@@ -1,0 +1,20 @@
+{
+    "name"            : "node-levelup"
+  , "version"         : "0.0.0"
+  , "main"            : "lib/levelup.js"
+  , "dependencies"    : {
+        "node-errno"    : "*"
+    }
+  , "devDependencies" : {
+        "buster"        : "*"
+      , "rimraf"        : "*"
+      , "async"        : "*"
+    }
+  , "scripts"         : {
+      "test"            : "./node_modules/.bin/buster-test"
+    , "install"         : "node-gyp rebuild"
+  }
+  , "license"         : "MIT"
+  , "gypfile"         : true
+  , "private"         : true
+}
