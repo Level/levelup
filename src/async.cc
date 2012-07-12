@@ -4,7 +4,9 @@
 #include <pthread.h>
 
 #include "database.h"
+
 #include "async.h"
+#include "batch.h"
 
 using namespace std;
 using namespace v8;
@@ -137,6 +139,31 @@ DeleteWorker::~DeleteWorker () {
 
 void DeleteWorker::Execute() {
   status = database->DeleteFromDatabase(options, key);
+}
+
+/** BATCH WORKER **/
+
+BatchWorker::BatchWorker  (Database* database, Persistent<Function> callback, vector<BatchOp*> operations, bool sync) {
+  request.data     = this;
+  this->database   = database;
+  this->callback   = callback;
+  this->operations = operations;
+  options          = new WriteOptions();
+  options->sync    = sync;
+}
+
+BatchWorker::~BatchWorker () {
+  for (unsigned int i = 0; i < operations.size(); i++)
+    delete operations[i];
+  operations.clear();
+}
+
+
+void BatchWorker::Execute() {
+  WriteBatch batch;
+  for (unsigned int i = 0; i < operations.size(); i++)
+    operations[i]->Execute(&batch);
+  status = database->WriteBatchToDatabase(options, &batch);
 }
 
 /** UTIL **/

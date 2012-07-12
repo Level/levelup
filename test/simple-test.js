@@ -10,6 +10,20 @@ buster.testCase('Basic API', {
     'setUp': function () {
       this.cleanupDirs = []
       this.closeableDatabases = []
+      this.openTestDatabase = function (callback) {
+        var db = levelup.createDatabase(
+                this.cleanupDirs[0] = '/tmp/levelup_test_db'
+              , {
+                    createIfMissing: true
+                  , errorIfExists: true
+                }
+            )
+        this.closeableDatabases.push(db)
+        db.open(function (err) {
+          refute(err)
+          callback(db)
+        })
+      }.bind(this)
     }
 
   , 'tearDown': function (done) {
@@ -146,24 +160,7 @@ buster.testCase('Basic API', {
     }
 
   , 'Simple operations': {
-        'setUp': function () {
-          this.openTestDatabase = function (callback) {
-            var db = levelup.createDatabase(
-                    this.cleanupDirs[0] = '/tmp/levelup_test_db'
-                  , {
-                        createIfMissing: true
-                      , errorIfExists: true
-                    }
-                )
-            this.closeableDatabases.push(db)
-            db.open(function (err) {
-              refute(err)
-              callback(db)
-            })
-          }.bind(this)
-        }
-
-      , 'get() on non-open database causes error': function (done) {
+        'get() on non-open database causes error': function (done) {
           levelup.createDatabase('foobar').get('undefkey', function (err, value) {
             refute(value)
             assert.isInstanceOf(err, Error)
@@ -259,6 +256,93 @@ buster.testCase('Basic API', {
                                 refute(err)
                                 assert(value)
                               }
+                              callback()
+                            })
+                          }
+                        , callback
+                      )
+                    }
+                ]
+              , done
+            )
+          })
+        }
+    }
+
+  , 'batch()': {
+        'batch() with multiple puts': function (done) {
+          this.openTestDatabase(function (db) {
+            db.batch(
+                [
+                    { type: 'put', key: 'foo', value: 'afoovalue' }
+                  , { type: 'put', key: 'bar', value: 'abarvalue' }
+                  , { type: 'put', key: 'baz', value: 'abazvalue' }
+                ]
+              , function (err) {
+                  refute(err)
+                  async.forEach(
+                      ['foo', 'bar', 'baz']
+                    , function (key, callback) {
+                        db.get(key, function (err, value) {
+                          refute(err)
+                          assert.equals(value, 'a' + key + 'value')
+                          callback()
+                        })
+                      }
+                    , done
+                  )
+                }
+            )
+          })
+        }
+
+      , 'batch() with multiple puts and deletes': function (done) {
+          this.openTestDatabase(function (db) {
+            async.series(
+                [
+                    function (callback) {
+                      db.batch(
+                          [
+                              { type: 'put', key: '1', value: 'one' }
+                            , { type: 'put', key: '2', value: 'two' }
+                            , { type: 'put', key: '3', value: 'three' }
+                          ]
+                        , callback
+                      )
+                    }
+                  , function (callback) {
+                      db.batch(
+                          [
+                              { type: 'put', key: 'foo', value: 'afoovalue' }
+                            , { type: 'del', key: '1' }
+                            , { type: 'put', key: 'bar', value: 'abarvalue' }
+                            , { type: 'del', key: 'foo' }
+                            , { type: 'put', key: 'baz', value: 'abazvalue' }
+                          ]
+                        , callback
+                      )
+                    }
+                  , function (callback) {
+                      // these should exist
+                      async.forEach(
+                          ['2', '3', 'bar', 'baz']
+                        , function (key, callback) {
+                            db.get(key, function (err, value) {
+                              refute(err)
+                              callback()
+                            })
+                          }
+                        , callback
+                      )
+                    }
+                  , function (callback) {
+                      // these shouldn't exist
+                      async.forEach(
+                          ['1', 'foo']
+                        , function (key, callback) {
+                            db.get(key, function (err, value) {
+                              assert(err)
+                              assert.isInstanceOf(err, errors.NotFoundError)
                               callback()
                             })
                           }

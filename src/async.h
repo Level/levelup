@@ -2,7 +2,10 @@
 #define LU_ASYNC_H
 
 #include <cstdlib>
+#include <vector>
 #include <node.h>
+
+#include "batch.h"
 
 using namespace std;
 using namespace v8;
@@ -76,6 +79,18 @@ public:
   ~DeleteWorker ();
 
   virtual void         Execute ();
+};
+
+class BatchWorker : public AsyncWorker {
+public:
+  BatchWorker  (Database* database, Persistent<Function> callback, vector<BatchOp*> operations, bool sync);
+  ~BatchWorker ();
+
+  virtual void         Execute ();
+
+private:
+  WriteOptions*        options;
+  vector<BatchOp*>     operations;
 };
 
 void AsyncExecute (uv_work_t* req);

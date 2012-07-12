@@ -40,9 +40,10 @@
         {
             "target_name": "levelup"
           , "sources": [
-                "src/levelup.cc"
+                "src/async.cc"
+              , "src/batch.cc"
               , "src/database.cc"
-              , "src/async.cc"
+              , "src/levelup.cc"
             ]
           , "include_dirs": [
                 "<(module_root_dir)/deps/leveldb-1.5.0/include/"

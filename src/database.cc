@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <vector>
 #include <node.h>
 #include <iostream>
 #include <pthread.h>
@@ -8,6 +9,7 @@
 #include "levelup.h"
 #include "database.h"
 #include "async.h"
+#include "batch.h"
 
 using namespace std;
 using namespace v8;
@@ -17,6 +19,11 @@ using namespace leveldb;
 LU_OPTION ( createIfMissing ); // for open()
 LU_OPTION ( errorIfExists   ); // for open()
 LU_OPTION ( sync            ); // for write() and delete()
+LU_STR    ( key );
+LU_STR    ( value );
+LU_STR    ( type );
+LU_STR    ( del );
+LU_STR    ( put );
 
 Database::Database () {
   db = NULL;
@@ -45,6 +52,10 @@ Status Database::DeleteFromDatabase (WriteOptions* options, string key) {
   return db->Delete(*options, key);
 }
 
+Status Database::WriteBatchToDatabase (WriteOptions* options, WriteBatch* batch) {
+  return db->Write(*options, batch);
+}
+
 void Database::CloseDatabase () {
   delete db;
   db = NULL;
@@ -61,6 +72,7 @@ void Database::Init () {
   tpl->PrototypeTemplate()->Set(String::NewSymbol("put")   , FunctionTemplate::New(Write)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("get")   , FunctionTemplate::New(Read)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("del")   , FunctionTemplate::New(Delete)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("batch") , FunctionTemplate::New(Batch)->GetFunction());
   constructor = Persistent<Function>::New(tpl->GetFunction());
 }
 
@@ -182,6 +194,47 @@ Handle<Value> Database::Delete (const Arguments& args) {
       database
     , callback
     , *key
+    , sync
+  );
+  AsyncQueueWorker(worker);
+
+  return Undefined();
+}
+
+Handle<Value> Database::Batch (const Arguments& args) {
+  HandleScope scope;
+
+  Database* database = ObjectWrap::Unwrap<Database>(args.This());
+  Local<Array> array = Local<Array>::Cast(args[0]);
+  Persistent<Function> callback;
+  if (args.Length() > 1)
+    callback = Persistent<Function>::New(Local<Function>::Cast(args[args.Length() > 2 ? 2 : 1]));
+  bool sync = false;
+  if (args.Length() > 2) {
+    Local<Object> optionsObj = Local<Object>::Cast(args[1]);
+    sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
+  }
+
+  vector<BatchOp*> operations;
+  for (unsigned int i = 0; i < array->Length(); i++) {
+    Local<Object> obj = Local<Object>::Cast(array->Get(i));
+    if (!obj->Has(str_type) || !obj->Has(str_key))
+      continue;
+    String::Utf8Value key(obj->Get(str_key)->ToString());
+    if (obj->Get(str_type)->StrictEquals(str_del)) {
+      operations.push_back(new BatchDelete(*key));
+    } else if (obj->Get(str_type)->StrictEquals(str_put)) {
+      if (obj->Has(str_value)) {
+        String::Utf8Value value(obj->Get(str_value)->ToString());
+        operations.push_back(new BatchWrite(*key, *value));
+      }
+    }
+  }
+
+  BatchWorker* worker = new BatchWorker(
+      database
+    , callback
+    , operations
     , sync
   );
   AsyncQueueWorker(worker);
