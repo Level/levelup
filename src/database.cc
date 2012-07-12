@@ -7,48 +7,55 @@
 
 #include "levelup.h"
 #include "database.h"
-#include "database_async.h"
+#include "async.h"
 
 using namespace std;
 using namespace v8;
 using namespace node;
 using namespace leveldb;
 
-LU_OPTION( createIfMissing );
-LU_OPTION( errorIfExists   );
+LU_OPTION ( createIfMissing ); // for open()
+LU_OPTION ( errorIfExists   ); // for open()
+LU_OPTION ( sync            ); // for write()
 
-Handle<Value> CreateDatabase (const Arguments& args) {
-  HandleScope scope;
-  return scope.Close(Database::NewInstance(args));
+Database::Database () {
+  db = NULL;
+};
+
+Database::~Database () {
+  if (db != NULL)
+    delete db;
+};
+
+/* expect these to be called from worker threads, no v8 here */
+
+Status Database::OpenDatabase (Options* options, string location) {
+  return DB::Open(*options, location, &db);
 }
 
-void runCallback (Persistent<Function> callback, Local<Value> argv[], int length) {
-  TryCatch try_catch;
-  callback->Call(Context::GetCurrent()->Global(), length, argv);
-
-  if (try_catch.HasCaught()) {
-    FatalException(try_catch);
-  }
+Status Database::WriteToDatabase (WriteOptions* options, string key, string value) {
+  return db->Put(*options, key, value);
 }
 
-// Database class
+Status Database::ReadFromDatabase (ReadOptions* options, string key, string& value) {
+  return db->Get(*options, key, &value);
+}
 
-Database::Database () {};
-Database::~Database () {};
+void Database::CloseDatabase () {
+  delete db;
+  db = NULL;
+}
 
 Persistent<Function> Database::constructor;
 
 void Database::Init () {
-  // Prepare constructor template
   Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
   tpl->SetClassName(String::NewSymbol("Database"));
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);
-  // Prototype
+  tpl->InstanceTemplate()->SetInternalFieldCount(4);
   tpl->PrototypeTemplate()->Set(String::NewSymbol("open"), FunctionTemplate::New(Open)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("close"), FunctionTemplate::New(Close)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("write"), FunctionTemplate::New(Write)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("read"), FunctionTemplate::New(Read)->GetFunction());
-
   constructor = Persistent<Function>::New(tpl->GetFunction());
 }
 
@@ -64,123 +71,44 @@ Handle<Value> Database::New (const Arguments& args) {
 Handle<Value> Database::NewInstance (const Arguments& args) {
   HandleScope scope;
 
-  const unsigned argc = 0;
   Handle<Value> argv[0];
-  Local<Object> instance = constructor->NewInstance(argc, argv);
+  Local<Object> instance = constructor->NewInstance(0, argv);
 
   return scope.Close(instance);
-}
-
-/** OPEN (async) **/
-
-Status Database::OpenDatabase(Options options, string location) {
-  //cout << "open() in " << pthread_self() << endl;
-  return DB::Open(options, location, &db);
-}
-
-Status Database::WriteToDatabase(Options options, string key, string value) {
-  //cout << "write() in " << pthread_self() << endl;
-  return db->Put(leveldb::WriteOptions(), key, value);
-}
-
-Status Database::ReadFromDatabase(Options options, string key, string* value) {
-  //cout << "read() in " << pthread_self() << endl;
-  return db->Get(leveldb::ReadOptions(), key, value);
-}
-
-void AsyncOpenComplete (uv_work_t* req) {
-  HandleScope scope;
-  AsyncBatonOpen* baton = static_cast<AsyncBatonOpen*>(req->data);
-
-  if (baton->status.ok()) {
-    Local<Value> argv[0];
-    runCallback(baton->callback, argv, 0);
-  } else {
-    Local<Value> argv[] = {
-        Local<Value>::New(Exception::Error(String::New(baton->status.ToString().c_str())))
-    };
-    runCallback(baton->callback, argv, 1);
-  }
-
-  baton->callback.Dispose();
-  delete baton;
-}
-
-void AsyncWriteComplete (uv_work_t* req) {
-  HandleScope scope;
-  AsyncBatonWrite* baton = static_cast<AsyncBatonWrite*>(req->data);
-
-  if (baton->status.ok()) {
-    Local<Value> argv[0];
-    runCallback(baton->callback, argv, 0);
-  } else {
-    Local<Value> argv[] = {
-        Local<Value>::New(Exception::Error(String::New(baton->status.ToString().c_str())))
-    };
-    runCallback(baton->callback, argv, 1);
-  }
-
-  baton->callback.Dispose();
-  delete baton;
-}
-
-void AsyncReadComplete (uv_work_t* req) {
-  HandleScope scope;
-  AsyncBatonRead* baton = static_cast<AsyncBatonRead*>(req->data);
-
-  if (baton->status.ok()) {
-    Local<Value> argv[] = {
-        Local<Value>::New(Null())
-      , Local<Value>::New(String::New(baton->value.c_str()))
-    };
-    runCallback(baton->callback, argv, 2);
-  } else {
-    Local<Value> argv[] = {
-        Local<Value>::New(Exception::Error(String::New(baton->status.ToString().c_str())))
-    };
-    runCallback(baton->callback, argv, 1);
-  }
-
-  baton->callback.Dispose();
-  delete baton;
 }
 
 Handle<Value> Database::Open (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  AsyncBatonOpen* baton = new AsyncBatonOpen();
-  baton->request.data = baton;
-  baton->database = database;
-
   String::Utf8Value location(args[0]->ToString());
   Local<Object> optionsObj = Local<Object>::Cast(args[1]);
-  Local<Function> callback = Local<Function>::Cast(args[2]);
+  Persistent<Function> callback;
+  if (args.Length() > 1)
+    callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
-  baton->callback = Persistent<Function>::New(callback);
-
-  baton->location = *location;
-
-  if (optionsObj->Has(option_createIfMissing))
-    baton->options.create_if_missing = optionsObj->Get(option_createIfMissing)->BooleanValue();
-
-  if (optionsObj->Has(option_errorIfExists))
-    baton->options.error_if_exists = optionsObj->Get(option_errorIfExists)->BooleanValue();
-
-  uv_queue_work(uv_default_loop(), &baton->request, AsyncOpen, AsyncOpenComplete);
+  OpenWorker* worker = new OpenWorker(
+      database
+    , callback
+    , *location
+    , optionsObj->Has(option_createIfMissing) && optionsObj->Get(option_createIfMissing)->BooleanValue()
+    , optionsObj->Has(option_errorIfExists)   && optionsObj->Get(option_errorIfExists)->BooleanValue()
+  );
+  AsyncQueueWorker(worker);
 
   return Undefined();
 }
-
-/** CLOSE **/
 
 Handle<Value> Database::Close (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
+  Persistent<Function> callback;
+  if (args.Length() > 0)
+    callback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
 
-  delete database->db;
-  database->db = NULL;
+  CloseWorker* worker = new CloseWorker(database, callback);
+  AsyncQueueWorker(worker);
 
   return Undefined();
 }
@@ -189,26 +117,25 @@ Handle<Value> Database::Write (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  AsyncBatonWrite* baton = new AsyncBatonWrite();
-  baton->request.data = baton;
-  baton->database = database;
-
   String::Utf8Value key(args[0]->ToString());
   String::Utf8Value value(args[1]->ToString());
-
-  baton->key = *key;
-  baton->value = *value;
-
-/*  Local<Object> optionsObj = NULL;
-  if (args.Length() > 3)
-    optionsObj = Local<Object>::Cast(args[2]);
-*/
-  if (args.Length() > 2) {
-    Local<Function> callback = Local<Function>::Cast(args[args.Length() > 3 ? 3 : 2]);
-    baton->callback = Persistent<Function>::New(callback);
+  Persistent<Function> callback;
+  if (args.Length() > 2)
+    callback = Persistent<Function>::New(Local<Function>::Cast(args[args.Length() > 3 ? 3 : 2]));
+  bool sync = false;
+  if (args.Length() > 3) { // an options object
+    Local<Object> optionsObj = Local<Object>::Cast(args[2]);
+    sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
   }
 
-  uv_queue_work(uv_default_loop(), &baton->request, AsyncWrite, AsyncWriteComplete);
+  WriteWorker* worker  = new WriteWorker(
+      database
+    , callback
+    , *key
+    , *value
+    , sync
+  );
+  AsyncQueueWorker(worker);
 
   return Undefined();
 }
@@ -217,24 +144,22 @@ Handle<Value> Database::Read (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  AsyncBatonRead* baton = new AsyncBatonRead();
-  baton->request.data = baton;
-  baton->database = database;
-
   String::Utf8Value key(args[0]->ToString());
+  Persistent<Function> callback;
+  if (args.Length() > 1)
+    callback = Persistent<Function>::New(Local<Function>::Cast(args[args.Length() > 2 ? 2 : 1]));
 
-  baton->key = *key;
-
-/*  Local<Object> optionsObj = NULL;
-  if (args.Length() > 2)
-    optionsObj = Local<Object>::Cast(args[1]);
-*/
-  if (args.Length() > 1) {
-    Local<Function> callback = Local<Function>::Cast(args[args.Length() > 2 ? 2 : 1]);
-    baton->callback = Persistent<Function>::New(callback);
-  }
-
-  uv_queue_work(uv_default_loop(), &baton->request, AsyncRead, AsyncReadComplete);
+  ReadWorker* worker = new ReadWorker(
+      database
+    , callback
+    , *key
+  );
+  AsyncQueueWorker(worker);
 
   return Undefined();
+}
+
+Handle<Value> CreateDatabase (const Arguments& args) {
+  HandleScope scope;
+  return scope.Close(Database::NewInstance(args));
 }

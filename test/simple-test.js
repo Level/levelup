@@ -13,10 +13,15 @@ buster.testCase('Basic API', {
     }
 
   , 'tearDown': function (done) {
-      async.forEach(this.cleanupDirs, rimraf, done)
-      this.closeableDatabases.forEach(function (db) {
-        db.close()
-      })
+      async.forEach(
+          this.closeableDatabases
+        , function (db, callback) {
+            db.close(callback)
+          }
+        , function () {
+            async.forEach(this.cleanupDirs, rimraf, done)
+          }.bind(this)
+      )
     }
 
   , 'createDatabase()': function () {
@@ -123,19 +128,20 @@ buster.testCase('Basic API', {
         refute(err) // sanity
         assert.isTrue(db.isOpen())
 
-        db.close()
-        assert.isFalse(db.isOpen())
+        db.close(function () {
+          assert.isFalse(db.isOpen())
 
-        db = levelup.createDatabase(
-                this.cleanupDirs[0]
-              , { errorIfExists   : false }
-            )
-        this.closeableDatabases.push(db)
-        db.open(function (err) {
-          refute(err)
-          assert.isTrue(db.isOpen())
-          done()
-        })
+          db = levelup.createDatabase(
+                  this.cleanupDirs[0]
+                , { errorIfExists   : false }
+              )
+          this.closeableDatabases.push(db)
+          db.open(function (err) {
+            refute(err)
+            assert.isTrue(db.isOpen())
+            done()
+          })
+        }.bind(this))
       }.bind(this))
     }
 

@@ -42,7 +42,7 @@
           , "sources": [
                 "src/levelup.cc"
               , "src/database.cc"
-              , "src/database_async.cc"
+              , "src/async.cc"
             ]
           , "include_dirs": [
                 "<(module_root_dir)/deps/leveldb-1.5.0/include/"
@@ -52,6 +52,7 @@
                     "libraries": [
                         "<(module_root_dir)/deps/leveldb-1.5.0/libleveldb.a"
                     ]
+          , "cflags": ["-g"]
                 }]
             ]
         }
