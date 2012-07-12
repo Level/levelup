@@ -51,6 +51,7 @@ public:
 class WriteWorker : public IOWorker {
 public:
   WriteWorker  (Database* database, Persistent<Function> callback, string key, string value, bool sync);
+  WriteWorker  () {};
   ~WriteWorker ();
 
   WriteOptions*        options;
@@ -67,6 +68,14 @@ public:
 
 protected:
   virtual void         HandleOKCallback ();
+};
+
+class DeleteWorker : public WriteWorker {
+public:
+  DeleteWorker  (Database* database, Persistent<Function> callback, string key, bool sync);
+  ~DeleteWorker ();
+
+  virtual void         Execute ();
 };
 
 void AsyncExecute (uv_work_t* req);

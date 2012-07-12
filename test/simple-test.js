@@ -210,5 +210,65 @@ buster.testCase('Basic API', {
             })
           })
         }
+
+      , 'del() on non-open database causes error': function (done) {
+          levelup.createDatabase('foobar').del('undefkey', function (err) {
+            assert.isInstanceOf(err, Error)
+            assert.isInstanceOf(err, errors.LevelUPError)
+            assert.isInstanceOf(err, errors.ReadError)
+            assert.match(err, /not .*open/)
+            done()
+          })
+        }
+
+      , 'del() on empty database doesn\'t cause error': function (done) {
+          this.openTestDatabase(function (db) {
+            db.del('undefkey', function (err) {
+              refute(err)
+              done()
+            })
+          })
+        }
+
+      , 'del() works on real entries': function (done) {
+          this.openTestDatabase(function (db) {
+            async.series(
+                [
+                    function (callback) {
+                      async.forEach(
+                          ['foo', 'bar', 'baz']
+                        , function (key, callback) {
+                            db.put(key, 1 + Math.random(), callback)
+                          }
+                        , callback
+                      )
+                    }
+                  , function (callback) {
+                      db.del('bar', callback)
+                    }
+                  , function (callback) {
+                      async.forEach(
+                          ['foo', 'bar', 'baz']
+                        , function (key, callback) {
+                            db.get(key, function (err, value) {
+                              // we should get foo & baz but not bar
+                              if (key == 'bar') {
+                                assert(err)
+                                refute(value)
+                              } else {
+                                refute(err)
+                                assert(value)
+                              }
+                              callback()
+                            })
+                          }
+                        , callback
+                      )
+                    }
+                ]
+              , done
+            )
+          })
+        }
     }
 })

@@ -120,6 +120,25 @@ void ReadWorker::HandleOKCallback () {
   runCallback(callback, argv, 2);
 }
 
+/** DELETE WORKER **/
+
+DeleteWorker::DeleteWorker (Database* database, Persistent<Function> callback, string key, bool sync) {
+  request.data   = this;
+  this->database = database;
+  this->callback = callback;
+  this->key      = key;
+  options        = new WriteOptions();
+  options->sync  = sync;
+}
+
+DeleteWorker::~DeleteWorker () {
+  delete options;
+}
+
+void DeleteWorker::Execute() {
+  status = database->DeleteFromDatabase(options, key);
+}
+
 /** UTIL **/
 
 void runCallback (Persistent<Function> callback, Local<Value> argv[], int length) {
