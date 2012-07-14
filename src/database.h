@@ -23,11 +23,11 @@ class Database : public node::ObjectWrap {
   static v8::Handle<v8::Value> NewInstance (const v8::Arguments& args);
 
   Status OpenDatabase         (Options* options, string location);
-  Status WriteToDatabase      (WriteOptions* options, string key, string value);
-  Status ReadFromDatabase     (ReadOptions* options, string key, string& value);
-  Status DeleteFromDatabase   (WriteOptions* options, string key);
+  Status PutToDatabase        (WriteOptions* options, Slice key, Slice value);
+  Status GetFromDatabase      (ReadOptions* options, Slice key, string& value);
+  Status DeleteFromDatabase   (WriteOptions* options, Slice key);
   Status WriteBatchToDatabase (WriteOptions* options, WriteBatch* batch);
-  void   CloseDatabase      ();
+  void   CloseDatabase        ();
 
  private:
   Database ();
@@ -40,9 +40,9 @@ class Database : public node::ObjectWrap {
   LU_V8_METHOD( New    )
   LU_V8_METHOD( Open   )
   LU_V8_METHOD( Close  )
-  LU_V8_METHOD( Write  )
+  LU_V8_METHOD( Put  )
   LU_V8_METHOD( Delete )
-  LU_V8_METHOD( Read   )
+  LU_V8_METHOD( Get   )
   LU_V8_METHOD( Batch  )
 };
 

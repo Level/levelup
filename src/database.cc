@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <vector>
 #include <node.h>
+#include <node_buffer.h>
 #include <iostream>
 #include <pthread.h>
 
@@ -40,15 +41,15 @@ Status Database::OpenDatabase (Options* options, string location) {
   return DB::Open(*options, location, &db);
 }
 
-Status Database::WriteToDatabase (WriteOptions* options, string key, string value) {
+Status Database::PutToDatabase (WriteOptions* options, Slice key, Slice value) {
   return db->Put(*options, key, value);
 }
 
-Status Database::ReadFromDatabase (ReadOptions* options, string key, string& value) {
+Status Database::GetFromDatabase (ReadOptions* options, Slice key, string& value) {
   return db->Get(*options, key, &value);
 }
 
-Status Database::DeleteFromDatabase (WriteOptions* options, string key) {
+Status Database::DeleteFromDatabase (WriteOptions* options, Slice key) {
   return db->Delete(*options, key);
 }
 
@@ -69,8 +70,8 @@ void Database::Init () {
   tpl->InstanceTemplate()->SetInternalFieldCount(5);
   tpl->PrototypeTemplate()->Set(String::NewSymbol("open")  , FunctionTemplate::New(Open)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("close") , FunctionTemplate::New(Close)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("put")   , FunctionTemplate::New(Write)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("get")   , FunctionTemplate::New(Read)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("put")   , FunctionTemplate::New(Put)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("get")   , FunctionTemplate::New(Get)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("del")   , FunctionTemplate::New(Delete)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("batch") , FunctionTemplate::New(Batch)->GetFunction());
   constructor = Persistent<Function>::New(tpl->GetFunction());
@@ -100,9 +101,7 @@ Handle<Value> Database::Open (const Arguments& args) {
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
   String::Utf8Value location(args[0]->ToString());
   Local<Object> optionsObj = Local<Object>::Cast(args[1]);
-  Persistent<Function> callback;
-  if (args.Length() > 1)
-    callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
+  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
   OpenWorker* worker = new OpenWorker(
       database
@@ -130,46 +129,48 @@ Handle<Value> Database::Close (const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> Database::Write (const Arguments& args) {
+Handle<Value> Database::Put (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  String::Utf8Value key(args[0]->ToString());
-  String::Utf8Value value(args[1]->ToString());
-  Persistent<Function> callback;
-  if (args.Length() > 2)
-    callback = Persistent<Function>::New(Local<Function>::Cast(args[args.Length() > 3 ? 3 : 2]));
-  bool sync = false;
-  if (args.Length() > 3) {
-    Local<Object> optionsObj = Local<Object>::Cast(args[2]);
-    sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
-  }
+
+  Local<Object> keyBuffer = args[0]->ToObject();
+  Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
+  Local<Object> valueBuffer = args[1]->ToObject();
+  Slice value(Buffer::Data(valueBuffer), Buffer::Length(valueBuffer));
+
+  Local<Object> optionsObj = Local<Object>::Cast(args[2]);
+  bool sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
+  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[3]));
 
   WriteWorker* worker  = new WriteWorker(
       database
     , callback
-    , *key
-    , *value
+    , key
+    , value
     , sync
+    , Persistent<Object>::New(keyBuffer)
+    , Persistent<Object>::New(valueBuffer)
   );
   AsyncQueueWorker(worker);
 
   return Undefined();
 }
 
-Handle<Value> Database::Read (const Arguments& args) {
+Handle<Value> Database::Get (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  String::Utf8Value key(args[0]->ToString());
-  Persistent<Function> callback;
-  if (args.Length() > 1)
-    callback = Persistent<Function>::New(Local<Function>::Cast(args[args.Length() > 2 ? 2 : 1]));
+  Local<Object> keyBuffer = args[0]->ToObject();
+  Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
+  //Local<Object> optionsObj = Local<Object>::Cast(args[1]);
+  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
   ReadWorker* worker = new ReadWorker(
       database
     , callback
-    , *key
+    , key
+    , Persistent<Object>::New(keyBuffer)
   );
   AsyncQueueWorker(worker);
 
@@ -180,21 +181,18 @@ Handle<Value> Database::Delete (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  String::Utf8Value key(args[0]->ToString());
-  Persistent<Function> callback;
-  if (args.Length() > 1)
-    callback = Persistent<Function>::New(Local<Function>::Cast(args[args.Length() > 2 ? 2 : 1]));
-  bool sync = false;
-  if (args.Length() > 2) {
-    Local<Object> optionsObj = Local<Object>::Cast(args[1]);
-    sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
-  }
+  Local<Object> keyBuffer = args[0]->ToObject();
+  Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
+  Local<Object> optionsObj = Local<Object>::Cast(args[1]);
+  bool sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
+  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
   DeleteWorker* worker = new DeleteWorker(
       database
     , callback
-    , *key
+    , key
     , sync
+    , Persistent<Object>::New(keyBuffer)
   );
   AsyncQueueWorker(worker);
 
@@ -206,27 +204,40 @@ Handle<Value> Database::Batch (const Arguments& args) {
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
   Local<Array> array = Local<Array>::Cast(args[0]);
-  Persistent<Function> callback;
-  if (args.Length() > 1)
-    callback = Persistent<Function>::New(Local<Function>::Cast(args[args.Length() > 2 ? 2 : 1]));
-  bool sync = false;
-  if (args.Length() > 2) {
-    Local<Object> optionsObj = Local<Object>::Cast(args[1]);
-    sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
-  }
+  Local<Object> optionsObj = Local<Object>::Cast(args[1]);
+  bool sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
+  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
   vector<BatchOp*> operations;
   for (unsigned int i = 0; i < array->Length(); i++) {
     Local<Object> obj = Local<Object>::Cast(array->Get(i));
     if (!obj->Has(str_type) || !obj->Has(str_key))
       continue;
-    String::Utf8Value key(obj->Get(str_key)->ToString());
+
+    Local<Object> keyObj = obj->Get(str_key)->ToObject();
+    string* keyStr = NULL;
+    Slice key;
+    if (Buffer::HasInstance(keyObj))
+      key = Slice(Buffer::Data(keyObj), Buffer::Length(keyObj));
+    else {
+      keyStr = new string(ToCString(String::Utf8Value(keyObj->ToString())));
+      key = *keyStr;
+    }
+
     if (obj->Get(str_type)->StrictEquals(str_del)) {
-      operations.push_back(new BatchDelete(*key));
+      operations.push_back(new BatchDelete(key, keyStr));
     } else if (obj->Get(str_type)->StrictEquals(str_put)) {
       if (obj->Has(str_value)) {
-        String::Utf8Value value(obj->Get(str_value)->ToString());
-        operations.push_back(new BatchWrite(*key, *value));
+        Local<Object> valueObj = obj->Get(str_value)->ToObject();
+        string* valueStr = NULL;
+        Slice value;
+        if (Buffer::HasInstance(valueObj))
+          value = Slice(Buffer::Data(valueObj), Buffer::Length(valueObj));
+        else {
+          valueStr = new string(ToCString(String::Utf8Value(valueObj->ToString())));
+          value = *valueStr;
+        }
+        operations.push_back(new BatchWrite(key, keyStr, value, valueStr));
       }
     }
   }

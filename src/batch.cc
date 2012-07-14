@@ -7,16 +7,20 @@
 
 using namespace std;
 
-BatchDelete::BatchDelete (string key) {
-  this->key   = key;
+BatchDelete::~BatchDelete () {
+  if (keyPtr != NULL)
+    delete keyPtr;
 }
 
 void BatchDelete::Execute (WriteBatch* batch) {
   batch->Delete(key);
 }
 
-BatchWrite::BatchWrite (string key, string value) : BatchDelete (key) {
-  this->value = value;
+BatchWrite::~BatchWrite () {
+  if (keyPtr != NULL)
+    delete keyPtr;
+  if (valuePtr != NULL)
+    delete valuePtr;
 }
 
 void BatchWrite::Execute (WriteBatch* batch) {

@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <node.h>
+#include <node_buffer.h>
 #include <iostream>
 #include <pthread.h>
 
@@ -40,31 +41,11 @@ void AsyncWorker::HandleErrorCallback () {
 
 /** OPEN WORKER **/
 
-OpenWorker::OpenWorker (Database* database, Persistent<Function> callback, string location, bool createIfMissing, bool errorIfExists) {
-  request.data               = this;
-  this->database             = database;
-  this->location             = location;
-  this->callback             = callback;
-  options                    = new Options();
-  options->create_if_missing = createIfMissing;
-  options->error_if_exists   = errorIfExists;
-}
-
-OpenWorker::~OpenWorker () {
-  delete options;
-}
-
 void OpenWorker::Execute() {
   status = database->OpenDatabase(options, location);
 }
 
 /** CLOSE WORKER **/
-
-CloseWorker::CloseWorker (Database* database, Persistent<Function> callback) {
-  request.data               = this;
-  this->database             = database;
-  this->callback             = callback;
-}
 
 void CloseWorker::Execute() {
   database->CloseDatabase();
@@ -76,62 +57,47 @@ void CloseWorker::WorkComplete () {
   callback.Dispose();
 }
 
-/** WRITE WORKER **/
+/** IO WORKER (abstract) **/
 
-WriteWorker::WriteWorker (Database* database, Persistent<Function> callback, string key, string value, bool sync) {
-  request.data   = this;
-  this->database = database;
-  this->callback = callback;
-  this->key      = key;
-  this->value    = value;
-  options        = new WriteOptions();
-  options->sync  = sync;
+void IOWorker::WorkComplete() {
+  AsyncWorker::WorkComplete();
+  keyPtr.Dispose();
 }
+
+/** WRITE WORKER **/
 
 WriteWorker::~WriteWorker () {
   delete options;
 }
 
 void WriteWorker::Execute() {
-  status = database->WriteToDatabase(options, key, value);
+  status = database->PutToDatabase(options, key, value);
+}
+
+void WriteWorker::WorkComplete() {
+  IOWorker::WorkComplete();
+  valuePtr.Dispose();
 }
 
 /** READ WORKER **/
-
-ReadWorker::ReadWorker (Database* database, Persistent<Function> callback, string key) {
-  request.data   = this;
-  this->database = database;
-  this->callback = callback;
-  this->key      = key;
-  options        = new ReadOptions();
-}
 
 ReadWorker::~ReadWorker () {
   delete options;
 }
 
 void ReadWorker::Execute () {
-  status = database->ReadFromDatabase(options, key, value);
+  status = database->GetFromDatabase(options, key, value);
 }
 
 void ReadWorker::HandleOKCallback () {
   Local<Value> argv[] = {
       Local<Value>::New(Null())
-    , Local<Value>::New(String::New(value.c_str()))
+    , Local<Value>::New(Buffer::New((char*)value.data(), value.size())->handle_)
   };
   runCallback(callback, argv, 2);
 }
 
 /** DELETE WORKER **/
-
-DeleteWorker::DeleteWorker (Database* database, Persistent<Function> callback, string key, bool sync) {
-  request.data   = this;
-  this->database = database;
-  this->callback = callback;
-  this->key      = key;
-  options        = new WriteOptions();
-  options->sync  = sync;
-}
 
 DeleteWorker::~DeleteWorker () {
   delete options;
@@ -142,15 +108,6 @@ void DeleteWorker::Execute() {
 }
 
 /** BATCH WORKER **/
-
-BatchWorker::BatchWorker  (Database* database, Persistent<Function> callback, vector<BatchOp*> operations, bool sync) {
-  request.data     = this;
-  this->database   = database;
-  this->callback   = callback;
-  this->operations = operations;
-  options          = new WriteOptions();
-  options->sync    = sync;
-}
 
 BatchWorker::~BatchWorker () {
   for (unsigned int i = 0; i < operations.size(); i++)
@@ -170,6 +127,7 @@ void BatchWorker::Execute() {
 
 void runCallback (Persistent<Function> callback, Local<Value> argv[], int length) {
   TryCatch try_catch;
+ 
   callback->Call(Context::GetCurrent()->Global(), length, argv);
   if (try_catch.HasCaught()) {
     FatalException(try_catch);

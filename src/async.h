@@ -13,11 +13,19 @@ using namespace leveldb;
 
 class AsyncWorker {
 public:
+  AsyncWorker (
+      Database* database
+    , Persistent<Function> callback
+  ) : database(database)
+    , callback(callback) {
+        request.data               = this;
+      };
+
   uv_work_t            request;
   Database*            database;
   Persistent<Function> callback;
   Status               status;
-  void                 WorkComplete ();
+  virtual void         WorkComplete ();
   virtual void         Execute () {};
 
 protected:
@@ -27,8 +35,23 @@ protected:
 
 class OpenWorker  : public AsyncWorker {
 public:
-  OpenWorker  (Database* database, Persistent<Function> callback, string location, bool createIfMissing, bool errorIfExists);
-  ~OpenWorker ();
+  OpenWorker (
+      Database* database
+    , Persistent<Function> callback
+    , string location
+    , bool createIfMissing
+    , bool errorIfExists
+  ) : AsyncWorker(database, callback)
+    , location(location)
+  {
+    options                    = new Options();
+    options->create_if_missing = createIfMissing;
+    options->error_if_exists   = errorIfExists;
+  };
+
+  ~OpenWorker () {
+    delete options;
+  }
 
   string               location;
   Options*             options;
@@ -37,7 +60,11 @@ public:
 
 class CloseWorker : public AsyncWorker {
 public:
-  CloseWorker  (Database* database, Persistent<Function> callback);
+  CloseWorker (
+      Database* database
+    , Persistent<Function> callback
+  ) : AsyncWorker(database, callback)
+  {};
 
   virtual void         Execute ();
 
@@ -47,23 +74,35 @@ private:
 
 class IOWorker    : public AsyncWorker {
 public:
-  string               key;
-  string               value;
-};
+  IOWorker (
+      Database* database
+    , Persistent<Function> callback
+    , Slice key
+    , Persistent<Object> keyPtr
+  ) : AsyncWorker(database, callback)
+    , key(key)
+    , keyPtr(keyPtr)
+  {};
 
-class WriteWorker : public IOWorker {
-public:
-  WriteWorker  (Database* database, Persistent<Function> callback, string key, string value, bool sync);
-  WriteWorker  () {};
-  ~WriteWorker ();
+  virtual void         WorkComplete ();
 
-  WriteOptions*        options;
-  virtual void         Execute ();
+protected:
+  Slice                key;
+  Persistent<Object>   keyPtr;
 };
 
 class ReadWorker : public IOWorker {
 public:
-  ReadWorker  (Database* database, Persistent<Function> callback, string key);
+  ReadWorker(
+      Database* database
+    , Persistent<Function> callback
+    , Slice key
+    , Persistent<Object> keyPtr
+  ) : IOWorker(database, callback, key, keyPtr)
+  {
+    options = new ReadOptions();
+  };
+
   ~ReadWorker ();
 
   ReadOptions*         options;
@@ -71,19 +110,72 @@ public:
 
 protected:
   virtual void         HandleOKCallback ();
+
+private:
+  string               value;
 };
 
-class DeleteWorker : public WriteWorker {
+class DeleteWorker : public IOWorker {
 public:
-  DeleteWorker  (Database* database, Persistent<Function> callback, string key, bool sync);
+  DeleteWorker(
+      Database* database
+    , Persistent<Function> callback
+    , Slice key
+    , bool sync
+    , Persistent<Object> keyPtr
+  ) : IOWorker(database, callback, key, keyPtr)
+  {
+    options        = new WriteOptions();
+    options->sync  = sync;
+  };
+
   ~DeleteWorker ();
 
   virtual void         Execute ();
+
+protected:
+  WriteOptions*        options;
+};
+
+class WriteWorker : public DeleteWorker {
+public:
+  WriteWorker (
+      Database* database
+    , Persistent<Function> callback
+    , Slice key
+    , Slice value
+    , bool sync
+    , Persistent<Object> keyPtr
+    , Persistent<Object> valuePtr
+  ) : DeleteWorker(database, callback, key, sync, keyPtr)
+    , value(value)
+    , valuePtr(valuePtr)
+  {};
+
+  ~WriteWorker ();
+
+  virtual void         Execute ();
+  virtual void         WorkComplete ();
+
+private:
+  Slice                value;
+  Persistent<Object>   valuePtr;
 };
 
 class BatchWorker : public AsyncWorker {
 public:
-  BatchWorker  (Database* database, Persistent<Function> callback, vector<BatchOp*> operations, bool sync);
+  BatchWorker(
+      Database* database
+    , Persistent<Function> callback
+    , vector<BatchOp*> operations
+    , bool sync
+  ) : AsyncWorker(database, callback)
+    , operations(operations)
+  {
+    options        = new WriteOptions();
+    options->sync  = sync;
+  };
+
   ~BatchWorker ();
 
   virtual void         Execute ();

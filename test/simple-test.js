@@ -1,3 +1,5 @@
+/*global cleanUp:true, openTestDatabase:true*/
+
 var buster  = require('buster')
   , assert  = buster.assert
   , levelup = require('../lib/levelup.js')
@@ -10,32 +12,11 @@ buster.testCase('Basic API', {
     'setUp': function () {
       this.cleanupDirs = []
       this.closeableDatabases = []
-      this.openTestDatabase = function (callback) {
-        var db = levelup.createDatabase(
-                this.cleanupDirs[0] = '/tmp/levelup_test_db'
-              , {
-                    createIfMissing: true
-                  , errorIfExists: true
-                }
-            )
-        this.closeableDatabases.push(db)
-        db.open(function (err) {
-          refute(err)
-          callback(db)
-        })
-      }.bind(this)
+      this.openTestDatabase = openTestDatabase.bind(this)
     }
 
   , 'tearDown': function (done) {
-      async.forEach(
-          this.closeableDatabases
-        , function (db, callback) {
-            db.close(callback)
-          }
-        , function () {
-            async.forEach(this.cleanupDirs, rimraf, done)
-          }.bind(this)
-      )
+      cleanUp(this.closeableDatabases, this.cleanupDirs, done)
     }
 
   , 'createDatabase()': function () {
@@ -348,6 +329,101 @@ buster.testCase('Basic API', {
                           }
                         , callback
                       )
+                    }
+                ]
+              , done
+            )
+          })
+        }
+
+      , 'batch() with can manipulate data from put()': function (done) {
+          // checks encoding and whatnot
+          this.openTestDatabase(function (db) {
+            async.series(
+                [
+                    db.put.bind(db, '1', 'one')
+                  , db.put.bind(db, '2', 'two')
+                  , db.put.bind(db, '3', 'three')
+                  , function (callback) {
+                      db.batch(
+                          [
+                              { type: 'put', key: 'foo', value: 'afoovalue' }
+                            , { type: 'del', key: '1' }
+                            , { type: 'put', key: 'bar', value: 'abarvalue' }
+                            , { type: 'del', key: 'foo' }
+                            , { type: 'put', key: 'baz', value: 'abazvalue' }
+                          ]
+                        , callback
+                      )
+                    }
+                  , function (callback) {
+                      // these should exist
+                      async.forEach(
+                          ['2', '3', 'bar', 'baz']
+                        , function (key, callback) {
+                            db.get(key, function (err, value) {
+                              refute(err)
+                              callback()
+                            })
+                          }
+                        , callback
+                      )
+                    }
+                  , function (callback) {
+                      // these shouldn't exist
+                      async.forEach(
+                          ['1', 'foo']
+                        , function (key, callback) {
+                            db.get(key, function (err, value) {
+                              assert(err)
+                              assert.isInstanceOf(err, errors.NotFoundError)
+                              callback()
+                            })
+                          }
+                        , callback
+                      )
+                    }
+                ]
+              , done
+            )
+          })
+        }
+
+      , 'batch() data can be read with get() and del()': function (done) {
+          this.openTestDatabase(function (db) {
+            async.series(
+                [
+                    function (callback) {
+                      db.batch(
+                          [
+                              { type: 'put', key: '1', value: 'one' }
+                            , { type: 'put', key: '2', value: 'two' }
+                            , { type: 'put', key: '3', value: 'three' }
+                          ]
+                        , callback
+                      )
+                    }
+                  , db.del.bind(db, '1', 'one')
+                  , function (callback) {
+                      // these should exist
+                      async.forEach(
+                          ['2', '3']
+                        , function (key, callback) {
+                            db.get(key, function (err, value) {
+                              refute(err)
+                              callback()
+                            })
+                          }
+                        , callback
+                      )
+                    }
+                  , function (callback) {
+                      // this shouldn't exist
+                      db.get('1', function (err, value) {
+                        assert(err)
+                        assert.isInstanceOf(err, errors.NotFoundError)
+                        callback()
+                      })
                     }
                 ]
               , done

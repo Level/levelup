@@ -19,3 +19,6 @@ NODE_MODULE(levelup, Init)
 const char* ToCString(const v8::String::Utf8Value& value) {
   return *value ? *value : "<string conversion failed>";
 }
+const char* ToCString(const v8::String::AsciiValue& value) {
+  return *value ? *value : "<string conversion failed>";
+}

@@ -1,4 +1,10 @@
-var ba = require('buster').assertions
+var ba      = require('buster').assertions
+  , async   = require('async')
+  , rimraf  = require('rimraf')
+  , fs      = require('fs')
+  , path    = require('path')
+  , levelup = require('../lib/levelup.js')
+  , child_process = require('child_process')
 
 ba.add('isInstanceOf', {
     assert: function (actual, expected) {
@@ -21,3 +27,46 @@ ba.add('isUndefined', {
   , assertMessage: '${0} expected to be undefined'
   , refuteMessage: '${0} expected not to be undefined'
 })
+
+global.openTestDatabase = function (callback) {
+  var db = levelup.createDatabase(
+          this.cleanupDirs[0] = '/tmp/levelup_test_db'
+        , {
+              createIfMissing: true
+            , errorIfExists: true
+          }
+      )
+  this.closeableDatabases.push(db)
+  db.open(function (err) {
+    refute(err)
+    callback(db)
+  })
+}
+
+global.cleanUp = function (closeableDatabases, cleanupDirs, callback) {
+  async.forEach(
+      closeableDatabases
+    , function (db, callback) {
+        db.close(callback)
+      }
+    , function () {
+        async.forEach(cleanupDirs, rimraf, callback)
+      }.bind(this)
+  )
+}
+
+global.loadBinaryTestData = function (callback) {
+  fs.readFile(path.join(__dirname, 'testdata.bin'), callback)
+}
+
+global.binaryTestDataMD5Sum = '920725ef1a3b32af40ccd0b78f4a62fd'
+
+global.checkBinaryTestData = function (testData, callback) {
+  fs.writeFile('__tst.dat', testData, function (err) {
+    child_process.exec('md5sum __tst.dat', function (error, stdout, stderr) {
+      var md5Sum = stdout.split(' ')[0]
+      assert.equals(md5Sum, global.binaryTestDataMD5Sum)
+      rimraf('__tst.dat', callback)
+    })
+  })
+}
