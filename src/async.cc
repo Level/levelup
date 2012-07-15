@@ -115,7 +115,6 @@ BatchWorker::~BatchWorker () {
   operations.clear();
 }
 
-
 void BatchWorker::Execute() {
   WriteBatch batch;
   for (unsigned int i = 0; i < operations.size(); i++)

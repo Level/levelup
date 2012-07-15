@@ -8,18 +8,18 @@
 using namespace std;
 
 BatchDelete::~BatchDelete () {
-  delete key;
+  keyPtr.Dispose();
 }
 
 void BatchDelete::Execute (WriteBatch* batch) {
-  batch->Delete(Slice(*key));
+  batch->Delete(key);
 }
 
 BatchWrite::~BatchWrite () {
-  delete key;
-  delete value;
+  keyPtr.Dispose();
+  valuePtr.Dispose();
 }
 
 void BatchWrite::Execute (WriteBatch* batch) {
-  batch->Put(Slice(*key), Slice(*value));
+  batch->Put(key, value);
 }

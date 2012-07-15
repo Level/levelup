@@ -216,26 +216,25 @@ Handle<Value> Database::Batch (const Arguments& args) {
     Local<Object> keyBuffer = obj->Get(str_key)->ToObject();
     if (!keyBuffer->IsObject() || !Buffer::HasInstance(keyBuffer))
       continue;
-    string* key = new string(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
+    Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
 
     if (obj->Get(str_type)->StrictEquals(str_del)) {
-      operations.push_back(new BatchDelete(key));
+      operations.push_back(new BatchDelete(key, Persistent<Object>::New(keyBuffer)));
     } else if (obj->Get(str_type)->StrictEquals(str_put) && obj->Has(str_value)) {
       Local<Object> valueBuffer = obj->Get(str_value)->ToObject();
       if (!valueBuffer->IsObject() || !Buffer::HasInstance(valueBuffer))
         continue;
-      string* value = new string(Buffer::Data(valueBuffer), Buffer::Length(valueBuffer));     
-      operations.push_back(new BatchWrite(key, value));
+      Slice value(Buffer::Data(valueBuffer), Buffer::Length(valueBuffer));
+      operations.push_back(new BatchWrite(key, value, Persistent<Object>::New(keyBuffer), Persistent<Object>::New(valueBuffer)));
     }
   }
 
-  BatchWorker* worker = new BatchWorker(
+  AsyncQueueWorker(new BatchWorker(
       database
     , callback
     , operations
     , sync
-  );
-  AsyncQueueWorker(worker);
+  ));
 
   return Undefined();
 }
