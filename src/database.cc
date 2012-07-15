@@ -134,9 +134,9 @@ Handle<Value> Database::Put (const Arguments& args) {
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
 
-  Local<Object> keyBuffer = args[0]->ToObject();
+  Persistent<Object> keyBuffer = Persistent<Object>::New(args[0]->ToObject());
   Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
-  Local<Object> valueBuffer = args[1]->ToObject();
+  Persistent<Object> valueBuffer = Persistent<Object>::New(args[1]->ToObject());
   Slice value(Buffer::Data(valueBuffer), Buffer::Length(valueBuffer));
   Local<Object> optionsObj = Local<Object>::Cast(args[2]);
   bool sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
@@ -148,8 +148,8 @@ Handle<Value> Database::Put (const Arguments& args) {
     , key
     , value
     , sync
-    , Persistent<Object>::New(keyBuffer)
-    , Persistent<Object>::New(valueBuffer)
+    , keyBuffer
+    , valueBuffer
   );
   AsyncQueueWorker(worker);
 
@@ -160,7 +160,7 @@ Handle<Value> Database::Get (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  Local<Object> keyBuffer = args[0]->ToObject();
+  Persistent<Object> keyBuffer = Persistent<Object>::New(args[0]->ToObject());
   Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
   //Local<Object> optionsObj = Local<Object>::Cast(args[1]);
   Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
@@ -169,7 +169,7 @@ Handle<Value> Database::Get (const Arguments& args) {
       database
     , callback
     , key
-    , Persistent<Object>::New(keyBuffer)
+    , keyBuffer
   );
   AsyncQueueWorker(worker);
 
@@ -180,7 +180,7 @@ Handle<Value> Database::Delete (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  Local<Object> keyBuffer = args[0]->ToObject();
+  Persistent<Object> keyBuffer = Persistent<Object>::New(args[0]->ToObject());
   Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
   Local<Object> optionsObj = Local<Object>::Cast(args[1]);
   bool sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
@@ -191,7 +191,7 @@ Handle<Value> Database::Delete (const Arguments& args) {
     , callback
     , key
     , sync
-    , Persistent<Object>::New(keyBuffer)
+    , keyBuffer
   );
   AsyncQueueWorker(worker);
 
@@ -213,31 +213,19 @@ Handle<Value> Database::Batch (const Arguments& args) {
     if (!obj->Has(str_type) || !obj->Has(str_key))
       continue;
 
-    Local<Object> keyObj = obj->Get(str_key)->ToObject();
-    string* keyStr = NULL;
-    Slice key;
-    if (Buffer::HasInstance(keyObj))
-      key = Slice(Buffer::Data(keyObj), Buffer::Length(keyObj));
-    else {
-      keyStr = new string(ToCString(String::Utf8Value(keyObj->ToString())));
-      key = *keyStr;
-    }
+    Local<Object> keyBuffer = obj->Get(str_key)->ToObject();
+    if (!keyBuffer->IsObject() || !Buffer::HasInstance(keyBuffer))
+      continue;
+    string* key = new string(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
 
     if (obj->Get(str_type)->StrictEquals(str_del)) {
-      operations.push_back(new BatchDelete(key, keyStr));
-    } else if (obj->Get(str_type)->StrictEquals(str_put)) {
-      if (obj->Has(str_value)) {
-        Local<Object> valueObj = obj->Get(str_value)->ToObject();
-        string* valueStr = NULL;
-        Slice value;
-        if (Buffer::HasInstance(valueObj))
-          value = Slice(Buffer::Data(valueObj), Buffer::Length(valueObj));
-        else {
-          valueStr = new string(ToCString(String::Utf8Value(valueObj->ToString())));
-          value = *valueStr;
-        }
-        operations.push_back(new BatchWrite(key, keyStr, value, valueStr));
-      }
+      operations.push_back(new BatchDelete(key));
+    } else if (obj->Get(str_type)->StrictEquals(str_put) && obj->Has(str_value)) {
+      Local<Object> valueBuffer = obj->Get(str_value)->ToObject();
+      if (!valueBuffer->IsObject() || !Buffer::HasInstance(valueBuffer))
+        continue;
+      string* value = new string(Buffer::Data(valueBuffer), Buffer::Length(valueBuffer));     
+      operations.push_back(new BatchWrite(key, value));
     }
   }
 

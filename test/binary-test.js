@@ -8,6 +8,8 @@ var buster  = require('buster')
   , async   = require('async')
   , fs      = require('fs')
 
+require('./common.js')
+
 buster.testCase('Binary API', {
     'setUp': function (done) {
       this.cleanupDirs = []
@@ -92,4 +94,52 @@ buster.testCase('Binary API', {
         }.bind(this))
       }.bind(this))
     }
+
+
+  , 'test put() and del() and get() with binary key {encoding:binary}': function (done) {
+      this.openTestDatabase(function (db) {
+        db.put(this.testData, 'binarydata', {encoding:'binary'}, function (err) {
+          refute(err)
+          db.del(this.testData, {encoding:'binary'}, function (err) {
+            db.get(this.testData, {encoding:'binary'}, function (err, value) {
+              assert(err)
+              done()
+            }.bind(this))
+          }.bind(this))
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'batch() with multiple puts': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(
+            [
+                { type: 'put', key: 'foo', value: this.testData }
+              , { type: 'put', key: 'bar', value: this.testData }
+              , { type: 'put', key: 'baz', value: 'abazvalue' }
+            ]
+          , {keyEncoding:'utf8',valueEncoding:'binary'}
+          , function (err) {
+              refute(err)
+              async.forEach(
+                  ['foo', 'bar', 'baz']
+                , function (key, callback) {
+                    db.get(key, {encoding:'binary'}, function (err, value) {
+                      refute(err)
+                      if (key == 'baz') {
+                        assert.equals(value, 'a' + key + 'value')
+                        callback()
+                      } else {
+                        checkBinaryTestData(value, callback)
+                      }
+                    })
+                  }
+                , done
+              )
+            }.bind(this)
+        )
+      }.bind(this))
+    }
+
+
 })

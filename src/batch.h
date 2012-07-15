@@ -15,36 +15,29 @@ public:
 class BatchDelete : public BatchOp {
 public:
   BatchDelete (
-      Slice key
-    , string* keyPtr
+      string* key
   ) : key(key)
-    , keyPtr(keyPtr)
   {};
   ~BatchDelete ();
   virtual void Execute (WriteBatch* batch);
 
 protected:
-  Slice key;
-  string* keyPtr;
+  string* key;
 };
 
 class BatchWrite : public BatchDelete {
 public:
   BatchWrite (
-      Slice key
-    , string* keyPtr
-    , Slice value
-    , string* valuePtr
-  ) : BatchDelete(key, keyPtr)
+      string* key
+    , string* value
+  ) : BatchDelete(key)
     , value(value)
-    , valuePtr(valuePtr)
   {};
   ~BatchWrite ();
   virtual void Execute (WriteBatch* batch);
 
 private:
-  Slice value;
-  string* valuePtr;
+  string* value;
 };
 
 #endif

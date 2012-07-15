@@ -8,21 +8,18 @@
 using namespace std;
 
 BatchDelete::~BatchDelete () {
-  if (keyPtr != NULL)
-    delete keyPtr;
+  delete key;
 }
 
 void BatchDelete::Execute (WriteBatch* batch) {
-  batch->Delete(key);
+  batch->Delete(Slice(*key));
 }
 
 BatchWrite::~BatchWrite () {
-  if (keyPtr != NULL)
-    delete keyPtr;
-  if (valuePtr != NULL)
-    delete valuePtr;
+  delete key;
+  delete value;
 }
 
 void BatchWrite::Execute (WriteBatch* batch) {
-  batch->Put(key, value);
+  batch->Put(Slice(*key), Slice(*value));
 }
