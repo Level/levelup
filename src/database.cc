@@ -138,7 +138,6 @@ Handle<Value> Database::Put (const Arguments& args) {
   Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
   Local<Object> valueBuffer = args[1]->ToObject();
   Slice value(Buffer::Data(valueBuffer), Buffer::Length(valueBuffer));
-
   Local<Object> optionsObj = Local<Object>::Cast(args[2]);
   bool sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
   Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[3]));
