@@ -10,7 +10,9 @@
 #include "levelup.h"
 #include "database.h"
 #include "async.h"
+#include "database_async.h"
 #include "batch.h"
+#include "iterator.h"
 
 using namespace std;
 using namespace v8;
@@ -57,6 +59,10 @@ Status Database::WriteBatchToDatabase (WriteOptions* options, WriteBatch* batch)
   return db->Write(*options, batch);
 }
 
+leveldb::Iterator* Database::NewIterator (ReadOptions* options) {
+  return db->NewIterator(*options);
+}
+
 void Database::CloseDatabase () {
   delete db;
   db = NULL;
@@ -67,13 +73,14 @@ Persistent<Function> Database::constructor;
 void Database::Init () {
   Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
   tpl->SetClassName(String::NewSymbol("Database"));
-  tpl->InstanceTemplate()->SetInternalFieldCount(5);
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("open")  , FunctionTemplate::New(Open)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("close") , FunctionTemplate::New(Close)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("put")   , FunctionTemplate::New(Put)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("get")   , FunctionTemplate::New(Get)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("del")   , FunctionTemplate::New(Delete)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("batch") , FunctionTemplate::New(Batch)->GetFunction());
+  tpl->InstanceTemplate()->SetInternalFieldCount(7);
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("open")     , FunctionTemplate::New(Open)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("close")    , FunctionTemplate::New(Close)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("put")      , FunctionTemplate::New(Put)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("get")      , FunctionTemplate::New(Get)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("del")      , FunctionTemplate::New(Delete)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("batch")    , FunctionTemplate::New(Batch)->GetFunction());
+//  tpl->PrototypeTemplate()->Set(String::NewSymbol("iterator") , FunctionTemplate::New(Iterator)->GetFunction());
   constructor = Persistent<Function>::New(tpl->GetFunction());
 }
 
@@ -238,6 +245,44 @@ Handle<Value> Database::Batch (const Arguments& args) {
 
   return Undefined();
 }
+
+/*
+Handle<Value> Database::Iterator (const Arguments& args) {
+  HandleScope scope;
+
+  cout << "Database::Iterator" << endl;
+
+  Database* database = ObjectWrap::Unwrap<Database>(args.This());
+  Persistent<Function> dataCallback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
+  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[1]));
+
+  cout << "Database::Iterator making worker" << endl;
+
+  levelup::Iterator iterator = new Iterator(
+      this
+    , callback
+    , dataCallback
+    , NULL
+    , NULL
+  );
+*/
+/*
+  IteratorWorker* worker = new IteratorWorker(
+      database
+    , callback
+    , dataCallback
+    , NULL
+    , NULL
+  );
+
+  cout << "Queueing iterator worker..." << endl;
+
+  AsyncQueueWorker(worker);
+*/
+/*  
+  return Undefined();
+}
+*/
 
 Handle<Value> CreateDatabase (const Arguments& args) {
   HandleScope scope;

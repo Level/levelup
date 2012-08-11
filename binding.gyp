@@ -43,6 +43,9 @@
                 "src/async.cc"
               , "src/batch.cc"
               , "src/database.cc"
+              , "src/database_async.cc"
+              , "src/iterator.cc"
+              , "src/iterator_async.cc"
               , "src/levelup.cc"
             ]
           , "include_dirs": [

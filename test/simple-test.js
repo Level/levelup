@@ -157,7 +157,7 @@ buster.testCase('Basic API', {
             refute(value)
             assert.isInstanceOf(err, Error)
             assert.isInstanceOf(err, errors.LevelUPError)
-            assert.isInstanceOf(err, errors.ReadError)
+            assert.isInstanceOf(err, errors.WriteError)
             assert.match(err, /not .*open/)
             done()
           })
@@ -193,7 +193,7 @@ buster.testCase('Basic API', {
           levelup.createDatabase('foobar').del('undefkey', function (err) {
             assert.isInstanceOf(err, Error)
             assert.isInstanceOf(err, errors.LevelUPError)
-            assert.isInstanceOf(err, errors.ReadError)
+            assert.isInstanceOf(err, errors.WriteError)
             assert.match(err, /not .*open/)
             done()
           })

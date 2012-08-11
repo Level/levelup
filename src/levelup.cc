@@ -2,13 +2,17 @@
 
 #include "levelup.h"
 #include "database.h"
+#include "iterator.h"
 
 using namespace v8;
+using namespace levelup;
 
 void Init (Handle<Object> target) {
   Database::Init();
+  levelup::Iterator::Init();
 
   target->Set(String::NewSymbol("createDatabase"), FunctionTemplate::New(CreateDatabase)->GetFunction());
+  target->Set(String::NewSymbol("createIterator"), FunctionTemplate::New(CreateIterator)->GetFunction());
 }
 
 NODE_MODULE(levelup, Init)

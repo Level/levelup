@@ -3,7 +3,8 @@
   , "version"         : "0.0.0"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
-        "node-errno"    : "*"
+        "errno"         : "*"
+      , "inherits"      : "~1.0.0"
     }
   , "devDependencies" : {
         "buster"        : "*"
