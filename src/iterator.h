@@ -16,11 +16,12 @@ Handle<Value> CreateIterator (const Arguments& args);
 
 class Iterator : public node::ObjectWrap {
 public:
-  static void Init  ();
+  static void Init      ();
   static v8::Handle<v8::Value> NewInstance (const v8::Arguments& args);
 
-  bool IteratorNext (string& key, string& value);
-  void IteratorEnd  ();
+  bool   IteratorNext   (string& key, string& value);
+  Status IteratorStatus ();
+  void   IteratorEnd    ();
 
 private:
   Iterator (

@@ -16,16 +16,18 @@ using namespace leveldb;
 
 void NextWorker::Execute () {
   ok = iterator->IteratorNext(key, value);
+  if (!ok)
+    status = iterator->IteratorStatus();
 }
 
 void NextWorker::HandleOKCallback () {
   if (ok) {
     Local<Value> argv[] = {
-        Local<Value>::New(Buffer::New((char*)key.data(), key.size())->handle_)
+        Local<Value>::New(Null())
+      , Local<Value>::New(Buffer::New((char*)key.data(), key.size())->handle_)
       , Local<Value>::New(Buffer::New((char*)value.data(), value.size())->handle_)
     };
-    //delete value;
-    runCallback(callback, argv, 2);
+    runCallback(callback, argv, 3);
   } else {
     Local<Value> argv[0];
     runCallback(endCallback, argv, 0);

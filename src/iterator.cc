@@ -43,6 +43,10 @@ bool levelup::Iterator::IteratorNext (string& key, string& value) {
   }
 }
 
+Status levelup::Iterator::IteratorStatus () {
+  return dbIterator->status();
+}
+
 void levelup::Iterator::IteratorEnd () {
   //TODO: could return it->status()
   delete dbIterator;

@@ -25,7 +25,9 @@ buster.testCase('WriteStream', {
         })
       }
 
-      this.verify = function (db, done) {
+      this.verify = function (ws, db, done) {
+        assert.isFalse(ws.writable)
+        assert.isFalse(ws.readable)
         async.forEach(
             this.sourceData
           , function (data, callback) {
@@ -52,7 +54,7 @@ buster.testCase('WriteStream', {
         ws.on('error', function (err) {
           refute(err)
         })
-        ws.on('close', this.verify.bind(this, db, done))
+        ws.on('close', this.verify.bind(this, ws, db, done))
         this.sourceData.forEach(function (d) {
           ws.write(d)
         })
@@ -67,7 +69,7 @@ buster.testCase('WriteStream', {
         ws.on('error', function (err) {
           refute(err)
         })
-        ws.on('close', this.verify.bind(this, db, done))
+        ws.on('close', this.verify.bind(this, ws, db, done))
         async.forEachSeries(
             this.sourceData
           , function (d, callback) {
@@ -102,11 +104,13 @@ buster.testCase('WriteStream', {
       // second element should warn that the buffer isn't being cleared
       assert.isFalse(ws.write(this.sourceData[1]))
 
-      ws.once('close', this.verify.bind(this, db, done))
+      ws.once('close', this.verify.bind(this, ws, db, done))
       ws.once('drain', function () {
         this.sourceData.slice(2).forEach(function (d, i) {
-          assert[i != 0 ? 'isFalse' : 'isTrue'](ws.write(d), 'correct return value for element #' + i)
+          assert[i !== 0 ? 'isFalse' : 'isTrue'](ws.write(d), 'correct return value for element #' + i)
         })
+        assert.isTrue(ws.writable)
+        assert.isFalse(ws.readable)
         ws.end()
       }.bind(this))
 
@@ -114,5 +118,56 @@ buster.testCase('WriteStream', {
         // should lead to a 'drain' event
         refute(err)
       })
+    }
+
+    // at the moment, destroySoon() is basically just end()
+  , 'test destroySoon()': function (done) {
+      this.openTestDatabase(function (db) {
+        var ws = db.writeStream()
+        ws.on('error', function (err) {
+          refute(err)
+        })
+        ws.on('close', this.verify.bind(this, ws, db, done))
+        this.sourceData.forEach(function (d) {
+          ws.write(d)
+        })
+        ws.once('ready', ws.destroySoon) // end after it's ready, nextTick makes this work OK
+      }.bind(this))
+    }
+
+  , 'test destroy()': function (done) {
+      var verify = function (ws, db) {
+        assert.isFalse(ws.writable)
+        async.forEach(
+            this.sourceData
+          , function (data, callback) {
+              db.get(data.key, function (err, value) {
+                // none of them should exist
+                assert(err)
+                refute(value)
+                callback()
+              })
+            }
+          , done
+        )
+      }
+
+      this.openTestDatabase(function (db) {
+        var ws = db.writeStream()
+        ws.on('error', function (err) {
+          refute(err)
+        })
+        assert.isTrue(ws.writable)
+        assert.isFalse(ws.readable)
+        ws.on('close', verify.bind(this, ws, db))
+        this.sourceData.forEach(function (d) {
+          ws.write(d)
+          assert.isTrue(ws.writable)
+          assert.isFalse(ws.readable)
+        })
+        assert.isTrue(ws.writable)
+        assert.isFalse(ws.readable)
+        ws.once('ready', ws.destroy)
+      }.bind(this))
     }
 })
