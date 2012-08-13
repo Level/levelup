@@ -13,8 +13,5 @@
           , "src/iterator_async.cc"
           , "src/levelup.cc"
         ]
-      , "include_dirs": [
-            "<(module_root_dir)/deps/leveldb/include/"
-        ]
     }]
 }

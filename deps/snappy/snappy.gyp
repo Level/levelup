@@ -1,3 +1,5 @@
+# Originally taken from the Chromium source snappy.gyp, adapted & simplified for node-levelup
+
 # Copyright (c) 2012 The Chromium Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -11,7 +13,6 @@
       ['OS=="mac"', {'os_include': 'mac'}],
       ['OS=="win"', {'os_include': 'win32'}],
     ],
-    'use_system_libxml%': 0,
   },
   'targets': [
     {
@@ -20,7 +21,6 @@
       'include_dirs': [
         '<(os_include)',
         'snappy-1.0.5',
-        '../..',
       ],
       'direct_dependent_settings': {
         'include_dirs': [

@@ -1,11 +1,10 @@
+# Originally taken from the Chromium source leveldatabase.gyp, adapted & simplified for node-levelup
+
 # Copyright (c) 2011 The LevelDB Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file. See the AUTHORS file for names of contributors.
 
 {
-  'variables': {
-    'Xuse_snappy%': 0,
-  },
   'target_defaults': {
     'defines': [
       'LEVELDB_PLATFORM_POSIX=1',
@@ -14,17 +13,11 @@
     'include_dirs': [
       'leveldb-1.5.0/',
       'leveldb-1.5.0/include/',
-      'leveldb-1.5.0/port/',
     ],
     'conditions': [
       ['OS == "win"', {
         'include_dirs': [
           'leveldb-1.5.0/port/win',
-        ],
-      }],
-      ['Xuse_snappy', {
-        'Xdefines': [
-          'USE_SNAPPY=1',
         ],
       }],
     ],
@@ -36,16 +29,8 @@
       'dependencies': [
         "../snappy/snappy.gyp:snappy",
       ],
-      'conditions': [
-        ['Xuse_snappy', {
-          'XXdependencies': [
-            '../../third_party/snappy/snappy.gyp:snappy',
-          ],
-        }],
-      ],
       'direct_dependent_settings': {
         'include_dirs': [
-          'leveldb-1.5.0/port/',
           'leveldb-1.5.0/include/',
           'leveldb-1.5.0/',
         ],
@@ -57,13 +42,6 @@
           }],
         ],
       },
-      # Patch posted for upstream, can be removed once that's landed and
-      # rolled into Chromium.
-      # Internal link: https://mondrian.corp.google.com/#review/29997992
-      'msvs_disabled_warnings': [
-        # Signed/unsigned comparison.
-        4018,
-      ],
       'sources': [
         'leveldb-1.5.0/db/builder.cc',
         'leveldb-1.5.0/db/builder.h',
