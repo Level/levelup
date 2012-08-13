@@ -5,11 +5,12 @@
   , "dependencies"    : {
         "errno"         : "*"
       , "inherits"      : "~1.0.0"
+      , "bindings"      : "~1.0.0"
     }
   , "devDependencies" : {
         "buster"        : "*"
       , "rimraf"        : "*"
-      , "async"        : "*"
+      , "async"         : "*"
     }
   , "scripts"         : {
       "test"            : "./node_modules/.bin/buster-test"
