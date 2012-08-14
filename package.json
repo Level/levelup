@@ -4,7 +4,6 @@
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
         "errno"         : ">=0.0.2"
-      , "inherits"      : "~1.0.0"
       , "bindings"      : "~1.0.0"
     }
   , "devDependencies" : {
