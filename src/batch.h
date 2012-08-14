@@ -1,3 +1,5 @@
+/* Copyright (c) 2012 Rod Vagg <@rvagg> */
+
 #ifndef LU_BATCH_H
 #define LU_BATCH_H
 

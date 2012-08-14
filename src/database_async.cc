@@ -1,3 +1,5 @@
+/* Copyright (c) 2012 Rod Vagg <@rvagg> */
+
 #include <cstdlib>
 #include <node.h>
 #include <node_buffer.h>

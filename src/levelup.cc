@@ -1,3 +1,5 @@
+/* Copyright (c) 2012 Rod Vagg <@rvagg> */
+
 #include <node.h>
 
 #include "levelup.h"

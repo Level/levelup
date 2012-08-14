@@ -1,3 +1,5 @@
+/* Copyright (c) 2012 Rod Vagg <@rvagg> */
+
 #ifndef LU_DATABASE_ASYNC_H
 #define LU_DATABASE_ASYNC_H
 

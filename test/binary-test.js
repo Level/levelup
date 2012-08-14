@@ -1,5 +1,7 @@
 /*global cleanUp:true, openTestDatabase:true, loadBinaryTestData:true, binaryTestDataMD5Sum:true, checkBinaryTestData:true*/
 
+/* Copyright (c) 2012 Rod Vagg <@rvagg> */
+
 var buster  = require('buster')
   , assert  = buster.assert
   , levelup = require('../lib/levelup.js')
@@ -101,8 +103,10 @@ buster.testCase('Binary API', {
         db.put(this.testData, 'binarydata', {encoding:'binary'}, function (err) {
           refute(err)
           db.del(this.testData, {encoding:'binary'}, function (err) {
+            refute(err)
             db.get(this.testData, {encoding:'binary'}, function (err, value) {
               assert(err)
+              refute(value)
               done()
             }.bind(this))
           }.bind(this))

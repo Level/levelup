@@ -1,3 +1,5 @@
+/* Copyright (c) 2012 Rod Vagg <@rvagg> */
+
 #ifndef LU_ITERATOR_ASYNC_H
 #define LU_ITERATOR_ASYNC_H
 

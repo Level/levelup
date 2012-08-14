@@ -1,3 +1,5 @@
+/* Copyright (c) 2012 Rod Vagg <@rvagg> */
+
 /*global cleanUp:true, openTestDatabase:true*/
 
 var buster  = require('buster')

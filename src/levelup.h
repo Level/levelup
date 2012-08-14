@@ -1,3 +1,5 @@
+/* Copyright (c) 2012 Rod Vagg <@rvagg> */
+
 #ifndef LU_LEVELUP_H
 #define LU_LEVELUP_H
 

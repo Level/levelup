@@ -1,3 +1,5 @@
+/* Copyright (c) 2012 Rod Vagg <@rvagg> */
+
 /*global cleanUp:true, openTestDatabase:true*/
 
 var buster  = require('buster')
@@ -84,6 +86,7 @@ buster.testCase('Basic API', {
         refute(err)
         assert.isTrue(db.isOpen())
         fs.stat(this.cleanupDirs[0], function (err, stat) {
+          refute(err)
           assert(stat.isDirectory())
           done()
         })
@@ -310,6 +313,7 @@ buster.testCase('Basic API', {
                         , function (key, callback) {
                             db.get(key, function (err, value) {
                               refute(err)
+                              refute.isNull(value)
                               callback()
                             })
                           }
@@ -324,6 +328,7 @@ buster.testCase('Basic API', {
                             db.get(key, function (err, value) {
                               assert(err)
                               assert.isInstanceOf(err, errors.NotFoundError)
+                              refute(value)
                               callback()
                             })
                           }
@@ -363,6 +368,7 @@ buster.testCase('Basic API', {
                         , function (key, callback) {
                             db.get(key, function (err, value) {
                               refute(err)
+                              refute.isNull(value)
                               callback()
                             })
                           }
@@ -377,6 +383,7 @@ buster.testCase('Basic API', {
                             db.get(key, function (err, value) {
                               assert(err)
                               assert.isInstanceOf(err, errors.NotFoundError)
+                              refute(value)
                               callback()
                             })
                           }
@@ -411,6 +418,7 @@ buster.testCase('Basic API', {
                         , function (key, callback) {
                             db.get(key, function (err, value) {
                               refute(err)
+                              refute.isNull(value)
                               callback()
                             })
                           }
@@ -422,6 +430,7 @@ buster.testCase('Basic API', {
                       db.get('1', function (err, value) {
                         assert(err)
                         assert.isInstanceOf(err, errors.NotFoundError)
+                        refute(value)
                         callback()
                       })
                     }

@@ -1,3 +1,5 @@
+/* Copyright (c) 2012 Rod Vagg <@rvagg> */
+
 var ba      = require('buster').assertions
   , async   = require('async')
   , rimraf  = require('rimraf')
