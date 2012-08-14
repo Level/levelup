@@ -67,12 +67,14 @@ global.checkBinaryTestData = function (testData, callback) {
   var fname = '__tst.dat.' + Math.random()
   fs.writeFile(fname, testData, function (err) {
     refute(err)
-    child_process.exec('md5sum ' + fname, function (err, stdout, stderr) {
-      refute(err)
-      refute(stderr)
-      var md5Sum = stdout.split(' ')[0]
-      assert.equals(md5Sum, global.binaryTestDataMD5Sum)
-      fs.unlink(fname, callback)
+    child_process.exec('which md5sum', function (err, stdout, stderr) {
+      child_process.exec((stdout !== '' ? 'md5sum ' : 'md5 -r ') + fname, function (err, stdout, stderr) {
+        refute(err)
+        refute(stderr)
+        var md5Sum = stdout.split(' ')[0]
+        assert.equals(md5Sum, global.binaryTestDataMD5Sum)
+        fs.unlink(fname, callback)
+      })
     })
   })
 }

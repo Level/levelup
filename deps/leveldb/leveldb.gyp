@@ -20,6 +20,25 @@
           'leveldb-1.5.0/port/win',
         ],
       }],
+      ['OS == "linux"', {
+        'defines': [
+          'OS_LINUX=1',
+        ],
+        'CCFLAGS': [
+          '-fno-builtin-memcmp',
+          '-pthread',
+          '-fPIC',
+        ],
+      }],
+      ['OS == "mac"', {
+        'defines': [
+          'OS_MACOSX=1',
+        ],
+        'CCFLAGS': [
+          '-fno-builtin-memcmp',
+          '-fPIC',
+        ],
+      }],
     ],
   },
   'targets': [
