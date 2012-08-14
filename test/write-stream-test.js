@@ -9,6 +9,7 @@ var buster  = require('buster')
   , rimraf  = require('rimraf')
   , async   = require('async')
   , fs      = require('fs')
+  , path    = require('path')
 
 buster.testCase('WriteStream', {
     'setUp': function () {
@@ -94,8 +95,10 @@ buster.testCase('WriteStream', {
     }
 
   , 'test delayed open with maxBufferLength': function (done) {
+      var location = path.join(__dirname, 'levelup_test_db_delayed_open')
+      this.cleanupDirs.push(location)
       var db = levelup.createDatabase(
-              this.cleanupDirs[0] = '/tmp/levelup_test_db'
+              location
             , { createIfMissing: true, errorIfExists: false }
           )
         , ws = db.writeStream({ maxBufferLength: 1 })

@@ -7,6 +7,7 @@ var ba      = require('buster').assertions
   , path    = require('path')
   , levelup = require('../lib/levelup.js')
   , child_process = require('child_process')
+  , dbidx   = 0
 
 ba.add('isInstanceOf', {
     assert: function (actual, expected) {
@@ -30,19 +31,25 @@ ba.add('isUndefined', {
   , refuteMessage: '${0} expected not to be undefined'
 })
 
-global.openTestDatabase = function (callback) {
-  var db = levelup.createDatabase(
-          this.cleanupDirs[0] = '/tmp/levelup_test_db'
-        , {
-              createIfMissing: true
-            , errorIfExists: true
-          }
-      )
-  this.closeableDatabases.push(db)
-  db.open(function (err) {
+global.openTestDatabase = function (location, callback) {
+  callback = typeof location == 'function' ? location : callback
+  location = typeof location == 'string' ? location : path.join(__dirname, 'levelup_test_db_' + dbidx++)
+  rimraf(location, function (err) {
     refute(err)
-    callback(db)
-  })
+    this.cleanupDirs.push(location)
+    var db = levelup.createDatabase(
+            location
+          , {
+                createIfMissing: true
+              , errorIfExists: true
+            }
+        )
+    this.closeableDatabases.push(db)
+    db.open(function (err) {
+      refute(err)
+      callback(db)
+    })
+  }.bind(this))
 }
 
 global.cleanUp = function (closeableDatabases, cleanupDirs, callback) {
@@ -67,7 +74,7 @@ global.checkBinaryTestData = function (testData, callback) {
   var fname = '__tst.dat.' + Math.random()
   fs.writeFile(fname, testData, function (err) {
     refute(err)
-    child_process.exec('which md5sum', function (err, stdout, stderr) {
+    child_process.exec('which md5sum', function (err, stdout) {
       child_process.exec((stdout !== '' ? 'md5sum ' : 'md5 -r ') + fname, function (err, stdout, stderr) {
         refute(err)
         refute(stderr)
