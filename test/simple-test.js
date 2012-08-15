@@ -1,6 +1,6 @@
 /* Copyright (c) 2012 Rod Vagg <@rvagg> */
 
-/*global cleanUp:true, openTestDatabase:true*/
+/*global commonSetUp:true, commonTearDown:true*/
 
 var buster  = require('buster')
   , assert  = buster.assert
@@ -11,15 +11,8 @@ var buster  = require('buster')
   , fs      = require('fs')
 
 buster.testCase('Basic API', {
-    'setUp': function () {
-      this.cleanupDirs = []
-      this.closeableDatabases = []
-      this.openTestDatabase = openTestDatabase.bind(this)
-    }
-
-  , 'tearDown': function (done) {
-      cleanUp(this.closeableDatabases, this.cleanupDirs, done)
-    }
+    'setUp': commonSetUp
+  , 'tearDown': commonTearDown
 
   , 'createDatabase()': function () {
       var db

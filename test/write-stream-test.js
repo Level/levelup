@@ -1,6 +1,6 @@
 /* Copyright (c) 2012 Rod Vagg <@rvagg> */
 
-/*global cleanUp:true, openTestDatabase:true*/
+/*global commonSetUp:true, commonTearDown:true*/
 
 var buster  = require('buster')
   , assert  = buster.assert
@@ -13,9 +13,8 @@ var buster  = require('buster')
 
 buster.testCase('WriteStream', {
     'setUp': function () {
-      this.cleanupDirs = []
-      this.closeableDatabases = []
-      this.openTestDatabase = openTestDatabase.bind(this)
+      commonSetUp.call(this)
+
       this.timeout = 1000
 
       this.sourceData = []
@@ -45,9 +44,7 @@ buster.testCase('WriteStream', {
       }
     }
 
-  , 'tearDown': function (done) {
-      cleanUp(this.closeableDatabases, this.cleanupDirs, done)
-    }
+  , 'tearDown': commonTearDown
 
   //TODO: test various encodings
 

@@ -52,14 +52,14 @@ global.openTestDatabase = function (location, callback) {
   }.bind(this))
 }
 
-global.cleanUp = function (closeableDatabases, cleanupDirs, callback) {
+global.commonTearDown = function (done) {
   async.forEach(
-      closeableDatabases
+      this.closeableDatabases
     , function (db, callback) {
         db.close(callback)
       }
     , function () {
-        async.forEach(cleanupDirs, rimraf, callback)
+        async.forEach(this.cleanupDirs, rimraf, done)
       }.bind(this)
   )
 }
@@ -84,4 +84,11 @@ global.checkBinaryTestData = function (testData, callback) {
       })
     })
   })
+}
+
+global.commonSetUp = function () {
+  this.cleanupDirs = []
+  this.closeableDatabases = []
+  this.openTestDatabase = openTestDatabase.bind(this)
+  this.timeout = 500
 }

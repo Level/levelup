@@ -1,6 +1,6 @@
-/*global cleanUp:true, openTestDatabase:true, loadBinaryTestData:true, binaryTestDataMD5Sum:true, checkBinaryTestData:true*/
-
 /* Copyright (c) 2012 Rod Vagg <@rvagg> */
+
+/*global commonSetUp:true, commonTearDown:true, loadBinaryTestData:true, binaryTestDataMD5Sum:true, checkBinaryTestData:true*/
 
 var buster  = require('buster')
   , assert  = buster.assert
@@ -14,9 +14,7 @@ require('./common.js')
 
 buster.testCase('Binary API', {
     'setUp': function (done) {
-      this.cleanupDirs = []
-      this.closeableDatabases = []
-      this.openTestDatabase = openTestDatabase.bind(this)
+      commonSetUp.call(this)
       loadBinaryTestData(function (err, data) {
         refute(err)
         this.testData = data
@@ -24,9 +22,7 @@ buster.testCase('Binary API', {
       }.bind(this))
     }
 
-  , 'tearDown': function (done) {
-      cleanUp(this.closeableDatabases, this.cleanupDirs, done)
-    }
+  , 'tearDown': commonTearDown
 
   , 'sanity check on test data': function (done) {
       assert(Buffer.isBuffer(this.testData))
