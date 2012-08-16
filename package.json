@@ -13,6 +13,8 @@
       , "async"         : "*"
       , "fstream"       : "*"
       , "tar"           : "*"
+      , "mkfiletree"    : "*"
+      , "readfiletree"  : "*"
     }
   , "scripts"         : {
       "test"            : "./node_modules/.bin/buster-test"
