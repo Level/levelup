@@ -1,5 +1,5 @@
 {
-    "name"            : "node-levelup"
+    "name"            : "levelup"
   , "version"         : "0.0.0"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
@@ -22,5 +22,4 @@
   }
   , "license"         : "MIT"
   , "gypfile"         : true
-  , "private"         : true
 }

@@ -88,6 +88,7 @@ TODO
 * ReadStream optional 'start' key
 * ReadStream optional 'end' key
 * Filter streams, e.g.: KeyReadStream, ValueReadStream
+* *Windows support, maybe*
 
 Licence & Copyright
 -------------------
