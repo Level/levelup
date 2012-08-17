@@ -44,9 +44,9 @@ db.open(function (err) {
 
 `createDatabase()` takes an optional options object as its second argument; the following properties are accepted:
 
-* `createIfMissing` *(boolean)*: If `true`, will initialise an empty database at the specified location if one doesn't already exit. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open.
+* `createIfMissing` *(boolean)*: If `true`, will initialise an empty database at the specified location if one doesn't already exit. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open. Defaults to `false`.
 
-* `errorIfExists` *(boolean)*: If `true`, you will receive an error in your `open()` callback if the database exists at the specified location.
+* `errorIfExists` *(boolean)*: If `true`, you will receive an error in your `open()` callback if the database exists at the specified location. Defaults to `false`.
 
 * `encoding` *(string)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see `[Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)`)
   <p>`'utf8'` is the default encoding for both keys and values so you can simply pass in strings and expect strings from your `get()` operations. You can also pass `Buffer` objects as keys and/or values and converstion will be performed.</p>
@@ -55,3 +55,43 @@ db.open(function (err) {
 
 * `keyEncoding` and `valueEncoding` *(string)*: use instead of `encoding` to specify the exact encoding of both the keys and the values in this database.
 
+Additionally, each of the main interface methods accept an optional options object that can be used to override `encoding` (or `keyEncoding` & `valueEncoding`).
+
+### Batch operations
+
+For faster write operations, the `batch()` method can be used to submit an array of operations to be executed sequentially. Each operation is contained in an object having the following properties: `type`, `key`, `value`, where the *type* is either `'put'` or `'del'`. In the case of `'del'` the `'value'` property is ignored.
+
+```js
+var ops = [
+    { type: 'del', key: 'father' }
+  , { type: 'put', key: 'name'  , value: 'Yuri Irsenovich Kim' }
+  , { type: 'put', key: 'dob'   , value: '16 February 1941'    }
+  , { type: 'put', key: 'spouse', value: 'Kim Young-sook'      }
+]
+
+db.batch(ops, function (err) {
+  if (err) throw err
+  console.log('Great success dear leader!')
+})
+```
+
+Streams
+-------
+
+*See `db.readStream()` and `db.writeStream()`. More documentation coming soon.
+
+TODO
+----
+
+* JSON encoding/decoding
+* ReadStream reverse read
+* ReadStream optional 'start' key
+* ReadStream optional 'end' key
+* Filter streams, e.g.: KeyReadStream, ValueReadStream
+
+Licence & Copyright
+-------------------
+
+LevelUP is Copyright (c) 2012 Rod Vagg <@rvagg> and licenced under the MIT licence. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
+
+LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).
