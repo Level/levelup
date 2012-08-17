@@ -64,9 +64,10 @@ For faster write operations, the `batch()` method can be used to submit an array
 ```js
 var ops = [
     { type: 'del', key: 'father' }
-  , { type: 'put', key: 'name'  , value: 'Yuri Irsenovich Kim' }
-  , { type: 'put', key: 'dob'   , value: '16 February 1941'    }
-  , { type: 'put', key: 'spouse', value: 'Kim Young-sook'      }
+  , { type: 'put', key: 'name', value: 'Yuri Irsenovich Kim' }
+  , { type: 'put', key: 'dob', value: '16 February 1941' }
+  , { type: 'put', key: 'spouse', value: 'Kim Young-sook' }
+  , { type: 'put', key: 'occupation', value: 'Clown' }
 ]
 
 db.batch(ops, function (err) {
@@ -78,7 +79,65 @@ db.batch(ops, function (err) {
 Streams
 -------
 
-*See `db.readStream()` and `db.writeStream()`. More documentation coming soon.
+### ReadStream
+
+You can obtain a **ReadStream** of the full database by calling the `readStream()` method. The resulting stream is a complete Node.js-style [Readable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_readable_stream) where `'data'` events emit objects with `'key'` and `'value'` pairs.
+
+```js
+db.readStream()
+  .on('data', function (data) {
+    console.log(data.key, '=', data.value)
+  })
+  .on('error', function (err) {
+    console.log('Oh my!', err)
+  })
+  .on('close', function () {
+    console.log('Stream closed')
+  })
+  .on('end', function () {
+    console.log('Stream closed')
+  })
+```
+
+The standard `pause()`, `resume()` and `destroy()` methods are implemented on the ReadStream, as is `pipe()` (see below). `'data'`, '`error'`, `'end'` and `'close'` events are emitted.
+
+### WriteStream
+
+A **WriteStream** can be obtained by calling the `writeStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method. The WriteStream will buffer writes and submit them as a `batch()` operation where the writes occur on the same event loop tick, otherwise they are treated as simple `put()` operations.
+
+```js
+db.writeStream()
+  .on('error', function (err) {
+    console.log('Oh my!', err)
+  })
+  .on('close', function () {
+    console.log('Stream closed')
+  })
+  .write({ key: 'name', value: 'Yuri Irsenovich Kim' })
+  .write({ key: 'dob', value: '16 February 1941' })
+  .write({ key: 'spouse', value: 'Kim Young-sook' })
+  .write({ key: 'occupation', value: 'Clown' })
+  .end()
+```
+
+The standard `write()`, `end()`, `destroy()` and `destroySoon()` methods are implemented on the WriteStream. `'drain'`, `'error'`, `'close'` and `'pipe'` events are emitted.
+
+### Pipes and compatibility
+
+A ReadStream can be piped directly to a WriteStream, allowing for easy copying of an entire database. A simple `copy()` operation is included in LevelUP that performs exactly this on two open databases:
+
+```js
+function copy (srcdb, dstdb, callback) {
+  srcdb.readStream().pipe(dstdb.writeStream().on('close', callback))
+}
+```
+
+The ReadStream is also [fstream](https://github.com/isaacs/fstream)-compatible which means you should be able to pipe to and from fstreams. So you can serialize and deserialize an entire database to a directory where keys are filenames and values are their contents, or even into a *tar* file using [node-tar](https://github.com/isaacs/node-tar). See the [fstream functional test](https://github.com/rvagg/node-levelup/blob/master/test/functional/fstream-test.js) for an example. *(Note: I'm not really sure there's a great use-case for this but it's a fun example and it helps to harden the stream implementations.)*
+
+Important considerations
+------------------------
+
+* LevelDB is thread-safe but is suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process.
 
 TODO
 ----
@@ -89,6 +148,7 @@ TODO
 * ReadStream optional 'end' key
 * Filter streams, e.g.: KeyReadStream, ValueReadStream
 * *Windows support, maybe*
+* Benchmarks
 
 Licence & Copyright
 -------------------
