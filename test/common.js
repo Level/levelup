@@ -31,19 +31,14 @@ ba.add('isUndefined', {
   , refuteMessage: '${0} expected not to be undefined'
 })
 
-global.openTestDatabase = function (location, callback) {
-  callback = typeof location == 'function' ? location : callback
-  location = typeof location == 'string' ? location : path.join(__dirname, 'levelup_test_db_' + dbidx++)
+global.openTestDatabase = function () {
+  var options = typeof arguments[0] == 'object' ? arguments[0] : { createIfMissing: true, errorIfExists: true }
+    , callback = typeof arguments[0] == 'function' ? arguments[0] : arguments[1]
+    , location = typeof arguments[0] == 'string' ? arguments[0] : path.join(__dirname, 'levelup_test_db_' + dbidx++)
   rimraf(location, function (err) {
     refute(err)
     this.cleanupDirs.push(location)
-    var db = levelup.createDatabase(
-            location
-          , {
-                createIfMissing: true
-              , errorIfExists: true
-            }
-        )
+    var db = levelup.createDatabase(location, options)
     this.closeableDatabases.push(db)
     db.open(function (err) {
       refute(err)
@@ -89,6 +84,6 @@ global.checkBinaryTestData = function (testData, callback) {
 global.commonSetUp = function () {
   this.cleanupDirs = []
   this.closeableDatabases = []
-  this.openTestDatabase = openTestDatabase.bind(this)
-  this.timeout = 500
+  this.openTestDatabase = global.openTestDatabase.bind(this)
+  this.timeout = 1000
 }

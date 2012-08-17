@@ -22,15 +22,11 @@ buster.testCase('Basic API', {
 
       db = levelup.createDatabase('/tmp/testdb')
       assert.isObject(db)
-      assert.isFalse(db.createIfMissing)
-      assert.isFalse(db.errorIfExists)
+      assert.isFalse(db.options.createIfMissing)
+      assert.isFalse(db.options.errorIfExists)
       assert.equals(db.location, '/tmp/testdb')
 
       // read-only properties
-      db.createIfMissing = true
-      assert.isFalse(db.createIfMissing)
-      db.errorIfExists = true
-      assert.isFalse(db.errorIfExists)
       db.location = 'foo'
       assert.equals(db.location, '/tmp/testdb')
 
@@ -40,15 +36,11 @@ buster.testCase('Basic API', {
         , errorIfExists   : true
       })
       assert.isObject(db)
-      assert.isTrue(db.createIfMissing)
-      assert.isTrue(db.errorIfExists)
+      assert.isTrue(db.options.createIfMissing)
+      assert.isTrue(db.options.errorIfExists)
       assert.equals(db.location, '/tmp/foodb')
 
       // read-only properties
-      db.createIfMissing = true
-      assert.isTrue(db.createIfMissing)
-      db.errorIfExists = true
-      assert.isTrue(db.errorIfExists)
       db.location = 'bar'
       assert.equals(db.location, '/tmp/foodb')
     }
