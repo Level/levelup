@@ -1,11 +1,12 @@
 {
     "name"            : "levelup"
-  , "version"         : "0.0.0"
+  , "version"         : "0.0.0-1"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
-        "errno"         : ">=0.0.2"
+        "errno"         : "~0.0.2"
       , "bindings"      : "~1.0.0"
-      , "concat-stream" : ">=0.0.8"
+      , "concat-stream" : "~0.0.8"
+      , "bufferstream"  : "~0.5.1"
     }
   , "devDependencies" : {
         "buster"        : "*"

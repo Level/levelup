@@ -20,10 +20,11 @@ buster.testCase('ReadStream', {
       this.endSpy     = this.spy()
       this.sourceData = []
 
-      for (var i = 0; i < 10; i++) {
+      for (var i = 0; i < 100; i++) {
+        var k = (i < 10 ? '0' : '') + i
         this.sourceData.push({
             type  : 'put'
-          , key   : i
+          , key   : k
           , value : Math.random()
         })
       }
@@ -119,7 +120,7 @@ buster.testCase('ReadStream', {
             }
           }
         , verify = function () {
-            assert.equals(calls, 10, 'onData was used in test')
+            assert.equals(calls, this.sourceData.length, 'onData was used in test')
             assert(pauseVerify.called, 'pauseVerify was used in test')
             this.verify(rs, done)
           }.bind(this)
@@ -206,4 +207,14 @@ buster.testCase('ReadStream', {
         }.bind(this))
       }.bind(this))
     }
+
+/*
+  , 'test readStream() with "start"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+        })
+      })
+    }
+*/
 })
