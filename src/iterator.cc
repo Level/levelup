@@ -15,12 +15,8 @@ using namespace v8;
 using namespace node;
 using namespace levelup;
 
-/*
-void dataCallbackProxy (void* ctx, Slice key, Slice value) {
-  IteratorWorker* worker = static_cast<IteratorWorker*>(ctx);
-  worker->DataCallback(key, value);
-}
-*/
+LU_OPTION ( start );
+LU_OPTION ( end );
 
 bool levelup::Iterator::GetIterator () {
   if (dbIterator == NULL) {
@@ -36,7 +32,8 @@ bool levelup::Iterator::GetIterator () {
 
 bool levelup::Iterator::IteratorNext (string& key, string& value) {
   if (!GetIterator()) dbIterator->Next();
-  if (dbIterator->Valid()) { // && (end == NULL || dbIterator->key().data() < end->data())) {
+  // 'end' here is an inclusive test
+  if (dbIterator->Valid() && (end == NULL || end->compare(dbIterator->key().ToString()) > 0)) {
     key.assign(dbIterator->key().data(), dbIterator->key().size());
     value.assign(dbIterator->value().data(), dbIterator->value().size());
     return true;
@@ -96,10 +93,11 @@ void levelup::Iterator::Init () {
 Handle<Value> levelup::Iterator::NewInstance (const Arguments& args) {
   HandleScope scope;
 
-  Handle<Value> argv[1] = {
+  Handle<Value> argv[2] = {
       args[0]->ToObject()
+    , args[1]->ToObject()
   };
-  Local<Object> instance = constructor->NewInstance(1, argv);
+  Local<Object> instance = constructor->NewInstance(2, argv);
 
   return scope.Close(instance);
 }
@@ -108,7 +106,17 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args[0]->ToObject());
-  Iterator* iterator = new Iterator(database, NULL, NULL);
+  Slice* start = NULL;
+  if (args[1]->ToObject()->Has(option_start)) {
+    Persistent<Object> startBuffer = Persistent<Object>::New(args[1]->ToObject()->Get(option_start)->ToObject());
+    start = new Slice(Buffer::Data(startBuffer), Buffer::Length(startBuffer));
+  }
+  string* end = NULL;
+  if (args[1]->ToObject()->Has(option_end)) {
+    Persistent<Object> endBuffer = Persistent<Object>::New(args[1]->ToObject()->Get(option_end)->ToObject());
+    end = new string(Buffer::Data(endBuffer), Buffer::Length(endBuffer));
+  }
+  Iterator* iterator = new Iterator(database, start, end);
   iterator->Wrap(args.This());
 
   return args.This();

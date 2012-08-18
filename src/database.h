@@ -8,8 +8,7 @@
 
 #include "leveldb/db.h"
 
-#define LU_V8_METHOD(name) \
-  static v8::Handle<v8::Value> name (const v8::Arguments& args);
+#include "levelup.h"
 
 using namespace std;
 using namespace v8;

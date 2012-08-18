@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <node.h>
 
+#include "levelup.h"
 #include "database.h"
 
 using namespace std;
@@ -29,7 +30,7 @@ private:
   Iterator (
       Database*            database
     , Slice*               start
-    , Slice*               end
+    , string*              end
   ) : database(database)
     , start(start)
     , end(end)
@@ -50,7 +51,7 @@ private:
   leveldb::Iterator*   dbIterator;
   ReadOptions*         options;
   Slice*               start;
-  Slice*               end;
+  string*              end;
 
   bool GetIterator ();
 

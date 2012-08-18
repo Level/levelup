@@ -9,6 +9,9 @@
 #define LU_OPTION(key) \
   static Persistent<String> option_ ## key = Persistent<String>::New(String::New(#key));
 
+#define LU_V8_METHOD(name) \
+  static v8::Handle<v8::Value> name (const v8::Arguments& args);
+
 const char* ToCString(const v8::String::Utf8Value& value);
 const char* ToCString(const v8::String::AsciiValue& value);
 

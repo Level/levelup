@@ -208,13 +208,59 @@ buster.testCase('ReadStream', {
       }.bind(this))
     }
 
-/*
   , 'test readStream() with "start"': function (done) {
       this.openTestDatabase(function (db) {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
-        })
-      })
+
+          var rs = db.readStream({ start: '50' })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          // slice off the first 50 so verify() expects only the last 50 even though all 100 are in the db
+          this.sourceData = this.sourceData.slice(50)
+        }.bind(this))
+      }.bind(this))
     }
-*/
+
+  , 'test readStream() with "end"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ end: '50' })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          // slice off the last 50 so verify() expects only the first 50 even though all 100 are in the db
+          this.sourceData = this.sourceData.slice(0, 50)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with both "start" and "end"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ start: 30, end: 70 })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          this.sourceData = this.sourceData.slice(30, 70)
+        }.bind(this))
+      }.bind(this))
+    }
 })
