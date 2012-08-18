@@ -91,37 +91,6 @@ buster.testCase('WriteStream', {
       }.bind(this))
     }
 
-  , 'test delayed open with maxBufferLength': function (done) {
-      var location = path.join(__dirname, 'levelup_test_db_delayed_open')
-      this.cleanupDirs.push(location)
-      var db = levelup.createDatabase(
-              location
-            , { createIfMissing: true, errorIfExists: false }
-          )
-        , ws = db.writeStream({ maxBufferLength: 1 })
-
-      this.closeableDatabases.push(db)
-      // should be able to push first element in just fine
-      assert.isTrue(ws.write(this.sourceData[0]))
-      // second element should warn that the buffer isn't being cleared
-      assert.isFalse(ws.write(this.sourceData[1]))
-
-      ws.once('close', this.verify.bind(this, ws, db, done))
-      ws.once('drain', function () {
-        this.sourceData.slice(2).forEach(function (d, i) {
-          assert[i !== 0 ? 'isFalse' : 'isTrue'](ws.write(d), 'correct return value for element #' + i)
-        })
-        assert.isTrue(ws.writable)
-        assert.isFalse(ws.readable)
-        ws.end()
-      }.bind(this))
-
-      db.open(function (err) {
-        // should lead to a 'drain' event
-        refute(err)
-      })
-    }
-
     // at the moment, destroySoon() is basically just end()
   , 'test destroySoon()': function (done) {
       this.openTestDatabase(function (db) {

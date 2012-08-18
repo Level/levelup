@@ -38,12 +38,11 @@ global.openTestDatabase = function () {
   rimraf(location, function (err) {
     refute(err)
     this.cleanupDirs.push(location)
-    var db = levelup.createDatabase(location, options)
-    this.closeableDatabases.push(db)
-    db.open(function (err) {
+    levelup(location, options, function (err, db) {
       refute(err)
+      this.closeableDatabases.push(db)
       callback(db)
-    })
+    }.bind(this))
   }.bind(this))
 }
 

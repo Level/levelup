@@ -70,40 +70,6 @@ buster.testCase('ReadStream', {
       }.bind(this))
     }
 
-  , 'test delayed open': function (done) {
-      var location = path.join(__dirname, 'levelup_test_db_delayed_open')
-        , execute = function () {
-            this.cleanupDirs.push(location)
-            var db = levelup.createDatabase(location
-                  , { createIfMissing: true, errorIfExists: false }
-                )
-            this.closeableDatabases.push(db)
-            db.open(function (err) {
-              refute(err)
-
-              var rs = db.readStream()
-              assert.isFalse(rs.writable)
-              assert.isTrue(rs.readable)
-              rs.on('ready', this.readySpy)
-              rs.on('data' , this.dataSpy)
-              rs.on('end'  , this.endSpy)
-              rs.on('close', this.verify.bind(this, rs, done))
-            }.bind(this))
-          }.bind(this)
-
-      // setup -- open db, write stuff to it, close it again so we can reopen it
-      this.openTestDatabase(location, function (db) {
-        db.batch(this.sourceData.slice(), function (err) {
-          refute(err)
-          db.close(function () {
-            setTimeout(function () {
-              execute()
-            }, 10)
-          })
-        })
-      }.bind(this))
-    }
-
   , 'test pausing': function (done) {
       var calls = 0
         , rs
