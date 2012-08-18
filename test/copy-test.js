@@ -1,7 +1,5 @@
 /* Copyright (c) 2012 Rod Vagg <@rvagg> */
 
-/*global commonSetUp:true, commonTearDown:true*/
-
 var buster  = require('buster')
   , assert  = buster.assert
   , levelup = require('../lib/levelup.js')
@@ -9,10 +7,11 @@ var buster  = require('buster')
   , rimraf  = require('rimraf')
   , async   = require('async')
   , fs      = require('fs')
+  , common  = require('./common')
 
 buster.testCase('Copy', {
-    'setUp': commonSetUp
-  , 'tearDown': commonTearDown
+    'setUp': common.commonSetUp
+  , 'tearDown': common.commonTearDown
 
   , 'copy full database': function (done) {
       var sourceData = []

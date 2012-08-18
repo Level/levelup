@@ -31,10 +31,14 @@ ba.add('isUndefined', {
   , refuteMessage: '${0} expected not to be undefined'
 })
 
-global.openTestDatabase = function () {
+module.exports.nextLocation = function () {
+  return path.join(__dirname, 'levelup_test_db_' + dbidx++)
+}
+
+module.exports.openTestDatabase = function () {
   var options = typeof arguments[0] == 'object' ? arguments[0] : { createIfMissing: true, errorIfExists: true }
     , callback = typeof arguments[0] == 'function' ? arguments[0] : arguments[1]
-    , location = typeof arguments[0] == 'string' ? arguments[0] : path.join(__dirname, 'levelup_test_db_' + dbidx++)
+    , location = typeof arguments[0] == 'string' ? arguments[0] : module.exports.nextLocation()
   rimraf(location, function (err) {
     refute(err)
     this.cleanupDirs.push(location)
@@ -46,7 +50,7 @@ global.openTestDatabase = function () {
   }.bind(this))
 }
 
-global.commonTearDown = function (done) {
+module.exports.commonTearDown = function (done) {
   async.forEach(
       this.closeableDatabases
     , function (db, callback) {
@@ -58,13 +62,13 @@ global.commonTearDown = function (done) {
   )
 }
 
-global.loadBinaryTestData = function (callback) {
-  fs.readFile(path.join(__dirname, 'testdata.bin'), callback)
+module.exports.loadBinaryTestData = function (callback) {
+  fs.readFile(path.join(__dirname, 'data/testdata.bin'), callback)
 }
 
-global.binaryTestDataMD5Sum = '920725ef1a3b32af40ccd0b78f4a62fd'
+module.exports.binaryTestDataMD5Sum = '920725ef1a3b32af40ccd0b78f4a62fd'
 
-global.checkBinaryTestData = function (testData, callback) {
+module.exports.checkBinaryTestData = function (testData, callback) {
   var fname = '__tst.dat.' + Math.random()
   fs.writeFile(fname, testData, function (err) {
     refute(err)
@@ -73,16 +77,16 @@ global.checkBinaryTestData = function (testData, callback) {
         refute(err)
         refute(stderr)
         var md5Sum = stdout.split(' ')[0]
-        assert.equals(md5Sum, global.binaryTestDataMD5Sum)
+        assert.equals(md5Sum, module.exports.binaryTestDataMD5Sum)
         fs.unlink(fname, callback)
       })
     })
   })
 }
 
-global.commonSetUp = function () {
+module.exports.commonSetUp = function () {
   this.cleanupDirs = []
   this.closeableDatabases = []
-  this.openTestDatabase = global.openTestDatabase.bind(this)
+  this.openTestDatabase = module.exports.openTestDatabase.bind(this)
   this.timeout = 1000
 }

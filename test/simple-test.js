@@ -1,7 +1,5 @@
 /* Copyright (c) 2012 Rod Vagg <@rvagg> */
 
-/*global commonSetUp:true, commonTearDown:true*/
-
 var buster  = require('buster')
   , assert  = buster.assert
   , levelup = require('../lib/levelup.js')
@@ -9,10 +7,11 @@ var buster  = require('buster')
   , rimraf  = require('rimraf')
   , async   = require('async')
   , fs      = require('fs')
+  , common  = require('./common')
 
 buster.testCase('Basic API', {
-    'setUp': commonSetUp
-  , 'tearDown': commonTearDown
+    'setUp': common.commonSetUp
+  , 'tearDown': common.commonTearDown
 
   , 'levelup()': function () {
       assert.isFunction(levelup)
@@ -21,26 +20,27 @@ buster.testCase('Basic API', {
     }
 
   , 'default options': function (done) {
-      levelup('/tmp/testdb', { createIfMissing: true, errorIfExists: true }, function (err, db) {
+      var location = common.nextLocation()
+      levelup(location, { createIfMissing: true, errorIfExists: true }, function (err, db) {
         refute(err)
         assert.isTrue(db.isOpen())
         this.closeableDatabases.push(db)
-        this.cleanupDirs.push('/tmp/testdb')
+        this.cleanupDirs.push(location)
         db.close(function (err) {
           refute(err)
 
           assert.isFalse(db.isOpen())
 
-          levelup('/tmp/testdb', function (err, db) { // no options object
+          levelup(location, function (err, db) { // no options object
             refute(err)
             assert.isObject(db)
             assert.isFalse(db.options.createIfMissing)
             assert.isFalse(db.options.errorIfExists)
-            assert.equals(db.location, '/tmp/testdb')
+            assert.equals(db.location, location)
 
             // read-only properties
             db.location = 'foo'
-            assert.equals(db.location, '/tmp/testdb')
+            assert.equals(db.location, location)
             done()
           }.bind(this))
         }.bind(this))
@@ -48,24 +48,25 @@ buster.testCase('Basic API', {
     }
 
   , 'basic options': function (done) {
-      levelup('/tmp/foodb', { createIfMissing: true, errorIfExists: true }, function (err, db) {
+      var location = common.nextLocation()
+      levelup(location, { createIfMissing: true, errorIfExists: true }, function (err, db) {
         refute(err)
         this.closeableDatabases.push(db)
-        this.cleanupDirs.push('/tmp/foodb')
+        this.cleanupDirs.push(location)
         assert.isObject(db)
         assert.isTrue(db.options.createIfMissing)
         assert.isTrue(db.options.errorIfExists)
-        assert.equals(db.location, '/tmp/foodb')
+        assert.equals(db.location, location)
 
         // read-only properties
         db.location = 'bar'
-        assert.equals(db.location, '/tmp/foodb')
+        assert.equals(db.location, location)
         done()
       }.bind(this))
     }
 
   , 'open() with !createIfMissing expects error': function (done) {
-      levelup(this.cleanupDirs[0] = '/tmp/levelup_test_db', function (err, db) {
+      levelup(this.cleanupDirs[0] = common.nextLocation(), function (err, db) {
         assert(err)
         refute(db)
         assert.isInstanceOf(err, Error)
@@ -76,7 +77,7 @@ buster.testCase('Basic API', {
     }
 
   , 'open() with createIfMissing expects directory to be created': function (done) {
-      levelup(this.cleanupDirs[0] = '/tmp/levelup_test_db', { createIfMissing: true }, function (err, db) {
+      levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true }, function (err, db) {
         this.closeableDatabases.push(db)
         refute(err)
         assert.isTrue(db.isOpen())
@@ -89,7 +90,7 @@ buster.testCase('Basic API', {
     }
 
   , 'open() with errorIfExists expects error if exists': function (done) {
-      levelup(this.cleanupDirs[0] = '/tmp/levelup_test_db', { createIfMissing: true }, function (err, db) {
+      levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true }, function (err, db) {
         this.closeableDatabases.push(db)
         refute(err) // sanity
         levelup(this.cleanupDirs[0], { errorIfExists   : true }, function (err) {
@@ -103,7 +104,7 @@ buster.testCase('Basic API', {
     }
 
   , 'open() with !errorIfExists does not expect error if exists': function (done) {
-      levelup(this.cleanupDirs[0] = '/tmp/levelup_test_db', { createIfMissing: true }, function (err, db) {
+      levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true }, function (err, db) {
         refute(err) // sanity
         this.closeableDatabases.push(db)
         assert.isTrue(db.isOpen())
@@ -123,7 +124,7 @@ buster.testCase('Basic API', {
 
   , 'Simple operations': {
         'get() on non-open database causes error': function (done) {
-          levelup(this.cleanupDirs[0] = '/tmp/levelup_test_db', { createIfMissing: true }, function (err, db) {
+          levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true }, function (err, db) {
             refute(err) // sanity
             this.closeableDatabases.push(db)
             assert.isTrue(db.isOpen())
@@ -142,7 +143,7 @@ buster.testCase('Basic API', {
         }
 
       , 'put() on non-open database causes error': function (done) {
-          levelup(this.cleanupDirs[0] = '/tmp/levelup_test_db', { createIfMissing: true }, function (err, db) {
+          levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true }, function (err, db) {
             refute(err) // sanity
             this.closeableDatabases.push(db)
             assert.isTrue(db.isOpen())
@@ -186,7 +187,7 @@ buster.testCase('Basic API', {
         }
 
       , 'del() on non-open database causes error': function (done) {
-          levelup(this.cleanupDirs[0] = '/tmp/levelup_test_db', { createIfMissing: true }, function (err, db) {
+          levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true }, function (err, db) {
             refute(err) // sanity
             this.closeableDatabases.push(db)
             assert.isTrue(db.isOpen())

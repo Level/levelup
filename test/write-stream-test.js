@@ -1,7 +1,5 @@
 /* Copyright (c) 2012 Rod Vagg <@rvagg> */
 
-/*global commonSetUp:true, commonTearDown:true*/
-
 var buster  = require('buster')
   , assert  = buster.assert
   , levelup = require('../lib/levelup.js')
@@ -10,10 +8,11 @@ var buster  = require('buster')
   , async   = require('async')
   , fs      = require('fs')
   , path    = require('path')
+  , common  = require('./common')
 
 buster.testCase('WriteStream', {
     'setUp': function () {
-      commonSetUp.call(this)
+      common.commonSetUp.call(this)
 
       this.timeout = 1000
 
@@ -44,7 +43,7 @@ buster.testCase('WriteStream', {
       }
     }
 
-  , 'tearDown': commonTearDown
+  , 'tearDown': common.commonTearDown
 
   //TODO: test various encodings
 
