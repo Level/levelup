@@ -192,6 +192,47 @@ buster.testCase('ReadStream', {
       }.bind(this))
     }
 
+  , 'test readStream() with "start" being mid-way key (float)': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          // '49.5' doesn't actually exist but we expect it to start at '50' because '49' < '49.5' < '50' (in string terms as well as numeric)
+          var rs = db.readStream({ start: '49.5' })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          // slice off the first 50 so verify() expects only the last 50 even though all 100 are in the db
+          this.sourceData = this.sourceData.slice(50)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with "start" being mid-way key (string)': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          // '499999' doesn't actually exist but we expect it to start at '50' because '49' < '499999' < '50' (in string terms)
+          // the same as the previous test but we're relying solely on string ordering
+          var rs = db.readStream({ start: '499999' })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          // slice off the first 50 so verify() expects only the last 50 even though all 100 are in the db
+          this.sourceData = this.sourceData.slice(50)
+        }.bind(this))
+      }.bind(this))
+    }
+
   , 'test readStream() with "end"': function (done) {
       this.openTestDatabase(function (db) {
         db.batch(this.sourceData.slice(), function (err) {
