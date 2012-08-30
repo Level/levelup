@@ -21,15 +21,15 @@ var levelup = require('levelup')
 //    This will create or open the underlying LevelDB store.
 var options = { createIfMissing: true, errorIfExists: false }
 levelup('./mydb', options, function (err, db) {
-  if (err) throw err
+  if (err) return console.log('Ooops!', err)
 
   // 2) put a key & value
   db.put('name', 'LevelUP', function (err) {
-    if (err) throw err // some kind of I/O error
+    if (err) return console.log('Ooops!', err) // some kind of I/O error
 
     // 3) fetch by key
     db.get('name', function (err, value) {
-      if (err) throw err // likely the key was not found
+      if (err) return console.log('Ooops!', err) // likely the key was not found
 
       // ta da!
       console.log('name=' + value)
@@ -69,7 +69,7 @@ var ops = [
 ]
 
 db.batch(ops, function (err) {
-  if (err) throw err
+  if (err) return console.log('Ooops!', err)
   console.log('Great success dear leader!')
 })
 ```
