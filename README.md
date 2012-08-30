@@ -1,8 +1,8 @@
 LevelUP
 =======
 
-Fast & simple storage; a Node.js-style LevelDB wrapper
-------------------------------------------------------
+Fast & simple storage - a Node.js-style LevelDB wrapper
+-------------------------------------------------------
 
 **[LevelDB](http://code.google.com/p/leveldb/)** is a simple key/value data store built by Google, inspired by BigTable. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, forward and reverse iteration and simple compression using the [Snappy](http://code.google.com/p/snappy/) algorithm which is optimised for speed over compression.
 
@@ -17,32 +17,30 @@ All operations are asynchronous although they don't necessarily require a callba
 ```js
 var levelup = require('levelup')
 
-// 1) create our database object, supply location and options
-var db = levelup.createDatabase('./mydb', { createIfMissing: true , errorIfExists: false })
+// 1) Create our database, supply location and options.
+//    This will create or open the underlying LevelDB store.
+var options = { createIfMissing: true, errorIfExists: false }
+levelup('./mydb', options, function (err, db) {
+  if (err) throw err
 
-// 2) open the database, this will create or open the underlying LevelDB store
-db.open(function (err) {
-
-  // 3) put a key & value
+  // 2) put a key & value
   db.put('name', 'LevelUP', function (err) {
-    if (err) throw err
+    if (err) throw err // some kind of I/O error
 
-    // 4) fetch by key
+    // 3) fetch by key
     db.get('name', function (err, value) {
       if (err) throw err // likely the key was not found
 
+      // ta da!
       console.log('name=' + value)
     })
-
   })
-
 })
-
 ```
 
 ### Options
 
-`createDatabase()` takes an optional options object as its second argument; the following properties are accepted:
+`leveldb()` takes an optional options object as its second argument; the following properties are accepted:
 
 * `createIfMissing` *(boolean)*: If `true`, will initialise an empty database at the specified location if one doesn't already exit. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open. Defaults to `false`.
 
@@ -51,7 +49,7 @@ db.open(function (err) {
 * `encoding` *(string)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see `[Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)`)
   <p>`'utf8'` is the default encoding for both keys and values so you can simply pass in strings and expect strings from your `get()` operations. You can also pass `Buffer` objects as keys and/or values and converstion will be performed.</p>
   <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
-  <p>**json** encoding will be supported in a future release, likely stored as utf8 strings.</p>
+  <p>`'json'` encoding is also supported, see below.</p>
 
 * `keyEncoding` and `valueEncoding` *(string)*: use instead of `encoding` to specify the exact encoding of both the keys and the values in this database.
 
@@ -101,9 +99,15 @@ db.readStream()
 
 The standard `pause()`, `resume()` and `destroy()` methods are implemented on the ReadStream, as is `pipe()` (see below). `'data'`, '`error'`, `'end'` and `'close'` events are emitted.
 
+Additionally, you can supply an options object as the first parameter to `readStream()` with the following options:
+
+* `'start'`: the key you wish to start the read at. By default it will start at the beginning of the store. Note that the *start* doesn't have to be an actual key that exists, LevelDB will simply find the *next* key, greater than the key you provide.
+
+* `'end'`: the key you wish to end the read on. By default it will continue until the end of the store. Again, the *end* doesn't have to be an actual key as a `<`-type operation is performed to detect the end. You can also use the `destroy()` method instead of supplying an `'end'` parameter to achieve the same effect.
+
 ### WriteStream
 
-A **WriteStream** can be obtained by calling the `writeStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method. The WriteStream will buffer writes and submit them as a `batch()` operation where the writes occur on the same event loop tick, otherwise they are treated as simple `put()` operations.
+A **WriteStream** can be obtained by calling the `writeStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method. Tce WriteStream will buffer writes and submit them as a `batch()` operation where the writes occur on the same event loop tick, otherwise they are treated as simple `put()` operations.
 
 ```js
 db.writeStream()
@@ -134,6 +138,11 @@ function copy (srcdb, dstdb, callback) {
 
 The ReadStream is also [fstream](https://github.com/isaacs/fstream)-compatible which means you should be able to pipe to and from fstreams. So you can serialize and deserialize an entire database to a directory where keys are filenames and values are their contents, or even into a *tar* file using [node-tar](https://github.com/isaacs/node-tar). See the [fstream functional test](https://github.com/rvagg/node-levelup/blob/master/test/functional/fstream-test.js) for an example. *(Note: I'm not really sure there's a great use-case for this but it's a fun example and it helps to harden the stream implementations.)*
 
+JSON
+----
+
+You specify `'json'` encoding for both keys and/or values, you can then supply JavaScript objects to LevelUP and receive them from all fetch operations, including ReadStreams. LevelUP will automatically *stringify* your objects and store them as *utf8* and parse the strings back into objects before passing them back to you.
+
 Important considerations
 ------------------------
 
@@ -142,15 +151,12 @@ Important considerations
 TODO
 ----
 
-* JSON encoding/decoding
 * ReadStream reverse read
-* ReadStream optional 'start' key
-* ReadStream optional 'end' key
 * Filter streams, e.g.: KeyReadStream, ValueReadStream
 * *Windows support, maybe*
 * Benchmarks
 
-Licence & Copyright
+Licence & copyright
 -------------------
 
 LevelUP is Copyright (c) 2012 Rod Vagg <@rvagg> and licenced under the MIT licence. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
