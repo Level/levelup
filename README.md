@@ -40,16 +40,16 @@ levelup('./mydb', options, function (err, db) {
 
 ### Options
 
-`leveldb()` takes an optional options object as its second argument; the following properties are accepted:
+`levelup()` takes an optional options object as its second argument; the following properties are accepted:
 
 * `createIfMissing` *(boolean)*: If `true`, will initialise an empty database at the specified location if one doesn't already exit. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open. Defaults to `false`.
 
 * `errorIfExists` *(boolean)*: If `true`, you will receive an error in your `open()` callback if the database exists at the specified location. Defaults to `false`.
 
-* `encoding` *(string)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see `[Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)`)
-  <p>`'utf8'` is the default encoding for both keys and values so you can simply pass in strings and expect strings from your `get()` operations. You can also pass `Buffer` objects as keys and/or values and converstion will be performed.</p>
+* `encoding` *(string)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end))
+  <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and converstion will be performed.</p>
   <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
-  <p>`'json'` encoding is also supported, see below.</p>
+  <p><code>'json'</code> encoding is also supported, see below.</p>
 
 * `keyEncoding` and `valueEncoding` *(string)*: use instead of `encoding` to specify the exact encoding of both the keys and the values in this database.
 
