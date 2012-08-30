@@ -1,5 +1,6 @@
 {
     "name"            : "levelup"
+  , "keywords"        : [ "leveldb", "levelup", "stream", "database", "db", "store", "storage", "json" ]
   , "version"         : "0.0.0-1"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
