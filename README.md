@@ -146,7 +146,7 @@ You specify `'json'` encoding for both keys and/or values, you can then supply J
 Important considerations
 ------------------------
 
-* LevelDB is thread-safe but is suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process.
+* LevelDB is thread-safe but is **not** suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process.
 
 TODO
 ----
