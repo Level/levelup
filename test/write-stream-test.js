@@ -2,12 +2,7 @@
 
 var buster  = require('buster')
   , assert  = buster.assert
-  , levelup = require('../lib/levelup.js')
-  , errors  = require('../lib/errors.js')
-  , rimraf  = require('rimraf')
   , async   = require('async')
-  , fs      = require('fs')
-  , path    = require('path')
   , common  = require('./common')
 
 buster.testCase('WriteStream', {

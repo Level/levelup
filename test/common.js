@@ -44,8 +44,10 @@ module.exports.openTestDatabase = function () {
     this.cleanupDirs.push(location)
     levelup(location, options, function (err, db) {
       refute(err)
-      this.closeableDatabases.push(db)
-      callback(db)
+      if (!err) {
+        this.closeableDatabases.push(db)
+        callback(db)
+      }
     }.bind(this))
   }.bind(this))
 }

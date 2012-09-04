@@ -1,5 +1,8 @@
 {
     "name"            : "levelup"
+  , "authors": [
+       "Rod Vagg @rvagg <rod@vagg.org> (https://github.com/rvagg)"
+    ]
   , "keywords"        : [ "leveldb", "levelup", "stream", "database", "db", "store", "storage", "json" ]
   , "version"         : "0.0.1"
   , "main"            : "lib/levelup.js"

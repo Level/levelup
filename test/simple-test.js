@@ -4,7 +4,6 @@ var buster  = require('buster')
   , assert  = buster.assert
   , levelup = require('../lib/levelup.js')
   , errors  = require('../lib/errors.js')
-  , rimraf  = require('rimraf')
   , async   = require('async')
   , fs      = require('fs')
   , common  = require('./common')
@@ -34,13 +33,15 @@ buster.testCase('Basic API', {
           levelup(location, function (err, db) { // no options object
             refute(err)
             assert.isObject(db)
-            assert.isFalse(db.options.createIfMissing)
-            assert.isFalse(db.options.errorIfExists)
-            assert.equals(db.location, location)
+            assert.isFalse(db._options.createIfMissing)
+            assert.isFalse(db._options.errorIfExists)
+            assert.equals(db._location, location)
 
+            /*
             // read-only properties
             db.location = 'foo'
             assert.equals(db.location, location)
+            */
             done()
           }.bind(this))
         }.bind(this))
@@ -54,13 +55,15 @@ buster.testCase('Basic API', {
         this.closeableDatabases.push(db)
         this.cleanupDirs.push(location)
         assert.isObject(db)
-        assert.isTrue(db.options.createIfMissing)
-        assert.isTrue(db.options.errorIfExists)
-        assert.equals(db.location, location)
+        assert.isTrue(db._options.createIfMissing)
+        assert.isTrue(db._options.errorIfExists)
+        assert.equals(db._location, location)
 
+        /*
         // read-only properties
-        db.location = 'bar'
-        assert.equals(db.location, location)
+        db._location = 'bar'
+        assert.equals(db._location, location)
+        */
         done()
       }.bind(this))
     }

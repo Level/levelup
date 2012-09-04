@@ -3,10 +3,7 @@
 var buster  = require('buster')
   , assert  = buster.assert
   , levelup = require('../lib/levelup.js')
-  , errors  = require('../lib/errors.js')
-  , rimraf  = require('rimraf')
   , async   = require('async')
-  , fs      = require('fs')
   , common  = require('./common')
 
 buster.testCase('JSON API', {
@@ -22,7 +19,7 @@ buster.testCase('JSON API', {
           this.closeableDatabases.push(db)
 
           async.parallel(
-              testData.map(function (d) { return db.put.bind(null, d.key, d.value) })
+              testData.map(function (d) { return db.put.bind(db, d.key, d.value) })
             , function (err) {
                 refute(err)
 
