@@ -4,7 +4,7 @@
        "Rod Vagg @rvagg <rod@vagg.org> (https://github.com/rvagg)"
     ]
   , "keywords"        : [ "leveldb", "levelup", "stream", "database", "db", "store", "storage", "json" ]
-  , "version"         : "0.0.1"
+  , "version"         : "0.0.2"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
         "errno"         : "~0.0.2"
