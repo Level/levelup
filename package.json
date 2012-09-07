@@ -4,7 +4,7 @@
        "Rod Vagg @rvagg <rod@vagg.org> (https://github.com/rvagg)"
     ]
   , "keywords"        : [ "leveldb", "levelup", "stream", "database", "db", "store", "storage", "json" ]
-  , "version"         : "0.0.2"
+  , "version"         : "0.0.2-1"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
         "errno"         : "~0.0.2"
@@ -20,6 +20,10 @@
       , "tar"           : "*"
       , "mkfiletree"    : "*"
       , "readfiletree"  : "*"
+    }
+  , "repository": {
+        "type": "git"
+      , "url": "https://github.com/rvagg/node-levelup.git"
     }
   , "scripts"         : {
       "test"            : "./node_modules/.bin/buster-test"
