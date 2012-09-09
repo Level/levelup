@@ -31,6 +31,7 @@ buster.testCase('ReadStream', {
         this.sourceData.forEach(function (d, i) {
           var call = this.dataSpy.getCall(i)
           if (call) {
+            //console.log('call', i, ':', call.args[0].key, '=', call.args[0].value, '(expected', d.key, '=', d.value, ')')
             assert.equals(call.args.length, 1, 'ReadStream "data" event #' + i + ' fired with 1 argument')
             refute.isNull(call.args[0].key, 'ReadStream "data" event #' + i + ' argument has "key" property')
             refute.isNull(call.args[0].value, 'ReadStream "data" event #' + i + ' argument has "value" property')
@@ -167,6 +168,25 @@ buster.testCase('ReadStream', {
       }.bind(this))
     }
 
+  , 'test readStream() with "reverse=true"': function (done) {
+      this.openTestDatabase(function (db) {
+        // execute
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ reverse: true })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          this.sourceData.reverse() // for verify
+        }.bind(this))
+      }.bind(this))
+    }
+
   , 'test readStream() with "start"': function (done) {
       this.openTestDatabase(function (db) {
         db.batch(this.sourceData.slice(), function (err) {
@@ -182,6 +202,26 @@ buster.testCase('ReadStream', {
 
           // slice off the first 50 so verify() expects only the last 50 even though all 100 are in the db
           this.sourceData = this.sourceData.slice(50)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with "start" and "reverse=true"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ start: '50', reverse: true })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          // reverse and slice off the first 50 so verify() expects only the first 50 even though all 100 are in the db
+          this.sourceData.reverse()
+          this.sourceData = this.sourceData.slice(49)
         }.bind(this))
       }.bind(this))
     }
@@ -202,6 +242,29 @@ buster.testCase('ReadStream', {
 
           // slice off the first 50 so verify() expects only the last 50 even though all 100 are in the db
           this.sourceData = this.sourceData.slice(50)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with "start" being mid-way key (float) and "reverse=true"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          //NOTE: this is similar to the above case but we're going backwards, the important caveat with
+          // reversable streams is that the start will always be the NEXT key if the actual key you specify
+          // doesn't exist, not the PREVIOUS (i.e. it skips ahead to find a start key)
+          var rs = db.readStream({ start: '49.5', reverse: true })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          // reverse & slice off the first 50 so verify() expects only the first 50 even though all 100 are in the db
+          this.sourceData.reverse()
+          this.sourceData = this.sourceData.slice(49)
         }.bind(this))
       }.bind(this))
     }
@@ -240,8 +303,65 @@ buster.testCase('ReadStream', {
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
 
-          // slice off the last 50 so verify() expects only the first 50 even though all 100 are in the db
-          this.sourceData = this.sourceData.slice(0, 50)
+          // slice off the last 49 so verify() expects only 0 -> 50 inclusive, even though all 100 are in the db
+          this.sourceData = this.sourceData.slice(0, 51)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with "end" being mid-way key (float)': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ end: '50.5' })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          // slice off the last 49 so verify() expects only 0 -> 50 inclusive, even though all 100 are in the db
+          this.sourceData = this.sourceData.slice(0, 51)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with "end" being mid-way key (string)': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ end: '50555555' })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          // slice off the last 49 so verify() expects only 0 -> 50 inclusive, even though all 100 are in the db
+          this.sourceData = this.sourceData.slice(0, 51)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with "end" being mid-way key (float) and "reverse=true"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ end: '50.5', reverse: true })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          this.sourceData.reverse()
+          this.sourceData = this.sourceData.slice(0, 49)
         }.bind(this))
       }.bind(this))
     }
@@ -259,7 +379,28 @@ buster.testCase('ReadStream', {
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
 
-          this.sourceData = this.sourceData.slice(30, 70)
+          // should include 30 to 70, inclusive
+          this.sourceData = this.sourceData.slice(30, 71)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with both "start" and "end" and "reverse=true"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ start: 70, end: 30, reverse: true })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          // expect 70 -> 30 inclusive
+          this.sourceData.reverse()
+          this.sourceData = this.sourceData.slice(29, 70)
         }.bind(this))
       }.bind(this))
     }

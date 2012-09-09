@@ -103,7 +103,9 @@ Additionally, you can supply an options object as the first parameter to `readSt
 
 * `'start'`: the key you wish to start the read at. By default it will start at the beginning of the store. Note that the *start* doesn't have to be an actual key that exists, LevelDB will simply find the *next* key, greater than the key you provide.
 
-* `'end'`: the key you wish to end the read on. By default it will continue until the end of the store. Again, the *end* doesn't have to be an actual key as a `<`-type operation is performed to detect the end. You can also use the `destroy()` method instead of supplying an `'end'` parameter to achieve the same effect.
+* `'end'`: the key you wish to end the read on. By default it will continue until the end of the store. Again, the *end* doesn't have to be an actual key as an (inclusive) `<=`-type operation is performed to detect the end. You can also use the `destroy()` method instead of supplying an `'end'` parameter to achieve the same effect.
+
+* `'reverse'`: a boolean, set to true if you want the stream to go in reverse order. Beware that due to the way LevelDB works, a reverse seek will be slower than a forward seek.
 
 ### WriteStream
 
@@ -151,7 +153,6 @@ Important considerations
 TODO
 ----
 
-* ReadStream reverse read
 * Filter streams, e.g.: KeyReadStream, ValueReadStream
 * *Windows support, maybe*
 * Benchmarks

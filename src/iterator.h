@@ -31,9 +31,11 @@ private:
       Database*            database
     , Slice*               start
     , string*              end
+    , bool                 reverse
   ) : database(database)
     , start(start)
     , end(end)
+    , reverse(reverse)
   {
     options = new ReadOptions();
     dbIterator = NULL;
@@ -52,6 +54,7 @@ private:
   ReadOptions*         options;
   Slice*               start;
   string*              end;
+  bool                 reverse;
 
   bool GetIterator ();
 

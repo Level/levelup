@@ -17,12 +17,15 @@ using namespace levelup;
 
 LU_OPTION ( start );
 LU_OPTION ( end );
+LU_OPTION ( reverse );
 
 bool levelup::Iterator::GetIterator () {
   if (dbIterator == NULL) {
     dbIterator = database->NewIterator(options);
     if (start != NULL)
       dbIterator->Seek(*start);
+    else if (reverse)
+      dbIterator->SeekToLast();
     else
       dbIterator->SeekToFirst();
     return true;
@@ -31,9 +34,18 @@ bool levelup::Iterator::GetIterator () {
 }
 
 bool levelup::Iterator::IteratorNext (string& key, string& value) {
-  if (!GetIterator()) dbIterator->Next();
+  if (!GetIterator()) {
+    if (reverse)
+      dbIterator->Prev();
+    else
+      dbIterator->Next();
+  }
+
   // 'end' here is an inclusive test
-  if (dbIterator->Valid() && (end == NULL || end->compare(dbIterator->key().ToString()) > 0)) {
+  if (dbIterator->Valid()
+      && (end == NULL
+          || (reverse && end->compare(dbIterator->key().ToString()) <= 0)
+          || (!reverse && end->compare(dbIterator->key().ToString()) >= 0))) {
     key.assign(dbIterator->key().data(), dbIterator->key().size());
     value.assign(dbIterator->value().data(), dbIterator->value().size());
     return true;
@@ -108,15 +120,19 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
   Database* database = ObjectWrap::Unwrap<Database>(args[0]->ToObject());
   Slice* start = NULL;
   if (args[1]->ToObject()->Has(option_start)) {
-    Persistent<Object> startBuffer = Persistent<Object>::New(args[1]->ToObject()->Get(option_start)->ToObject());
+    Local<Object> startBuffer = Local<Object>::New(args[1]->ToObject()->Get(option_start)->ToObject());
     start = new Slice(Buffer::Data(startBuffer), Buffer::Length(startBuffer));
   }
   string* end = NULL;
   if (args[1]->ToObject()->Has(option_end)) {
-    Persistent<Object> endBuffer = Persistent<Object>::New(args[1]->ToObject()->Get(option_end)->ToObject());
+    Local<Object> endBuffer = Local<Object>::New(args[1]->ToObject()->Get(option_end)->ToObject());
     end = new string(Buffer::Data(endBuffer), Buffer::Length(endBuffer));
   }
-  Iterator* iterator = new Iterator(database, start, end);
+  bool reverse = false;
+  if (args[1]->ToObject()->Has(option_reverse)) {
+    reverse = args[1]->ToObject()->Get(option_reverse)->BooleanValue();
+  }
+  Iterator* iterator = new Iterator(database, start, end, reverse);
   iterator->Wrap(args.This());
 
   return args.This();
