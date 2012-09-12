@@ -21,11 +21,12 @@ buster.testCase('WriteStream', {
         })
       }
 
-      this.verify = function (ws, db, done) {
+      this.verify = function (ws, db, done, data) {
+        if (!data) data = this.sourceData // can pass alternative data array for verification
         assert.isFalse(ws.writable)
         assert.isFalse(ws.readable)
         async.forEach(
-            this.sourceData
+            data
           , function (data, callback) {
               db.get(data.key, function (err, value) {
                 refute(err)
@@ -133,6 +134,33 @@ buster.testCase('WriteStream', {
         assert.isTrue(ws.writable)
         assert.isFalse(ws.readable)
         ws.once('ready', ws.destroy)
+      }.bind(this))
+    }
+
+  , '=>test json encoding': function (done) {
+      var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'json' }
+        , data = [
+              { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } }
+            , { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { type: 'put', key: 'ac', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { type: 'put', key: 'ba', value: { a: 'complex', obj: 100 } }
+            , { type: 'put', key: 'bb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { type: 'put', key: 'bc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { type: 'put', key: 'ca', value: { a: 'complex', obj: 100 } }
+            , { type: 'put', key: 'cb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+          ]
+
+      this.openTestDatabase(options, function (db) {
+        var ws = db.writeStream()
+        ws.on('error', function (err) {
+          refute(err)
+        })
+        ws.on('close', this.verify.bind(this, ws, db, done, data))
+        data.forEach(function (d) {
+          ws.write(d)
+        })
+        ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
       }.bind(this))
     }
 })

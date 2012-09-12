@@ -22,13 +22,14 @@ buster.testCase('ReadStream', {
         })
       }
 
-      this.verify = function (rs, done) {
+      this.verify = function (rs, done, data) {
+        if (!data) data = this.sourceData // can pass alternative data array for verification
         assert.isFalse(rs.writable)
         assert.isFalse(rs.readable)
         assert.equals(this.readySpy.callCount, 1, 'ReadStream emitted single "ready" event')
         assert.equals(this.endSpy.callCount, 1, 'ReadStream emitted single "end" event')
-        assert.equals(this.dataSpy.callCount, this.sourceData.length, 'ReadStream emitted correct number of "data" events')
-        this.sourceData.forEach(function (d, i) {
+        assert.equals(this.dataSpy.callCount, data.length, 'ReadStream emitted correct number of "data" events')
+        data.forEach(function (d, i) {
           var call = this.dataSpy.getCall(i)
           if (call) {
             //console.log('call', i, ':', call.args[0].key, '=', call.args[0].value, '(expected', d.key, '=', d.value, ')')
@@ -401,6 +402,35 @@ buster.testCase('ReadStream', {
           // expect 70 -> 30 inclusive
           this.sourceData.reverse()
           this.sourceData = this.sourceData.slice(29, 70)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test json encoding': function (done) {
+      var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'json' }
+        , data = [
+              { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } }
+            , { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { type: 'put', key: 'ac', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { type: 'put', key: 'ba', value: { a: 'complex', obj: 100 } }
+            , { type: 'put', key: 'bb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { type: 'put', key: 'bc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { type: 'put', key: 'ca', value: { a: 'complex', obj: 100 } }
+            , { type: 'put', key: 'cb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+          ]
+
+      this.openTestDatabase(options, function (db) {
+        db.batch(data.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream()
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done, data))
         }.bind(this))
       }.bind(this))
     }
