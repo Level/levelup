@@ -137,7 +137,7 @@ buster.testCase('WriteStream', {
       }.bind(this))
     }
 
-  , '=>test json encoding': function (done) {
+  , 'test json encoding': function (done) {
       var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'json' }
         , data = [
               { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } }
