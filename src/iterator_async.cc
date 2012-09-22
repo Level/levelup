@@ -8,6 +8,7 @@
 
 #include "database.h"
 
+#include "levelup.h"
 #include "async.h"
 #include "iterator_async.h"
 
@@ -29,10 +30,10 @@ void NextWorker::HandleOKCallback () {
       , Local<Value>::New(Buffer::New((char*)key.data(), key.size())->handle_)
       , Local<Value>::New(Buffer::New((char*)value.data(), value.size())->handle_)
     };
-    runCallback(callback, argv, 3);
+    RunCallback(callback, argv, 3);
   } else {
     Local<Value> argv[0];
-    runCallback(endCallback, argv, 0);
+    RunCallback(endCallback, argv, 0);
   }
 }
 

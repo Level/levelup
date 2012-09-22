@@ -15,4 +15,6 @@
 const char* ToCString(const v8::String::Utf8Value& value);
 const char* ToCString(const v8::String::AsciiValue& value);
 
+void RunCallback (v8::Persistent<v8::Function> callback, v8::Local<v8::Value> argv[], int length);
+
 #endif

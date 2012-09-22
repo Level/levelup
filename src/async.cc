@@ -8,6 +8,7 @@
 
 #include "database.h"
 
+#include "levelup.h"
 #include "async.h"
 #include "batch.h"
 
@@ -17,15 +18,6 @@ using namespace node;
 using namespace leveldb;
 
 /** ASYNC BASE **/
-
-void runCallback (Persistent<Function> callback, Local<Value> argv[], int length) {
-  TryCatch try_catch;
- 
-  callback->Call(Context::GetCurrent()->Global(), length, argv);
-  if (try_catch.HasCaught()) {
-    FatalException(try_catch);
-  }
-}
 
 void AsyncWorker::WorkComplete () {
   HandleScope scope;
@@ -38,14 +30,14 @@ void AsyncWorker::WorkComplete () {
 
 void AsyncWorker::HandleOKCallback () {
   Local<Value> argv[0];
-  runCallback(callback, argv, 0);  
+  RunCallback(callback, argv, 0);  
 }
 
 void AsyncWorker::HandleErrorCallback () {
   Local<Value> argv[] = {
       Local<Value>::New(Exception::Error(String::New(status.ToString().c_str())))
   };
-  runCallback(callback, argv, 1);
+  RunCallback(callback, argv, 1);
 }
 
 void AsyncExecute (uv_work_t* req) {

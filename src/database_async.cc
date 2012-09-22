@@ -8,6 +8,7 @@
 
 #include "database.h"
 
+#include "levelup.h"
 #include "async.h"
 #include "database_async.h"
 #include "batch.h"
@@ -72,7 +73,7 @@ void ReadWorker::HandleOKCallback () {
       Local<Value>::New(Null())
     , Local<Value>::New(Buffer::New((char*)value.data(), value.size())->handle_)
   };
-  runCallback(callback, argv, 2);
+  RunCallback(callback, argv, 2);
 }
 
 /** DELETE WORKER **/

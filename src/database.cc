@@ -141,6 +141,23 @@ Handle<Value> Database::Put (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
+  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[3]));
+
+  if (args[0]->IsNull() || args[0]->IsUndefined()) {
+    Local<Value> argv[] = {
+      Local<Value>::New(Exception::Error(String::New("Key cannot be `null` or `undefined`")))
+    };
+    RunCallback(callback, argv, 1);
+    return Undefined();
+  }
+
+  if (args[1]->IsNull() || args[1]->IsUndefined()) {
+    Local<Value> argv[] = {
+      Local<Value>::New(Exception::Error(String::New("Value cannot be `null` or `undefined`")))
+    };
+    RunCallback(callback, argv, 1);
+    return Undefined();
+  }
 
   Persistent<Object> keyBuffer = Persistent<Object>::New(args[0]->ToObject());
   Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
@@ -148,7 +165,6 @@ Handle<Value> Database::Put (const Arguments& args) {
   Slice value(Buffer::Data(valueBuffer), Buffer::Length(valueBuffer));
   Local<Object> optionsObj = Local<Object>::Cast(args[2]);
   bool sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
-  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[3]));
 
   WriteWorker* worker  = new WriteWorker(
       database
@@ -168,10 +184,20 @@ Handle<Value> Database::Get (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
+  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
+
+  if (args[0]->IsNull() || args[0]->IsUndefined()) {
+    Local<Value> argv[] = {
+      Local<Value>::New(Exception::Error(String::New("Key cannot be `null` or `undefined`")))
+    };
+    RunCallback(callback, argv, 1);
+    return Undefined();
+  }
+
+
   Persistent<Object> keyBuffer = Persistent<Object>::New(args[0]->ToObject());
   Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
   //Local<Object> optionsObj = Local<Object>::Cast(args[1]);
-  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
   ReadWorker* worker = new ReadWorker(
       database
@@ -188,11 +214,20 @@ Handle<Value> Database::Delete (const Arguments& args) {
   HandleScope scope;
 
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
+  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
+
+  if (args[0]->IsNull() || args[0]->IsUndefined()) {
+    Local<Value> argv[] = {
+      Local<Value>::New(Exception::Error(String::New("Key cannot be `null` or `undefined`")))
+    };
+    RunCallback(callback, argv, 1);
+    return Undefined();
+  }
+
   Persistent<Object> keyBuffer = Persistent<Object>::New(args[0]->ToObject());
   Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
   Local<Object> optionsObj = Local<Object>::Cast(args[1]);
   bool sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
-  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
   DeleteWorker* worker = new DeleteWorker(
       database
@@ -217,20 +252,27 @@ Handle<Value> Database::Batch (const Arguments& args) {
 
   vector<BatchOp*> operations;
   for (unsigned int i = 0; i < array->Length(); i++) {
+    if (!array->Get(i)->IsObject())
+      continue;
+
     Local<Object> obj = Local<Object>::Cast(array->Get(i));
     if (!obj->Has(str_type) || !obj->Has(str_key))
       continue;
 
+    if (!obj->Get(str_key)->IsObject())
+      continue;
     Local<Object> keyBuffer = obj->Get(str_key)->ToObject();
-    if (!keyBuffer->IsObject() || !Buffer::HasInstance(keyBuffer))
+    if (!Buffer::HasInstance(keyBuffer))
       continue;
     Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
 
     if (obj->Get(str_type)->StrictEquals(str_del)) {
       operations.push_back(new BatchDelete(key, Persistent<Object>::New(keyBuffer)));
     } else if (obj->Get(str_type)->StrictEquals(str_put) && obj->Has(str_value)) {
+      if (!obj->Get(str_value)->IsObject())
+        continue;
       Local<Object> valueBuffer = obj->Get(str_value)->ToObject();
-      if (!valueBuffer->IsObject() || !Buffer::HasInstance(valueBuffer))
+      if (!Buffer::HasInstance(valueBuffer))
         continue;
       Slice value(Buffer::Data(valueBuffer), Buffer::Length(valueBuffer));
       operations.push_back(new BatchWrite(key, value, Persistent<Object>::New(keyBuffer), Persistent<Object>::New(valueBuffer)));

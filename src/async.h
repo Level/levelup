@@ -11,8 +11,6 @@ using namespace std;
 using namespace v8;
 using namespace leveldb;
 
-void runCallback (Persistent<Function> callback, Local<Value> argv[], int length);
-
 class AsyncWorker {
 public:
   AsyncWorker (
