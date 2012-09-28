@@ -2,9 +2,19 @@
     "name"            : "levelup"
   , "description"     : " Fast & simple storage - a Node.js-style LevelDB wrapper"
   , "authors": [
-       "Rod Vagg @rvagg <rod@vagg.org> (https://github.com/rvagg)"
+        "Rod Vagg @rvagg <rod@vagg.org> (https://github.com/rvagg)"
     ]
-  , "keywords"        : [ "leveldb", "levelup", "stream", "database", "db", "store", "storage", "json" ]
+  , "keywords"        : [
+        "leveldb"
+      , "levelup"
+      , "stream"
+      , "database"
+      , "db"
+      , "database"
+      , "store"
+      , "storage"
+      , "json"
+    ]
   , "version"         : "0.0.5-1"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
@@ -27,9 +37,9 @@
       , "url": "https://github.com/rvagg/node-levelup.git"
     }
   , "scripts"         : {
-      "test"            : "./node_modules/.bin/buster-test"
-    , "install"         : "node-gyp rebuild"
-  }
+        "test"            : "./node_modules/.bin/buster-test"
+      , "install"         : "node-gyp rebuild"
+    }
   , "license"         : "MIT"
   , "gypfile"         : true
 }
