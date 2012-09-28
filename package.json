@@ -1,10 +1,11 @@
 {
     "name"            : "levelup"
+  , "description"     : " Fast & simple storage - a Node.js-style LevelDB wrapper"
   , "authors": [
        "Rod Vagg @rvagg <rod@vagg.org> (https://github.com/rvagg)"
     ]
   , "keywords"        : [ "leveldb", "levelup", "stream", "database", "db", "store", "storage", "json" ]
-  , "version"         : "0.0.5"
+  , "version"         : "0.0.5-1"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
         "errno"         : "~0.0.3"
