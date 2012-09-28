@@ -40,6 +40,7 @@ levelup('./mydb', options, function (err, db) {
 })
 ```
 
+
 ### Options
 
 `levelup()` takes an optional options object as its second argument; the following properties are accepted:
@@ -56,6 +57,7 @@ levelup('./mydb', options, function (err, db) {
 * `keyEncoding` and `valueEncoding` *(string)*: use instead of `encoding` to specify the exact encoding of both the keys and the values in this database.
 
 Additionally, each of the main interface methods accept an optional options object that can be used to override `encoding` (or `keyEncoding` & `valueEncoding`).
+
 
 ### Batch operations
 
@@ -78,6 +80,7 @@ db.batch(ops, function (err) {
 
 Streams
 -------
+
 
 ### ReadStream
 
@@ -109,6 +112,51 @@ Additionally, you can supply an options object as the first parameter to `readSt
 
 * `'reverse'`: a boolean, set to true if you want the stream to go in reverse order. Beware that due to the way LevelDB works, a reverse seek will be slower than a forward seek.
 
+* `'keys'`: a boolean (defaults to `true`) to indicate whether the `'data'` event should contain keys. If set to `true` and `'values'` set to `false` then `'data'` events will simply be keys, rather than objects with a `'key'` property. Used internally by the `keyStream()` method.
+
+* `'values'`: a boolean (defaults to `true`) to indicate whether the `'data'` event should contain values. If set to `true` and `'keys'` set to `false` then `'data'` events will simply be values, rather than objects with a `'value'` property. Used internally by the `valueStream()` method.
+
+
+### KeyStream
+
+A **KeyStream** is a **ReadStream** where the `'data'` events are simply the keys from the database so it can be used like a traditional stream rather than an object stream.
+
+You can obtain a KeyStream either by calling the `keyStream()` method on a LevelUP object or by passing passing an options object to `readStream()` with `keys` set to `true` and `values` set to `false`.
+
+```js
+db.keyStream()
+  .on('data', function (data) {
+    console.log('key=', data)
+  })
+
+// same as:
+db.readStream({ keys: true, values: false })
+  .on('data', function (data) {
+    console.log('key=', data)
+  })
+```
+
+
+### ValueStream
+
+A **ValueStream** is a **ReadStream** where the `'data'` events are simply the values from the database so it can be used like a traditional stream rather than an object stream.
+
+You can obtain a ValueStream either by calling the `valueStream()` method on a LevelUP object or by passing passing an options object to `readStream()` with `valuess` set to `true` and `keys` set to `false`.
+
+```js
+db.valueStream()
+  .on('data', function (data) {
+    console.log('value=', data)
+  })
+
+// same as:
+db.readStream({ keys: false, values: true })
+  .on('data', function (data) {
+    console.log('value=', data)
+  })
+```
+
+
 ### WriteStream
 
 A **WriteStream** can be obtained by calling the `writeStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method. Tce WriteStream will buffer writes and submit them as a `batch()` operation where the writes occur on the same event loop tick, otherwise they are treated as simple `put()` operations.
@@ -130,7 +178,8 @@ db.writeStream()
 
 The standard `write()`, `end()`, `destroy()` and `destroySoon()` methods are implemented on the WriteStream. `'drain'`, `'error'`, `'close'` and `'pipe'` events are emitted.
 
-### Pipes and compatibility
+
+### Pipes and Node Stream compatibility
 
 A ReadStream can be piped directly to a WriteStream, allowing for easy copying of an entire database. A simple `copy()` operation is included in LevelUP that performs exactly this on two open databases:
 
@@ -141,6 +190,8 @@ function copy (srcdb, dstdb, callback) {
 ```
 
 The ReadStream is also [fstream](https://github.com/isaacs/fstream)-compatible which means you should be able to pipe to and from fstreams. So you can serialize and deserialize an entire database to a directory where keys are filenames and values are their contents, or even into a *tar* file using [node-tar](https://github.com/isaacs/node-tar). See the [fstream functional test](https://github.com/rvagg/node-levelup/blob/master/test/functional/fstream-test.js) for an example. *(Note: I'm not really sure there's a great use-case for this but it's a fun example and it helps to harden the stream implementations.)*
+
+KeyStreams and ValueStreams can be treated like standard streams of raw data. If `'encoding'` is set to `'binary'` the `'data'` events will simply be standard Node `Buffer` objects straight out of the data store.
 
 JSON
 ----
@@ -155,13 +206,12 @@ Important considerations
 TODO
 ----
 
-* Filter streams, e.g.: KeyReadStream, ValueReadStream
-* *Windows support, maybe*
+* Windows support (see [issue #5](https://github.com/rvagg/node-levelup/issues/5) if you would like to help)
 * Benchmarks
 
 Licence & copyright
 -------------------
 
-LevelUP is Copyright (c) 2012 Rod Vagg <[@rvagg](https://twitter.com/rvagg)> and licenced under the MIT licence. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
+LevelUP is Copyright (c) 2012 Rod Vagg [@rvagg](https://twitter.com/rvagg) and licenced under the MIT licence. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
 
 LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).

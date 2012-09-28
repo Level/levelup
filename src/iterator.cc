@@ -18,6 +18,8 @@ using namespace levelup;
 LU_OPTION ( start );
 LU_OPTION ( end );
 LU_OPTION ( reverse );
+LU_OPTION ( keys );
+LU_OPTION ( values );
 
 bool levelup::Iterator::GetIterator () {
   if (dbIterator == NULL) {
@@ -46,9 +48,13 @@ bool levelup::Iterator::IteratorNext (string& key, string& value) {
       && (end == NULL
           || (reverse && end->compare(dbIterator->key().ToString()) <= 0)
           || (!reverse && end->compare(dbIterator->key().ToString()) >= 0))) {
-    key.assign(dbIterator->key().data(), dbIterator->key().size());
-    value.assign(dbIterator->value().data(), dbIterator->value().size());
+
+    if (keys)
+      key.assign(dbIterator->key().data(), dbIterator->key().size());
+    if (values)
+      value.assign(dbIterator->value().data(), dbIterator->value().size());
     return true;
+
   } else {
     return false;
   }
@@ -132,7 +138,15 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
   if (args[1]->ToObject()->Has(option_reverse)) {
     reverse = args[1]->ToObject()->Get(option_reverse)->BooleanValue();
   }
-  Iterator* iterator = new Iterator(database, start, end, reverse);
+  bool keys = true;
+  if (args[1]->ToObject()->Has(option_keys)) {
+    keys = args[1]->ToObject()->Get(option_keys)->BooleanValue();
+  }
+  bool values = true;
+  if (args[1]->ToObject()->Has(option_values)) {
+    values = args[1]->ToObject()->Get(option_values)->BooleanValue();
+  }
+  Iterator* iterator = new Iterator(database, start, end, reverse, keys, values);
   iterator->Wrap(args.This());
 
   return args.This();
@@ -140,5 +154,5 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
 
 Handle<Value> levelup::CreateIterator (const Arguments& args) {
   HandleScope scope;
-  return scope.Close(levelup::Iterator::NewInstance(args));
+ return scope.Close(levelup::Iterator::NewInstance(args));
 }
