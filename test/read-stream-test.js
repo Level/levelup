@@ -434,4 +434,25 @@ buster.testCase('ReadStream', {
         }.bind(this))
       }.bind(this))
     }
+
+  , 'test readStream() "reverse=true" not sticky (issue #6)': function (done) {
+      this.openTestDatabase(function (db) {
+        // execute
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+          // read in reverse, assume all's good
+          var rs = db.readStream({ reverse: true })
+          rs.on('close', function () {
+            // now try reading the other way
+            var rs = db.readStream()
+            assert.isFalse(rs.writable)
+            assert.isTrue(rs.readable)
+            rs.on('ready', this.readySpy)
+            rs.on('data' , this.dataSpy)
+            rs.on('end'  , this.endSpy)
+            rs.on('close', this.verify.bind(this, rs, done))
+          }.bind(this))
+        }.bind(this))
+      }.bind(this))
+    }
 })

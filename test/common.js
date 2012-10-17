@@ -90,5 +90,5 @@ module.exports.commonSetUp = function () {
   this.cleanupDirs = []
   this.closeableDatabases = []
   this.openTestDatabase = module.exports.openTestDatabase.bind(this)
-  this.timeout = 1000
+  this.timeout = 10000
 }
