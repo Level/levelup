@@ -15,12 +15,12 @@
       , "storage"
       , "json"
     ]
-  , "version"         : "0.1.0"
+  , "version"         : "0.1.1"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
         "errno"         : "~0.0.3"
       , "bindings"      : "~1.0.0"
-      , "concat-stream" : "~0.0.8"
+      , "concat-stream" : "~0.0.9"
       , "bufferstream"  : "~0.5.1"
     }
   , "devDependencies" : {
