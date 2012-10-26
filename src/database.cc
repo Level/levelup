@@ -151,9 +151,25 @@ Handle<Value> Database::Put (const Arguments& args) {
     return Undefined();
   }
 
+  if (!Buffer::HasInstance(args[0])) {
+    Local<Value> argv[] = {
+      Local<Value>::New(Exception::Error(String::New("Key must be an instance of Buffer")))
+    };
+    RunCallback(callback, argv, 1);
+    return Undefined();
+  }
+
   if (args[1]->IsNull() || args[1]->IsUndefined()) {
     Local<Value> argv[] = {
       Local<Value>::New(Exception::Error(String::New("Value cannot be `null` or `undefined`")))
+    };
+    RunCallback(callback, argv, 1);
+    return Undefined();
+  }
+
+  if (!Buffer::HasInstance(args[1])) {
+    Local<Value> argv[] = {
+      Local<Value>::New(Exception::Error(String::New("Value must be an instance of Buffer")))
     };
     RunCallback(callback, argv, 1);
     return Undefined();
@@ -194,6 +210,13 @@ Handle<Value> Database::Get (const Arguments& args) {
     return Undefined();
   }
 
+  if (!Buffer::HasInstance(args[0])) {
+    Local<Value> argv[] = {
+      Local<Value>::New(Exception::Error(String::New("Key must be an instance of Buffer")))
+    };
+    RunCallback(callback, argv, 1);
+    return Undefined();
+  }
 
   Persistent<Object> keyBuffer = Persistent<Object>::New(args[0]->ToObject());
   Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
@@ -219,6 +242,14 @@ Handle<Value> Database::Delete (const Arguments& args) {
   if (args[0]->IsNull() || args[0]->IsUndefined()) {
     Local<Value> argv[] = {
       Local<Value>::New(Exception::Error(String::New("Key cannot be `null` or `undefined`")))
+    };
+    RunCallback(callback, argv, 1);
+    return Undefined();
+  }
+
+  if (!Buffer::HasInstance(args[0])) {
+    Local<Value> argv[] = {
+      Local<Value>::New(Exception::Error(String::New("Key must be an instance of Buffer")))
     };
     RunCallback(callback, argv, 1);
     return Undefined();

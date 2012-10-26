@@ -455,4 +455,42 @@ buster.testCase('ReadStream', {
         }.bind(this))
       }.bind(this))
     }
+
+  , 'test ReadStream, start=0': function (done) {
+      this.openTestDatabase(function (db) {
+        // execute
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ start: 0 })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+        }.bind(this))
+      }.bind(this))
+    }
+
+    // we don't expect any data to come out of here because the keys start at '00' not 0
+    // we just want to ensure that we don't kill the process
+  , 'test ReadStream, end=0': function (done) {
+      this.openTestDatabase(function (db) {
+        // execute
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ end: 0 })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          this.sourceData = [ ]
+        }.bind(this))
+      }.bind(this))
+    }
 })
