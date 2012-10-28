@@ -1,8 +1,13 @@
 /* Copyright (c) 2012 Rod Vagg <@rvagg> */
 
-var buster  = require('buster')
-  , assert  = buster.assert
-  , common  = require('./common')
+var buster     = require('buster')
+  , assert     = buster.assert
+  , levelup    = require('../lib/levelup.js')
+  , common     = require('./common')
+  , SlowStream = require('slow-stream')
+  , delayed    = require('delayed')
+  , rimraf     = require('rimraf')
+  , async      = require('async')
 
 buster.testCase('ReadStream', {
     'setUp': function () {
@@ -492,5 +497,67 @@ buster.testCase('ReadStream', {
           this.sourceData = [ ]
         }.bind(this))
       }.bind(this))
+    }
+
+    // ok, so here's the deal, this is kind of obscure: when you have 2 databases open and
+    // have a readstream coming out from both of them with no references to the dbs left
+    // V8 will GC one of them and you'll get an failed assert from leveldb.
+    // This ISN'T a problem if you only have one of them open, even if the db gets GCed!
+    // Process:
+    //   * open
+    //   * batch write data
+    //   * close
+    //   * reopen
+    //   * create ReadStream, keeping no reference to the db
+    //   * pipe ReadStream through SlowStream just to make sure GC happens
+    //       - the error should occur here if the bug exists
+    //   * when both streams finish, verify all 'data' events happened
+  , '=>test ReadStream without db ref doesn\'t get GCed': function (done) {
+      var dataSpy1   = this.spy()
+        , dataSpy2   = this.spy()
+        , location1  = common.nextLocation()
+        , location2  = common.nextLocation()
+        , sourceData = this.sourceData
+        , verify     = function () {
+            // no reference to `db` here, should have been GCed by now if it could be
+            assert(dataSpy1.callCount, sourceData.length)
+            assert(dataSpy2.callCount, sourceData.length)
+            async.parallel([ rimraf.bind(null, location1), rimraf.bind(null, location2) ], done)
+          }
+        , execute    = function (d, callback) {
+            // no reference to `db` here, could be GCed
+            d.readStream
+              .pipe(new SlowStream({ maxWriteInterval: 5 }))
+              .on('data', d.spy)
+              .on('end', delayed.delayed(callback, 0.05))
+          }
+        , open       = function (reopen, location, callback) {
+            levelup(location, { createIfMissing: !reopen, errorIfExists: !reopen }, callback)
+          }
+        , write      = function (db, callback) { db.batch(sourceData.slice(), callback) }
+        , close      = function (db, callback) { db.close(callback) }
+        , setup      = function (callback) {
+            async.map([ location1, location2 ], open.bind(null, false), function (err, dbs) {
+              refute(err)
+              if (err) return
+              async.map(dbs, write, function (err) {
+                refute(err)
+                if (err) return
+                async.forEach(dbs, close, callback)
+              })
+            })
+          }
+        , reopen    = function () {
+            async.map([ location1, location2 ], open.bind(null, true), function (err, dbs) {
+              refute(err)
+              if (err) return
+              async.forEach([
+                  { readStream: dbs[0].readStream(), spy: dataSpy1 }
+                , { readStream: dbs[1].readStream(), spy: dataSpy2 }
+              ], execute, verify)
+            })
+          }
+
+      setup(delayed.delayed(reopen, 0.05))
     }
 })

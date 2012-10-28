@@ -31,6 +31,8 @@
       , "tar"           : "*"
       , "mkfiletree"    : "*"
       , "readfiletree"  : "*"
+      , "slow-stream"   : "*"
+      , "delayed"       : "*"
     }
   , "repository": {
         "type": "git"
