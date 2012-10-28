@@ -7,7 +7,6 @@
 {
   'target_defaults': {
     'defines': [
-      'LEVELDB_PLATFORM_POSIX=1',
       'USE_SNAPPY=1',
     ],
     'include_dirs': [
@@ -23,6 +22,18 @@
       ['OS == "linux"', {
         'defines': [
           'OS_LINUX=1',
+      		'LEVELDB_PLATFORM_POSIX=1',
+        ],
+        'CCFLAGS': [
+          '-fno-builtin-memcmp',
+          '-pthread',
+          '-fPIC',
+        ],
+      }],
+      ['OS == "solaris"', {
+        'defines': [
+          'OS_SOLARIS=1',
+      		'LEVELDB_PLATFORM_POSIX=1',
         ],
         'CCFLAGS': [
           '-fno-builtin-memcmp',
@@ -33,6 +44,7 @@
       ['OS == "mac"', {
         'defines': [
           'OS_MACOSX=1',
+      		'LEVELDB_PLATFORM_POSIX=1',
         ],
         'CCFLAGS': [
           '-fno-builtin-memcmp',
