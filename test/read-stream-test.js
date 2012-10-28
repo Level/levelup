@@ -512,7 +512,7 @@ buster.testCase('ReadStream', {
     //   * pipe ReadStream through SlowStream just to make sure GC happens
     //       - the error should occur here if the bug exists
     //   * when both streams finish, verify all 'data' events happened
-  , '=>test ReadStream without db ref doesn\'t get GCed': function (done) {
+  , 'test ReadStream without db ref doesn\'t get GCed': function (done) {
       var dataSpy1   = this.spy()
         , dataSpy2   = this.spy()
         , location1  = common.nextLocation()
