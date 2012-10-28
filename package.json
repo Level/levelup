@@ -1,6 +1,6 @@
 {
     "name"            : "levelup"
-  , "description"     : " Fast & simple storage - a Node.js-style LevelDB wrapper"
+  , "description"     : "Fast & simple storage - a Node.js-style LevelDB wrapper"
   , "authors": [
         "Rod Vagg @rvagg <rod@vagg.org> (https://github.com/rvagg)"
     ]
@@ -15,7 +15,7 @@
       , "storage"
       , "json"
     ]
-  , "version"         : "0.1.2"
+  , "version"         : "0.2.0"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
         "errno"         : "~0.0.3"
