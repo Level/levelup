@@ -197,16 +197,15 @@ KeyStreams and ValueStreams can be treated like standard streams of raw data. If
 Events
 ------
 
-Levelup emits events when the callbacks to the corrisponding methods are called.
+LevelUP emits events when the callbacks to the corresponding methods are called.
 
-* `db.emit('put', key, value)` emitted when a new value is `'put'`,
-* `db.emit('del', key)` emitted when a value is deleted,
-* `db.emit('batch', ary)` emitted when a batch opperation has executed.
-* `db.emit('ready')` emitted when the database has opened.
-* `db.emit('closed')` emitted when the database has closed.
+* `db.emit('put', key, value)` emitted when a new value is `'put'`
+* `db.emit('del', key)` emitted when a value is deleted
+* `db.emit('batch', ary)` emitted when a batch operation has executed
+* `db.emit('ready')` emitted when the database has opened
+* `db.emit('closed')` emitted when the database has closed
 
-If you do not pass a callback to an async function, and there is an error,
-levelup will `emit('error', err)` instead.
+If you do not pass a callback to an async function, and there is an error, LevelUP will `emit('error', err)` instead.
 
 JSON
 ----
