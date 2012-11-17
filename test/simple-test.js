@@ -20,8 +20,7 @@ buster.testCase('Basic API', {
 
   , 'default options': function (done) {
       var location = common.nextLocation()
-      levelup(location, { createIfMissing: true, errorIfExists: true }, function (err, db) {
-        refute(err)
+      var db = levelup(location, { createIfMissing: true, errorIfExists: true }, function (err, db) {
         assert.isTrue(db.isOpen())
         this.closeableDatabases.push(db)
         this.cleanupDirs.push(location)
@@ -52,6 +51,7 @@ buster.testCase('Basic API', {
       var location = common.nextLocation()
       levelup(location, { createIfMissing: true, errorIfExists: true }, function (err, db) {
         refute(err)
+
         this.closeableDatabases.push(db)
         this.cleanupDirs.push(location)
         assert.isObject(db)
@@ -66,6 +66,23 @@ buster.testCase('Basic API', {
         */
         done()
       }.bind(this))
+    }
+
+  , 'without callback': function (done) {
+      var location = common.nextLocation()
+      var db = levelup(location, { createIfMissing: true, errorIfExists: true })
+
+      this.closeableDatabases.push(db)
+      this.cleanupDirs.push(location)
+      assert.isObject(db)
+      assert.isTrue(db._options.createIfMissing)
+      assert.isTrue(db._options.errorIfExists)
+      assert.equals(db._location, location)
+
+      db.on("ready", function () {
+        assert.isTrue(db.isOpen())
+        done()
+      })
     }
 
   , 'open() with !createIfMissing expects error': function (done) {
@@ -126,44 +143,8 @@ buster.testCase('Basic API', {
     }
 
   , 'Simple operations': {
-        'get() on non-open database causes error': function (done) {
-          levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true }, function (err, db) {
-            refute(err) // sanity
-            this.closeableDatabases.push(db)
-            assert.isTrue(db.isOpen())
 
-            db.close(function () {
-              db.get('undefkey', function (err, value) {
-                refute(value)
-                assert.isInstanceOf(err, Error)
-                assert.isInstanceOf(err, errors.LevelUPError)
-                assert.isInstanceOf(err, errors.ReadError)
-                assert.match(err, /not .*open/)
-                done()
-              })
-            })
-          }.bind(this))
-        }
-
-      , 'put() on non-open database causes error': function (done) {
-          levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true }, function (err, db) {
-            refute(err) // sanity
-            this.closeableDatabases.push(db)
-            assert.isTrue(db.isOpen())
-
-            db.close(function () {
-              db.put('somekey', 'somevalue', function (err) {
-                assert.isInstanceOf(err, Error)
-                assert.isInstanceOf(err, errors.LevelUPError)
-                assert.isInstanceOf(err, errors.WriteError)
-                assert.match(err, /not .*open/)
-                done()
-              })
-            })
-          }.bind(this))
-        }
-
-      , 'get() on empty database causes error': function (done) {
+      'get() on empty database causes error': function (done) {
           this.openTestDatabase(function (db) {
             db.get('undefkey', function (err, value) {
               refute(value)
@@ -187,24 +168,6 @@ buster.testCase('Basic API', {
               })
             })
           })
-        }
-
-      , 'del() on non-open database causes error': function (done) {
-          levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true }, function (err, db) {
-            refute(err) // sanity
-            this.closeableDatabases.push(db)
-            assert.isTrue(db.isOpen())
-
-            db.close(function () {
-              db.del('undefkey', function (err) {
-                assert.isInstanceOf(err, Error)
-                assert.isInstanceOf(err, errors.LevelUPError)
-                assert.isInstanceOf(err, errors.WriteError)
-                assert.match(err, /not .*open/)
-                done()
-              })
-            })
-          }.bind(this))
         }
 
       , 'del() on empty database doesn\'t cause error': function (done) {
