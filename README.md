@@ -193,6 +193,21 @@ The ReadStream is also [fstream](https://github.com/isaacs/fstream)-compatible w
 
 KeyStreams and ValueStreams can be treated like standard streams of raw data. If `'encoding'` is set to `'binary'` the `'data'` events will simply be standard Node `Buffer` objects straight out of the data store.
 
+
+Events
+------
+
+Levelup emits events when the callbacks to the corrisponding methods are called.
+
+* `db.emit('put', key, value)` emitted when a new value is `'put'`,
+* `db.emit('del', key)` emitted when a value is deleted,
+* `db.emit('batch', ary)` emitted when a batch opperation has executed.
+* `db.emit('ready')` emitted when the database has opened.
+* `db.emit('closed')` emitted when the database has closed.
+
+If you do not pass a callback to an async function, and there is an error,
+levelup will `emit('error', err)` instead.
+
 JSON
 ----
 
@@ -215,3 +230,4 @@ Licence & copyright
 LevelUP is Copyright (c) 2012 Rod Vagg [@rvagg](https://twitter.com/rvagg) and licenced under the MIT licence. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
 
 LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).
+
