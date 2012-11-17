@@ -223,10 +223,27 @@ TODO
 * Windows support (see [issue #5](https://github.com/rvagg/node-levelup/issues/5) if you would like to help)
 * Benchmarks
 
+Contributing
+------------
+
+LevelUP is an **OPEN Open Source Project**. This means that:
+
+> Individuals making significant and valuable contributions are given commit-access to the project to contribute as they see fit. This project is more like an open wiki than a standard guarded open source project.
+
+See the [CONTRIBUTING.md](https://github.com/rvagg/node-levelup/blob/master/CONTRIBUTING.md) file for more details.
+
+### Contributors
+
+* Rod Vagg - [GitHub/rvagg](https://github.com/rvagg) - [Twitter/@rvagg](https://twitter.com/rvagg)
+* John Chesley - [GitHub/chesles](https://github.com/chesles/) - [Twitter/@chesles](https://twitter.com/chesles)
+* Jake Verbaten - [GitHub/raynos](https://github.com/raynos) - [Twitter/@raynos2](https://twitter.com/Raynos2)
+* Dominic Tarr - [GitHub/dominictarr](https://github.com/dominictarr) - [Twitter/@dominictarr](https://twitter.com/dominictarr)
+
 Licence & copyright
 -------------------
 
-LevelUP is Copyright (c) 2012 Rod Vagg [@rvagg](https://twitter.com/rvagg) and licenced under the MIT licence. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
+LevelUP is Copyright (c) 2012 Rod Vagg and other contributors listed above.
+
+LevelUP is licensed under the MIT licence. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
 
 LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).
-
