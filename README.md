@@ -194,9 +194,6 @@ db.batch(ops, function (err) {
 
 See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can overwrite default `key` and `value` encodings and also specify the use of `sync` filesystem operations.
 
-Streams
--------
-
 --------------------------------------------------------
 <a name="isOpen"></a>
 ### db.isOpen()
