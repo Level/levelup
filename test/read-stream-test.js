@@ -560,4 +560,36 @@ buster.testCase('ReadStream', {
 
       setup(delayed.delayed(reopen, 0.05))
     }
+
+
+    // this is just a fancy way of testing levelup('/path').readStream()
+    // i.e. not waiting for 'open' to complete
+    // the logic for this is inside the ReadStream constructor which waits for 'ready'
+  , 'test ReadStream on pre-opened db': function (done) {
+      var execute = function (db) {
+            // is in limbo
+            refute(db.isOpen())
+            refute(db.isClosed())
+
+            var rs = db.readStream()
+            assert.isFalse(rs.writable)
+            assert.isTrue(rs.readable)
+            rs.on('ready', this.readySpy)
+            rs.on('data' , this.dataSpy)
+            rs.on('end'  , this.endSpy)
+            rs.on('close', this.verify.bind(this, rs, done))
+          }.bind(this)
+        , setup = function (db) {
+            db.batch(this.sourceData.slice(), function (err) {
+              refute(err)
+              db.close(function (err) {
+                refute(err)
+                var db2 = levelup(db._location, { createIfMissing: false, errorIfExists: false, encoding: 'utf8' })
+                execute(db2)
+              })
+            }.bind(this))
+          }.bind(this)
+
+      this.openTestDatabase(setup)
+    }
 })
