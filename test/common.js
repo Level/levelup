@@ -39,6 +39,7 @@ module.exports.openTestDatabase = function () {
   var options = typeof arguments[0] == 'object' ? arguments[0] : { createIfMissing: true, errorIfExists: true }
     , callback = typeof arguments[0] == 'function' ? arguments[0] : arguments[1]
     , location = typeof arguments[0] == 'string' ? arguments[0] : module.exports.nextLocation()
+
   rimraf(location, function (err) {
     refute(err)
     this.cleanupDirs.push(location)

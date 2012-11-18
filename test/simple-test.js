@@ -20,7 +20,7 @@ buster.testCase('Basic API', {
 
   , 'default options': function (done) {
       var location = common.nextLocation()
-      var db = levelup(location, { createIfMissing: true, errorIfExists: true }, function (err, db) {
+      levelup(location, { createIfMissing: true, errorIfExists: true }, function (err, db) {
         assert.isTrue(db.isOpen())
         this.closeableDatabases.push(db)
         this.cleanupDirs.push(location)
