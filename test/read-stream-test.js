@@ -576,7 +576,6 @@ buster.testCase('ReadStream', {
             assert.isTrue(rs.readable)
             rs.on('ready', this.readySpy)
             rs.on('data' , this.dataSpy)
-            rs.on('data' , function () { console.log('data', arguments) })
             rs.on('end'  , this.endSpy)
             rs.on('close', this.verify.bind(this, rs, done))
           }.bind(this)
