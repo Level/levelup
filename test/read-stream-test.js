@@ -580,12 +580,9 @@ buster.testCase('ReadStream', {
             rs.on('close', this.verify.bind(this, rs, done))
           }.bind(this)
         , setup = function (db) {
-          console.log('opened')
             db.batch(this.sourceData.slice(), function (err) {
-              console.log('batching',err)
               refute(err)
               db.close(function (err) {
-                console.log('closed', err)
                 refute(err)
                 var db2 = levelup(db._location, { createIfMissing: false, errorIfExists: false, encoding: 'utf8' })
                 execute(db2)
