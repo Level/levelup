@@ -277,7 +277,7 @@ db.readStream({ keys: true, values: false })
 ```
 
 --------------------------------------------------------
-<a name="valyeStream"></a>
+<a name="valueStream"></a>
 ### db.valueStream()
 
 A **ValueStream** is a **ReadStream** where the `'data'` events are simply the values from the database so it can be used like a traditional stream rather than an object stream.
