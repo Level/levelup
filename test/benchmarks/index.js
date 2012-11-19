@@ -44,6 +44,14 @@ var Benchmark = require('benchmark')
       })
     }
 
+  , focusKey = Object.keys(benchmarks).filter(function (k) { return (/\=>/).test(k) })
+
+if (focusKey.length) {
+  var focusBenchmark = benchmarks[focusKey[0]]
+  benchmarks = {}
+  benchmarks[focusKey[0]] = focusBenchmark
+}
+
 async.forEachSeries(
     Object.keys(benchmarks)
   , function (name, cb) {
