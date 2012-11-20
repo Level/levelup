@@ -159,6 +159,11 @@ buster.testCase('Basic API', {
 
       , 'put() and get() simple string key/value pairs': function (done) {
           this.openTestDatabase(function (db) {
+            var count = 0
+            db.on('put', function (key, value) {
+
+            })
+
             db.put('some key', 'some value stored in the database', function (err) {
               refute(err)
               db.get('some key', function (err, value) {
