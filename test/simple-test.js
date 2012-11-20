@@ -200,13 +200,15 @@ buster.testCase('Basic API', {
 
             db.on('del', assertKey)
 
-            db.on('after:del', assertKey)
+            db.on('after:del', function (key) {
+              assertKey(key)
+              assert.equals(count, 3)
+              done()
+            })
 
 
             db.del('undefkey', function (err) {
               refute(err)
-              assert.equals(count, 3)
-              done()
             })
           })
         }
