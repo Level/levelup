@@ -2,3 +2,4 @@ node_modules/
 build/
 libleveldb.so
 libleveldb.a
+test/levelup_test_*

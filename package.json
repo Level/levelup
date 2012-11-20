@@ -41,6 +41,8 @@
   , "scripts"         : {
         "test"            : "./node_modules/.bin/buster-test"
       , "install"         : "node-gyp rebuild"
+      , "benchmark"       : "cd ./test/benchmarks && npm install && node ./"
+      , "clean"           : "rm test/levelup_test_db_* -r"
     }
   , "license"         : "MIT"
   , "gypfile"         : true

@@ -30,7 +30,7 @@ Tested & supported platforms
   * **Mac OS**
   * **Solaris** (tested on SmartOS & Nodejitsu)
 
-**Windows** support is coming soon; see [issue #5](https://github.com/rvagg/node-levelup/issues/5) if you would like to help on that front. 
+**Windows** support is coming soon; see [issue #5](https://github.com/rvagg/node-levelup/issues/5) if you would like to help on that front.
 
 <a name="basic"></a>
 Basic usage
@@ -70,6 +70,7 @@ db.put('name', 'LevelUP', function (err) {
   * <a href="#get"><code>db.<b>get()</b></code></a>
   * <a href="#del"><code>db.<b>del()</b></code></a>
   * <a href="#batch"><code>db.<b>batch()</b></code></a>
+  * <a href="#hook"><code>db.<b>hook()</b></code></a>
   * <a href="#isOpen"><code>db.<b>isOpen()</b></code></a>
   * <a href="#isClosed"><code>db.<b>isClosed()</b></code></a>
   * <a href="#readStream"><code>db.<b>readStream()</b></code></a>
@@ -193,6 +194,27 @@ db.batch(ops, function (err) {
 #### `options`
 
 See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can overwrite default `key` and `value` encodings and also specify the use of `sync` filesystem operations.
+
+--------------------------------------------------------
+<a name="hook"></a>
+### db.hook(type, listener)
+`hook` can be used to intercept a put or del command and turn it
+  into a batch instead.
+
+This is useful if you need to transparently intercept database
+  mutation for a job queue system and want to ensure that your
+  interceptions have the failure tolerance garantuees that batch
+  has.
+
+```js
+db.hook("put", function (value, key, arr) {
+  // insert a token into the db that a job needs to be run.
+  // this is fault tolerant way to run recoverable jobs
+  arr.push({ type: "put", key: "~job:" + key, value: key })
+})
+
+...
+```
 
 --------------------------------------------------------
 <a name="isOpen"></a>
