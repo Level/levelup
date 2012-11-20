@@ -160,15 +160,27 @@ buster.testCase('Basic API', {
       , 'put() and get() simple string key/value pairs': function (done) {
           this.openTestDatabase(function (db) {
             var count = 0
-            db.on('put', function (key, value) {
+              , key = 'some key'
+              , value = 'some value stored in the database'
 
-            })
+            function assertKeyValue(_key, _value) {
+              assert.equals(key, _key)
+              assert.equals(value, _value)
+              count++
+            }
 
-            db.put('some key', 'some value stored in the database', function (err) {
+            db.on('before:put', assertKeyValue)
+
+            db.on('put', assertKeyValue)
+
+            db.on('after:put', assertKeyValue)
+
+            db.put(key, value, function (err) {
               refute(err)
-              db.get('some key', function (err, value) {
+              db.get(key, function (err, _value) {
                 refute(err)
-                assert.equals(value, 'some value stored in the database')
+                assert.equals(_value, value)
+                assert.equals(count, 3)
                 done()
               })
             })
@@ -177,8 +189,23 @@ buster.testCase('Basic API', {
 
       , 'del() on empty database doesn\'t cause error': function (done) {
           this.openTestDatabase(function (db) {
+            var count = 0
+
+            function assertKey(_key) {
+              assert.equals('undefkey', _key)
+              count++
+            }
+
+            db.on('before:del', assertKey)
+
+            db.on('del', assertKey)
+
+            db.on('after:del', assertKey)
+
+
             db.del('undefkey', function (err) {
               refute(err)
+              assert.equals(count, 3)
               done()
             })
           })
@@ -229,12 +256,30 @@ buster.testCase('Basic API', {
   , 'batch()': {
         'batch() with multiple puts': function (done) {
           this.openTestDatabase(function (db) {
+            var count = 0
+              , key = 'some key'
+              , value = 'some value stored in the database'
+
+            function assertArray(_arr) {
+              assert.equals(arr, _arr)
+              count++
+            }
+
+            var arr = [
+                { type: 'put', key: 'foo', value: 'afoovalue' }
+              , { type: 'put', key: 'bar', value: 'abarvalue' }
+              , { type: 'put', key: 'baz', value: 'abazvalue' }
+            ]
+
+            db.on('before:batch', assertArray)
+
+            db.on('batch', assertArray)
+
+            db.on('after:batch', assertArray)
+
+
             db.batch(
-                [
-                    { type: 'put', key: 'foo', value: 'afoovalue' }
-                  , { type: 'put', key: 'bar', value: 'abarvalue' }
-                  , { type: 'put', key: 'baz', value: 'abazvalue' }
-                ]
+                arr
               , function (err) {
                   refute(err)
                   async.forEach(
@@ -246,7 +291,10 @@ buster.testCase('Basic API', {
                           callback()
                         })
                       }
-                    , done
+                    , function () {
+                      assert.equals(count, 3)
+                      done()
+                    }
                   )
                 }
             )
