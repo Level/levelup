@@ -8,8 +8,8 @@ buster.testCase('put hook', {
   , 'tearDown': common.commonTearDown
 
   , 'hook(put)': function (done) {
-      function handler(value, key, array) {
-        array.push({ type: "del", key: key, value: value })
+      function handler(key, value, array) {
+        array.push({ type: "del", key: key })
       }
 
       var location = common.nextLocation()

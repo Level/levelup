@@ -207,11 +207,20 @@ This is useful if you need to transparently intercept database
   has.
 
 ```js
+function delHook(key, arr) {
+  // insert stuff into array that is patched to batch here too
+}
+
 db.hook("put", function (value, key, arr) {
   // insert a token into the db that a job needs to be run.
   // this is fault tolerant way to run recoverable jobs
   arr.push({ type: "put", key: "~job:" + key, value: key })
 })
+
+db.hook("del", delHook)
+
+// Actually don't use hook
+db.removeHook(delHook)
 
 ...
 ```
