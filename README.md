@@ -30,7 +30,7 @@ Tested & supported platforms
   * **Mac OS**
   * **Solaris** (tested on SmartOS & Nodejitsu)
 
-**Windows** support is coming soon; see [issue #5](https://github.com/rvagg/node-levelup/issues/5) if you would like to help on that front. 
+**Windows** support is coming soon; see [issue #5](https://github.com/rvagg/node-levelup/issues/5) if you would like to help on that front.
 
 <a name="basic"></a>
 Basic usage
@@ -338,9 +338,22 @@ Events
 
 LevelUP emits events when the callbacks to the corresponding methods are called.
 
-* `db.emit('put', key, value)` emitted when a new value is `'put'`
+* `db.emit('put:before', key, value)` emitted before a new
+  value is `'put'`
+* `db.emit('put', key, value)` emitted when a new value is
+  `'put'` succesfully
+* `db.emit('put:after', key, value, err)` emitted when a `'put'`
+  operation completed, either succesfully or unsuccesfully
+* `db.emit('del:before', key)` emitted before a value is deleted
 * `db.emit('del', key)` emitted when a value is deleted
+* `db.emit('del:after', key, err)` emitted when a `'del'`
+  operation completed, either succesfully or unsuccesfully
+* `db.emit('batch:before', key, value)` emitted before a batch
+  operation is executed
 * `db.emit('batch', ary)` emitted when a batch operation has executed
+* `db.emit('batch:after', arr, err)` emitted when a
+  `'batch'` operation completed, either succesfully or
+  unsuccesfully
 * `db.emit('ready')` emitted when the database has opened
 * `db.emit('closed')` emitted when the database has closed
 
