@@ -33,6 +33,7 @@
       , "readfiletree"  : "*"
       , "slow-stream"   : "*"
       , "delayed"       : "*"
+      , "boganipsum"    : "*"
     }
   , "repository": {
         "type": "git"
@@ -41,6 +42,7 @@
   , "scripts"         : {
         "test"            : "./node_modules/.bin/buster-test"
       , "install"         : "node-gyp rebuild"
+      , "functionaltest"  : "node ./test/functional/fstream-test.js"
     }
   , "license"         : "MIT"
   , "gypfile"         : true
