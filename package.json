@@ -44,6 +44,7 @@
         "test"            : "./node_modules/.bin/buster-test"
       , "install"         : "node-gyp rebuild"
       , "functionaltests" : "node ./test/functional/fstream-test.js && node ./test/functional/binary-data-test.js && node ./test/functional/compat-test.js"
+      , "alltests" : "npm test && npm run-script functionaltests"
     }
   , "license"         : "MIT"
   , "gypfile"         : true

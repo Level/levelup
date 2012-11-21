@@ -37,4 +37,5 @@ async.series([
   if (err) console.error('Error', err)
   else console.log('No errors? All good then!')
   console.log('***************************************************')
+  process.exit(err ? -1 : 0)
 })

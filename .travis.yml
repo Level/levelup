@@ -7,3 +7,4 @@ branches:
 notifications:
   email:
     - rod@vagg.org
+script: npm run-script alltests
