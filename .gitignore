@@ -2,3 +2,4 @@ node_modules/
 build/
 libleveldb.so
 libleveldb.a
+leveldb-1.7.0*
