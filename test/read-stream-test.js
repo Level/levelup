@@ -592,4 +592,76 @@ buster.testCase('ReadStream', {
 
       this.openTestDatabase(setup)
     }
+
+  , 'test readStream() with "limit"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ limit: 20 })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          this.sourceData = this.sourceData.slice(0, 20)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with "start" and "limit"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ start: '20', limit: 20 })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          this.sourceData = this.sourceData.slice(20, 40)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with "end" after "limit"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ end: '50', limit: 20 })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          this.sourceData = this.sourceData.slice(0, 20)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with "end" before "limit"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.readStream({ end: '30', limit: 50 })
+          assert.isFalse(rs.writable)
+          assert.isTrue(rs.readable)
+          rs.on('ready', this.readySpy)
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          this.sourceData = this.sourceData.slice(0, 31)
+        }.bind(this))
+      }.bind(this))
+    }
 })

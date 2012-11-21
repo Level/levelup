@@ -17,6 +17,7 @@ using namespace levelup;
 
 LU_OPTION ( start );
 LU_OPTION ( end );
+LU_OPTION ( limit );
 LU_OPTION ( reverse );
 LU_OPTION ( keys );
 LU_OPTION ( values );
@@ -45,6 +46,7 @@ bool levelup::Iterator::IteratorNext (string& key, string& value) {
 
   // 'end' here is an inclusive test
   if (dbIterator->Valid()
+      && (limit < 0 || ++count <= limit)
       && (end == NULL
           || (reverse && end->compare(dbIterator->key().ToString()) <= 0)
           || (!reverse && end->compare(dbIterator->key().ToString()) >= 0))) {
@@ -146,7 +148,11 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
   if (args[1]->ToObject()->Has(option_values)) {
     values = args[1]->ToObject()->Get(option_values)->BooleanValue();
   }
-  Iterator* iterator = new Iterator(database, start, end, reverse, keys, values);
+  int limit = -1;
+  if (args[1]->ToObject()->Has(option_limit)) {
+    limit = Local<Integer>::Cast(args[1]->ToObject()->Get(option_limit))->Value();
+  }
+  Iterator* iterator = new Iterator(database, start, end, reverse, keys, values, limit);
   iterator->Wrap(args.This());
 
   return args.This();

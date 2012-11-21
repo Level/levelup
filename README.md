@@ -252,6 +252,8 @@ Additionally, you can supply an options object as the first parameter to `readSt
 
 * `'values'`: a boolean (defaults to `true`) to indicate whether the `'data'` event should contain values. If set to `true` and `'keys'` set to `false` then `'data'` events will simply be values, rather than objects with a `'value'` property. Used internally by the `valueStream()` method.
 
+* `'limit'`: a number (defaults to -1) to limit the number of results collected by this stream. This number represents a *maximum* number of results and may not be reached if you get to the end of the store or your `'end'` value first. A value of -1 means there is no limit.
+
 --------------------------------------------------------
 <a name="keyStream"></a>
 ### db.keyStream()

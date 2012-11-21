@@ -34,15 +34,18 @@ private:
     , bool                 reverse
     , bool                 keys
     , bool                 values
+    , int                  limit
   ) : database(database)
     , start(start)
     , end(end)
     , reverse(reverse)
     , keys(keys)
     , values(values)
+    , limit(limit)
   {
     options = new ReadOptions();
     dbIterator = NULL;
+    count = 0;
   };
 
   ~Iterator () {
@@ -61,6 +64,8 @@ private:
   bool                 reverse;
   bool                 keys;
   bool                 values;
+  int                  limit;
+  int                  count;
 
   bool GetIterator ();
 
