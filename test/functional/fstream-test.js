@@ -73,6 +73,9 @@ process.on('uncaughtException', function (err) {
   refute(err)
 })
 
+console.log('***************************************************')
+console.log('RUNNING FSTREAM-TEST...')
+
 async.waterfall([
     rimraf.bind(null, dblocation)
   , mkfiletree.makeTemp.bind(null, 'levelup_test_fstream', fixtureFiles)
@@ -88,4 +91,7 @@ async.waterfall([
     }
   , verify
   , cleanUp
+  , function () {
+      console.log('***************************************************')
+    }
 ])

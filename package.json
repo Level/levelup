@@ -34,6 +34,7 @@
       , "slow-stream"   : "*"
       , "delayed"       : "*"
       , "boganipsum"    : "*"
+      , "tar"           : "*"
     }
   , "repository": {
         "type": "git"
@@ -42,7 +43,7 @@
   , "scripts"         : {
         "test"            : "./node_modules/.bin/buster-test"
       , "install"         : "node-gyp rebuild"
-      , "functionaltest"  : "node ./test/functional/fstream-test.js"
+      , "functionaltests" : "node ./test/functional/fstream-test.js && node ./test/functional/binary-data-test.js && node ./test/functional/compat-test.js"
     }
   , "license"         : "MIT"
   , "gypfile"         : true

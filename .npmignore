@@ -1,2 +1,4 @@
 *.tar.gz
 build/
+test-data.tar
+test-data.db.tar
