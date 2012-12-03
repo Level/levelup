@@ -65,6 +65,14 @@ leveldb::Iterator* Database::NewIterator (ReadOptions* options) {
   return db->NewIterator(*options);
 }
 
+const leveldb::Snapshot* Database::NewSnapshot () {
+  return db->GetSnapshot();
+}
+
+void Database::ReleaseSnapshot (const leveldb::Snapshot* snapshot) {
+  return db->ReleaseSnapshot(snapshot);
+}
+
 void Database::CloseDatabase () {
   delete db;
   db = NULL;

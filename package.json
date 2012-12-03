@@ -31,7 +31,7 @@
     "tar": "*",
     "mkfiletree": "*",
     "readfiletree": "*",
-    "slow-stream": "*",
+    "slow-stream": "~0.0.3",
     "delayed": "*",
     "boganipsum": "*"
   },
@@ -43,7 +43,10 @@
     "test": "./node_modules/.bin/buster-test",
     "install": "node-gyp rebuild",
     "functionaltests": "node ./test/functional/fstream-test.js && node ./test/functional/binary-data-test.js && node ./test/functional/compat-test.js",
-    "alltests": "npm test && npm run-script functionaltests"
+    "alltests": "npm test && npm run-script functionaltests",
+    "publish": "rm -rf ./node_modules/ npm-shrinkwrap.json && npm install --production && npm shrinkwrap && npm publish && rm npm-shrinkwrap.json && npm install",
+    "sr": "npm shrinkwrap",
+    "l": "npm ls"
   },
   "license": "MIT",
   "gypfile": true

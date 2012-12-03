@@ -23,13 +23,15 @@ public:
   static void Init ();
   static v8::Handle<v8::Value> NewInstance (const v8::Arguments& args);
 
-  Status OpenDatabase           (Options* options, string location);
-  Status PutToDatabase          (WriteOptions* options, Slice key, Slice value);
-  Status GetFromDatabase        (ReadOptions* options, Slice key, string& value);
-  Status DeleteFromDatabase     (WriteOptions* options, Slice key);
-  Status WriteBatchToDatabase   (WriteOptions* options, WriteBatch* batch);
+  Status OpenDatabase            (Options* options, string location);
+  Status PutToDatabase           (WriteOptions* options, Slice key, Slice value);
+  Status GetFromDatabase         (ReadOptions* options, Slice key, string& value);
+  Status DeleteFromDatabase      (WriteOptions* options, Slice key);
+  Status WriteBatchToDatabase    (WriteOptions* options, WriteBatch* batch);
   leveldb::Iterator* NewIterator (ReadOptions* options);
-  void   CloseDatabase          ();
+  const leveldb::Snapshot* NewSnapshot ();
+  void ReleaseSnapshot           (const leveldb::Snapshot* snapshot);
+  void CloseDatabase             ();
 
 private:
   Database ();
