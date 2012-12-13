@@ -32,6 +32,7 @@
       , "slow-stream": ">=0.0.3"
       , "delayed": "*"
       , "boganipsum": "*"
+      , "du": "*"
     }
   , "repository": {
       "type": "git"
