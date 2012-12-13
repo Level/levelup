@@ -28,13 +28,13 @@ buster.testCase('Snapshots', {
           rs = rs.pipe(new SlowStream({ maxWriteInterval: 5 }))
           this.readySpy()
           rs.on('data' , this.dataSpy)
-          rs.on('end'  , this.endSpy)
+          rs.once('end'  , this.endSpy)
           rs.on('end', function () {
             rs.readable = false
             rs.writable = false
           })
 
-          rs.on('close', delayed.delayed(this.verify.bind(this, rs, done), 0.05))
+          rs.once('close', delayed.delayed(this.verify.bind(this, rs, done), 0.05))
 
           process.nextTick(function () {
 
