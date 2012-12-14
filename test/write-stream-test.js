@@ -86,6 +86,41 @@ buster.testCase('WriteStream', {
       }.bind(this))
     }
 
+    // exactly the same as previous but should avoid batch() writes
+  , 'test WriteStream with async writes and useBatch=false': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch = function () {
+          Array.prototype.slice.call(arguments).forEach(function (a) {
+            if (typeof a == 'function') a('Should not call batch()')
+          })
+        }
+
+        var ws = db.writeStream({ useBatch: false })
+
+        ws.on('error', function (err) {
+          refute(err)
+        })
+        ws.on('close', this.verify.bind(this, ws, db, done))
+        async.forEachSeries(
+            this.sourceData
+          , function (d, callback) {
+              if (d.key % 3) {
+                setTimeout(function () {
+                  ws.write(d)
+                  callback()
+                }, 10)
+              } else {
+                ws.write(d)
+                callback()
+              }
+            }
+          , function () {
+              ws.end()
+            }
+        )
+      }.bind(this))
+    }
+
     // at the moment, destroySoon() is basically just end()
   , 'test destroySoon()': function (done) {
       this.openTestDatabase(function (db) {

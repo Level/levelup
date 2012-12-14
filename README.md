@@ -319,6 +319,9 @@ db.writeStream()
 
 The standard `write()`, `end()`, `destroy()` and `destroySoon()` methods are implemented on the WriteStream. `'drain'`, `'error'`, `'close'` and `'pipe'` events are emitted.
 
+Additionally, you can supply an options object as the first parameter to `writeStream()` with the following option:
+
+* `'useBatch'`: a boolean (defaults to `true`) if set to `false`, your *WriteStream* will avoid the use of `batch()` and use `put()` to write all data to the database. Since `batch()` is much quicker than multiple `put()` operations, you are advised to leave this as `true` unless you have a good reason to change it.
 
 #### Pipes and Node Stream compatibility
 
