@@ -20,11 +20,17 @@ using namespace leveldb;
 
 /** OPEN WORKER **/
 
+OpenWorker::~OpenWorker () {
+  delete options;
+}
+
 void OpenWorker::Execute () {
   status = database->OpenDatabase(options, location);
 }
 
 /** CLOSE WORKER **/
+
+CloseWorker::~CloseWorker () {}
 
 void CloseWorker::Execute () {
   database->CloseDatabase();
@@ -38,24 +44,11 @@ void CloseWorker::WorkComplete () {
 
 /** IO WORKER (abstract) **/
 
+IOWorker::~IOWorker () {}
+
 void IOWorker::WorkComplete () {
   AsyncWorker::WorkComplete();
   keyPtr.Dispose();
-}
-
-/** WRITE WORKER **/
-
-WriteWorker::~WriteWorker () {
-  delete options;
-}
-
-void WriteWorker::Execute () {
-  status = database->PutToDatabase(options, key, value);
-}
-
-void WriteWorker::WorkComplete () {
-  IOWorker::WorkComplete();
-  valuePtr.Dispose();
 }
 
 /** READ WORKER **/
@@ -86,17 +79,32 @@ void DeleteWorker::Execute () {
   status = database->DeleteFromDatabase(options, key);
 }
 
+/** WRITE WORKER **/
+
+void WriteWorker::Execute () {
+  status = database->PutToDatabase(options, key, value);
+}
+
+void WriteWorker::WorkComplete () {
+  IOWorker::WorkComplete();
+  valuePtr.Dispose();
+}
+
 /** BATCH WORKER **/
 
 BatchWorker::~BatchWorker () {
-  for (unsigned int i = 0; i < operations.size(); i++)
-    delete operations[i];
-  operations.clear();
+  for (vector<BatchOp*>::iterator it = operations->begin(); it != operations->end();) {
+    delete *it;
+    it = operations->erase(it);
+  }
+  delete operations;
+  delete options;
 }
 
 void BatchWorker::Execute () {
   WriteBatch batch;
-  for (unsigned int i = 0; i < operations.size(); i++)
-    operations[i]->Execute(&batch);
+  for (vector<BatchOp*>::iterator it = operations->begin(); it != operations->end();) {
+    (*it++)->Execute(&batch);
+  }
   status = database->WriteBatchToDatabase(options, &batch);
 }

@@ -9,6 +9,8 @@
 
 using namespace std;
 
+BatchOp::~BatchOp () {}
+
 BatchDelete::~BatchDelete () {
   keyPtr.Dispose();
 }

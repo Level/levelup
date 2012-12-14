@@ -15,26 +15,33 @@ using namespace leveldb;
 
 namespace levelup {
 
+LU_OPTION ( start   );
+LU_OPTION ( end     );
+LU_OPTION ( limit   );
+LU_OPTION ( reverse );
+LU_OPTION ( keys    );
+LU_OPTION ( values  );
+
 Handle<Value> CreateIterator (const Arguments& args);
 
 class Iterator : public node::ObjectWrap {
 public:
-  static void Init      ();
+  static void Init ();
   static v8::Handle<v8::Value> NewInstance (const v8::Arguments& args);
 
-  bool   IteratorNext   (string& key, string& value);
+  bool IteratorNext (string& key, string& value);
   Status IteratorStatus ();
-  void   IteratorEnd    ();
+  void IteratorEnd ();
 
 private:
   Iterator (
-      Database*            database
-    , Slice*               start
-    , string*              end
-    , bool                 reverse
-    , bool                 keys
-    , bool                 values
-    , int                  limit
+      Database* database
+    , Slice* start
+    , string* end
+    , bool reverse
+    , bool keys
+    , bool values
+    , int limit
   ) : database(database)
     , start(start)
     , end(end)
@@ -56,16 +63,16 @@ private:
       delete end;
   };
 
-  Database*            database;
-  leveldb::Iterator*   dbIterator;
-  ReadOptions*         options;
-  Slice*               start;
-  string*              end;
-  bool                 reverse;
-  bool                 keys;
-  bool                 values;
-  int                  limit;
-  int                  count;
+  Database* database;
+  leveldb::Iterator* dbIterator;
+  ReadOptions* options;
+  Slice* start;
+  string* end;
+  bool reverse;
+  bool keys;
+  bool values;
+  int limit;
+  int count;
 
   bool GetIterator ();
 

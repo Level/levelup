@@ -19,6 +19,8 @@ using namespace leveldb;
 
 /** ASYNC BASE **/
 
+AsyncWorker::~AsyncWorker () {}
+
 void AsyncWorker::WorkComplete () {
   HandleScope scope;
   if (status.ok())

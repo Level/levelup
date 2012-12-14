@@ -13,33 +13,30 @@ using namespace std;
 using namespace v8;
 using namespace leveldb;
 
-class NextWorker  : public AsyncWorker {
+class NextWorker : public AsyncWorker {
 public:
   NextWorker (
-      levelup::Iterator*   iterator
+      levelup::Iterator* iterator
     , Persistent<Function> dataCallback
     , Persistent<Function> endCallback
   ) : AsyncWorker(database, dataCallback)
     , iterator(iterator)
     , endCallback(endCallback)
-  { };
+  {};
 
-  ~NextWorker () {};
-
-  virtual void         Execute ();
-
-protected:
-  virtual void         HandleOKCallback ();
+  virtual ~NextWorker ();
+  virtual void Execute ();
+  virtual void HandleOKCallback ();
 
 private:
-  levelup::Iterator*   iterator;
+  levelup::Iterator* iterator;
   Persistent<Function> endCallback;
-  string               key;
-  string               value;
-  bool                 ok;
+  string key;
+  string value;
+  bool ok;
 };
 
-class EndWorker  : public AsyncWorker {
+class EndWorker : public AsyncWorker {
 public:
   EndWorker (
       levelup::Iterator* iterator
@@ -48,12 +45,11 @@ public:
     , iterator(iterator)
   {};
 
-  ~EndWorker () {};
-
-  virtual void         Execute ();
+  virtual ~EndWorker ();
+  virtual void Execute ();
 
 private:
-  levelup::Iterator*   iterator;
+  levelup::Iterator* iterator;
 };
 
 #endif

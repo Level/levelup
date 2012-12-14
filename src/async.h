@@ -18,19 +18,20 @@ public:
     , Persistent<Function> callback
   ) : database(database)
     , callback(callback) {
-        request.data               = this;
+        request.data = this;
       };
 
-  uv_work_t            request;
-  Database*            database;
-  Persistent<Function> callback;
-  Status               status;
-  virtual void         WorkComplete ();
-  virtual void         Execute () {};
+  virtual ~AsyncWorker ();
+  uv_work_t request;
+  virtual void WorkComplete ();
+  virtual void Execute () =0;
 
 protected:
-  virtual void         HandleOKCallback ();
-  virtual void         HandleErrorCallback ();
+  Database* database;
+  Persistent<Function> callback;
+  Status status;
+  virtual void HandleOKCallback ();
+  virtual void HandleErrorCallback ();
 };
 
 void AsyncExecute (uv_work_t* req);

@@ -11,7 +11,8 @@
 class BatchOp {
 public:
   BatchOp () {};
-  virtual void Execute (WriteBatch* batch);
+  virtual ~BatchOp ();
+  virtual void Execute (WriteBatch* batch) =0;
 };
 
 class BatchDelete : public BatchOp {
@@ -23,30 +24,31 @@ public:
     , keyPtr(keyPtr)
   {};
   ~BatchDelete ();
+  void Execute (WriteBatch* batch);
 
-  virtual void Execute (WriteBatch* batch);
-
-protected:
+private:
   Slice key;
   Persistent<Object> keyPtr;
 };
 
-class BatchWrite : public BatchDelete {
+class BatchWrite : public BatchOp {
 public:
   BatchWrite (
       Slice key
     , Slice value
     , Persistent<Object> keyPtr
     , Persistent<Object> valuePtr
-  ) : BatchDelete(key, keyPtr)
+  ) : key(key)
+    , keyPtr(keyPtr)
     , value(value)
     , valuePtr(valuePtr)
   {};
   ~BatchWrite ();
-
-  virtual void Execute (WriteBatch* batch);
+  void Execute (WriteBatch* batch);
 
 private:
+  Slice key;
+  Persistent<Object> keyPtr;
   Slice value;
   Persistent<Object> valuePtr;
 };

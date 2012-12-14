@@ -24,18 +24,17 @@ public:
   ) : AsyncWorker(database, callback)
     , location(location)
   {
-    options                    = new Options();
+    options = new Options();
     options->create_if_missing = createIfMissing;
-    options->error_if_exists   = errorIfExists;
+    options->error_if_exists = errorIfExists;
   };
 
-  ~OpenWorker () {
-    delete options;
-  }
+  virtual ~OpenWorker ();
+  virtual void Execute ();
 
-  string               location;
-  Options*             options;
-  virtual void         Execute ();
+private:
+  string location;
+  Options* options;
 };
 
 class CloseWorker : public AsyncWorker {
@@ -46,10 +45,9 @@ public:
   ) : AsyncWorker(database, callback)
   {};
 
-  virtual void         Execute ();
-
-private:
-  virtual void         WorkComplete ();
+  virtual ~CloseWorker ();
+  virtual void Execute ();
+  virtual void WorkComplete ();
 };
 
 class IOWorker    : public AsyncWorker {
@@ -64,11 +62,12 @@ public:
     , keyPtr(keyPtr)
   {};
 
-  virtual void         WorkComplete ();
+  virtual ~IOWorker ();
+  virtual void WorkComplete ();
 
 protected:
-  Slice                key;
-  Persistent<Object>   keyPtr;
+  Slice key;
+  Persistent<Object> keyPtr;
 };
 
 class ReadWorker : public IOWorker {
@@ -83,16 +82,13 @@ public:
     options = new ReadOptions();
   };
 
-  ~ReadWorker ();
-
-  ReadOptions*         options;
-  virtual void         Execute ();
-
-protected:
-  virtual void         HandleOKCallback ();
+  virtual ~ReadWorker ();
+  virtual void Execute ();
+  virtual void HandleOKCallback ();
 
 private:
-  string               value;
+  ReadOptions* options;
+  string value;
 };
 
 class DeleteWorker : public IOWorker {
@@ -105,16 +101,15 @@ public:
     , Persistent<Object> keyPtr
   ) : IOWorker(database, callback, key, keyPtr)
   {
-    options        = new WriteOptions();
-    options->sync  = sync;
+    options = new WriteOptions();
+    options->sync = sync;
   };
 
-  ~DeleteWorker ();
-
-  virtual void         Execute ();
+  virtual ~DeleteWorker ();
+  virtual void Execute ();
 
 protected:
-  WriteOptions*        options;
+  WriteOptions* options;
 };
 
 class WriteWorker : public DeleteWorker {
@@ -132,14 +127,12 @@ public:
     , valuePtr(valuePtr)
   {};
 
-  ~WriteWorker ();
-
-  virtual void         Execute ();
-  virtual void         WorkComplete ();
+  virtual void Execute ();
+  virtual void WorkComplete ();
 
 private:
-  Slice                value;
-  Persistent<Object>   valuePtr;
+  Slice value;
+  Persistent<Object> valuePtr;
 };
 
 class BatchWorker : public AsyncWorker {
@@ -147,22 +140,21 @@ public:
   BatchWorker (
       Database* database
     , Persistent<Function> callback
-    , vector<BatchOp*> operations
+    , vector<BatchOp*>* operations
     , bool sync
   ) : AsyncWorker(database, callback)
     , operations(operations)
   {
-    options        = new WriteOptions();
-    options->sync  = sync;
+    options = new WriteOptions();
+    options->sync = sync;
   };
 
-  ~BatchWorker ();
-
-  virtual void         Execute ();
+  virtual ~BatchWorker ();
+  virtual void Execute ();
 
 private:
-  WriteOptions*        options;
-  vector<BatchOp*>     operations;
+  WriteOptions* options;
+  vector<BatchOp*>* operations;
 };
 
 #endif

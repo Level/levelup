@@ -17,6 +17,8 @@ using namespace v8;
 using namespace node;
 using namespace leveldb;
 
+NextWorker::~NextWorker () {}
+
 void NextWorker::Execute () {
   ok = iterator->IteratorNext(key, value);
   if (!ok)
@@ -36,6 +38,8 @@ void NextWorker::HandleOKCallback () {
     RunCallback(endCallback, argv, 0);
   }
 }
+
+EndWorker::~EndWorker () {}
 
 void EndWorker::Execute () {
   iterator->IteratorEnd();

@@ -289,7 +289,7 @@ Handle<Value> Database::Batch (const Arguments& args) {
   bool sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
   Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
-  vector<BatchOp*> operations;
+  vector<BatchOp*>* operations = new vector<BatchOp*>;
   for (unsigned int i = 0; i < array->Length(); i++) {
     if (!array->Get(i)->IsObject())
       continue;
@@ -306,7 +306,7 @@ Handle<Value> Database::Batch (const Arguments& args) {
     Slice key(Buffer::Data(keyBuffer), Buffer::Length(keyBuffer));
 
     if (obj->Get(str_type)->StrictEquals(str_del)) {
-      operations.push_back(new BatchDelete(key, Persistent<Object>::New(keyBuffer)));
+      operations->push_back(new BatchDelete(key, Persistent<Object>::New(keyBuffer)));
     } else if (obj->Get(str_type)->StrictEquals(str_put) && obj->Has(str_value)) {
       if (!obj->Get(str_value)->IsObject())
         continue;
@@ -314,7 +314,7 @@ Handle<Value> Database::Batch (const Arguments& args) {
       if (!Buffer::HasInstance(valueBuffer))
         continue;
       Slice value(Buffer::Data(valueBuffer), Buffer::Length(valueBuffer));
-      operations.push_back(new BatchWrite(key, value, Persistent<Object>::New(keyBuffer), Persistent<Object>::New(valueBuffer)));
+      operations->push_back(new BatchWrite(key, value, Persistent<Object>::New(keyBuffer), Persistent<Object>::New(valueBuffer)));
     }
   }
 

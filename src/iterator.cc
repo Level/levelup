@@ -15,13 +15,6 @@ using namespace v8;
 using namespace node;
 using namespace levelup;
 
-LU_OPTION ( start );
-LU_OPTION ( end );
-LU_OPTION ( limit );
-LU_OPTION ( reverse );
-LU_OPTION ( keys );
-LU_OPTION ( values );
-
 bool levelup::Iterator::GetIterator () {
   if (dbIterator == NULL) {
     dbIterator = database->NewIterator(options);
