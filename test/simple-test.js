@@ -144,7 +144,7 @@ buster.testCase('Basic API', {
 
   , 'Simple operations': {
 
-      'get() on empty database causes error': function (done) {
+        'get() on empty database causes error': function (done) {
           this.openTestDatabase(function (db) {
             db.get('undefkey', function (err, value) {
               refute(value)
