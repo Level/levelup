@@ -120,14 +120,18 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
 
   Database* database = ObjectWrap::Unwrap<Database>(args[0]->ToObject());
   Slice* start = NULL;
-  if (args[1]->ToObject()->Has(option_start) && Buffer::HasInstance(args[1]->ToObject()->Get(option_start))) {
-    Local<Object> startBuffer = Local<Object>::New(args[1]->ToObject()->Get(option_start)->ToObject());
-    start = new Slice(Buffer::Data(startBuffer), Buffer::Length(startBuffer));
+  if (args[1]->ToObject()->Has(option_start)
+      && (Buffer::HasInstance(args[1]->ToObject()->Get(option_start)) || args[1]->ToObject()->Get(option_start)->IsString())) {
+    Local<Value> startBuffer = Local<Value>::New(args[1]->ToObject()->Get(option_start));
+    STRING_OR_BUFFER_TO_SLICE(_start, startBuffer)
+    start = new Slice(_start.data(), _start.size());
   }
   string* end = NULL;
-  if (args[1]->ToObject()->Has(option_end) && Buffer::HasInstance(args[1]->ToObject()->Get(option_end))) {
-    Local<Object> endBuffer = Local<Object>::New(args[1]->ToObject()->Get(option_end)->ToObject());
-    end = new string(Buffer::Data(endBuffer), Buffer::Length(endBuffer));
+  if (args[1]->ToObject()->Has(option_end)
+      && (Buffer::HasInstance(args[1]->ToObject()->Get(option_end)) || args[1]->ToObject()->Get(option_end)->IsString())) {
+    Local<Value> endBuffer = Local<Value>::New(args[1]->ToObject()->Get(option_end));
+    STRING_OR_BUFFER_TO_SLICE(_end, endBuffer)
+    end = new string(_end.data(), _end.size());
   }
   bool reverse = false;
   if (args[1]->ToObject()->Has(option_reverse)) {

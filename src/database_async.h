@@ -58,7 +58,7 @@ public:
       Database* database
     , Persistent<Function> callback
     , Slice key
-    , Persistent<Object> keyPtr
+    , Persistent<Value> keyPtr
   ) : AsyncWorker(database, callback)
     , key(key)
     , keyPtr(keyPtr)
@@ -69,7 +69,7 @@ public:
 
 protected:
   Slice key;
-  Persistent<Object> keyPtr;
+  Persistent<Value> keyPtr;
 };
 
 class ReadWorker : public IOWorker {
@@ -78,7 +78,7 @@ public:
       Database* database
     , Persistent<Function> callback
     , Slice key
-    , Persistent<Object> keyPtr
+    , Persistent<Value> keyPtr
   ) : IOWorker(database, callback, key, keyPtr)
   {
     options = new ReadOptions();
@@ -100,7 +100,7 @@ public:
     , Persistent<Function> callback
     , Slice key
     , bool sync
-    , Persistent<Object> keyPtr
+    , Persistent<Value> keyPtr
   ) : IOWorker(database, callback, key, keyPtr)
   {
     options = new WriteOptions();
@@ -122,8 +122,8 @@ public:
     , Slice key
     , Slice value
     , bool sync
-    , Persistent<Object> keyPtr
-    , Persistent<Object> valuePtr
+    , Persistent<Value> keyPtr
+    , Persistent<Value> valuePtr
   ) : DeleteWorker(database, callback, key, sync, keyPtr)
     , value(value)
     , valuePtr(valuePtr)
@@ -134,7 +134,7 @@ public:
 
 private:
   Slice value;
-  Persistent<Object> valuePtr;
+  Persistent<Value> valuePtr;
 };
 
 class BatchWorker : public AsyncWorker {

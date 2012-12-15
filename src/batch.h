@@ -19,7 +19,7 @@ class BatchDelete : public BatchOp {
 public:
   BatchDelete (
       Slice key
-    , Persistent<Object> keyPtr
+    , Persistent<Value> keyPtr
   ) : key(key)
     , keyPtr(keyPtr)
   {};
@@ -28,7 +28,7 @@ public:
 
 private:
   Slice key;
-  Persistent<Object> keyPtr;
+  Persistent<Value> keyPtr;
 };
 
 class BatchWrite : public BatchOp {
@@ -36,8 +36,8 @@ public:
   BatchWrite (
       Slice key
     , Slice value
-    , Persistent<Object> keyPtr
-    , Persistent<Object> valuePtr
+    , Persistent<Value> keyPtr
+    , Persistent<Value> valuePtr
   ) : key(key)
     , keyPtr(keyPtr)
     , value(value)
@@ -48,9 +48,9 @@ public:
 
 private:
   Slice key;
-  Persistent<Object> keyPtr;
+  Persistent<Value> keyPtr;
   Slice value;
-  Persistent<Object> valuePtr;
+  Persistent<Value> valuePtr;
 };
 
 #endif
