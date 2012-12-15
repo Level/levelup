@@ -32,6 +32,12 @@
               , '-Wno-unused-function'
             ]
         }]
+      , ['OS == "mac"', {
+            'cflags': [
+                '-Wno-sign-compare'
+              , '-Wno-unused-function'
+            ]
+        }]
     ]
   , 'sources': [
         'snappy-1.0.5/snappy-internal.h'

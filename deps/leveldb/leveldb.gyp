@@ -73,6 +73,10 @@
                 '-fno-builtin-memcmp'
               , '-fPIC'
             ]
+          , 'cflags': [
+                '-Wno-sign-compare'
+              , '-Wno-unused-variable'
+            ]
         }]
     ]
   , 'sources': [
