@@ -21,12 +21,14 @@ public:
     , string location
     , bool createIfMissing
     , bool errorIfExists
+    , bool compression
   ) : AsyncWorker(database, callback)
     , location(location)
   {
     options = new Options();
     options->create_if_missing = createIfMissing;
     options->error_if_exists = errorIfExists;
+    options->compression = compression ? kSnappyCompression : kNoCompression;
   };
 
   virtual ~OpenWorker ();

@@ -23,6 +23,7 @@ using namespace leveldb;
 
 LU_OPTION ( createIfMissing ); // for open()
 LU_OPTION ( errorIfExists   ); // for open()
+LU_OPTION ( compression     ); // for open()
 LU_OPTION ( sync            ); // for write() and delete()
 LU_STR    ( key );
 LU_STR    ( value );
@@ -124,7 +125,8 @@ Handle<Value> Database::Open (const Arguments& args) {
     , callback
     , *location
     , optionsObj->Has(option_createIfMissing) && optionsObj->Get(option_createIfMissing)->BooleanValue()
-    , optionsObj->Has(option_errorIfExists)   && optionsObj->Get(option_errorIfExists)->BooleanValue()
+    , optionsObj->Has(option_errorIfExists) && optionsObj->Get(option_errorIfExists)->BooleanValue()
+    , optionsObj->Has(option_compression) && optionsObj->Get(option_compression)->BooleanValue()
   );
   AsyncQueueWorker(worker);
 
