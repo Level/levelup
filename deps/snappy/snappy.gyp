@@ -26,6 +26,12 @@
               , '-Wno-unused-function'
             ]
         }]
+      , ['OS == "solaris"', {
+            'cflags': [
+                '-Wno-sign-compare'
+              , '-Wno-unused-function'
+            ]
+        }]
     ]
   , 'sources': [
         'snappy-1.0.5/snappy-internal.h'

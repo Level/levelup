@@ -58,6 +58,10 @@
               , '-pthread'
               , '-fPIC'
             ]
+          , 'cflags': [
+                '-Wno-sign-compare'
+              , '-Wno-unused-but-set-variable'
+            ]
         }]
       , ['OS == "mac"', {
             'defines': [
