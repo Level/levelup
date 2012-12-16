@@ -26,11 +26,21 @@ void NextWorker::Execute () {
 }
 
 void NextWorker::HandleOKCallback () {
+  Local<Value> returnKey;
+  if (iterator->keyAsBuffer)
+    returnKey = Local<Value>::New(Buffer::New((char*)key.data(), key.size())->handle_);
+  else
+    returnKey = String::New((char*)key.data(), key.size());
+  Local<Value> returnValue;
+  if (iterator->valueAsBuffer)
+    returnValue = Local<Value>::New(Buffer::New((char*)value.data(), value.size())->handle_);
+  else
+    returnValue = String::New((char*)value.data(), value.size());
   if (ok) {
     Local<Value> argv[] = {
         Local<Value>::New(Null())
-      , Local<Value>::New(Buffer::New((char*)key.data(), key.size())->handle_)
-      , Local<Value>::New(Buffer::New((char*)value.data(), value.size())->handle_)
+      , returnKey
+      , returnValue
     };
     RunCallback(callback, argv, 3);
   } else {

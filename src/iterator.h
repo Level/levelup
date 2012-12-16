@@ -15,12 +15,14 @@ using namespace leveldb;
 
 namespace levelup {
 
-LU_OPTION ( start   );
-LU_OPTION ( end     );
-LU_OPTION ( limit   );
-LU_OPTION ( reverse );
-LU_OPTION ( keys    );
-LU_OPTION ( values  );
+LU_OPTION ( start         );
+LU_OPTION ( end           );
+LU_OPTION ( limit         );
+LU_OPTION ( reverse       );
+LU_OPTION ( keys          );
+LU_OPTION ( values        );
+LU_OPTION ( keyAsBuffer   );
+LU_OPTION ( valueAsBuffer );
 
 Handle<Value> CreateIterator (const Arguments& args);
 
@@ -33,7 +35,6 @@ public:
   Status IteratorStatus ();
   void IteratorEnd ();
 
-private:
   Iterator (
       Database* database
     , Slice* start
@@ -42,6 +43,8 @@ private:
     , bool keys
     , bool values
     , int limit
+    , bool keyAsBuffer
+    , bool valueAsBuffer
   ) : database(database)
     , start(start)
     , end(end)
@@ -49,6 +52,8 @@ private:
     , keys(keys)
     , values(values)
     , limit(limit)
+    , keyAsBuffer(keyAsBuffer)
+    , valueAsBuffer(valueAsBuffer)
   {
     options = new ReadOptions();
     dbIterator = NULL;
@@ -63,6 +68,7 @@ private:
       delete end;
   };
 
+private:
   Database* database;
   leveldb::Iterator* dbIterator;
   ReadOptions* options;
@@ -74,6 +80,11 @@ private:
   int limit;
   int count;
 
+public:
+  bool keyAsBuffer;
+  bool valueAsBuffer;
+
+private:
   bool GetIterator ();
 
   static v8::Persistent<v8::Function> constructor;

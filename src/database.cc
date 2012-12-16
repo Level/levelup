@@ -24,12 +24,13 @@ using namespace leveldb;
 LU_OPTION ( createIfMissing ); // for open()
 LU_OPTION ( errorIfExists   ); // for open()
 LU_OPTION ( compression     ); // for open()
-LU_OPTION ( sync            ); // for write() and delete()
-LU_STR    ( key );
+LU_OPTION ( sync            ); // for put() and delete()
+LU_OPTION ( asBuffer        ); // for get()
+LU_STR    ( key   );
 LU_STR    ( value );
-LU_STR    ( type );
-LU_STR    ( del );
-LU_STR    ( put );
+LU_STR    ( type  );
+LU_STR    ( del   );
+LU_STR    ( put   );
 
 Database::Database () {
   db = NULL;
@@ -118,10 +119,10 @@ Handle<Value> Database::Open (const Arguments& args) {
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
   String::Utf8Value location(args[0]->ToString());
   Local<Object> optionsObj = Local<Object>::Cast(args[1]);
-  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
   BOOLEAN_OPTION_VALUE(optionsObj, createIfMissing)
   BOOLEAN_OPTION_VALUE(optionsObj, errorIfExists)
   BOOLEAN_OPTION_VALUE(optionsObj, compression)
+  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
   OpenWorker* worker = new OpenWorker(
       database
@@ -193,11 +194,14 @@ Handle<Value> Database::Get (const Arguments& args) {
 
   Persistent<Value> keyBuffer = Persistent<Value>::New(args[0]);
   STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
+  Local<Object> optionsObj = Local<Object>::Cast(args[1]);
+  BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, asBuffer)
 
   ReadWorker* worker = new ReadWorker(
       database
     , callback
     , key
+    , asBuffer
     , keyBuffer
   );
   AsyncQueueWorker(worker);

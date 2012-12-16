@@ -78,8 +78,10 @@ public:
       Database* database
     , Persistent<Function> callback
     , Slice key
+    , bool asBuffer
     , Persistent<Value> keyPtr
   ) : IOWorker(database, callback, key, keyPtr)
+    , asBuffer(asBuffer)
   {
     options = new ReadOptions();
   };
@@ -89,6 +91,7 @@ public:
   virtual void HandleOKCallback ();
 
 private:
+  bool asBuffer;
   ReadOptions* options;
   string value;
 };
