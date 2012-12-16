@@ -158,9 +158,7 @@ Handle<Value> Database::Put (const Arguments& args) {
   Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[3]));
 
   CB_ERR_IF_NULL_OR_UNDEFINED(0, "Key")
-  CB_ERR_IF_NOT_BUFFER_OR_STRING(0, "Key")
   CB_ERR_IF_NULL_OR_UNDEFINED(1, "Value")
-  CB_ERR_IF_NOT_BUFFER_OR_STRING(1, "Value")
 
   Persistent<Value> keyBuffer = Persistent<Value>::New(args[0]);
   STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
@@ -190,7 +188,6 @@ Handle<Value> Database::Get (const Arguments& args) {
   Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
   CB_ERR_IF_NULL_OR_UNDEFINED(0, "Key")
-  CB_ERR_IF_NOT_BUFFER_OR_STRING(0, "Key")
 
   Persistent<Value> keyBuffer = Persistent<Value>::New(args[0]);
   STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
@@ -216,7 +213,6 @@ Handle<Value> Database::Delete (const Arguments& args) {
   Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
   CB_ERR_IF_NULL_OR_UNDEFINED(0, "Key")
-  CB_ERR_IF_NOT_BUFFER_OR_STRING(0, "Key")
 
   Persistent<Value> keyBuffer = Persistent<Value>::New(args[0]);
   STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
@@ -254,18 +250,15 @@ Handle<Value> Database::Batch (const Arguments& args) {
       continue;
 
     Local<Value> keyBuffer = obj->Get(str_key);
-    if (!keyBuffer->IsString() && !Buffer::HasInstance(keyBuffer))
-      continue;
-    STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
 
     if (obj->Get(str_type)->StrictEquals(str_del)) {
+      STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
       operations->push_back(new BatchDelete(key, Persistent<Value>::New(keyBuffer)));
     } else if (obj->Get(str_type)->StrictEquals(str_put) && obj->Has(str_value)) {
       if (!obj->Has(str_value))
         continue;
       Local<Value> valueBuffer = obj->Get(str_value);
-      if (!valueBuffer->IsString() && !Buffer::HasInstance(valueBuffer))
-        continue;
+      STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
       STRING_OR_BUFFER_TO_SLICE(value, valueBuffer)
       operations->push_back(new BatchWrite(key, value, Persistent<Value>::New(keyBuffer), Persistent<Value>::New(valueBuffer)));
     }

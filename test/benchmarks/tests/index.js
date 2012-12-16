@@ -43,7 +43,7 @@ module.exports = {
       , 'SQLite3'             : require('./get_int_string_x1000_sqlite3')
     }
 
-  , '=>batch(int, string) x 1000': {
+  , 'batch(int, string) x 1000': {
         'LevelUP'             : require('./batch_int_string_x1000_levelup')
       , 'LevelUP (release)'   : require('./batch_int_string_x1000_levelup')
       , 'LevelUP (no Snappy)' : require('./batch_int_string_x1000_levelup')
