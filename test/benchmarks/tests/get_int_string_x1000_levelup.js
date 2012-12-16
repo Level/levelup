@@ -26,3 +26,4 @@ var setupFn = function (count, db, cb) {
 module.exports = fn.bind(null, 1000)
 module.exports.fn = fn
 module.exports.setup = setupFn.bind(null, 1000)
+module.exports.setupFn = setupFn

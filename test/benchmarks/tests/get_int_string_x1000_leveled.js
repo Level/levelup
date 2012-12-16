@@ -1,8 +1,5 @@
 var setupFn = function (count, db, cb) {
-  var data = []
-    , batch = db.batch()
-
-
+  var batch = db.batch()
   for (var i = 0; i < count; i++)
     batch.put(
         String(i)
@@ -13,4 +10,5 @@ var setupFn = function (count, db, cb) {
 }
 
 module.exports = require('./get_int_string_x1000_levelup').bind(null) // bind() to make a new function to put .setup on
+module.exports.setupFn = setupFn
 module.exports.setup = setupFn.bind(null, 1000)

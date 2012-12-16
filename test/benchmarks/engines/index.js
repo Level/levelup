@@ -9,3 +9,6 @@ module.exports['LevelUP (release)'].color = 'yellow'
 
 module.exports.Leveled = require('./leveled')
 module.exports.Leveled.color = 'cyan'
+
+module.exports.SQLite3 = require('./sqlite3')
+module.exports.SQLite3.color = 'blue'
