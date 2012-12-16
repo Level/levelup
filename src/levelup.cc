@@ -7,6 +7,7 @@
 #include "iterator.h"
 
 using namespace v8;
+using namespace node;
 using namespace levelup;
 
 void Init (Handle<Object> target) {
@@ -34,6 +35,6 @@ void RunCallback (Persistent<Function> callback, Local<Value> argv[], int length
  
   callback->Call(Context::GetCurrent()->Global(), length, argv);
   if (try_catch.HasCaught()) {
-    node::FatalException(try_catch);
+    FatalException(try_catch);
   }
 }

@@ -17,7 +17,7 @@ module.exports = {
       , 'Leveled'             : require('./put_int_string_x100000_leveled')
     }
 
-  , '=>get(int):string x 1000': {
+  , 'get(int):string x 1000': {
         'LevelUP'             : require('./get_int_string_x1000_levelup')
       , 'LevelUP (release)'   : require('./get_int_string_x1000_levelup')
       , 'LevelUP (no Snappy)' : require('./get_int_string_x1000_levelup')
@@ -28,6 +28,7 @@ module.exports = {
         'LevelUP'             : require('./batch_int_string_x1000_levelup')
       , 'LevelUP (release)'   : require('./batch_int_string_x1000_levelup')
       , 'LevelUP (no Snappy)' : require('./batch_int_string_x1000_levelup')
+// Leveled is currently killing the process for these batch ops
 //      , 'Leveled'             : require('./batch_int_string_x1000_leveled')
     }
 
