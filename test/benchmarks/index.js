@@ -28,17 +28,27 @@ var path = require('path')
     }
 
   , run = function (db, name, fn, color, cb) {
-      new Benchmark(name, {
-        'defer': true,
-        'fn': function  (deferred) {
-          fn(db, deferred.resolve.bind(deferred))
-        }
-      })
-      .on('complete', function(event) {
-        console.log(String(event.target)[color].bold)
-        cb()
-      })
-      .run({ async: true })
+      var exec = function () {
+        new Benchmark(name, {
+          'defer': true,
+          'fn': function  (deferred) {
+            fn(db, deferred.resolve.bind(deferred))
+          }
+        })
+        .on('complete', function(event) {
+          console.log(String(event.target)[color].bold)
+          cb()
+        })
+        .run({ async: true })
+      }
+
+      if (fn.setup) {
+        fn.setup(db, function (err) {
+          if (err) return cb(err)
+          exec()
+        })
+      } else
+        exec()
     }
 
   , runTest = function (testName, callback) {
