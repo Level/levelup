@@ -33,10 +33,12 @@
             ]
         }]
       , ['OS == "mac"', {
-            'cflags': [
-                '-Wno-sign-compare'
-              , '-Wno-unused-function'
-            ]
+            'xcode_settings': {
+                'WARNING_CFLAGS': [
+                    '-Wno-sign-compare'
+                  , '-Wno-unused-function'
+                ]
+            }
         }]
     ]
   , 'sources': [
