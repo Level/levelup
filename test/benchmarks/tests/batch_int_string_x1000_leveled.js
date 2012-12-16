@@ -1,8 +1,7 @@
 var fn = function (puts, db, cb) {
-  var received = 0
-    , after = function (err) {
+  var after = function (err) {
         if (err) throw err
-        if (++received == puts) cb()
+        cb()
       }
     , batch = db.batch()
 
