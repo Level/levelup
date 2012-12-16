@@ -73,10 +73,13 @@
                 '-fno-builtin-memcmp'
               , '-fPIC'
             ]
-          , 'cflags': [
-                '-Wno-sign-compare'
-              , '-Wno-unused-variable'
-            ]
+          , 'xcode_settings': {
+                'WARNING_CFLAGS': [
+                    '-Wno-sign-compare'
+                  , '-Wno-unused-variable'
+                  , '-Wno-unused-function'
+                ]
+            }
         }]
     ]
   , 'sources': [
