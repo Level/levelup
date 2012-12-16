@@ -133,18 +133,10 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
     STRING_OR_BUFFER_TO_SLICE(_end, endBuffer)
     end = new string(_end.data(), _end.size());
   }
-  bool reverse = false;
-  if (args[1]->ToObject()->Has(option_reverse)) {
-    reverse = args[1]->ToObject()->Get(option_reverse)->BooleanValue();
-  }
-  bool keys = true;
-  if (args[1]->ToObject()->Has(option_keys)) {
-    keys = args[1]->ToObject()->Get(option_keys)->BooleanValue();
-  }
-  bool values = true;
-  if (args[1]->ToObject()->Has(option_values)) {
-    values = args[1]->ToObject()->Get(option_values)->BooleanValue();
-  }
+  Local<Object> optionsObj = Local<Object>::Cast(args[1]);
+  BOOLEAN_OPTION_VALUE(optionsObj, reverse)
+  BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, keys)
+  BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, values)
   int limit = -1;
   if (args[1]->ToObject()->Has(option_limit)) {
     limit = Local<Integer>::Cast(args[1]->ToObject()->Get(option_limit))->Value();

@@ -119,14 +119,17 @@ Handle<Value> Database::Open (const Arguments& args) {
   String::Utf8Value location(args[0]->ToString());
   Local<Object> optionsObj = Local<Object>::Cast(args[1]);
   Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
+  BOOLEAN_OPTION_VALUE(optionsObj, createIfMissing)
+  BOOLEAN_OPTION_VALUE(optionsObj, errorIfExists)
+  BOOLEAN_OPTION_VALUE(optionsObj, compression)
 
   OpenWorker* worker = new OpenWorker(
       database
     , callback
     , *location
-    , optionsObj->Has(option_createIfMissing) && optionsObj->Get(option_createIfMissing)->BooleanValue()
-    , optionsObj->Has(option_errorIfExists) && optionsObj->Get(option_errorIfExists)->BooleanValue()
-    , optionsObj->Has(option_compression) && optionsObj->Get(option_compression)->BooleanValue()
+    , createIfMissing
+    , errorIfExists
+    , compression
   );
   AsyncQueueWorker(worker);
 
@@ -163,7 +166,7 @@ Handle<Value> Database::Put (const Arguments& args) {
   Persistent<Value> valueBuffer = Persistent<Value>::New(args[1]);
   STRING_OR_BUFFER_TO_SLICE(value, valueBuffer)
   Local<Object> optionsObj = Local<Object>::Cast(args[2]);
-  bool sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
+  BOOLEAN_OPTION_VALUE(optionsObj, sync)
 
   WriteWorker* worker  = new WriteWorker(
       database
@@ -214,7 +217,7 @@ Handle<Value> Database::Delete (const Arguments& args) {
   Persistent<Value> keyBuffer = Persistent<Value>::New(args[0]);
   STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
   Local<Object> optionsObj = Local<Object>::Cast(args[1]);
-  bool sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
+  BOOLEAN_OPTION_VALUE(optionsObj, sync)
 
   DeleteWorker* worker = new DeleteWorker(
       database
@@ -234,7 +237,7 @@ Handle<Value> Database::Batch (const Arguments& args) {
   Database* database = ObjectWrap::Unwrap<Database>(args.This());
   Local<Array> array = Local<Array>::Cast(args[0]);
   Local<Object> optionsObj = Local<Object>::Cast(args[1]);
-  bool sync = optionsObj->Has(option_sync) && optionsObj->Get(option_sync)->BooleanValue();
+  BOOLEAN_OPTION_VALUE(optionsObj, sync)
   Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
   vector<BatchOp*>* operations = new vector<BatchOp*>;

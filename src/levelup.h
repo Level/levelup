@@ -44,6 +44,11 @@
   } \
   Slice to(to ## Ch_, to ## Sz_);
 
+#define BOOLEAN_OPTION_VALUE(optionsObj, opt) \
+  bool opt = optionsObj->Has(option_ ## opt) && optionsObj->Get(option_ ## opt)->BooleanValue();
+#define BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, opt) \
+  bool opt = !optionsObj->Has(option_ ## opt) || optionsObj->Get(option_ ## opt)->BooleanValue();
+
 const char* ToCString(const v8::String::Utf8Value& value);
 const char* ToCString(const v8::String::AsciiValue& value);
 
