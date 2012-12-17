@@ -109,16 +109,18 @@ db.get('foo', function (err, value) {
 
 `levelup()` takes an optional options object as its second argument; the following properties are accepted:
 
-* `createIfMissing` *(boolean)*: If `true`, will initialise an empty database at the specified location if one doesn't already exit. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open. Defaults to `false`.
+* `'createIfMissing'` *(boolean, default: `false`)*: If `true`, will initialise an empty database at the specified location if one doesn't already exit. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open.
 
-* `errorIfExists` *(boolean)*: If `true`, you will receive an error in your `open()` callback if the database exists at the specified location. Defaults to `false`.
+* `'errorIfExists'` *(boolean, default: `false`)*: If `true`, you will receive an error in your `open()` callback if the database exists at the specified location.
 
-* `encoding` *(string)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end))
+* `'compression'` *(boolean, default: `true`)*: If `true`, all *compressible* data will be run through the Snappy compression algorithm before being stored. Snappy is very fast and shouldn't gain much speed by disabling so leave this on unless you have good reason to turn it off.
+
+* `'encoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end))
   <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and converstion will be performed.</p>
   <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
   <p><code>'json'</code> encoding is also supported, see below.</p>
 
-* `keyEncoding` and `valueEncoding` *(string)*: use instead of `encoding` to specify the exact encoding of both the keys and the values in this database.
+* `'keyEncoding'` and `valueEncoding'` *(string, default: `'utf8'`)*: use instead of `encoding` to specify the exact encoding of both the keys and the values in this database.
 
 Additionally, each of the main interface methods accept an optional options object that can be used to override `encoding` (or `keyEncoding` & `valueEncoding`).
 
@@ -246,13 +248,13 @@ Additionally, you can supply an options object as the first parameter to `readSt
 
 * `'end'`: the key you wish to end the read on. By default it will continue until the end of the store. Again, the *end* doesn't have to be an actual key as an (inclusive) `<=`-type operation is performed to detect the end. You can also use the `destroy()` method instead of supplying an `'end'` parameter to achieve the same effect.
 
-* `'reverse'`: a boolean, set to true if you want the stream to go in reverse order. Beware that due to the way LevelDB works, a reverse seek will be slower than a forward seek.
+* `'reverse'` *(boolean, default: `false`)*: a boolean, set to true if you want the stream to go in reverse order. Beware that due to the way LevelDB works, a reverse seek will be slower than a forward seek.
 
-* `'keys'`: a boolean (defaults to `true`) to indicate whether the `'data'` event should contain keys. If set to `true` and `'values'` set to `false` then `'data'` events will simply be keys, rather than objects with a `'key'` property. Used internally by the `keyStream()` method.
+* `'keys'` *(boolean, default: `true`)*: whether the `'data'` event should contain keys. If set to `true` and `'values'` set to `false` then `'data'` events will simply be keys, rather than objects with a `'key'` property. Used internally by the `keyStream()` method.
 
-* `'values'`: a boolean (defaults to `true`) to indicate whether the `'data'` event should contain values. If set to `true` and `'keys'` set to `false` then `'data'` events will simply be values, rather than objects with a `'value'` property. Used internally by the `valueStream()` method.
+* `'values'` *(boolean, default: `true`)*: whether the `'data'` event should contain values. If set to `true` and `'keys'` set to `false` then `'data'` events will simply be values, rather than objects with a `'value'` property. Used internally by the `valueStream()` method.
 
-* `'limit'`: a number (defaults to -1) to limit the number of results collected by this stream. This number represents a *maximum* number of results and may not be reached if you get to the end of the store or your `'end'` value first. A value of -1 means there is no limit.
+* `'limit'` *(number, default: `-1`)*: limit the number of results collected by this stream. This number represents a *maximum* number of results and may not be reached if you get to the end of the store or your `'end'` value first. A value of `-1` means there is no limit.
 
 --------------------------------------------------------
 <a name="keyStream"></a>
@@ -321,7 +323,7 @@ The standard `write()`, `end()`, `destroy()` and `destroySoon()` methods are imp
 
 Additionally, you can supply an options object as the first parameter to `writeStream()` with the following option:
 
-* `'useBatch'`: a boolean (defaults to `true`) if set to `false`, your *WriteStream* will avoid the use of `batch()` and use `put()` to write all data to the database. Since `batch()` is much quicker than multiple `put()` operations, you are advised to leave this as `true` unless you have a good reason to change it.
+* `'useBatch'` *(boolean, default: `true`)*: if set to `false`, your *WriteStream* will avoid the use of `batch()` and use `put()` to write all data to the database. Since `batch()` is much quicker than multiple `put()` operations, you are advised to leave this as `true` unless you have a good reason to change it.
 
 #### Pipes and Node Stream compatibility
 
@@ -379,6 +381,7 @@ See the [CONTRIBUTING.md](https://github.com/rvagg/node-levelup/blob/master/CONT
 * John Chesley - [GitHub/chesles](https://github.com/chesles/) - [Twitter/@chesles](https://twitter.com/chesles)
 * Jake Verbaten - [GitHub/raynos](https://github.com/raynos) - [Twitter/@raynos2](https://twitter.com/Raynos2)
 * Dominic Tarr - [GitHub/dominictarr](https://github.com/dominictarr) - [Twitter/@dominictarr](https://twitter.com/dominictarr)
+* Max Ogden - [GitHub/maxogden](https://github.com/maxogden) - [Twitter/@maxogden](http://twitter.com/maxogden)
 
 <a name="licence"></a>
 Licence & copyright

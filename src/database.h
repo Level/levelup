@@ -14,6 +14,17 @@ using namespace std;
 using namespace v8;
 using namespace leveldb;
 
+LU_OPTION ( createIfMissing ); // for open()
+LU_OPTION ( errorIfExists   ); // for open()
+LU_OPTION ( compression     ); // for open()
+LU_OPTION ( sync            ); // for put() and delete()
+LU_OPTION ( asBuffer        ); // for get()
+LU_STR    ( key   );
+LU_STR    ( value );
+LU_STR    ( type  );
+LU_STR    ( del   );
+LU_STR    ( put   );
+
 struct AsyncDescriptor;
 
 Handle<Value> CreateDatabase (const Arguments& args);
@@ -48,7 +59,6 @@ private:
   LU_V8_METHOD( Delete   )
   LU_V8_METHOD( Get      )
   LU_V8_METHOD( Batch    )
-//  LU_V8_METHOD( Iterator )
 };
 
 #endif

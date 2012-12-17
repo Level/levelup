@@ -53,5 +53,5 @@ void AsyncExecuteComplete (uv_work_t* req) {
 }
 
 void AsyncQueueWorker (AsyncWorker* worker) {
-  uv_queue_work(uv_default_loop(), &worker->request, AsyncExecute, AsyncExecuteComplete);
+  uv_queue_work(uv_default_loop(), &worker->request, AsyncExecute, (uv_after_work_cb)AsyncExecuteComplete);
 }

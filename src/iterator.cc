@@ -120,32 +120,30 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
 
   Database* database = ObjectWrap::Unwrap<Database>(args[0]->ToObject());
   Slice* start = NULL;
-  if (args[1]->ToObject()->Has(option_start) && Buffer::HasInstance(args[1]->ToObject()->Get(option_start))) {
-    Local<Object> startBuffer = Local<Object>::New(args[1]->ToObject()->Get(option_start)->ToObject());
-    start = new Slice(Buffer::Data(startBuffer), Buffer::Length(startBuffer));
+  if (args[1]->ToObject()->Has(option_start)
+      && (Buffer::HasInstance(args[1]->ToObject()->Get(option_start)) || args[1]->ToObject()->Get(option_start)->IsString())) {
+    Local<Value> startBuffer = Local<Value>::New(args[1]->ToObject()->Get(option_start));
+    STRING_OR_BUFFER_TO_SLICE(_start, startBuffer)
+    start = new Slice(_start.data(), _start.size());
   }
   string* end = NULL;
-  if (args[1]->ToObject()->Has(option_end) && Buffer::HasInstance(args[1]->ToObject()->Get(option_end))) {
-    Local<Object> endBuffer = Local<Object>::New(args[1]->ToObject()->Get(option_end)->ToObject());
-    end = new string(Buffer::Data(endBuffer), Buffer::Length(endBuffer));
+  if (args[1]->ToObject()->Has(option_end)
+      && (Buffer::HasInstance(args[1]->ToObject()->Get(option_end)) || args[1]->ToObject()->Get(option_end)->IsString())) {
+    Local<Value> endBuffer = Local<Value>::New(args[1]->ToObject()->Get(option_end));
+    STRING_OR_BUFFER_TO_SLICE(_end, endBuffer)
+    end = new string(_end.data(), _end.size());
   }
-  bool reverse = false;
-  if (args[1]->ToObject()->Has(option_reverse)) {
-    reverse = args[1]->ToObject()->Get(option_reverse)->BooleanValue();
-  }
-  bool keys = true;
-  if (args[1]->ToObject()->Has(option_keys)) {
-    keys = args[1]->ToObject()->Get(option_keys)->BooleanValue();
-  }
-  bool values = true;
-  if (args[1]->ToObject()->Has(option_values)) {
-    values = args[1]->ToObject()->Get(option_values)->BooleanValue();
-  }
+  Local<Object> optionsObj = Local<Object>::Cast(args[1]);
+  BOOLEAN_OPTION_VALUE(optionsObj, reverse)
+  BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, keys)
+  BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, values)
+  BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, keyAsBuffer)
+  BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, valueAsBuffer)
   int limit = -1;
   if (args[1]->ToObject()->Has(option_limit)) {
     limit = Local<Integer>::Cast(args[1]->ToObject()->Get(option_limit))->Value();
   }
-  Iterator* iterator = new Iterator(database, start, end, reverse, keys, values, limit);
+  Iterator* iterator = new Iterator(database, start, end, reverse, keys, values, limit, keyAsBuffer, valueAsBuffer);
   iterator->Wrap(args.This());
 
   return args.This();
@@ -153,5 +151,5 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
 
 Handle<Value> levelup::CreateIterator (const Arguments& args) {
   HandleScope scope;
- return scope.Close(levelup::Iterator::NewInstance(args));
+  return scope.Close(levelup::Iterator::NewInstance(args));
 }

@@ -7,6 +7,7 @@
 #include "iterator.h"
 
 using namespace v8;
+using namespace node;
 using namespace levelup;
 
 void Init (Handle<Object> target) {
@@ -21,19 +22,11 @@ NODE_MODULE(levelup, Init)
 
 // util
 
-// Extracts a C string from a V8 Utf8Value.
-const char* ToCString(const v8::String::Utf8Value& value) {
-  return *value ? *value : "<string conversion failed>";
-}
-const char* ToCString(const v8::String::AsciiValue& value) {
-  return *value ? *value : "<string conversion failed>";
-}
-
 void RunCallback (Persistent<Function> callback, Local<Value> argv[], int length) {
   TryCatch try_catch;
  
   callback->Call(Context::GetCurrent()->Global(), length, argv);
   if (try_catch.HasCaught()) {
-    node::FatalException(try_catch);
+    FatalException(try_catch);
   }
 }

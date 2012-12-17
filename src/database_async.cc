@@ -62,9 +62,14 @@ void ReadWorker::Execute () {
 }
 
 void ReadWorker::HandleOKCallback () {
+  Local<Value> returnValue;
+  if (asBuffer)
+    returnValue = Local<Value>::New(Buffer::New((char*)value.data(), value.size())->handle_);
+  else
+    returnValue = String::New((char*)value.data(), value.size());
   Local<Value> argv[] = {
       Local<Value>::New(Null())
-    , Local<Value>::New(Buffer::New((char*)value.data(), value.size())->handle_)
+    , returnValue
   };
   RunCallback(callback, argv, 2);
 }

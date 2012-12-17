@@ -21,12 +21,14 @@ public:
     , string location
     , bool createIfMissing
     , bool errorIfExists
+    , bool compression
   ) : AsyncWorker(database, callback)
     , location(location)
   {
     options = new Options();
     options->create_if_missing = createIfMissing;
     options->error_if_exists = errorIfExists;
+    options->compression = compression ? kSnappyCompression : kNoCompression;
   };
 
   virtual ~OpenWorker ();
@@ -56,7 +58,7 @@ public:
       Database* database
     , Persistent<Function> callback
     , Slice key
-    , Persistent<Object> keyPtr
+    , Persistent<Value> keyPtr
   ) : AsyncWorker(database, callback)
     , key(key)
     , keyPtr(keyPtr)
@@ -67,7 +69,7 @@ public:
 
 protected:
   Slice key;
-  Persistent<Object> keyPtr;
+  Persistent<Value> keyPtr;
 };
 
 class ReadWorker : public IOWorker {
@@ -76,8 +78,10 @@ public:
       Database* database
     , Persistent<Function> callback
     , Slice key
-    , Persistent<Object> keyPtr
+    , bool asBuffer
+    , Persistent<Value> keyPtr
   ) : IOWorker(database, callback, key, keyPtr)
+    , asBuffer(asBuffer)
   {
     options = new ReadOptions();
   };
@@ -87,6 +91,7 @@ public:
   virtual void HandleOKCallback ();
 
 private:
+  bool asBuffer;
   ReadOptions* options;
   string value;
 };
@@ -98,7 +103,7 @@ public:
     , Persistent<Function> callback
     , Slice key
     , bool sync
-    , Persistent<Object> keyPtr
+    , Persistent<Value> keyPtr
   ) : IOWorker(database, callback, key, keyPtr)
   {
     options = new WriteOptions();
@@ -120,8 +125,8 @@ public:
     , Slice key
     , Slice value
     , bool sync
-    , Persistent<Object> keyPtr
-    , Persistent<Object> valuePtr
+    , Persistent<Value> keyPtr
+    , Persistent<Value> valuePtr
   ) : DeleteWorker(database, callback, key, sync, keyPtr)
     , value(value)
     , valuePtr(valuePtr)
@@ -132,7 +137,7 @@ public:
 
 private:
   Slice value;
-  Persistent<Object> valuePtr;
+  Persistent<Value> valuePtr;
 };
 
 class BatchWorker : public AsyncWorker {
