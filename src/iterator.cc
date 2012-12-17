@@ -151,5 +151,5 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
 
 Handle<Value> levelup::CreateIterator (const Arguments& args) {
   HandleScope scope;
- return scope.Close(levelup::Iterator::NewInstance(args));
+  return scope.Close(levelup::Iterator::NewInstance(args));
 }

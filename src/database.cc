@@ -21,17 +21,6 @@ using namespace v8;
 using namespace node;
 using namespace leveldb;
 
-LU_OPTION ( createIfMissing ); // for open()
-LU_OPTION ( errorIfExists   ); // for open()
-LU_OPTION ( compression     ); // for open()
-LU_OPTION ( sync            ); // for put() and delete()
-LU_OPTION ( asBuffer        ); // for get()
-LU_STR    ( key   );
-LU_STR    ( value );
-LU_STR    ( type  );
-LU_STR    ( del   );
-LU_STR    ( put   );
-
 Database::Database () {
   db = NULL;
 };
@@ -41,7 +30,7 @@ Database::~Database () {
     delete db;
 };
 
-/* expect these to be called from worker threads, no v8 here */
+/* Calls from worker threads, NO V8 HERE *****************************/
 
 Status Database::OpenDatabase (Options* options, string location) {
   return DB::Open(*options, location, &db);
@@ -80,7 +69,14 @@ void Database::CloseDatabase () {
   db = NULL;
 }
 
+/* V8 exposed functions *****************************/
+
 Persistent<Function> Database::constructor;
+
+Handle<Value> CreateDatabase (const Arguments& args) {
+  HandleScope scope;
+  return scope.Close(Database::NewInstance(args));
+}
 
 void Database::Init () {
   Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
@@ -272,9 +268,4 @@ Handle<Value> Database::Batch (const Arguments& args) {
   ));
 
   return Undefined();
-}
-
-Handle<Value> CreateDatabase (const Arguments& args) {
-  HandleScope scope;
-  return scope.Close(Database::NewInstance(args));
 }

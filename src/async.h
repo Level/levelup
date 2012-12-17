@@ -11,7 +11,7 @@ using namespace std;
 using namespace v8;
 using namespace leveldb;
 
-class AsyncWorker {
+/* abstract */ class AsyncWorker {
 public:
   AsyncWorker (
       Database* database
