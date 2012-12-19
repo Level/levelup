@@ -86,6 +86,7 @@ buster.testCase('WriteStream', {
       }.bind(this))
     }
 
+  /*
     // exactly the same as previous but should avoid batch() writes
   , 'test WriteStream with async writes and useBatch=false': function (done) {
       this.openTestDatabase(function (db) {
@@ -120,6 +121,7 @@ buster.testCase('WriteStream', {
         )
       }.bind(this))
     }
+  */
 
     // at the moment, destroySoon() is basically just end()
   , 'test destroySoon()': function (done) {
