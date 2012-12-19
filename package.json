@@ -17,6 +17,7 @@
   , "main": "lib/levelup.js"
   , "dependencies": {
         "errno": "~0.0.3"
+      , "async": "*"
       , "bindings": "~1.0.0"
       , "concat-stream": "~0.0.9"
       , "bufferstream": "~0.5.1"
@@ -24,7 +25,6 @@
   , "devDependencies": {
         "buster": "*"
       , "rimraf": "*"
-      , "async": "*"
       , "fstream": "*"
       , "tar": "*"
       , "mkfiletree": "*"
