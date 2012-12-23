@@ -109,18 +109,18 @@ db.get('foo', function (err, value) {
 
 `levelup()` takes an optional options object as its second argument; the following properties are accepted:
 
-* `'createIfMissing'` *(boolean, default: `false`)*: If `true`, will initialise an empty database at the specified location if one doesn't already exit. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open.
+* `'createIfMissing'` *(boolean, default: `false`)*: If `true`, will initialise an empty database at the specified location if one doesn't already exist. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open.
 
 * `'errorIfExists'` *(boolean, default: `false`)*: If `true`, you will receive an error in your `open()` callback if the database exists at the specified location.
 
 * `'compression'` *(boolean, default: `true`)*: If `true`, all *compressible* data will be run through the Snappy compression algorithm before being stored. Snappy is very fast and shouldn't gain much speed by disabling so leave this on unless you have good reason to turn it off.
 
 * `'encoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end))
-  <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and converstion will be performed.</p>
+  <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and conversion will be performed.</p>
   <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
   <p><code>'json'</code> encoding is also supported, see below.</p>
 
-* `'keyEncoding'` and `valueEncoding'` *(string, default: `'utf8'`)*: use instead of `encoding` to specify the exact encoding of both the keys and the values in this database.
+* `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: use instead of `encoding` to specify the exact encoding of both the keys and the values in this database.
 
 Additionally, each of the main interface methods accept an optional options object that can be used to override `encoding` (or `keyEncoding` & `valueEncoding`).
 
@@ -129,7 +129,7 @@ Additionally, each of the main interface methods accept an optional options obje
 ### db.open([callback])
 <code>open()</code> opens the underlying LevelDB store. In general **you should never need to call this method directly** as it's automatically called by <a href="#ctor"><code>levelup()</code></a>.
 
-However, it is possible to *reopen* a database after it has been closed with <a href="#close"><code>close()</code></a>; although this is not generally advised.
+However, it is possible to *reopen* a database after it has been closed with <a href="#close"><code>close()</code></a>, although this is not generally advised.
 
 --------------------------------------------------------
 <a name="close"></a>
@@ -147,7 +147,7 @@ The callback argument is optional but if you don't provide one and an error occu
 
 #### `options`
 
-Encoding of the `key` and `value` objects will adhere to `encoding` option(s) provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `put()` (it's recommended that stay consistent in your encoding of keys and values in a single store).
+Encoding of the `key` and `value` objects will adhere to `encoding` option(s) provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `put()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
 
 If you provide a `'sync'` value of `true` in your `options` object, LevelDB will perform a synchronous write of the data; although the operation will be asynchronous as far as Node is concerned. Normally, LevelDB passes the data to the operating system for writing and returns immediately, however a synchronous write will use `fsync()` or equivalent so your callback won't be triggered until the data is actually on disk. Synchronous filesystem writes are **significantly** slower than asynchronous writes but if you want to be absolutely sure that the data is flushed then you can use `'sync': true`.
 
@@ -158,7 +158,7 @@ If you provide a `'sync'` value of `true` in your `options` object, LevelDB will
 
 #### `options`
 
-Encoding of the `key` objects will adhere to `encoding` option(s) provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `et()` (it's recommended that stay consistent in your encoding of keys and values in a single store).
+Encoding of the `key` objects will adhere to `encoding` option(s) provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `get()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
 
 --------------------------------------------------------
 <a name="del"></a>
@@ -167,7 +167,7 @@ Encoding of the `key` objects will adhere to `encoding` option(s) provided to <a
 
 #### `options`
 
-Encoding of the `key` objects will adhere to `encoding` option(s) provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `et()` (it's recommended that stay consistent in your encoding of keys and values in a single store).
+Encoding of the `key` objects will adhere to `encoding` option(s) provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `del()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
 
 A `'sync'` option can also be passed, see <a href="#put"><code>put()</code></a> for details on how this works.
 
@@ -220,7 +220,7 @@ A LevelUP object can be in one of the following states:
 
 --------------------------------------------------------
 <a name="readStream"></a>
-### db.readStream()
+### db.readStream([options])
 
 You can obtain a **ReadStream** of the full database by calling the `readStream()` method. The resulting stream is a complete Node.js-style [Readable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_readable_stream) where `'data'` events emit objects with `'key'` and `'value'` pairs.
 
@@ -258,7 +258,7 @@ Additionally, you can supply an options object as the first parameter to `readSt
 
 --------------------------------------------------------
 <a name="keyStream"></a>
-### db.keyStream()
+### db.keyStream([options])
 
 A **KeyStream** is a **ReadStream** where the `'data'` events are simply the keys from the database so it can be used like a traditional stream rather than an object stream.
 
@@ -279,11 +279,11 @@ db.readStream({ keys: true, values: false })
 
 --------------------------------------------------------
 <a name="valueStream"></a>
-### db.valueStream()
+### db.valueStream([options])
 
 A **ValueStream** is a **ReadStream** where the `'data'` events are simply the values from the database so it can be used like a traditional stream rather than an object stream.
 
-You can obtain a ValueStream either by calling the `valueStream()` method on a LevelUP object or by passing passing an options object to `readStream()` with `valuess` set to `true` and `keys` set to `false`.
+You can obtain a ValueStream either by calling the `valueStream()` method on a LevelUP object or by passing passing an options object to `readStream()` with `values` set to `true` and `keys` set to `false`.
 
 ```js
 db.valueStream()
@@ -300,9 +300,9 @@ db.readStream({ keys: false, values: true })
 
 --------------------------------------------------------
 <a name="writeStream"></a>
-### db.writeStream()
+### db.writeStream([options])
 
-A **WriteStream** can be obtained by calling the `writeStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method. Tce WriteStream will buffer writes and submit them as a `batch()` operation where the writes occur on the same event loop tick, otherwise they are treated as simple `put()` operations.
+A **WriteStream** can be obtained by calling the `writeStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method. The WriteStream will buffer writes and submit them as a `batch()` operation where the writes occur on the same event loop tick, otherwise they are treated as simple `put()` operations.
 
 ```js
 db.writeStream()
@@ -327,7 +327,7 @@ A ReadStream can be piped directly to a WriteStream, allowing for easy copying o
 
 ```js
 function copy (srcdb, dstdb, callback) {
-  srcdb.readStream().pipe(dstdb.writeStream().on('close', callback))
+  srcdb.readStream().pipe(dstdb.writeStream()).on('close', callback)
 }
 ```
 
