@@ -377,7 +377,8 @@ See the [CONTRIBUTING.md](https://github.com/rvagg/node-levelup/blob/master/CONT
 * John Chesley - [GitHub/chesles](https://github.com/chesles/) - [Twitter/@chesles](https://twitter.com/chesles)
 * Jake Verbaten - [GitHub/raynos](https://github.com/raynos) - [Twitter/@raynos2](https://twitter.com/Raynos2)
 * Dominic Tarr - [GitHub/dominictarr](https://github.com/dominictarr) - [Twitter/@dominictarr](https://twitter.com/dominictarr)
-* Max Ogden - [GitHub/maxogden](https://github.com/maxogden) - [Twitter/@maxogden](http://twitter.com/maxogden)
+* Max Ogden - [GitHub/maxogden](https://github.com/maxogden) - [Twitter/@maxogden](https://twitter.com/maxogden)
+* Lars-Magnus Skog - [GitHub/ralphtheninja](https://github.com/ralphtheninja) - [Twitter/@ralphtheninja](https://twitter.com/ralphtheninja)
 
 <a name="licence"></a>
 Licence & copyright
