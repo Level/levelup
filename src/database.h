@@ -39,6 +39,7 @@ public:
   Status GetFromDatabase (ReadOptions* options, Slice key, string& value);
   Status DeleteFromDatabase (WriteOptions* options, Slice key);
   Status WriteBatchToDatabase (WriteOptions* options, WriteBatch* batch);
+  uint64_t ApproximateSizeFromDatabase (const Range* range);
   leveldb::Iterator* NewIterator (ReadOptions* options);
   const leveldb::Snapshot* NewSnapshot ();
   void ReleaseSnapshot (const leveldb::Snapshot* snapshot);
@@ -59,6 +60,7 @@ private:
   LU_V8_METHOD( Delete   )
   LU_V8_METHOD( Get      )
   LU_V8_METHOD( Batch    )
+  LU_V8_METHOD( ApproximateSize)
 };
 
 #endif
