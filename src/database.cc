@@ -52,6 +52,12 @@ Status Database::WriteBatchToDatabase (WriteOptions* options, WriteBatch* batch)
   return db->Write(*options, batch);
 }
 
+uint64_t Database::ApproximateSizeFromDatabase (const Range* range) {
+  uint64_t size;
+  db->GetApproximateSizes(range, 1, &size);
+  return size;
+}
+
 leveldb::Iterator* Database::NewIterator (ReadOptions* options) {
   return db->NewIterator(*options);
 }
@@ -88,6 +94,7 @@ void Database::Init () {
   tpl->PrototypeTemplate()->Set(String::NewSymbol("get")      , FunctionTemplate::New(Get)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("del")      , FunctionTemplate::New(Delete)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("batch")    , FunctionTemplate::New(Batch)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("approximateSize")    , FunctionTemplate::New(ApproximateSize)->GetFunction());
   constructor = Persistent<Function>::New(tpl->GetFunction());
 }
 
@@ -266,6 +273,33 @@ Handle<Value> Database::Batch (const Arguments& args) {
     , operations
     , sync
   ));
+
+  return Undefined();
+}
+
+Handle<Value> Database::ApproximateSize (const Arguments& args) {
+  HandleScope scope;
+
+  Database* database = ObjectWrap::Unwrap<Database>(args.This());
+  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
+
+  CB_ERR_IF_NULL_OR_UNDEFINED(0, "start")
+  CB_ERR_IF_NULL_OR_UNDEFINED(1, "end")
+
+  Persistent<Value> startBuffer = Persistent<Value>::New(args[0]);
+  STRING_OR_BUFFER_TO_SLICE(start, startBuffer)
+  Persistent<Value> endBuffer = Persistent<Value>::New(args[1]);
+  STRING_OR_BUFFER_TO_SLICE(end, endBuffer)
+
+  ApproximateSizeWorker* worker  = new ApproximateSizeWorker(
+      database
+    , callback
+    , start
+    , end
+    , startBuffer
+    , endBuffer
+  );
+  AsyncQueueWorker(worker);
 
   return Undefined();
 }

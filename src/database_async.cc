@@ -113,3 +113,24 @@ void BatchWorker::Execute () {
   }
   status = database->WriteBatchToDatabase(options, &batch);
 }
+
+/** APPROXIMATE SIZE WORKER **/
+
+void ApproximateSizeWorker::Execute () {
+  size = database->ApproximateSizeFromDatabase(&range);
+}
+
+void ApproximateSizeWorker::WorkComplete() {
+  AsyncWorker::WorkComplete();
+  startPtr.Dispose();
+  endPtr.Dispose();
+}
+
+void ApproximateSizeWorker::HandleOKCallback () {
+  Local<Value> returnValue = Number::New((double) size);
+  Local<Value> argv[] = {
+      Local<Value>::New(Null())
+    , returnValue
+  };
+  RunCallback(callback, argv, 2);
+}
