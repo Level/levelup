@@ -13,7 +13,7 @@
       , "storage"
       , "json"
     ]
-  , "version": "0.4.2"
+  , "version": "0.4.3"
   , "main": "lib/levelup.js"
   , "dependencies": {
         "errno": "~0.0.3"
