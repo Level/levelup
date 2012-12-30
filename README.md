@@ -199,12 +199,12 @@ See <a href="#put"><code>put()</code></a> for a discussion on the `options` obje
 
 --------------------------------------------------------
 <a name='approximateSize'></a>
-### db.approximateSize(start, end[, callback])
+### db.approximateSize(start, end, callback)
 <code>approximateSize()</code> can used to get the approximate number of bytes of file system space used by the range `[start..end)`. The result may not include recently written data.
 
 ```js
-db.approximateSize('a', 'c', function(err, size) {
-  if (err) return console.log('Ooops!', err)
+db.approximateSize('a', 'c', function (err, size) {
+  if (err) return console.error('Ooops!', err)
   console.log('Approximate size of range is %d', size)
 })
 ```
@@ -392,6 +392,7 @@ See the [CONTRIBUTING.md](https://github.com/rvagg/node-levelup/blob/master/CONT
 * Dominic Tarr - [GitHub/dominictarr](https://github.com/dominictarr) - [Twitter/@dominictarr](https://twitter.com/dominictarr)
 * Max Ogden - [GitHub/maxogden](https://github.com/maxogden) - [Twitter/@maxogden](https://twitter.com/maxogden)
 * Lars-Magnus Skog - [GitHub/ralphtheninja](https://github.com/ralphtheninja) - [Twitter/@ralphtheninja](https://twitter.com/ralphtheninja)
+* David Björklund - [GitHub/kesla](https://github.com/kesla) - [Twitter/david_bjorklund](https://twitter.com/david_bjorklund)
 
 <a name="licence"></a>
 Licence & copyright
