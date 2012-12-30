@@ -70,6 +70,7 @@ db.put('name', 'LevelUP', function (err) {
   * <a href="#get"><code>db.<b>get()</b></code></a>
   * <a href="#del"><code>db.<b>del()</b></code></a>
   * <a href="#batch"><code>db.<b>batch()</b></code></a>
+  * <a href="#approximateSize"><code>db.<b>approximateSize()</b></code></a>
   * <a href="#isOpen"><code>db.<b>isOpen()</b></code></a>
   * <a href="#isClosed"><code>db.<b>isClosed()</b></code></a>
   * <a href="#readStream"><code>db.<b>readStream()</b></code></a>
@@ -195,6 +196,18 @@ db.batch(ops, function (err) {
 #### `options`
 
 See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can overwrite default `key` and `value` encodings and also specify the use of `sync` filesystem operations.
+
+--------------------------------------------------------
+<a name='approximateSize'></a>
+### db.approximateSize(start, end[, callback])
+<code>approximateSize()</code> can used to get the approximate number of bytes of file system space used by the range `[start..end)`. The result may not include recently written data.
+
+```js
+db.approximateSize('a', 'c', function(err, size) {
+  if (err) return console.log('Ooops!', err)
+  console.log('Approximate size of range is %d', size)
+})
+```
 
 --------------------------------------------------------
 <a name="isOpen"></a>

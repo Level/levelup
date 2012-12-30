@@ -162,4 +162,30 @@ private:
   vector<BatchOp*>* operations;
 };
 
+class ApproximateSizeWorker : public AsyncWorker {
+public:
+  ApproximateSizeWorker (
+      Database* database
+    , Persistent<Function> callback
+    , Slice start
+    , Slice end
+    , Persistent<Value> startPtr
+    , Persistent<Value> endPtr
+  ) : AsyncWorker(database, callback)
+    , range(start, end)
+    , startPtr(startPtr)
+    , endPtr(endPtr)
+  {};
+
+  virtual void Execute ();
+  virtual void HandleOKCallback ();
+  virtual void WorkComplete ();
+
+  private:
+    Range range;
+    Persistent<Value> startPtr;
+    Persistent<Value> endPtr;
+    uint64_t size;
+};
+
 #endif
