@@ -94,7 +94,7 @@ void Database::Init () {
   tpl->PrototypeTemplate()->Set(String::NewSymbol("get")      , FunctionTemplate::New(Get)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("del")      , FunctionTemplate::New(Delete)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("batch")    , FunctionTemplate::New(Batch)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("approximateSize")    , FunctionTemplate::New(ApproximateSize)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("approximateSize"), FunctionTemplate::New(ApproximateSize)->GetFunction());
   constructor = Persistent<Function>::New(tpl->GetFunction());
 }
 

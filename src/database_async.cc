@@ -134,3 +134,4 @@ void ApproximateSizeWorker::HandleOKCallback () {
   };
   RunCallback(callback, argv, 2);
 }
+

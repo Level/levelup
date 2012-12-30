@@ -419,19 +419,20 @@ buster.testCase('Basic API', {
             })
           })
         }
-        , 'apporximateSize() work on none-empty database': function(done) {
+
+      , 'approximateSize() work on none-empty database': function(done) {
           var location = common.nextLocation()
           var db
             async.series(
                 [
                     function (callback) {
-                      levelup(location, { createIfMissing: true, errorIfExists: true }, function (err, _db) {
-                        refute(err)
-                        db = _db
-                        this.closeableDatabases.push(db)
-                        this.cleanupDirs.push(location)
-                        callback()
-                      }.bind(this))
+                      this.openTestDatabase(
+                          location
+                        , function (_db) {
+                          db = _db
+                          callback()
+                        }
+                      )
                     }.bind(this)
                   , function (callback) {
                       var batch = [];
@@ -447,28 +448,29 @@ buster.testCase('Basic API', {
                       )
                     }
                   , function (callback) {
-                    // close db to make sure stuff gets written to disc
-                    db.close(callback)
-                  }
+                      // close db to make sure stuff gets written to disc
+                      db.close(callback)
+                    }
                   , function (callback) {
-                    levelup(location, function (err, _db) {
-                      refute(err)
-                      db = _db
-                      callback()
-                    })
-                  }
+                      levelup(location, function (err, _db) {
+                          refute(err)
+                          db = _db
+                          callback()
+                        }
+                      )
+                    }
                   , function (callback) {
-                    db.approximateSize('', '99', function(err, size) {
-                      refute(err) // sanity
-                      refute.equals(size, 0)
-                      done()
-                    })
-                  }
+                      db.approximateSize('', '99', function(err, size) {
+                        refute(err) // sanity
+                        refute.equals(size, 0)
+                        done()
+                      })
+                    }
                 ]
               , done
             )
         }
-  }
+    }
 
   , 'null and undefined': {
         'setUp': function (done) {
