@@ -98,24 +98,26 @@ buster.testCase('Deferred open()', {
     
     
   , 'maxListeners warning': function (done) {
-        var location = common.nextLocation()
-        // 1) open database without callback, opens in worker thread
-          , db       = levelup(location, { createIfMissing: true, errorIfExists: true, encoding: 'utf8' })
+      var location   = common.nextLocation()
+      // 1) open database without callback, opens in worker thread
+        , db         = levelup(location, { createIfMissing: true, errorIfExists: true, encoding: 'utf8' })
+        , stderrMock = this.mock(console)
 
-        this.closeableDatabases.push(db)
-        this.cleanupDirs.push(location)
+      this.closeableDatabases.push(db)
+      this.cleanupDirs.push(location)
+      stderrMock.expects('error').never()
 
-        // 2) provoke an EventEmitter maxListeners warning
-        var toPut = 11
-        
-        for (var i = 0; i < toPut; i++) {
-          db.put('some', 'string', function (err) {
-            refute(err)
-            
-            if (!--toPut) {
-              done()
-            }
-          })
-        }
+      // 2) provoke an EventEmitter maxListeners warning
+      var toPut = 11
+
+      for (var i = 0; i < toPut; i++) {
+        db.put('some', 'string', function (err) {
+          refute(err)
+
+          if (!--toPut) {
+            done()
+          }
+        })
       }
+    }
 })
