@@ -8,6 +8,7 @@
 #include <node.h>
 #include "async.h"
 #include "batch.h"
+#include "leveldb/cache.h"
 
 using namespace std;
 using namespace v8;
@@ -22,6 +23,7 @@ public:
     , bool createIfMissing
     , bool errorIfExists
     , bool compression
+    , uint32_t cacheSize
   ) : AsyncWorker(database, callback)
     , location(location)
   {
@@ -29,6 +31,7 @@ public:
     options->create_if_missing = createIfMissing;
     options->error_if_exists = errorIfExists;
     options->compression = compression ? kSnappyCompression : kNoCompression;
+    options->block_cache = NewLRUCache(cacheSize);
   };
 
   virtual ~OpenWorker ();
@@ -79,11 +82,13 @@ public:
     , Persistent<Function> callback
     , Slice key
     , bool asBuffer
+    , bool fillCache
     , Persistent<Value> keyPtr
   ) : IOWorker(database, callback, key, keyPtr)
     , asBuffer(asBuffer)
   {
     options = new ReadOptions();
+    options->fill_cache = fillCache;
   };
 
   virtual ~ReadWorker ();

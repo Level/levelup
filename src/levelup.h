@@ -39,6 +39,8 @@
   bool opt = optionsObj->Has(option_ ## opt) && optionsObj->Get(option_ ## opt)->BooleanValue();
 #define BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, opt) \
   bool opt = !optionsObj->Has(option_ ## opt) || optionsObj->Get(option_ ## opt)->BooleanValue();
+#define UINT32_OPTION_VALUE(optionsObj, opt, default) \
+  uint32_t opt = optionsObj->Has(option_ ## opt) ? optionsObj->Get(option_ ## opt)->Uint32Value() : default;
 
 void RunCallback (v8::Persistent<v8::Function> callback, v8::Local<v8::Value> argv[], int length);
 

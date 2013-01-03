@@ -17,8 +17,10 @@ using namespace leveldb;
 LU_OPTION ( createIfMissing ); // for open()
 LU_OPTION ( errorIfExists   ); // for open()
 LU_OPTION ( compression     ); // for open()
+LU_OPTION ( cacheSize       ); // for open() 
 LU_OPTION ( sync            ); // for put() and delete()
 LU_OPTION ( asBuffer        ); // for get()
+LU_OPTION ( fillCache       ); // for get() and readStream()
 LU_STR    ( key   );
 LU_STR    ( value );
 LU_STR    ( type  );
