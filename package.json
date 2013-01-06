@@ -21,11 +21,11 @@
       , "storage"
       , "json"
     ]
-  , "version"         : "0.5.4"
+  , "version"         : "0.6.0-a02"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
-        "errno"           : "~0.0.3"
-      , "bindings"        : "~1.0.0"
+        "leveldown"       : "0.0.2"
+      , "errno"           : "~0.0.3"
       , "concat-stream"   : "~0.1.1"
       , "simple-bufferstream" : "~0.0.2"
     }
@@ -52,5 +52,4 @@
       , "alltests"        : "npm test && npm run-script functionaltests"
     }
   , "license"         : "MIT"
-  , "gypfile"         : true
 }
