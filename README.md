@@ -391,8 +391,9 @@ See the [CONTRIBUTING.md](https://github.com/rvagg/node-levelup/blob/master/CONT
 * Jake Verbaten - [GitHub/raynos](https://github.com/raynos) - [Twitter/@raynos2](https://twitter.com/Raynos2)
 * Dominic Tarr - [GitHub/dominictarr](https://github.com/dominictarr) - [Twitter/@dominictarr](https://twitter.com/dominictarr)
 * Max Ogden - [GitHub/maxogden](https://github.com/maxogden) - [Twitter/@maxogden](https://twitter.com/maxogden)
-* Lars-Magnus Skog - [GitHub/ralphtheninja](https://github.com/ralphtheninja) - [Twitter/@ralphtheninja](https://twitter.com/ralphtheninja)
-* David Björklund - [GitHub/kesla](https://github.com/kesla) - [Twitter/david_bjorklund](https://twitter.com/david_bjorklund)
+* Lars-Magnus Skog - [GitHub/ralphtheninja](https://github.com/@ralphtheninja) - [Twitter/@ralphtheninja](https://twitter.com/ralphtheninja)
+* David Björklund - [GitHub/kesla](https://github.com/kesla) - [Twitter/@david_bjorklund](https://twitter.com/david_bjorklund)
+* Julian Gruber - [Github/juliangruber](https://github.com/juliangruber) - [Twitter/@juliangruber](https://twitter.com/juliangruber)
 
 <a name="licence"></a>
 Licence & copyright
