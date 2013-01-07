@@ -125,6 +125,7 @@ Handle<Value> Database::Open (const Arguments& args) {
   BOOLEAN_OPTION_VALUE(optionsObj, createIfMissing)
   BOOLEAN_OPTION_VALUE(optionsObj, errorIfExists)
   BOOLEAN_OPTION_VALUE(optionsObj, compression)
+  UINT32_OPTION_VALUE(optionsObj, cacheSize, 8 << 20)
   Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
 
   OpenWorker* worker = new OpenWorker(
@@ -134,6 +135,7 @@ Handle<Value> Database::Open (const Arguments& args) {
     , createIfMissing
     , errorIfExists
     , compression
+    , cacheSize
   );
   AsyncQueueWorker(worker);
 
@@ -196,12 +198,14 @@ Handle<Value> Database::Get (const Arguments& args) {
   STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
   Local<Object> optionsObj = Local<Object>::Cast(args[1]);
   BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, asBuffer)
+  BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, fillCache)
 
   ReadWorker* worker = new ReadWorker(
       database
     , callback
     , key
     , asBuffer
+    , fillCache
     , keyBuffer
   );
   AsyncQueueWorker(worker);

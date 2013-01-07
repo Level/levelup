@@ -23,6 +23,7 @@ LU_OPTION ( keys          );
 LU_OPTION ( values        );
 LU_OPTION ( keyAsBuffer   );
 LU_OPTION ( valueAsBuffer );
+LU_OPTION ( fillCache     );
 
 Handle<Value> CreateIterator (const Arguments& args);
 
@@ -43,6 +44,7 @@ public:
     , bool keys
     , bool values
     , int limit
+    , bool fillCache
     , bool keyAsBuffer
     , bool valueAsBuffer
   ) : database(database)
@@ -56,6 +58,7 @@ public:
     , valueAsBuffer(valueAsBuffer)
   {
     options = new ReadOptions();
+    options->fill_cache = fillCache;
     dbIterator = NULL;
     count = 0;
   };
