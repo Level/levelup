@@ -139,11 +139,12 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
   BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, values)
   BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, keyAsBuffer)
   BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, valueAsBuffer)
+  BOOLEAN_OPTION_VALUE(optionsObj, fillCache)
   int limit = -1;
   if (args[1]->ToObject()->Has(option_limit)) {
     limit = Local<Integer>::Cast(args[1]->ToObject()->Get(option_limit))->Value();
   }
-  Iterator* iterator = new Iterator(database, start, end, reverse, keys, values, limit, keyAsBuffer, valueAsBuffer);
+  Iterator* iterator = new Iterator(database, start, end, reverse, keys, values, limit, fillCache, keyAsBuffer, valueAsBuffer);
   iterator->Wrap(args.This());
 
   return args.This();
