@@ -10,6 +10,8 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
 
 **LevelUP** aims to expose the features of LevelDB in a Node.js-friendly way. Both keys and values are treated as `Buffer` objects and are automatically converted using a specified `'encoding'`. LevelDB's iterators are exposed as a Node.js style object-`ReadStream` and writing can be peformed via an object-`WriteStream`.
 
+An important feature of LevelDB is that it stores entries sorted by keys. This makes LevelUP's <a href="#readStream"><code>ReadStream</code></a> interface is a very powerful way to look up items, particularly when combined with the `start` option.
+
 **LevelUP** is an **OPEN Open Source Project**, see the <a href="#contributing">Contributing</a> section to find out what this means.
 
   * <a href="#platforms">Tested & supported platforms</a>
@@ -21,6 +23,7 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
   * <a href="#contributing">Contributing</a>
   * <a href="#licence">Licence & copyright</a>
 
+See also a list of <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>Node.js LevelDB modules and projects</b></a> in the wiki.
 
 <a name="platforms"></a>
 Tested & supported platforms
@@ -396,15 +399,17 @@ See the [CONTRIBUTING.md](https://github.com/rvagg/node-levelup/blob/master/CONT
 
 LevelUP is only possible due to the excellent work of the following contributors:
 
-* Rod Vagg - [GitHub/rvagg](https://github.com/rvagg) - [Twitter/@rvagg](https://twitter.com/rvagg)
-* John Chesley - [GitHub/chesles](https://github.com/chesles/) - [Twitter/@chesles](https://twitter.com/chesles)
-* Jake Verbaten - [GitHub/raynos](https://github.com/raynos) - [Twitter/@raynos2](https://twitter.com/Raynos2)
-* Dominic Tarr - [GitHub/dominictarr](https://github.com/dominictarr) - [Twitter/@dominictarr](https://twitter.com/dominictarr)
-* Max Ogden - [GitHub/maxogden](https://github.com/maxogden) - [Twitter/@maxogden](https://twitter.com/maxogden)
-* Lars-Magnus Skog - [GitHub/ralphtheninja](https://github.com/@ralphtheninja) - [Twitter/@ralphtheninja](https://twitter.com/ralphtheninja)
-* David Björklund - [GitHub/kesla](https://github.com/kesla) - [Twitter/@david_bjorklund](https://twitter.com/david_bjorklund)
-* Julian Gruber - [GitHub/juliangruber](https://github.com/juliangruber) - [Twitter/@juliangruber](https://twitter.com/juliangruber)
-* Paolo Fragomeni - [GitHub/hij1nx](https://github.com/hij1nx) - [Twitter/@hij1nx](http://twitter.com/hij1nx)
+<table><tbody>
+<tr><th align="left">Rod Vagg</th><td>[GitHub/rvagg](https://github.com/rvagg)</td><td>[Twitter/@rvagg](https://twitter.com/rvagg)</td></tr>
+<tr><th align="left">John Chesley</th><td>[GitHub/chesles](https://github.com/chesles/)</td><td>[Twitter/@chesles](https://twitter.com/chesles)</td></tr>
+<tr><th align="left">Jake Verbaten</th><td>[GitHub/raynos](https://github.com/raynos)</td><td>[Twitter/@raynos2](https://twitter.com/Raynos2)</td></tr>
+<tr><th align="left">Dominic Tarr</th><td>[GitHub/dominictarr](https://github.com/dominictarr)</td><td>[Twitter/@dominictarr](https://twitter.com/dominictarr)</td></tr>
+<tr><th align="left">Max Ogden</th><td>[GitHub/maxogden](https://github.com/maxogden)</td><td>[Twitter/@maxogden](https://twitter.com/maxogden)</td></tr>
+<tr><th align="left">Lars-Magnus Skog</th><td>[GitHub/ralphtheninja](https://github.com/@ralphtheninja)</td><td>[Twitter/@ralphtheninja](https://twitter.com/ralphtheninja)</td></tr>
+<tr><th align="left">David Björklund</th><td>[GitHub/kesla](https://github.com/kesla)</td><td>[Twitter/@david_bjorklund](https://twitter.com/david_bjorklund)</td></tr>
+<tr><th align="left">Julian Gruber</th><td>[GitHub/juliangruber](https://github.com/juliangruber)</td><td>[Twitter/@juliangruber](https://twitter.com/juliangruber)</td></tr>
+<tr><th align="left">Paolo Fragomeni</th><td>[GitHub/hij1nx](https://github.com/hij1nx)</td><td>[Twitter/@hij1nx](http://twitter.com/hij1nx)</td></tr>
+</tbody></table>
 
 <a name="licence"></a>
 Licence & copyright
