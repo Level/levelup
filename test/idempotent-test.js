@@ -1,6 +1,6 @@
 /* Copyright (c) 2012-2013 LevelUP contributors
  * See list at <https://github.com/rvagg/node-levelup#contributing>
- * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE> 
+ * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
 var buster  = require('buster')
@@ -9,7 +9,11 @@ var buster  = require('buster')
   , common  = require('./common')
 
 buster.testCase('Idempotent open & close', {
-    'call open twice, should emit "open" once': function (done) {
+    'setUp': common.readStreamSetUp
+
+  , 'tearDown': common.commonTearDown
+
+  , 'call open twice, should emit "open" once': function (done) {
       var location = common.nextLocation()
         , n = 0
         , m = 0
@@ -27,6 +31,8 @@ buster.testCase('Idempotent open & close', {
             db.close()
             process.nextTick(db.close.bind(db))
           }.bind(this)
+
+      this.cleanupDirs.push(location)
 
       db = levelup(
           location
