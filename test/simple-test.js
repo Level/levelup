@@ -35,7 +35,7 @@ buster.testCase('Basic API', {
           levelup(location, function (err, db) { // no options object
             refute(err)
             assert.isObject(db)
-            assert.isFalse(db._options.createIfMissing)
+            assert.isTrue(db._options.createIfMissing)
             assert.isFalse(db._options.errorIfExists)
             assert.equals(db._location, location)
 
@@ -89,7 +89,7 @@ buster.testCase('Basic API', {
     }
 
   , 'open() with !createIfMissing expects error': function (done) {
-      levelup(this.cleanupDirs[0] = common.nextLocation(), function (err, db) {
+      levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: false }, function (err, db) {
         assert(err)
         refute(db)
         assert.isInstanceOf(err, Error)
