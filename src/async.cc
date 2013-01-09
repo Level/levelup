@@ -22,6 +22,11 @@ using namespace leveldb;
 
 /** ASYNC BASE **/
 
+AsyncWorker::AsyncWorker (Database* database, Persistent<Function> callback)
+    : database(database), callback(callback) {
+  request.data = this;
+};
+
 AsyncWorker::~AsyncWorker () {}
 
 void AsyncWorker::WorkComplete () {

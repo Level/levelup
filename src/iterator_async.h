@@ -22,10 +22,7 @@ public:
       levelup::Iterator* iterator
     , Persistent<Function> dataCallback
     , Persistent<Function> endCallback
-  ) : AsyncWorker(database, dataCallback)
-    , iterator(iterator)
-    , endCallback(endCallback)
-  {};
+  );
 
   virtual ~NextWorker ();
   virtual void Execute ();
@@ -44,9 +41,7 @@ public:
   EndWorker (
       levelup::Iterator* iterator
     , Persistent<Function> endCallback
-  ) : AsyncWorker(database, endCallback)
-    , iterator(iterator)
-  {};
+  );
 
   virtual ~EndWorker ();
   virtual void Execute ();

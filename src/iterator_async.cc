@@ -20,6 +20,17 @@ using namespace v8;
 using namespace node;
 using namespace leveldb;
 
+/** NEXT WORKER **/
+
+NextWorker::NextWorker (
+    levelup::Iterator* iterator
+  , Persistent<Function> dataCallback
+  , Persistent<Function> endCallback
+) : AsyncWorker(database, dataCallback)
+  , iterator(iterator)
+  , endCallback(endCallback)
+{};
+
 NextWorker::~NextWorker () {}
 
 void NextWorker::Execute () {
@@ -51,6 +62,15 @@ void NextWorker::HandleOKCallback () {
     RunCallback(endCallback, argv, 0);
   }
 }
+
+/** END WORKER **/
+
+EndWorker::EndWorker (
+    levelup::Iterator* iterator
+  , Persistent<Function> endCallback
+) : AsyncWorker(database, endCallback)
+  , iterator(iterator)
+{};
 
 EndWorker::~EndWorker () {}
 

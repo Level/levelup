@@ -19,10 +19,7 @@ public:
   AsyncWorker (
       Database* database
     , Persistent<Function> callback
-  ) : database(database)
-    , callback(callback) {
-        request.data = this;
-      };
+  );
 
   virtual ~AsyncWorker ();
   uv_work_t request;

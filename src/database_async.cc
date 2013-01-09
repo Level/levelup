@@ -23,6 +23,24 @@ using namespace leveldb;
 
 /** OPEN WORKER **/
 
+OpenWorker::OpenWorker (
+    Database* database
+  , Persistent<Function> callback
+  , string location
+  , bool createIfMissing
+  , bool errorIfExists
+  , bool compression
+  , uint32_t cacheSize
+) : AsyncWorker(database, callback)
+  , location(location)
+{
+  options = new Options();
+  options->create_if_missing = createIfMissing;
+  options->error_if_exists = errorIfExists;
+  options->compression = compression ? kSnappyCompression : kNoCompression;
+  options->block_cache = NewLRUCache(cacheSize);
+};
+
 OpenWorker::~OpenWorker () {
   delete options;
 }
@@ -32,6 +50,12 @@ void OpenWorker::Execute () {
 }
 
 /** CLOSE WORKER **/
+
+CloseWorker::CloseWorker (
+    Database* database
+  , Persistent<Function> callback
+) : AsyncWorker(database, callback)
+{};
 
 CloseWorker::~CloseWorker () {}
 
@@ -47,6 +71,16 @@ void CloseWorker::WorkComplete () {
 
 /** IO WORKER (abstract) **/
 
+IOWorker::IOWorker (
+    Database* database
+  , Persistent<Function> callback
+  , Slice key
+  , Persistent<Value> keyPtr
+) : AsyncWorker(database, callback)
+  , key(key)
+  , keyPtr(keyPtr)
+{};
+
 IOWorker::~IOWorker () {}
 
 void IOWorker::WorkComplete () {
@@ -55,6 +89,20 @@ void IOWorker::WorkComplete () {
 }
 
 /** READ WORKER **/
+
+ReadWorker::ReadWorker (
+    Database* database
+  , Persistent<Function> callback
+  , Slice key
+  , bool asBuffer
+  , bool fillCache
+  , Persistent<Value> keyPtr
+) : IOWorker(database, callback, key, keyPtr)
+  , asBuffer(asBuffer)
+{
+  options = new ReadOptions();
+  options->fill_cache = fillCache;
+};
 
 ReadWorker::~ReadWorker () {
   delete options;
@@ -79,6 +127,18 @@ void ReadWorker::HandleOKCallback () {
 
 /** DELETE WORKER **/
 
+DeleteWorker::DeleteWorker (
+    Database* database
+  , Persistent<Function> callback
+  , Slice key
+  , bool sync
+  , Persistent<Value> keyPtr
+) : IOWorker(database, callback, key, keyPtr)
+{
+  options = new WriteOptions();
+  options->sync = sync;
+};
+
 DeleteWorker::~DeleteWorker () {
   delete options;
 }
@@ -88,6 +148,21 @@ void DeleteWorker::Execute () {
 }
 
 /** WRITE WORKER **/
+
+WriteWorker::WriteWorker (
+    Database* database
+  , Persistent<Function> callback
+  , Slice key
+  , Slice value
+  , bool sync
+  , Persistent<Value> keyPtr
+  , Persistent<Value> valuePtr
+) : DeleteWorker(database, callback, key, sync, keyPtr)
+  , value(value)
+  , valuePtr(valuePtr)
+{};
+
+WriteWorker::~WriteWorker () {}
 
 void WriteWorker::Execute () {
   status = database->PutToDatabase(options, key, value);
@@ -99,6 +174,18 @@ void WriteWorker::WorkComplete () {
 }
 
 /** BATCH WORKER **/
+
+BatchWorker::BatchWorker (
+    Database* database
+  , Persistent<Function> callback
+  , vector<BatchOp*>* operations
+  , bool sync
+) : AsyncWorker(database, callback)
+  , operations(operations)
+{
+  options = new WriteOptions();
+  options->sync = sync;
+};
 
 BatchWorker::~BatchWorker () {
   for (vector<BatchOp*>::iterator it = operations->begin(); it != operations->end();) {
@@ -118,6 +205,21 @@ void BatchWorker::Execute () {
 }
 
 /** APPROXIMATE SIZE WORKER **/
+
+ApproximateSizeWorker::ApproximateSizeWorker (
+    Database* database
+  , Persistent<Function> callback
+  , Slice start
+  , Slice end
+  , Persistent<Value> startPtr
+  , Persistent<Value> endPtr
+) : AsyncWorker(database, callback)
+  , range(start, end)
+  , startPtr(startPtr)
+  , endPtr(endPtr)
+{};
+
+ApproximateSizeWorker::~ApproximateSizeWorker () {}
 
 void ApproximateSizeWorker::Execute () {
   size = database->ApproximateSizeFromDatabase(&range);
