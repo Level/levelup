@@ -363,7 +363,7 @@ LevelUP emits events when the callbacks to the corresponding methods are called.
 * `db.emit('put', key, value)` emitted when a new value is `'put'`
 * `db.emit('del', key)` emitted when a value is deleted
 * `db.emit('batch', ary)` emitted when a batch operation has executed
-* `db.emit('ready')` emitted when the database has opened `'open'` is synonym.
+* `db.emit('ready')` emitted when the database has opened (`'open'` is synonym)
 * `db.emit('closed')` emitted when the database has closed
 * `db.emit('opening')` emitted when the database is opening
 * `db.emit('closing')` emitted when the database is closing

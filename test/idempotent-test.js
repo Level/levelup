@@ -3,46 +3,44 @@
 var buster  = require('buster')
   , assert  = buster.assert
   , levelup = require('../lib/levelup.js')
-  , errors  = require('../lib/errors.js')
-  , async   = require('async')
-  , fs      = require('fs')
   , common  = require('./common')
 
-buster.testCase('idempotent open & close', {
-  'call open twice, should emit "open" once': function (done) {
+buster.testCase('Idempotent open & close', {
+    'call open twice, should emit "open" once': function (done) {
       var location = common.nextLocation()
-      var n = 0, m = 0
-      var db = levelup(location, { createIfMissing: true }, function (err, db) {
-        //callback should fire only once.
-        assert.equals(n++, 0)
-        if(n && m) close()
-        })
+        , n = 0
+        , m = 0
+        , db
+        , close = function () {
+            var closing = this.spy()
+            db.on('closing', closing)
+            db.on('closed', function () {
+              assert.equals(closing.callCount, 1)
+              assert.equals(closing.getCall(0).args, [])
+              done()
+            })
+
+            //close needs to be idempotent too.
+            db.close()
+            process.nextTick(db.close.bind(db))
+          }.bind(this)
+
+      db = levelup(
+          location
+        , { createIfMissing: true }
+        , function () {
+            assert.equals(n++, 0, 'callback should fire only once')
+            if (n && m)
+              close()
+          }
+      )
 
       db.on('open', function () {
-        console.log('emit open')
-        assert.equals(m++, 0)
-        if(n && m) close()    
+        assert.equals(m++, 0, 'callback should fire only once')
+        if (n && m)
+          close()
       })
 
       db.open()
-
-      //this will only be called once.
-      function close () {
-        var closing = false
-        db.on('closing', function () {
-          closing = true
-        })
-        db.on('closed', function () {
-          assert.equals(closing, true)
-          done()
-        })
-
-        //close needs to be idempotent too.
-        db.close()
-
-        process.nextTick(function () {
-          db.close()
-        })
-      }
     }
 })
