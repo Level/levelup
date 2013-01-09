@@ -1,3 +1,8 @@
+/* Copyright (c) 2012-2013 LevelUP contributors
+ * See list at <https://github.com/rvagg/node-levelup#contributing>
+ * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
+ */
+
 /*
  * This test verifies that an existing database contains the
  * correct data, by comparing it to the original data contained

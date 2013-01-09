@@ -394,6 +394,8 @@ See the [CONTRIBUTING.md](https://github.com/rvagg/node-levelup/blob/master/CONT
 
 ### Contributors
 
+LevelUP is only possible due to the excellent work of the following contributors:
+
 * Rod Vagg - [GitHub/rvagg](https://github.com/rvagg) - [Twitter/@rvagg](https://twitter.com/rvagg)
 * John Chesley - [GitHub/chesles](https://github.com/chesles/) - [Twitter/@chesles](https://twitter.com/chesles)
 * Jake Verbaten - [GitHub/raynos](https://github.com/raynos) - [Twitter/@raynos2](https://twitter.com/Raynos2)
@@ -401,14 +403,15 @@ See the [CONTRIBUTING.md](https://github.com/rvagg/node-levelup/blob/master/CONT
 * Max Ogden - [GitHub/maxogden](https://github.com/maxogden) - [Twitter/@maxogden](https://twitter.com/maxogden)
 * Lars-Magnus Skog - [GitHub/ralphtheninja](https://github.com/@ralphtheninja) - [Twitter/@ralphtheninja](https://twitter.com/ralphtheninja)
 * David Björklund - [GitHub/kesla](https://github.com/kesla) - [Twitter/@david_bjorklund](https://twitter.com/david_bjorklund)
-* Julian Gruber - [Github/juliangruber](https://github.com/juliangruber) - [Twitter/@juliangruber](https://twitter.com/juliangruber)
+* Julian Gruber - [GitHub/juliangruber](https://github.com/juliangruber) - [Twitter/@juliangruber](https://twitter.com/juliangruber)
+* Paolo Fragomeni - [GitHub/hij1nx](https://github.com/hij1nx) - [Twitter/@hij1nx](http://twitter.com/hij1nx)
 
 <a name="licence"></a>
 Licence & copyright
 -------------------
 
-LevelUP is Copyright (c) 2012 Rod Vagg and other contributors listed above.
+Copyright (c) 2012-2013 LevelUP contributors (listed above).
 
-LevelUP is licensed under the MIT licence. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
+LevelUP is licensed under an MIT +no-false-attribs license. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
 
-LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).
+*LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).*

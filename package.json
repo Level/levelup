@@ -1,8 +1,16 @@
 {
-    "name": "levelup"
-  , "description": "Fast & simple storage - a Node.js-style LevelDB wrapper"
-  , "authors": [
-        "Rod Vagg @rvagg <rod@vagg.org> (https://github.com/rvagg)"
+    "name"            : "levelup"
+  , "description"     : "Fast & simple storage - a Node.js-style LevelDB wrapper"
+  , "contributors"    : [
+        "Rod Vagg <r@va.gg> (https://github.com/rvagg)"
+      , "John Chesley <john@chesl.es> (https://github.com/chesles/)"
+      , "Jake Verbaten <raynos2@gmail.com> (https://github.com/raynos)"
+      , "Dominic Tarr <dominic.tarr@gmail.com> (https://github.com/dominictarr)"
+      , "Max Ogden <max@maxogden.com> (https://github.com/maxogden)"
+      , "Lars-Magnus Skog <lars.magnus.skog@gmail.com> (https://github.com/@ralphtheninja)"
+      , "David Björklund <david.bjorklund@gmail.com> (https://github.com/kesla)"
+      , "Julian Gruber <julian@juliangruber.com> (https://github.com/juliangruber)"
+      , "Paolo Fragomeni <paolo@async.ly> (https://github.com/hij1nx)"
     ]
   , "keywords": [
         "leveldb"
@@ -13,40 +21,37 @@
       , "storage"
       , "json"
     ]
-  , "version": "0.5.0"
-  , "main": "lib/levelup.js"
-  , "dependencies": {
-        "errno": "~0.0.3"
-      , "bindings": "~1.0.0"
-      , "concat-stream": "~0.0.9"
-      , "bufferstream": "~0.5.1"
+  , "version"         : "0.5.0"
+  , "main"            : "lib/levelup.js"
+  , "dependencies"    : {
+        "errno"           : "~0.0.3"
+      , "bindings"        : "~1.0.0"
+      , "concat-stream"   : "~0.0.9"
+      , "bufferstream"    : "~0.5.1"
     }
-  , "devDependencies": {
-        "buster": "*"
-      , "rimraf": "*"
-      , "async": "*"
-      , "fstream": "*"
-      , "tar": "*"
-      , "mkfiletree": "*"
-      , "readfiletree": "*"
-      , "slow-stream": ">=0.0.3"
-      , "delayed": "*"
-      , "boganipsum": "*"
-      , "du": "*"
+  , "devDependencies" : {
+        "buster"          : "*"
+      , "rimraf"          : "*"
+      , "async"           : "*"
+      , "fstream"         : "*"
+      , "tar"             : "*"
+      , "mkfiletree"      : "*"
+      , "readfiletree"    : "*"
+      , "slow-stream"     : ">=0.0.3"
+      , "delayed"         : "*"
+      , "boganipsum"      : "*"
+      , "du"              : "*"
     }
-  , "repository": {
-      "type": "git"
-      , "url": "https://github.com/rvagg/node-levelup.git"
+  , "repository"      : {
+        "type"            : "git"
+      , "url"             : "https://github.com/rvagg/node-levelup.git"
     }
-  , "scripts": {
-        "test": "./node_modules/.bin/buster-test"
-      , "install": "node-gyp rebuild"
-      , "functionaltests": "node ./test/functional/fstream-test.js && node ./test/functional/binary-data-test.js && node ./test/functional/compat-test.js"
-      , "alltests": "npm test && npm run-script functionaltests"
-      , "publish": "rm -rf ./node_modules/ npm-shrinkwrap.json && npm install --production && npm shrinkwrap && npm publish && rm npm-shrinkwrap.json && npm install"
-      , "sr": "npm shrinkwrap"
-      , "l": "npm ls"
+  , "scripts"         : {
+        "test"            : "buster-test"
+      , "install"         : "node-gyp rebuild"
+      , "functionaltests" : "node ./test/functional/fstream-test.js && node ./test/functional/binary-data-test.js && node ./test/functional/compat-test.js"
+      , "alltests"        : "npm test && npm run-script functionaltests"
     }
-  , "license": "MIT"
-  , "gypfile": true
+  , "license"         : "MIT"
+  , "gypfile"         : true
 }

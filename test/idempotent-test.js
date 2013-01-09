@@ -1,4 +1,7 @@
-/* Copyright (c) 2012 Rod Vagg <@rvagg> */
+/* Copyright (c) 2012-2013 LevelUP contributors
+ * See list at <https://github.com/rvagg/node-levelup#contributing>
+ * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE> 
+ */
 
 var buster  = require('buster')
   , assert  = buster.assert
