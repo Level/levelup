@@ -399,19 +399,19 @@ See the [CONTRIBUTING.md](https://github.com/rvagg/node-levelup/blob/master/CONT
 LevelUP is only possible due to the excellent work of the following contributors:
 
 <table><tbody>
-<tr><th align="left">Rod Vagg</th><td>[GitHub/rvagg](https://github.com/rvagg)</td><td>[Twitter/@rvagg](https://twitter.com/rvagg)</td></tr>
-<tr><th align="left">John Chesley</th><td>[GitHub/chesles](https://github.com/chesles/)</td><td>[Twitter/@chesles](https://twitter.com/chesles)</td></tr>
-<tr><th align="left">Jake Verbaten</th><td>[GitHub/raynos](https://github.com/raynos)</td><td>[Twitter/@raynos2](https://twitter.com/Raynos2)</td></tr>
-<tr><th align="left">Dominic Tarr</th><td>[GitHub/dominictarr](https://github.com/dominictarr)</td><td>[Twitter/@dominictarr](https://twitter.com/dominictarr)</td></tr>
-<tr><th align="left">Max Ogden</th><td>[GitHub/maxogden](https://github.com/maxogden)</td><td>[Twitter/@maxogden](https://twitter.com/maxogden)</td></tr>
-<tr><th align="left">Lars-Magnus Skog</th><td>[GitHub/ralphtheninja](https://github.com/@ralphtheninja)</td><td>[Twitter/@ralphtheninja](https://twitter.com/ralphtheninja)</td></tr>
-<tr><th align="left">David Björklund</th><td>[GitHub/kesla](https://github.com/kesla)</td><td>[Twitter/@david_bjorklund](https://twitter.com/david_bjorklund)</td></tr>
-<tr><th align="left">Julian Gruber</th><td>[GitHub/juliangruber](https://github.com/juliangruber)</td><td>[Twitter/@juliangruber](https://twitter.com/juliangruber)</td></tr>
-<tr><th align="left">Paolo Fragomeni</th><td>[GitHub/hij1nx](https://github.com/hij1nx)</td><td>[Twitter/@hij1nx](http://twitter.com/hij1nx)</td></tr>
+<tr><th align="left">Rod Vagg</th><td><a href="https://github.com/rvagg">GitHub/rvagg</a></td><td><a href="http://twitter.com/rvagg">Twitter/@rvagg</a></td></tr>
+<tr><th align="left">John Chesley</th><td><a href="https://github.com/chesles/">GitHub/chesles</a></td><td><a href="http://twitter.com/chesles">Twitter/@chesles</a></td></tr>
+<tr><th align="left">Jake Verbaten</th><td><a href="https://github.com/raynos">GitHub/raynos</a></td><td><a href="http://twitter.com/raynos2">Twitter/@raynos2</a></td></tr>
+<tr><th align="left">Dominic Tarr</th><td><a href="https://github.com/dominictarr">GitHub/dominictarr</a></td><td><a href="http://twitter.com/dominictarr">Twitter/@dominictarr</a></td></tr>
+<tr><th align="left">Max Ogden</th><td><a href="https://github.com/maxogden">GitHub/maxogden</a></td><td><a href="http://twitter.com/maxogden">Twitter/@maxogden</a></td></tr>
+<tr><th align="left">Lars-Magnus Skog</th><td><a href="https://github.com/ralphtheninja">GitHub/ralphtheninja</a></td><td><a href="http://twitter.com/ralphtheninja">Twitter/@ralphtheninja</a></td></tr>
+<tr><th align="left">David Björklund</th><td><a href="https://github.com/kesla">GitHub/kesla</a></td><td><a href="http://twitter.com/david_bjorklund">Twitter/@david_bjorklund</a></td></tr>
+<tr><th align="left">Julian Gruber</th><td><a href="https://github.com/juliangruber">GitHub/juliangruber</a></td><td><a href="http://twitter.com/juliangruber">Twitter/@juliangruber</a></td></tr>
+<tr><th align="left">Paolo Fragomeni</th><td><a href="https://github.com/hij1nx">GitHub/hij1nx</a></td><td><a href="http://twitter.com/hij1nx">Twitter/@hij1nx</a></td></tr>
 </tbody></table>
 
 <a name="licence"></a>
-Licence & copyright
+Licence &amp; copyright
 -------------------
 
 Copyright (c) 2012-2013 LevelUP contributors (listed above).
