@@ -46,8 +46,7 @@ var levelup = require('levelup')
 
 // 1) Create our database, supply location and options.
 //    This will create or open the underlying LevelDB store.
-var options = { createIfMissing: true, errorIfExists: false }
-var db = levelup('./mydb', options)
+var db = levelup('./mydb')
 
 // 2) put a key & value
 db.put('name', 'LevelUP', function (err) {
@@ -113,7 +112,7 @@ db.get('foo', function (err, value) {
 
 `levelup()` takes an optional options object as its second argument; the following properties are accepted:
 
-* `'createIfMissing'` *(boolean, default: `false`)*: If `true`, will initialise an empty database at the specified location if one doesn't already exist. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open.
+* `'createIfMissing'` *(boolean, default: `true`)*: If `true`, will initialise an empty database at the specified location if one doesn't already exist. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open.
 
 * `'errorIfExists'` *(boolean, default: `false`)*: If `true`, you will receive an error in your `open()` callback if the database exists at the specified location.
 
