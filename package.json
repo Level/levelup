@@ -21,7 +21,7 @@
       , "storage"
       , "json"
     ]
-  , "version"         : "0.5.0-1"
+  , "version"         : "0.5.1"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
         "errno"           : "~0.0.3"
@@ -48,7 +48,6 @@
     }
   , "scripts"         : {
         "test"            : "buster-test"
-      , "install"         : "node-gyp rebuild"
       , "functionaltests" : "node ./test/functional/fstream-test.js && node ./test/functional/binary-data-test.js && node ./test/functional/compat-test.js"
       , "alltests"        : "npm test && npm run-script functionaltests"
     }
