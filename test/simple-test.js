@@ -35,8 +35,7 @@ buster.testCase('Basic API', {
           levelup(location, function (err, db) { // no options object
             refute(err)
             assert.isObject(db)
-            assert.isTrue(db._options.createIfMissing)
-            assert.isFalse(db._options.errorIfExists)
+            assert.isTrue(db.hasOptions({ createIfMissing: true, errorIfExists: false }))
             assert.equals(db._location, location)
 
             /*
@@ -58,8 +57,7 @@ buster.testCase('Basic API', {
         this.closeableDatabases.push(db)
         this.cleanupDirs.push(location)
         assert.isObject(db)
-        assert.isTrue(db._options.createIfMissing)
-        assert.isTrue(db._options.errorIfExists)
+        assert.isTrue(db.hasOptions({ createIfMissing: true, errorIfExists: true }))
         assert.equals(db._location, location)
 
         /*
@@ -78,8 +76,7 @@ buster.testCase('Basic API', {
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
       assert.isObject(db)
-      assert.isTrue(db._options.createIfMissing)
-      assert.isTrue(db._options.errorIfExists)
+      assert.isTrue(db.hasOptions({ createIfMissing: true, errorIfExists: true }))
       assert.equals(db._location, location)
 
       db.on("ready", function () {
