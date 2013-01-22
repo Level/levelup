@@ -36,13 +36,7 @@ buster.testCase('Basic API', {
             refute(err)
             assert.isObject(db)
             assert.isTrue(db.hasOptions({ createIfMissing: true, errorIfExists: false }))
-            assert.equals(db._location, location)
-
-            /*
-            // read-only properties
-            db.location = 'foo'
-            assert.equals(db.location, location)
-            */
+            assert.equals(db.location(), location)
             done()
           }.bind(this))
         }.bind(this))
@@ -58,13 +52,7 @@ buster.testCase('Basic API', {
         this.cleanupDirs.push(location)
         assert.isObject(db)
         assert.isTrue(db.hasOptions({ createIfMissing: true, errorIfExists: true }))
-        assert.equals(db._location, location)
-
-        /*
-        // read-only properties
-        db._location = 'bar'
-        assert.equals(db._location, location)
-        */
+        assert.equals(db.location(), location)
         done()
       }.bind(this))
     }
@@ -77,7 +65,7 @@ buster.testCase('Basic API', {
       this.cleanupDirs.push(location)
       assert.isObject(db)
       assert.isTrue(db.hasOptions({ createIfMissing: true, errorIfExists: true }))
-      assert.equals(db._location, location)
+      assert.equals(db.location(), location)
 
       db.on("ready", function () {
         assert.isTrue(db.isOpen())
