@@ -35,15 +35,8 @@ buster.testCase('Basic API', {
           levelup(location, function (err, db) { // no options object
             refute(err)
             assert.isObject(db)
-            assert.isTrue(db._options.createIfMissing)
-            assert.isFalse(db._options.errorIfExists)
-            assert.equals(db._location, location)
-
-            /*
-            // read-only properties
-            db.location = 'foo'
-            assert.equals(db.location, location)
-            */
+            assert.isTrue(db.hasOptions({ createIfMissing: true, errorIfExists: false }))
+            assert.equals(db.location(), location)
             done()
           }.bind(this))
         }.bind(this))
@@ -58,15 +51,8 @@ buster.testCase('Basic API', {
         this.closeableDatabases.push(db)
         this.cleanupDirs.push(location)
         assert.isObject(db)
-        assert.isTrue(db._options.createIfMissing)
-        assert.isTrue(db._options.errorIfExists)
-        assert.equals(db._location, location)
-
-        /*
-        // read-only properties
-        db._location = 'bar'
-        assert.equals(db._location, location)
-        */
+        assert.isTrue(db.hasOptions({ createIfMissing: true, errorIfExists: true }))
+        assert.equals(db.location(), location)
         done()
       }.bind(this))
     }
@@ -78,9 +64,8 @@ buster.testCase('Basic API', {
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
       assert.isObject(db)
-      assert.isTrue(db._options.createIfMissing)
-      assert.isTrue(db._options.errorIfExists)
-      assert.equals(db._location, location)
+      assert.isTrue(db.hasOptions({ createIfMissing: true, errorIfExists: true }))
+      assert.equals(db.location(), location)
 
       db.on("ready", function () {
         assert.isTrue(db.isOpen())
