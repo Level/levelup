@@ -27,4 +27,5 @@
   , "es5": true
   , "esnext": true
   , "strict": false
+  , "onevar": true
 }
