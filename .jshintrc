@@ -15,7 +15,6 @@
   , "undef": true
   , "sub": true
   , "white": false
-  , "trailing": true
   , "asi": true
   , "laxbreak": true
   , "eqnull": true
