@@ -198,6 +198,26 @@ db.batch(ops, function (err) {
 })
 ```
 
+### db.batch()
+### batch#put(key, value)
+### batch#del(key)
+### batch#write([options, ]callback)
+As an alternative to the above syntax, when you invoke <code>batch()</code> without arguments, a Batch object is returned that exposes a chained interface for building a batch.
+
+This is the above example written using the chained api:
+
+```js
+db.batch()
+  .del('father')
+  .put('name', 'Yuri Irsenovich Kim')
+  .put('dob', '16 February 1941')
+  .put('spouse', 'Kim Young-sook')
+  .put('occupation', 'Clown')
+  .write(function (err) {
+    if (err) return console.log('Ooops!', err)
+    console.log('Great success dear leader!')
+  })
+```
 
 #### `options`
 
