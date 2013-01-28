@@ -37,13 +37,12 @@ buster.testCase('Basic API', {
             assert.isObject(db)
             assert.isTrue(db._options.createIfMissing)
             assert.isFalse(db._options.errorIfExists)
-            assert.equals(db._location, location)
+            assert.equals(db.location, location)
 
-            /*
             // read-only properties
             db.location = 'foo'
             assert.equals(db.location, location)
-            */
+
             done()
           }.bind(this))
         }.bind(this))
@@ -60,27 +59,27 @@ buster.testCase('Basic API', {
         assert.isObject(db)
         assert.isTrue(db._options.createIfMissing)
         assert.isTrue(db._options.errorIfExists)
-        assert.equals(db._location, location)
+        assert.equals(db.location, location)
 
-        /*
+
         // read-only properties
-        db._location = 'bar'
-        assert.equals(db._location, location)
-        */
+        db.location = 'bar'
+        assert.equals(db.location, location)
+
         done()
       }.bind(this))
     }
 
   , 'without callback': function (done) {
       var location = common.nextLocation()
-      var db = levelup(location, { createIfMissing: true, errorIfExists: true })
+        , db = levelup(location, { createIfMissing: true, errorIfExists: true })
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
       assert.isObject(db)
       assert.isTrue(db._options.createIfMissing)
       assert.isTrue(db._options.errorIfExists)
-      assert.equals(db._location, location)
+      assert.equals(db.location, location)
 
       db.on("ready", function () {
         assert.isTrue(db.isOpen())
@@ -425,53 +424,55 @@ buster.testCase('Basic API', {
 
       , 'approximateSize() work on none-empty database': function(done) {
           var location = common.nextLocation()
-          var db
-            async.series(
-                [
-                    function (callback) {
-                      this.openTestDatabase(
-                          location
-                        , function (_db) {
-                          db = _db
-                          callback()
-                        }
-                      )
-                    }.bind(this)
-                  , function (callback) {
-                      var batch = [];
-                      for(var i = 0; i < 10; ++i) {
-                        batch.push({
-                          type: 'put', key: String(i), value: 'afoovalue'
-                        });
+            , db
+
+          async.series(
+              [
+                  function (callback) {
+                    this.openTestDatabase(
+                        location
+                      , function (_db) {
+                        db = _db
+                        callback()
                       }
-                      db.batch(
-                          batch
-                        , { sync: true }
-                        , callback
-                      )
-                    }
-                  , function (callback) {
-                      // close db to make sure stuff gets written to disc
-                      db.close(callback)
-                    }
-                  , function (callback) {
-                      levelup(location, function (err, _db) {
-                          refute(err)
-                          db = _db
-                          callback()
-                        }
-                      )
-                    }
-                  , function (callback) {
-                      db.approximateSize('', '99', function(err, size) {
-                        refute(err) // sanity
-                        refute.equals(size, 0)
-                        done()
+                    )
+                  }.bind(this)
+                , function (callback) {
+                    var batch = []
+                      , i     = 0
+
+                    for (; i < 10; ++i) {
+                      batch.push({
+                        type: 'put', key: String(i), value: 'afoovalue'
                       })
                     }
-                ]
-              , done
-            )
+                    db.batch(
+                        batch
+                      , { sync: true }
+                      , callback
+                    )
+                  }
+                , function (callback) {
+                    // close db to make sure stuff gets written to disc
+                    db.close(callback)
+                  }
+                , function (callback) {
+                    levelup(location, function (err, _db) {
+                      refute(err)
+                      db = _db
+                      callback()
+                    })
+                  }
+                , function (callback) {
+                    db.approximateSize('', '99', function(err, size) {
+                      refute(err) // sanity
+                      refute.equals(size, 0)
+                      callback()
+                    })
+                  }
+              ]
+            , done
+          )
         }
     }
 

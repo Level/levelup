@@ -29,11 +29,11 @@ See also a list of <a href="https://github.com/rvagg/node-levelup/wiki/Modules">
 Tested & supported platforms
 ----------------------------
 
-  * **Linux** (tested on Ubuntu)
+  * **Linux** (including ARM platforms such as Raspberry Pi)
   * **Mac OS**
-  * **Solaris** (tested on SmartOS & Nodejitsu)
+  * **Solaris** (SmartOS & Nodejitsu)
 
-**Windows** support is coming soon; see [issue #5](https://github.com/rvagg/node-levelup/issues/5) if you would like to help on that front. 
+**Windows** support is a work in progress; see [issue #5](https://github.com/rvagg/node-levelup/issues/5) if you would like to help on that front. 
 
 <a name="basic"></a>
 Basic usage
@@ -107,6 +107,8 @@ db.get('foo', function (err, value) {
   console.log('got foo =', value)
 })
 ```
+
+The `location` argument is available as a read-only property on the returned LevelUP instance.
 
 #### `options`
 

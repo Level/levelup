@@ -29,7 +29,7 @@ var buster     = require('buster')
 
     // close, open, close again.. 'compaction' is also performed on open()s
   , cycle = function (db, compression, callback) {
-      var location = db._location
+      var location = db.location
       db.close(function (err) {
         if (err) return refute(err)
         levelup(location, { errorIfExists: false, compression: compression }, function (err, db) {
@@ -56,7 +56,7 @@ buster.testCase('Compression', {
           , function (args, callback) {
               db.put.apply(db, args.concat([callback]))
             }
-          , cycle.bind(null, db, true, delayed.delayed(verify.bind(null, db._location, true, done), 0.01))
+          , cycle.bind(null, db, true, delayed.delayed(verify.bind(null, db.location, true, done), 0.01))
         )
       })
     }
@@ -70,7 +70,7 @@ buster.testCase('Compression', {
           , function (args, callback) {
               db.put.apply(db, args.concat([callback]))
             }
-          , cycle.bind(null, db, false, delayed.delayed(verify.bind(null, db._location, false, done), 0.01))
+          , cycle.bind(null, db, false, delayed.delayed(verify.bind(null, db.location, false, done), 0.01))
         )
       })
     }
@@ -81,7 +81,7 @@ buster.testCase('Compression', {
             Array.apply(null, Array(multiples)).map(function (e, i) {
               return { type: 'put', key: i, value: compressableData }
             })
-          , cycle.bind(null, db, false, delayed.delayed(verify.bind(null, db._location, false, done), 0.01))
+          , cycle.bind(null, db, false, delayed.delayed(verify.bind(null, db.location, false, done), 0.01))
         )
       })
     }

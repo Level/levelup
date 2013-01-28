@@ -21,7 +21,7 @@ buster.testCase('Deferred open()', {
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
       assert.isObject(db)
-      assert.equals(db._location, location)
+      assert.equals(db.location, location)
 
       async.parallel([
       // 2) insert 3 values with put(), these should be deferred until the database is actually open
@@ -64,7 +64,7 @@ buster.testCase('Deferred open()', {
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
       assert.isObject(db)
-      assert.equals(db._location, location)
+      assert.equals(db.location, location)
 
       // 2) insert 3 values with batch(), these should be deferred until the database is actually open
       db.batch([
