@@ -409,6 +409,31 @@ buster.testCase('Basic API', {
             )
           })
         }
+        
+      , 'batch() has a chaining api too': function (done) {
+          this.openTestDatabase(function (db) {
+            async.series(
+                [
+                    db.put.bind(db, 'foo', 'bar')
+                  , function (callback) {
+                      db.batch()
+                        .put('bar', 'baz')
+                        .del('foo')
+                        .write(callback)
+                    }
+                  , function (callback) {
+                      db.get('foo', function (err, value) {
+                        assert(err)
+                        assert.isInstanceOf(err, errors.NotFoundError)
+                        refute(value)
+                        callback()
+                      })
+                    }
+                ]
+              , done
+            )
+          })
+        }
     }
 
   , 'approximateSize()': {
