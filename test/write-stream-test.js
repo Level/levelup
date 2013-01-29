@@ -203,4 +203,17 @@ buster.testCase('WriteStream', {
         ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
       }.bind(this))
     }
+  , 'test array write': function (done) {
+      var data = [
+          { type : 'put', key : 'aa', value : 'aa' }
+        , { type : 'put', key : 'bb', value : 'bb' }
+      ]
+      this.openTestDatabase(function (db) {
+        var ws = db.writeStream()
+        ws.on('error', refute)
+        ws.on('close', this.verify.bind(this, ws, db, done, data))
+        ws.write(data)
+        ws.once('ready', ws.end)
+      }.bind(this))
+    }
 })
