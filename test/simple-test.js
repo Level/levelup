@@ -1,6 +1,7 @@
 /* Copyright (c) 2012-2013 LevelUP contributors
  * See list at <https://github.com/rvagg/node-levelup#contributing>
- * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
+ * MIT +no-false-attribs License
+ * <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
 var buster  = require('buster')
@@ -18,7 +19,7 @@ buster.testCase('Basic API', {
   , 'levelup()': function () {
       assert.isFunction(levelup)
       assert.equals(levelup.length, 3) // location, options & callback arguments
-      assert.exception(levelup, 'InitializationError') // no location
+      assert.exception(levelup, 'InitError') // no location
     }
 
   , 'default options': function (done) {
