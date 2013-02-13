@@ -12,6 +12,8 @@ var buster     = require('buster')
   , rimraf     = require('rimraf')
   , async      = require('async')
 
+  , bigBlob    = Array.apply(null, Array(1024 * 100)).map(function () { return 'aaaaaaaaaa' }).join('')
+
 buster.testCase('ReadStream', {
     'setUp': common.readStreamSetUp
 
@@ -495,7 +497,7 @@ buster.testCase('ReadStream', {
             d.readStream
               .pipe(new SlowStream({ maxWriteInterval: 5 }))
               .on('data', d.spy)
-              .on('end', delayed.delayed(callback, 0.05))
+              .on('close', delayed.delayed(callback, 0.05))
           }
         , open       = function (reopen, location, callback) {
             levelup(location, { createIfMissing: !reopen, errorIfExists: !reopen }, callback)
@@ -627,6 +629,29 @@ buster.testCase('ReadStream', {
           rs.on('close', this.verify.bind(this, rs, done))
 
           this.sourceData = this.sourceData.slice(0, 31)
+        }.bind(this))
+      }.bind(this))
+    }
+
+    // can, fairly reliably, trigger a core dump if next/end isn't
+    // protected properly
+    // the use of large blobs means that next() takes time to return
+    // so we should be able to slip in an end() while it's working
+  , 'test iterator next/end race condition': function (done) {
+      var data = []
+        , i = 5
+        , v
+
+      while (i--) {
+        v = bigBlob + i
+        data.push({ type: 'put', key: v, value: v })
+      }
+
+      this.openTestDatabase(function (db) {
+        db.batch(data, function (err) {
+          refute(!!err)
+          var rs = db.readStream().on('close', done)
+          rs.once('data', rs.destroy.bind(rs))
         }.bind(this))
       }.bind(this))
     }

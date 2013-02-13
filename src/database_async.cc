@@ -3,14 +3,10 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-#include <cstdlib>
 #include <node.h>
 #include <node_buffer.h>
-#include <iostream>
-#include <pthread.h>
 
 #include "database.h"
-
 #include "levelup.h"
 #include "async.h"
 #include "database_async.h"

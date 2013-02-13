@@ -6,10 +6,9 @@
 #ifndef LU_BATCH_H
 #define LU_BATCH_H
 
-#include <cstdlib>
+#include "leveldb/write_batch.h"
 
 #include "database.h"
-#include "leveldb/write_batch.h"
 
 class BatchOp {
 public:

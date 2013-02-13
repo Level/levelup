@@ -6,7 +6,6 @@
 #ifndef LU_DATABASE_H
 #define LU_DATABASE_H
 
-#include <cstdlib>
 #include <node.h>
 
 #include "leveldb/db.h"

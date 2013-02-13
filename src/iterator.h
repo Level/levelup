@@ -6,11 +6,11 @@
 #ifndef LU_ITERATOR_H
 #define LU_ITERATOR_H
 
-#include <cstdlib>
 #include <node.h>
 
 #include "levelup.h"
 #include "database.h"
+#include "async.h"
 
 using namespace std;
 using namespace v8;
@@ -60,10 +60,13 @@ public:
     , keyAsBuffer(keyAsBuffer)
     , valueAsBuffer(valueAsBuffer)
   {
-    options = new ReadOptions();
+    options    = new ReadOptions();
     options->fill_cache = fillCache;
     dbIterator = NULL;
-    count = 0;
+    count      = 0;
+    nextCalls  = 0;
+    ended      = false;
+    endWorker  = NULL;
   };
 
   ~Iterator () {
@@ -89,6 +92,9 @@ private:
 public:
   bool keyAsBuffer;
   bool valueAsBuffer;
+  int nextCalls;
+  bool ended;
+  AsyncWorker* endWorker;
 
 private:
   bool GetIterator ();

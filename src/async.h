@@ -6,8 +6,6 @@
 #ifndef LU_ASYNC_H
 #define LU_ASYNC_H
 
-#include <cstdlib>
-#include <vector>
 #include <node.h>
 
 using namespace std;

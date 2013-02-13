@@ -37,7 +37,7 @@
       , "tar"             : "*"
       , "mkfiletree"      : "*"
       , "readfiletree"    : "*"
-      , "slow-stream"     : ">=0.0.3"
+      , "slow-stream"     : ">=0.0.4"
       , "delayed"         : "*"
       , "boganipsum"      : "*"
       , "du"              : "*"

@@ -6,12 +6,13 @@
 #ifndef LU_DATABASE_ASYNC_H
 #define LU_DATABASE_ASYNC_H
 
-#include <cstdlib>
 #include <vector>
 #include <node.h>
+
+#include "leveldb/cache.h"
+
 #include "async.h"
 #include "batch.h"
-#include "leveldb/cache.h"
 
 using namespace std;
 using namespace v8;

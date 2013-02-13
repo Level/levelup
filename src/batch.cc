@@ -3,9 +3,6 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-#include <cstdlib>
-#include <iostream>
-
 #include "leveldb/write_batch.h"
 
 #include "batch.h"

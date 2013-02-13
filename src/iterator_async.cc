@@ -3,14 +3,10 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-#include <cstdlib>
 #include <node.h>
 #include <node_buffer.h>
-#include <iostream>
-#include <pthread.h>
 
 #include "database.h"
-
 #include "levelup.h"
 #include "async.h"
 #include "iterator_async.h"
@@ -26,9 +22,11 @@ NextWorker::NextWorker (
     levelup::Iterator* iterator
   , Persistent<Function> dataCallback
   , Persistent<Function> endCallback
+  , void (*localCallback)(levelup::Iterator*)
 ) : AsyncWorker(database, dataCallback)
   , iterator(iterator)
   , endCallback(endCallback)
+  , localCallback(localCallback)
 {};
 
 NextWorker::~NextWorker () {}
@@ -61,6 +59,8 @@ void NextWorker::HandleOKCallback () {
     Local<Value> argv[0];
     RunCallback(endCallback, argv, 0);
   }
+
+  localCallback(iterator);
 }
 
 /** END WORKER **/

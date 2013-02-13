@@ -6,9 +6,8 @@
 #ifndef LU_ITERATOR_ASYNC_H
 #define LU_ITERATOR_ASYNC_H
 
-#include <cstdlib>
-#include <vector>
 #include <node.h>
+
 #include "async.h"
 #include "iterator.h"
 
@@ -22,6 +21,7 @@ public:
       levelup::Iterator* iterator
     , Persistent<Function> dataCallback
     , Persistent<Function> endCallback
+    , void (*localCallback)(levelup::Iterator*)
   );
 
   virtual ~NextWorker ();
@@ -31,6 +31,7 @@ public:
 private:
   levelup::Iterator* iterator;
   Persistent<Function> endCallback;
+  void (*localCallback)(levelup::Iterator*);
   string key;
   string value;
   bool ok;

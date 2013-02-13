@@ -3,11 +3,8 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-#include <cstdlib>
 #include <node.h>
 #include <node_buffer.h>
-#include <iostream>
-#include <pthread.h>
 
 #include "database.h"
 #include "iterator.h"
@@ -68,17 +65,36 @@ void levelup::Iterator::IteratorEnd () {
   dbIterator = NULL;
 }
 
+void checkEndCallback (levelup::Iterator* iterator) {
+  iterator->nextCalls--;
+  if (iterator->nextCalls == 0 && iterator->endWorker != NULL) {
+    AsyncQueueWorker(iterator->endWorker);
+    iterator->endWorker = NULL;
+  }
+}
+
 //void *ctx, void (*callback)(void *ctx, Slice key, Slice value)
 Handle<Value> levelup::Iterator::Next (const Arguments& args) {
   HandleScope scope;
   Iterator* iterator = ObjectWrap::Unwrap<Iterator>(args.This());
   Persistent<Function> endCallback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
   Persistent<Function> dataCallback = Persistent<Function>::New(Local<Function>::Cast(args[1]));
+
+  if (iterator->ended) {
+    Local<Value> argv[] = {
+        Local<Value>::New(Exception::Error(String::New("Cannot call next() after end()")))
+    };
+    RunCallback(dataCallback, argv, 1);
+    return Undefined();
+  }
+
   NextWorker* worker = new NextWorker(
       iterator
     , dataCallback
     , endCallback
+    , checkEndCallback
   );
+  iterator->nextCalls++;
   AsyncQueueWorker(worker);
   return Undefined();
 }
@@ -91,7 +107,12 @@ Handle<Value> levelup::Iterator::End (const Arguments& args) {
       iterator
     , endCallback
   );
-  AsyncQueueWorker(worker);
+  iterator->ended = true;
+  if (iterator->nextCalls == 0) {
+    AsyncQueueWorker(worker);
+  } else {
+    iterator->endWorker = worker;
+  }
   return Undefined();
 }
 
