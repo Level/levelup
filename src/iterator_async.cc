@@ -48,6 +48,10 @@ void NextWorker::HandleOKCallback () {
     returnValue = Local<Value>::New(Buffer::New((char*)value.data(), value.size())->handle_);
   else
     returnValue = String::New((char*)value.data(), value.size());
+
+  // clean up & handle the next/end state see iterator.cc/checkEndCallback
+  localCallback(iterator);
+
   if (ok) {
     Local<Value> argv[] = {
         Local<Value>::New(Null())
@@ -59,8 +63,6 @@ void NextWorker::HandleOKCallback () {
     Local<Value> argv[0];
     RunCallback(endCallback, argv, 0);
   }
-
-  localCallback(iterator);
 }
 
 /** END WORKER **/

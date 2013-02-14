@@ -66,8 +66,8 @@ void levelup::Iterator::IteratorEnd () {
 }
 
 void checkEndCallback (levelup::Iterator* iterator) {
-  iterator->nextCalls--;
-  if (iterator->nextCalls == 0 && iterator->endWorker != NULL) {
+  iterator->nexting = false;
+  if (iterator->endWorker != NULL) {
     AsyncQueueWorker(iterator->endWorker);
     iterator->endWorker = NULL;
   }
@@ -77,16 +77,17 @@ void checkEndCallback (levelup::Iterator* iterator) {
 Handle<Value> levelup::Iterator::Next (const Arguments& args) {
   HandleScope scope;
   Iterator* iterator = ObjectWrap::Unwrap<Iterator>(args.This());
-  Persistent<Function> endCallback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
-  Persistent<Function> dataCallback = Persistent<Function>::New(Local<Function>::Cast(args[1]));
 
   if (iterator->ended) {
-    Local<Value> argv[] = {
-        Local<Value>::New(Exception::Error(String::New("Cannot call next() after end()")))
-    };
-    RunCallback(dataCallback, argv, 1);
-    return Undefined();
+    THROW_RETURN("Cannot call next() after end()")
   }
+
+  if (iterator->nexting) {
+    THROW_RETURN("Cannot call next() before previous next() has completed")
+  }
+
+  Persistent<Function> endCallback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
+  Persistent<Function> dataCallback = Persistent<Function>::New(Local<Function>::Cast(args[1]));
 
   NextWorker* worker = new NextWorker(
       iterator
@@ -94,7 +95,7 @@ Handle<Value> levelup::Iterator::Next (const Arguments& args) {
     , endCallback
     , checkEndCallback
   );
-  iterator->nextCalls++;
+  iterator->nexting = true;
   AsyncQueueWorker(worker);
   return Undefined();
 }
@@ -102,16 +103,22 @@ Handle<Value> levelup::Iterator::Next (const Arguments& args) {
 Handle<Value> levelup::Iterator::End (const Arguments& args) {
   HandleScope scope;
   Iterator* iterator = ObjectWrap::Unwrap<Iterator>(args.This());
+
+  if (iterator->ended) {
+    THROW_RETURN("end() already called on iterator")
+  }
+
   Persistent<Function> endCallback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
   EndWorker* worker = new EndWorker(
       iterator
     , endCallback
   );
   iterator->ended = true;
-  if (iterator->nextCalls == 0) {
-    AsyncQueueWorker(worker);
-  } else {
+  if (iterator->nexting) {
+    // waiting for a next() to return, queue the end
     iterator->endWorker = worker;
+  } else {
+    AsyncQueueWorker(worker);
   }
   return Undefined();
 }

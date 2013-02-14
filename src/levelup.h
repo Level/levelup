@@ -45,6 +45,10 @@
 #define UINT32_OPTION_VALUE(optionsObj, opt, default) \
   uint32_t opt = optionsObj->Has(option_ ## opt) && optionsObj->Get(option_ ## opt)->IsUint32() ? optionsObj->Get(option_ ## opt)->Uint32Value() : default;
 
+#define THROW_RETURN(msg) \
+  ThrowException(Exception::Error(String::New(#msg))); \
+  return Undefined();
+
 void RunCallback (v8::Persistent<v8::Function> callback, v8::Local<v8::Value> argv[], int length);
 
 #endif

@@ -64,7 +64,7 @@ public:
     options->fill_cache = fillCache;
     dbIterator = NULL;
     count      = 0;
-    nextCalls  = 0;
+    nexting    = false;
     ended      = false;
     endWorker  = NULL;
   };
@@ -92,7 +92,7 @@ private:
 public:
   bool keyAsBuffer;
   bool valueAsBuffer;
-  int nextCalls;
+  bool nexting;
   bool ended;
   AsyncWorker* endWorker;
 
