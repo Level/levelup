@@ -11,10 +11,7 @@
 #include "async.h"
 #include "iterator_async.h"
 
-using namespace std;
-using namespace v8;
-using namespace node;
-using namespace leveldb;
+namespace levelup {
 
 /** NEXT WORKER **/
 
@@ -40,30 +37,36 @@ void NextWorker::Execute () {
 }
 
 void NextWorker::HandleOKCallback () {
-  Local<Value> returnKey;
-  if (iterator->keyAsBuffer)
-    returnKey = Local<Value>::New(Buffer::New((char*)key.data(), key.size())->handle_);
-  else
+  v8::Local<v8::Value> returnKey;
+  if (iterator->keyAsBuffer) {
+    returnKey = v8::Local<v8::Value>::New(
+      node::Buffer::New((char*)key.data(), key.size())->handle_
+    );
+  } else {
     returnKey = String::New((char*)key.data(), key.size());
-  Local<Value> returnValue;
-  if (iterator->valueAsBuffer)
-    returnValue = Local<Value>::New(Buffer::New((char*)value.data(), value.size())->handle_);
-  else
+  }
+  v8::Local<v8::Value> returnValue;
+  if (iterator->valueAsBuffer) {
+    returnValue = v8::Local<v8::Value>::New(
+      node::Buffer::New((char*)value.data(), value.size())->handle_
+    );
+  } else {
     returnValue = String::New((char*)value.data(), value.size());
+  }
 
   // clean up & handle the next/end state see iterator.cc/checkEndCallback
   localCallback(iterator);
 
   if (ok) {
-    Local<Value> argv[] = {
-        Local<Value>::New(Null())
+    v8::Local<v8::Value> argv[] = {
+        v8::Local<v8::Value>::New(Null())
       , returnKey
       , returnValue
     };
-    RunCallback(callback, argv, 3);
+    RUN_CALLBACK(callback, argv, 3);
   } else {
-    Local<Value> argv[0];
-    RunCallback(endCallback, argv, 0);
+    v8::Local<v8::Value> argv[0];
+    RUN_CALLBACK(endCallback, argv, 0);
   }
 }
 
@@ -81,3 +84,5 @@ EndWorker::~EndWorker () {}
 void EndWorker::Execute () {
   iterator->IteratorEnd();
 }
+
+} // namespace levelup

@@ -26,7 +26,6 @@ LU_OPTION ( keys          );
 LU_OPTION ( values        );
 LU_OPTION ( keyAsBuffer   );
 LU_OPTION ( valueAsBuffer );
-LU_OPTION ( fillCache     );
 
 Handle<Value> CreateIterator (const Arguments& args);
 

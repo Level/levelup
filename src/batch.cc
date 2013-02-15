@@ -7,7 +7,7 @@
 
 #include "batch.h"
 
-using namespace std;
+namespace levelup {
 
 BatchOp::~BatchOp () {}
 
@@ -15,7 +15,7 @@ BatchDelete::~BatchDelete () {
   keyPtr.Dispose();
 }
 
-void BatchDelete::Execute (WriteBatch* batch) {
+void BatchDelete::Execute (leveldb::WriteBatch* batch) {
   batch->Delete(key);
 }
 
@@ -24,6 +24,8 @@ BatchWrite::~BatchWrite () {
   valuePtr.Dispose();
 }
 
-void BatchWrite::Execute (WriteBatch* batch) {
+void BatchWrite::Execute (leveldb::WriteBatch* batch) {
   batch->Put(key, value);
 }
+
+} // namespace LevelUP

@@ -10,14 +10,11 @@
 #include "async.h"
 #include "batch.h"
 
-using namespace std;
-using namespace v8;
-using namespace node;
-using namespace leveldb;
+namespace levelup {
 
 /** ASYNC BASE **/
 
-AsyncWorker::AsyncWorker (Database* database, Persistent<Function> callback)
+AsyncWorker::AsyncWorker (Database* database, v8::Persistent<v8::Function> callback)
     : database(database), callback(callback) {
   request.data = this;
 };
@@ -25,7 +22,7 @@ AsyncWorker::AsyncWorker (Database* database, Persistent<Function> callback)
 AsyncWorker::~AsyncWorker () {}
 
 void AsyncWorker::WorkComplete () {
-  HandleScope scope;
+  v8::HandleScope scope;
   if (status.ok())
     HandleOKCallback();
   else
@@ -34,15 +31,17 @@ void AsyncWorker::WorkComplete () {
 }
 
 void AsyncWorker::HandleOKCallback () {
-  Local<Value> argv[0];
-  RunCallback(callback, argv, 0);  
+  v8::Local<v8::Value> argv[0];
+  RUN_CALLBACK(callback, argv, 0);  
 }
 
 void AsyncWorker::HandleErrorCallback () {
-  Local<Value> argv[] = {
-      Local<Value>::New(Exception::Error(String::New(status.ToString().c_str())))
+  v8::Local<v8::Value> argv[] = {
+      v8::Local<v8::Value>::New(
+        v8::Exception::Error(v8::String::New(status.ToString().c_str()))
+      )
   };
-  RunCallback(callback, argv, 1);
+  RUN_CALLBACK(callback, argv, 1);
 }
 
 void AsyncExecute (uv_work_t* req) {
@@ -56,5 +55,12 @@ void AsyncExecuteComplete (uv_work_t* req) {
 }
 
 void AsyncQueueWorker (AsyncWorker* worker) {
-  uv_queue_work(uv_default_loop(), &worker->request, AsyncExecute, (uv_after_work_cb)AsyncExecuteComplete);
+  uv_queue_work(
+      uv_default_loop()
+    , &worker->request
+    , AsyncExecute
+    , (uv_after_work_cb)AsyncExecuteComplete
+  );
 }
+
+} // namespace levelup

@@ -9,6 +9,8 @@
 #include "database.h"
 #include "iterator.h"
 
+namespace levelup {
+
 void Init (v8::Handle<v8::Object> exports) {
   Database::Init();
   levelup::Iterator::Init();
@@ -27,15 +29,4 @@ NODE_MODULE(levelup, Init)
 
 // util
 
-void RunCallback (
-      v8::Persistent<v8::Function> callback
-    , v8::Local<v8::Value> argv[], int length
-  ) {
-
-  v8::TryCatch try_catch;
- 
-  callback->Call(v8::Context::GetCurrent()->Global(), length, argv);
-  if (try_catch.HasCaught()) {
-    node::FatalException(try_catch);
-  }
-}
+} // namespace levelup

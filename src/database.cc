@@ -15,10 +15,7 @@
 #include "batch.h"
 #include "iterator.h"
 
-using namespace std;
-using namespace v8;
-using namespace node;
-using namespace leveldb;
+namespace levelup {
 
 Database::Database () {
   db = NULL;
@@ -76,7 +73,7 @@ void Database::CloseDatabase () {
 
 /* V8 exposed functions *****************************/
 
-Persistent<Function> Database::constructor;
+v8::Persistent<v8::Function> Database::constructor;
 
 Handle<Value> CreateDatabase (const Arguments& args) {
   HandleScope scope;
@@ -84,21 +81,42 @@ Handle<Value> CreateDatabase (const Arguments& args) {
 }
 
 void Database::Init () {
-  Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
-  tpl->SetClassName(String::NewSymbol("Database"));
+  v8::Local<v8::FunctionTemplate> tpl = v8::FunctionTemplate::New(New);
+  tpl->SetClassName(v8::String::NewSymbol("Database"));
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("open")     , FunctionTemplate::New(Open)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("close")    , FunctionTemplate::New(Close)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("put")      , FunctionTemplate::New(Put)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("get")      , FunctionTemplate::New(Get)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("del")      , FunctionTemplate::New(Delete)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("batch")    , FunctionTemplate::New(Batch)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("approximateSize"), FunctionTemplate::New(ApproximateSize)->GetFunction());
-  constructor = Persistent<Function>::New(tpl->GetFunction());
+  tpl->PrototypeTemplate()->Set(
+      v8::String::NewSymbol("open")
+    , v8::FunctionTemplate::New(Open)->GetFunction()
+  );
+  tpl->PrototypeTemplate()->Set(
+      v8::String::NewSymbol("close")
+    , v8::FunctionTemplate::New(Close)->GetFunction()
+  );
+  tpl->PrototypeTemplate()->Set(
+      v8::String::NewSymbol("put")
+    , v8::FunctionTemplate::New(Put)->GetFunction()
+  );
+  tpl->PrototypeTemplate()->Set(
+      v8::String::NewSymbol("get")
+    , v8::FunctionTemplate::New(Get)->GetFunction()
+  );
+  tpl->PrototypeTemplate()->Set(
+      v8::String::NewSymbol("del")
+    , v8::FunctionTemplate::New(Delete)->GetFunction()
+  );
+  tpl->PrototypeTemplate()->Set(
+      v8::String::NewSymbol("batch")
+    , v8::FunctionTemplate::New(Batch)->GetFunction()
+  );
+  tpl->PrototypeTemplate()->Set(
+      v8::String::NewSymbol("approximateSize")
+    , FunctionTemplate::New(ApproximateSize)->GetFunction()
+  );
+  constructor = v8::Persistent<Function>::New(tpl->GetFunction());
 }
 
-Handle<Value> Database::New (const Arguments& args) {
-  HandleScope scope;
+v8::Handle<Value> Database::New (const v8::Arguments& args) {
+  v8::HandleScope scope;
 
   Database* obj = new Database();
   obj->Wrap(args.This());
@@ -106,26 +124,27 @@ Handle<Value> Database::New (const Arguments& args) {
   return args.This();
 }
 
-Handle<Value> Database::NewInstance (const Arguments& args) {
-  HandleScope scope;
+v8::Handle<Value> Database::NewInstance (const v8::Arguments& args) {
+  v8::HandleScope scope;
 
-  Handle<Value> argv[0];
-  Local<Object> instance = constructor->NewInstance(0, argv);
+  v8::Handle<v8::Value> argv[0];
+  v8::Local<v8::Object> instance = constructor->NewInstance(0, argv);
 
   return scope.Close(instance);
 }
 
-Handle<Value> Database::Open (const Arguments& args) {
-  HandleScope scope;
+v8::Handle<Value> Database::Open (const v8::Arguments& args) {
+  v8::HandleScope scope;
 
-  Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  String::Utf8Value location(args[0]->ToString());
-  Local<Object> optionsObj = Local<Object>::Cast(args[1]);
+  Database* database = node::ObjectWrap::Unwrap<Database>(args.This());
+  v8::String::Utf8Value location(args[0]->ToString());
+  v8::Local<v8::Object> optionsObj = v8::Local<v8::Object>::Cast(args[1]);
   BOOLEAN_OPTION_VALUE(optionsObj, createIfMissing)
   BOOLEAN_OPTION_VALUE(optionsObj, errorIfExists)
   BOOLEAN_OPTION_VALUE(optionsObj, compression)
   UINT32_OPTION_VALUE(optionsObj, cacheSize, 8 << 20)
-  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
+  v8::Persistent<v8::Function> callback =
+      v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(args[2]));
 
   OpenWorker* worker = new OpenWorker(
       database
@@ -138,37 +157,38 @@ Handle<Value> Database::Open (const Arguments& args) {
   );
   AsyncQueueWorker(worker);
 
-  return Undefined();
+  return v8::Undefined();
 }
 
-Handle<Value> Database::Close (const Arguments& args) {
-  HandleScope scope;
+v8::Handle<Value> Database::Close (const v8::Arguments& args) {
+  v8::HandleScope scope;
 
-  Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  Persistent<Function> callback;
+  Database* database = node::ObjectWrap::Unwrap<Database>(args.This());
+  v8::Persistent<v8::Function> callback;
   if (args.Length() > 0)
-    callback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
+    callback = v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(args[0]));
 
   CloseWorker* worker = new CloseWorker(database, callback);
   AsyncQueueWorker(worker);
 
-  return Undefined();
+  return v8::Undefined();
 }
 
-Handle<Value> Database::Put (const Arguments& args) {
-  HandleScope scope;
+v8::Handle<v8::Value> Database::Put (const v8::Arguments& args) {
+  v8::HandleScope scope;
 
-  Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[3]));
+  Database* database = node::ObjectWrap::Unwrap<Database>(args.This());
+  v8::Persistent<v8::Function> callback =
+      v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(args[3]));
 
   CB_ERR_IF_NULL_OR_UNDEFINED(0, "Key")
   CB_ERR_IF_NULL_OR_UNDEFINED(1, "Value")
 
-  Persistent<Value> keyBuffer = Persistent<Value>::New(args[0]);
+  v8::Persistent<v8::Value> keyBuffer = v8::Persistent<v8::Value>::New(args[0]);
   STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
-  Persistent<Value> valueBuffer = Persistent<Value>::New(args[1]);
+  v8::Persistent<v8::Value> valueBuffer = v8::Persistent<v8::Value>::New(args[1]);
   STRING_OR_BUFFER_TO_SLICE(value, valueBuffer)
-  Local<Object> optionsObj = Local<Object>::Cast(args[2]);
+  v8::Local<v8::Object> optionsObj = v8::Local<v8::Object>::Cast(args[2]);
   BOOLEAN_OPTION_VALUE(optionsObj, sync)
 
   WriteWorker* worker  = new WriteWorker(
@@ -182,20 +202,21 @@ Handle<Value> Database::Put (const Arguments& args) {
   );
   AsyncQueueWorker(worker);
 
-  return Undefined();
+  return v8::Undefined();
 }
 
-Handle<Value> Database::Get (const Arguments& args) {
-  HandleScope scope;
+v8::Handle<Value> Database::Get (const v8::Arguments& args) {
+  v8::HandleScope scope;
 
-  Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
+  Database* database = node::ObjectWrap::Unwrap<Database>(args.This());
+  v8::Persistent<v8::Function> callback =
+      v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(args[2]));
 
   CB_ERR_IF_NULL_OR_UNDEFINED(0, "Key")
 
-  Persistent<Value> keyBuffer = Persistent<Value>::New(args[0]);
+  v8::Persistent<v8::Value> keyBuffer = v8::Persistent<v8::Value>::New(args[0]);
   STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
-  Local<Object> optionsObj = Local<Object>::Cast(args[1]);
+  v8::Local<v8::Object> optionsObj = v8::Local<v8::Object>::Cast(args[1]);
   BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, asBuffer)
   BOOLEAN_OPTION_VALUE_DEFTRUE(optionsObj, fillCache)
 
@@ -209,20 +230,21 @@ Handle<Value> Database::Get (const Arguments& args) {
   );
   AsyncQueueWorker(worker);
 
-  return Undefined();
+  return v8::Undefined();
 }
 
-Handle<Value> Database::Delete (const Arguments& args) {
-  HandleScope scope;
+v8::Handle<Value> Database::Delete (const v8::Arguments& args) {
+  v8::HandleScope scope;
 
-  Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
+  Database* database = node::ObjectWrap::Unwrap<Database>(args.This());
+  v8::Persistent<v8::Function> callback =
+      v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(args[2]));
 
   CB_ERR_IF_NULL_OR_UNDEFINED(0, "Key")
 
-  Persistent<Value> keyBuffer = Persistent<Value>::New(args[0]);
+  v8::Persistent<v8::Value> keyBuffer = v8::Persistent<v8::Value>::New(args[0]);
   STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
-  Local<Object> optionsObj = Local<Object>::Cast(args[1]);
+  v8::Local<v8::Object> optionsObj = v8::Local<v8::Object>::Cast(args[1]);
   BOOLEAN_OPTION_VALUE(optionsObj, sync)
 
   DeleteWorker* worker = new DeleteWorker(
@@ -234,39 +256,48 @@ Handle<Value> Database::Delete (const Arguments& args) {
   );
   AsyncQueueWorker(worker);
 
-  return Undefined();
+  return v8::Undefined();
 }
 
-Handle<Value> Database::Batch (const Arguments& args) {
-  HandleScope scope;
+v8::Handle<v8::Value> Database::Batch (const v8::Arguments& args) {
+  v8::HandleScope scope;
 
-  Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  Local<Array> array = Local<Array>::Cast(args[0]);
-  Local<Object> optionsObj = Local<Object>::Cast(args[1]);
+  Database* database = node::ObjectWrap::Unwrap<Database>(args.This());
+  v8::Local<v8::Array> array = v8::Local<v8::Array>::Cast(args[0]);
+  v8::Local<v8::Object> optionsObj = v8::Local<v8::Object>::Cast(args[1]);
   BOOLEAN_OPTION_VALUE(optionsObj, sync)
-  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
+  v8::Persistent<v8::Function> callback =
+      v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(args[2]));
 
-  vector<BatchOp*>* operations = new vector<BatchOp*>;
+  std::vector<BatchOp*>* operations = new std::vector<BatchOp*>;
   for (unsigned int i = 0; i < array->Length(); i++) {
     if (!array->Get(i)->IsObject())
       continue;
 
-    Local<Object> obj = Local<Object>::Cast(array->Get(i));
+    v8::Local<v8::Object> obj = v8::Local<v8::Object>::Cast(array->Get(i));
     if (!obj->Has(str_type) && !obj->Has(str_key))
       continue;
 
-    Local<Value> keyBuffer = obj->Get(str_key);
+    v8::Local<v8::Value> keyBuffer = obj->Get(str_key);
 
     if (obj->Get(str_type)->StrictEquals(str_del)) {
       STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
-      operations->push_back(new BatchDelete(key, Persistent<Value>::New(keyBuffer)));
+      operations->push_back(new BatchDelete(
+          key
+        , v8::Persistent<v8::Value>::New(keyBuffer)
+      ));
     } else if (obj->Get(str_type)->StrictEquals(str_put) && obj->Has(str_value)) {
       if (!obj->Has(str_value))
         continue;
-      Local<Value> valueBuffer = obj->Get(str_value);
+      v8::Local<v8::Value> valueBuffer = obj->Get(str_value);
       STRING_OR_BUFFER_TO_SLICE(key, keyBuffer)
       STRING_OR_BUFFER_TO_SLICE(value, valueBuffer)
-      operations->push_back(new BatchWrite(key, value, Persistent<Value>::New(keyBuffer), Persistent<Value>::New(valueBuffer)));
+      operations->push_back(new BatchWrite(
+          key
+        , value
+        , v8::Persistent<v8::Value>::New(keyBuffer)
+        , v8::Persistent<v8::Value>::New(valueBuffer)
+      ));
     }
   }
 
@@ -277,21 +308,22 @@ Handle<Value> Database::Batch (const Arguments& args) {
     , sync
   ));
 
-  return Undefined();
+  return v8::Undefined();
 }
 
-Handle<Value> Database::ApproximateSize (const Arguments& args) {
-  HandleScope scope;
+v8::Handle<v8::Value> Database::ApproximateSize (const v8::Arguments& args) {
+  v8::HandleScope scope;
 
-  Database* database = ObjectWrap::Unwrap<Database>(args.This());
-  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[2]));
+  Database* database = node::ObjectWrap::Unwrap<Database>(args.This());
+  v8::Persistent<v8::Function> callback =
+      v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(args[2]));
 
   CB_ERR_IF_NULL_OR_UNDEFINED(0, "start")
   CB_ERR_IF_NULL_OR_UNDEFINED(1, "end")
 
-  Persistent<Value> startBuffer = Persistent<Value>::New(args[0]);
+  v8::Persistent<v8::Value> startBuffer = v8::Persistent<v8::Value>::New(args[0]);
   STRING_OR_BUFFER_TO_SLICE(start, startBuffer)
-  Persistent<Value> endBuffer = Persistent<Value>::New(args[1]);
+  v8::Persistent<v8::Value> endBuffer = v8::Persistent<v8::Value>::New(args[1]);
   STRING_OR_BUFFER_TO_SLICE(end, endBuffer)
 
   ApproximateSizeWorker* worker  = new ApproximateSizeWorker(
@@ -304,5 +336,7 @@ Handle<Value> Database::ApproximateSize (const Arguments& args) {
   );
   AsyncQueueWorker(worker);
 
-  return Undefined();
+  return v8::Undefined();
 }
+
+} // namespace LevelUP
