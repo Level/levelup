@@ -13,7 +13,7 @@ namespace levelup {
 
 void Init (v8::Handle<v8::Object> exports) {
   Database::Init();
-  levelup::Iterator::Init();
+  Iterator::Init();
 
   exports->Set(
       v8::String::NewSymbol("createDatabase")
@@ -21,7 +21,7 @@ void Init (v8::Handle<v8::Object> exports) {
   );
   exports->Set(
       v8::String::NewSymbol("createIterator")
-    , v8::FunctionTemplate::New(levelup::CreateIterator)->GetFunction()
+    , v8::FunctionTemplate::New(CreateIterator)->GetFunction()
   );
 }
 

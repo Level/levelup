@@ -28,4 +28,4 @@ void BatchWrite::Execute (leveldb::WriteBatch* batch) {
   batch->Put(key, value);
 }
 
-} // namespace LevelUP
+} // namespace levelup

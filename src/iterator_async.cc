@@ -16,10 +16,10 @@ namespace levelup {
 /** NEXT WORKER **/
 
 NextWorker::NextWorker (
-    levelup::Iterator* iterator
-  , Persistent<Function> dataCallback
-  , Persistent<Function> endCallback
-  , void (*localCallback)(levelup::Iterator*)
+    Iterator* iterator
+  , v8::Persistent<v8::Function> dataCallback
+  , v8::Persistent<v8::Function> endCallback
+  , void (*localCallback)(Iterator*)
 ) : AsyncWorker(database, dataCallback)
   , iterator(iterator)
   , endCallback(endCallback)
@@ -43,7 +43,7 @@ void NextWorker::HandleOKCallback () {
       node::Buffer::New((char*)key.data(), key.size())->handle_
     );
   } else {
-    returnKey = String::New((char*)key.data(), key.size());
+    returnKey = v8::String::New((char*)key.data(), key.size());
   }
   v8::Local<v8::Value> returnValue;
   if (iterator->valueAsBuffer) {
@@ -51,7 +51,7 @@ void NextWorker::HandleOKCallback () {
       node::Buffer::New((char*)value.data(), value.size())->handle_
     );
   } else {
-    returnValue = String::New((char*)value.data(), value.size());
+    returnValue = v8::String::New((char*)value.data(), value.size());
   }
 
   // clean up & handle the next/end state see iterator.cc/checkEndCallback
@@ -59,7 +59,7 @@ void NextWorker::HandleOKCallback () {
 
   if (ok) {
     v8::Local<v8::Value> argv[] = {
-        v8::Local<v8::Value>::New(Null())
+        v8::Local<v8::Value>::New(v8::Null())
       , returnKey
       , returnValue
     };
@@ -73,8 +73,8 @@ void NextWorker::HandleOKCallback () {
 /** END WORKER **/
 
 EndWorker::EndWorker (
-    levelup::Iterator* iterator
-  , Persistent<Function> endCallback
+    Iterator* iterator
+  , v8::Persistent<v8::Function> endCallback
 ) : AsyncWorker(database, endCallback)
   , iterator(iterator)
 {};

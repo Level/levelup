@@ -17,10 +17,21 @@
 #define LU_V8_METHOD(name) \
   static v8::Handle<v8::Value> name (const v8::Arguments& args);
 
+#define THROW_RETURN(msg) \
+  v8::ThrowException(v8::Exception::Error(v8::String::New(#msg))); \
+  return v8::Undefined();
+
+#define RUN_CALLBACK(callback, argv, length) \
+  v8::TryCatch try_catch; \
+  callback->Call(v8::Context::GetCurrent()->Global(), length, argv); \
+  if (try_catch.HasCaught()) { \
+    node::FatalException(try_catch); \
+  }
+
 #define CB_ERR_IF_NULL_OR_UNDEFINED(index, name) \
   if (args[index]->IsNull() || args[index]->IsUndefined()) { \
-    v8::Local<Value> argv[] = { \
-      v8::Local<Value>::New(v8::Exception::Error( \
+    v8::Local<v8::Value> argv[] = { \
+      v8::Local<v8::Value>::New(v8::Exception::Error( \
         v8::String::New("#name cannot be `null` or `undefined`"))) \
     }; \
     RUN_CALLBACK(callback, argv, 1); \
@@ -39,7 +50,7 @@
     to ## Ch_ = new char[to ## Sz_]; \
     to ## Str->WriteUtf8(to ## Ch_, -1, NULL, v8::String::NO_NULL_TERMINATION); \
   } \
-  Slice to(to ## Ch_, to ## Sz_);
+  leveldb::Slice to(to ## Ch_, to ## Sz_);
 
 #define BOOLEAN_OPTION_VALUE(optionsObj, opt) \
   bool opt = optionsObj->Has(option_ ## opt) && \
@@ -52,16 +63,5 @@
     && optionsObj->Get(option_ ## opt)->IsUint32() \
       ? optionsObj->Get(option_ ## opt)->Uint32Value() \
       : default;
-
-#define THROW_RETURN(msg) \
-  v8::ThrowException(Exception::Error(v8::String::New(#msg))); \
-  return v8::Undefined();
-
-#define RUN_CALLBACK(callback, argv, length) \
-  v8::TryCatch try_catch; \
-  callback->Call(v8::Context::GetCurrent()->Global(), length, argv); \
-  if (try_catch.HasCaught()) { \
-    node::FatalException(try_catch); \
-  }
 
 #endif

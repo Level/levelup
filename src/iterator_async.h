@@ -16,10 +16,10 @@ namespace levelup {
 class NextWorker : public AsyncWorker {
 public:
   NextWorker (
-      levelup::Iterator* iterator
+      Iterator* iterator
     , v8::Persistent<v8::Function> dataCallback
     , v8::Persistent<v8::Function> endCallback
-    , void (*localCallback)(levelup::Iterator*)
+    , void (*localCallback)(Iterator*)
   );
 
   virtual ~NextWorker ();
@@ -27,9 +27,9 @@ public:
   virtual void HandleOKCallback ();
 
 private:
-  levelup::Iterator* iterator;
+  Iterator* iterator;
   v8::Persistent<v8::Function> endCallback;
-  void (*localCallback)(levelup::Iterator*);
+  void (*localCallback)(Iterator*);
   std::string key;
   std::string value;
   bool ok;
@@ -38,7 +38,7 @@ private:
 class EndWorker : public AsyncWorker {
 public:
   EndWorker (
-      levelup::Iterator* iterator
+      Iterator* iterator
     , v8::Persistent<v8::Function> endCallback
   );
 
@@ -46,7 +46,7 @@ public:
   virtual void Execute ();
 
 private:
-  levelup::Iterator* iterator;
+  Iterator* iterator;
 };
 
 } // namespace levelup

@@ -34,6 +34,6 @@ void AsyncExecute (uv_work_t* req);
 void AsyncExecuteComplete (uv_work_t* req);
 void AsyncQueueWorker (AsyncWorker* worker);
 
-} // namespace LevelUP
+} // namespace levelup
 
 #endif

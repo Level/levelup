@@ -12,10 +12,6 @@
 #include "database.h"
 #include "async.h"
 
-using namespace std;
-using namespace v8;
-using namespace leveldb;
-
 namespace levelup {
 
 LU_OPTION ( start         );
@@ -27,21 +23,21 @@ LU_OPTION ( values        );
 LU_OPTION ( keyAsBuffer   );
 LU_OPTION ( valueAsBuffer );
 
-Handle<Value> CreateIterator (const Arguments& args);
+v8::Handle<v8::Value> CreateIterator (const v8::Arguments& args);
 
 class Iterator : public node::ObjectWrap {
 public:
   static void Init ();
   static v8::Handle<v8::Value> NewInstance (const v8::Arguments& args);
 
-  bool IteratorNext (string& key, string& value);
-  Status IteratorStatus ();
+  bool IteratorNext (std::string& key, std::string& value);
+  leveldb::Status IteratorStatus ();
   void IteratorEnd ();
 
   Iterator (
       Database* database
-    , Slice* start
-    , string* end
+    , leveldb::Slice* start
+    , std::string* end
     , bool reverse
     , bool keys
     , bool values
@@ -59,7 +55,7 @@ public:
     , keyAsBuffer(keyAsBuffer)
     , valueAsBuffer(valueAsBuffer)
   {
-    options    = new ReadOptions();
+    options    = new leveldb::ReadOptions();
     options->fill_cache = fillCache;
     dbIterator = NULL;
     count      = 0;
@@ -79,9 +75,9 @@ public:
 private:
   Database* database;
   leveldb::Iterator* dbIterator;
-  ReadOptions* options;
-  Slice* start;
-  string* end;
+  leveldb::ReadOptions* options;
+  leveldb::Slice* start;
+  std::string* end;
   bool reverse;
   bool keys;
   bool values;
@@ -105,6 +101,6 @@ private:
   LU_V8_METHOD( End  )
 };
 
-};
+} // namespace levelup
 
 #endif

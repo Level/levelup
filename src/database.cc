@@ -28,33 +28,50 @@ Database::~Database () {
 
 /* Calls from worker threads, NO V8 HERE *****************************/
 
-Status Database::OpenDatabase (Options* options, string location) {
-  return DB::Open(*options, location, &db);
+leveldb::Status Database::OpenDatabase (
+        leveldb::Options* options
+      , std::string location
+    ) {
+  return leveldb::DB::Open(*options, location, &db);
 }
 
-Status Database::PutToDatabase (WriteOptions* options, Slice key, Slice value) {
+leveldb::Status Database::PutToDatabase (
+        leveldb::WriteOptions* options
+      , leveldb::Slice key
+      , leveldb::Slice value
+    ) {
   return db->Put(*options, key, value);
 }
 
-Status Database::GetFromDatabase (ReadOptions* options, Slice key, string& value) {
+leveldb::Status Database::GetFromDatabase (
+        leveldb::ReadOptions* options
+      , leveldb::Slice key
+      , std::string& value
+    ) {
   return db->Get(*options, key, &value);
 }
 
-Status Database::DeleteFromDatabase (WriteOptions* options, Slice key) {
+leveldb::Status Database::DeleteFromDatabase (
+        leveldb::WriteOptions* options
+      , leveldb::Slice key
+    ) {
   return db->Delete(*options, key);
 }
 
-Status Database::WriteBatchToDatabase (WriteOptions* options, WriteBatch* batch) {
+leveldb::Status Database::WriteBatchToDatabase (
+        leveldb::WriteOptions* options
+      , leveldb::WriteBatch* batch
+    ) {
   return db->Write(*options, batch);
 }
 
-uint64_t Database::ApproximateSizeFromDatabase (const Range* range) {
+uint64_t Database::ApproximateSizeFromDatabase (const leveldb::Range* range) {
   uint64_t size;
   db->GetApproximateSizes(range, 1, &size);
   return size;
 }
 
-leveldb::Iterator* Database::NewIterator (ReadOptions* options) {
+leveldb::Iterator* Database::NewIterator (leveldb::ReadOptions* options) {
   return db->NewIterator(*options);
 }
 
@@ -75,8 +92,8 @@ void Database::CloseDatabase () {
 
 v8::Persistent<v8::Function> Database::constructor;
 
-Handle<Value> CreateDatabase (const Arguments& args) {
-  HandleScope scope;
+v8::Handle<v8::Value> CreateDatabase (const v8::Arguments& args) {
+  v8::HandleScope scope;
   return scope.Close(Database::NewInstance(args));
 }
 
@@ -110,12 +127,12 @@ void Database::Init () {
   );
   tpl->PrototypeTemplate()->Set(
       v8::String::NewSymbol("approximateSize")
-    , FunctionTemplate::New(ApproximateSize)->GetFunction()
+    , v8::FunctionTemplate::New(ApproximateSize)->GetFunction()
   );
-  constructor = v8::Persistent<Function>::New(tpl->GetFunction());
+  constructor = v8::Persistent<v8::Function>::New(tpl->GetFunction());
 }
 
-v8::Handle<Value> Database::New (const v8::Arguments& args) {
+v8::Handle<v8::Value> Database::New (const v8::Arguments& args) {
   v8::HandleScope scope;
 
   Database* obj = new Database();
@@ -124,7 +141,7 @@ v8::Handle<Value> Database::New (const v8::Arguments& args) {
   return args.This();
 }
 
-v8::Handle<Value> Database::NewInstance (const v8::Arguments& args) {
+v8::Handle<v8::Value> Database::NewInstance (const v8::Arguments& args) {
   v8::HandleScope scope;
 
   v8::Handle<v8::Value> argv[0];
@@ -133,7 +150,7 @@ v8::Handle<Value> Database::NewInstance (const v8::Arguments& args) {
   return scope.Close(instance);
 }
 
-v8::Handle<Value> Database::Open (const v8::Arguments& args) {
+v8::Handle<v8::Value> Database::Open (const v8::Arguments& args) {
   v8::HandleScope scope;
 
   Database* database = node::ObjectWrap::Unwrap<Database>(args.This());
@@ -160,7 +177,7 @@ v8::Handle<Value> Database::Open (const v8::Arguments& args) {
   return v8::Undefined();
 }
 
-v8::Handle<Value> Database::Close (const v8::Arguments& args) {
+v8::Handle<v8::Value> Database::Close (const v8::Arguments& args) {
   v8::HandleScope scope;
 
   Database* database = node::ObjectWrap::Unwrap<Database>(args.This());
@@ -205,7 +222,7 @@ v8::Handle<v8::Value> Database::Put (const v8::Arguments& args) {
   return v8::Undefined();
 }
 
-v8::Handle<Value> Database::Get (const v8::Arguments& args) {
+v8::Handle<v8::Value> Database::Get (const v8::Arguments& args) {
   v8::HandleScope scope;
 
   Database* database = node::ObjectWrap::Unwrap<Database>(args.This());
@@ -233,7 +250,7 @@ v8::Handle<Value> Database::Get (const v8::Arguments& args) {
   return v8::Undefined();
 }
 
-v8::Handle<Value> Database::Delete (const v8::Arguments& args) {
+v8::Handle<v8::Value> Database::Delete (const v8::Arguments& args) {
   v8::HandleScope scope;
 
   Database* database = node::ObjectWrap::Unwrap<Database>(args.This());
@@ -339,4 +356,4 @@ v8::Handle<v8::Value> Database::ApproximateSize (const v8::Arguments& args) {
   return v8::Undefined();
 }
 
-} // namespace LevelUP
+} // namespace levelup
