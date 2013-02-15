@@ -6,23 +6,22 @@
 #ifndef LU_DATABASE_ASYNC_H
 #define LU_DATABASE_ASYNC_H
 
-#include <cstdlib>
 #include <vector>
 #include <node.h>
-#include "async.h"
-#include "batch.h"
+
 #include "leveldb/cache.h"
 
-using namespace std;
-using namespace v8;
-using namespace leveldb;
+#include "async.h"
+#include "batch.h"
 
-class OpenWorker  : public AsyncWorker {
+namespace levelup {
+
+class OpenWorker : public AsyncWorker {
 public:
   OpenWorker (
       Database* database
-    , Persistent<Function> callback
-    , string location
+    , v8::Persistent<v8::Function> callback
+    , std::string location
     , bool createIfMissing
     , bool errorIfExists
     , bool compression
@@ -33,15 +32,15 @@ public:
   virtual void Execute ();
 
 private:
-  string location;
-  Options* options;
+  std::string location;
+  leveldb::Options* options;
 };
 
 class CloseWorker : public AsyncWorker {
 public:
   CloseWorker (
       Database* database
-    , Persistent<Function> callback
+    , v8::Persistent<v8::Function> callback
   );
 
   virtual ~CloseWorker ();
@@ -53,28 +52,28 @@ class IOWorker    : public AsyncWorker {
 public:
   IOWorker (
       Database* database
-    , Persistent<Function> callback
-    , Slice key
-    , Persistent<Value> keyPtr
+    , v8::Persistent<v8::Function> callback
+    , leveldb::Slice key
+    , v8::Persistent<v8::Value> keyPtr
   );
 
   virtual ~IOWorker ();
   virtual void WorkComplete ();
 
 protected:
-  Slice key;
-  Persistent<Value> keyPtr;
+  leveldb::Slice key;
+  v8::Persistent<v8::Value> keyPtr;
 };
 
 class ReadWorker : public IOWorker {
 public:
   ReadWorker (
       Database* database
-    , Persistent<Function> callback
-    , Slice key
+    , v8::Persistent<v8::Function> callback
+    , leveldb::Slice key
     , bool asBuffer
     , bool fillCache
-    , Persistent<Value> keyPtr
+    , v8::Persistent<v8::Value> keyPtr
   );
 
   virtual ~ReadWorker ();
@@ -83,37 +82,37 @@ public:
 
 private:
   bool asBuffer;
-  ReadOptions* options;
-  string value;
+  leveldb::ReadOptions* options;
+  std::string value;
 };
 
 class DeleteWorker : public IOWorker {
 public:
   DeleteWorker (
       Database* database
-    , Persistent<Function> callback
-    , Slice key
+    , v8::Persistent<v8::Function> callback
+    , leveldb::Slice key
     , bool sync
-    , Persistent<Value> keyPtr
+    , v8::Persistent<v8::Value> keyPtr
   );
 
   virtual ~DeleteWorker ();
   virtual void Execute ();
 
 protected:
-  WriteOptions* options;
+  leveldb::WriteOptions* options;
 };
 
 class WriteWorker : public DeleteWorker {
 public:
   WriteWorker (
       Database* database
-    , Persistent<Function> callback
-    , Slice key
-    , Slice value
+    , v8::Persistent<v8::Function> callback
+    , leveldb::Slice key
+    , leveldb::Slice value
     , bool sync
-    , Persistent<Value> keyPtr
-    , Persistent<Value> valuePtr
+    , v8::Persistent<v8::Value> keyPtr
+    , v8::Persistent<v8::Value> valuePtr
   );
 
   virtual ~WriteWorker ();
@@ -121,16 +120,16 @@ public:
   virtual void WorkComplete ();
 
 private:
-  Slice value;
-  Persistent<Value> valuePtr;
+  leveldb::Slice value;
+  v8::Persistent<v8::Value> valuePtr;
 };
 
 class BatchWorker : public AsyncWorker {
 public:
   BatchWorker (
       Database* database
-    , Persistent<Function> callback
-    , vector<BatchOp*>* operations
+    , v8::Persistent<v8::Function> callback
+    , std::vector<BatchOp*>* operations
     , bool sync
   );
 
@@ -138,19 +137,19 @@ public:
   virtual void Execute ();
 
 private:
-  WriteOptions* options;
-  vector<BatchOp*>* operations;
+  leveldb::WriteOptions* options;
+  std::vector<BatchOp*>* operations;
 };
 
 class ApproximateSizeWorker : public AsyncWorker {
 public:
   ApproximateSizeWorker (
       Database* database
-    , Persistent<Function> callback
-    , Slice start
-    , Slice end
-    , Persistent<Value> startPtr
-    , Persistent<Value> endPtr
+    , v8::Persistent<v8::Function> callback
+    , leveldb::Slice start
+    , leveldb::Slice end
+    , v8::Persistent<v8::Value> startPtr
+    , v8::Persistent<v8::Value> endPtr
   );
 
   virtual ~ApproximateSizeWorker ();
@@ -159,10 +158,12 @@ public:
   virtual void WorkComplete ();
 
   private:
-    Range range;
-    Persistent<Value> startPtr;
-    Persistent<Value> endPtr;
+    leveldb::Range range;
+    v8::Persistent<v8::Value> startPtr;
+    v8::Persistent<v8::Value> endPtr;
     uint64_t size;
 };
+
+} // namespace levelup
 
 #endif

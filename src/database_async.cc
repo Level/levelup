@@ -3,30 +3,23 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-#include <cstdlib>
 #include <node.h>
 #include <node_buffer.h>
-#include <iostream>
-#include <pthread.h>
 
 #include "database.h"
-
 #include "levelup.h"
 #include "async.h"
 #include "database_async.h"
 #include "batch.h"
 
-using namespace std;
-using namespace v8;
-using namespace node;
-using namespace leveldb;
+namespace levelup {
 
 /** OPEN WORKER **/
 
 OpenWorker::OpenWorker (
     Database* database
-  , Persistent<Function> callback
-  , string location
+  , v8::Persistent<v8::Function> callback
+  , std::string location
   , bool createIfMissing
   , bool errorIfExists
   , bool compression
@@ -34,11 +27,13 @@ OpenWorker::OpenWorker (
 ) : AsyncWorker(database, callback)
   , location(location)
 {
-  options = new Options();
+  options = new leveldb::Options();
   options->create_if_missing = createIfMissing;
   options->error_if_exists = errorIfExists;
-  options->compression = compression ? kSnappyCompression : kNoCompression;
-  options->block_cache = NewLRUCache(cacheSize);
+  options->compression = compression
+    ? leveldb::kSnappyCompression
+    : leveldb::kNoCompression;
+  options->block_cache = leveldb::NewLRUCache(cacheSize);
 };
 
 OpenWorker::~OpenWorker () {
@@ -53,7 +48,7 @@ void OpenWorker::Execute () {
 
 CloseWorker::CloseWorker (
     Database* database
-  , Persistent<Function> callback
+  , v8::Persistent<v8::Function> callback
 ) : AsyncWorker(database, callback)
 {};
 
@@ -64,7 +59,7 @@ void CloseWorker::Execute () {
 }
 
 void CloseWorker::WorkComplete () {
-  HandleScope scope;
+  v8::HandleScope scope;
   HandleOKCallback();
   callback.Dispose();
 }
@@ -73,9 +68,9 @@ void CloseWorker::WorkComplete () {
 
 IOWorker::IOWorker (
     Database* database
-  , Persistent<Function> callback
-  , Slice key
-  , Persistent<Value> keyPtr
+  , v8::Persistent<v8::Function> callback
+  , leveldb::Slice key
+  , v8::Persistent<v8::Value> keyPtr
 ) : AsyncWorker(database, callback)
   , key(key)
   , keyPtr(keyPtr)
@@ -92,15 +87,15 @@ void IOWorker::WorkComplete () {
 
 ReadWorker::ReadWorker (
     Database* database
-  , Persistent<Function> callback
-  , Slice key
+  , v8::Persistent<v8::Function> callback
+  , leveldb::Slice key
   , bool asBuffer
   , bool fillCache
-  , Persistent<Value> keyPtr
+  , v8::Persistent<v8::Value> keyPtr
 ) : IOWorker(database, callback, key, keyPtr)
   , asBuffer(asBuffer)
 {
-  options = new ReadOptions();
+  options = new leveldb::ReadOptions();
   options->fill_cache = fillCache;
 };
 
@@ -113,29 +108,31 @@ void ReadWorker::Execute () {
 }
 
 void ReadWorker::HandleOKCallback () {
-  Local<Value> returnValue;
+  v8::Local<v8::Value> returnValue;
   if (asBuffer)
-    returnValue = Local<Value>::New(Buffer::New((char*)value.data(), value.size())->handle_);
+    returnValue = v8::Local<v8::Value>::New(
+      node::Buffer::New((char*)value.data(), value.size())->handle_
+    );
   else
-    returnValue = String::New((char*)value.data(), value.size());
-  Local<Value> argv[] = {
-      Local<Value>::New(Null())
+    returnValue = v8::String::New((char*)value.data(), value.size());
+  v8::Local<v8::Value> argv[] = {
+      v8::Local<v8::Value>::New(v8::Null())
     , returnValue
   };
-  RunCallback(callback, argv, 2);
+  RUN_CALLBACK(callback, argv, 2);
 }
 
 /** DELETE WORKER **/
 
 DeleteWorker::DeleteWorker (
     Database* database
-  , Persistent<Function> callback
-  , Slice key
+  , v8::Persistent<v8::Function> callback
+  , leveldb::Slice key
   , bool sync
-  , Persistent<Value> keyPtr
+  , v8::Persistent<v8::Value> keyPtr
 ) : IOWorker(database, callback, key, keyPtr)
 {
-  options = new WriteOptions();
+  options = new leveldb::WriteOptions();
   options->sync = sync;
 };
 
@@ -151,12 +148,12 @@ void DeleteWorker::Execute () {
 
 WriteWorker::WriteWorker (
     Database* database
-  , Persistent<Function> callback
-  , Slice key
-  , Slice value
+  , v8::Persistent<v8::Function> callback
+  , leveldb::Slice key
+  , leveldb::Slice value
   , bool sync
-  , Persistent<Value> keyPtr
-  , Persistent<Value> valuePtr
+  , v8::Persistent<v8::Value> keyPtr
+  , v8::Persistent<v8::Value> valuePtr
 ) : DeleteWorker(database, callback, key, sync, keyPtr)
   , value(value)
   , valuePtr(valuePtr)
@@ -177,18 +174,18 @@ void WriteWorker::WorkComplete () {
 
 BatchWorker::BatchWorker (
     Database* database
-  , Persistent<Function> callback
-  , vector<BatchOp*>* operations
+  , v8::Persistent<v8::Function> callback
+  , std::vector<BatchOp*>* operations
   , bool sync
 ) : AsyncWorker(database, callback)
   , operations(operations)
 {
-  options = new WriteOptions();
+  options = new leveldb::WriteOptions();
   options->sync = sync;
 };
 
 BatchWorker::~BatchWorker () {
-  for (vector<BatchOp*>::iterator it = operations->begin(); it != operations->end();) {
+  for (std::vector<BatchOp*>::iterator it = operations->begin(); it != operations->end();) {
     delete *it;
     it = operations->erase(it);
   }
@@ -197,8 +194,8 @@ BatchWorker::~BatchWorker () {
 }
 
 void BatchWorker::Execute () {
-  WriteBatch batch;
-  for (vector<BatchOp*>::iterator it = operations->begin(); it != operations->end();) {
+  leveldb::WriteBatch batch;
+  for (std::vector<BatchOp*>::iterator it = operations->begin(); it != operations->end();) {
     (*it++)->Execute(&batch);
   }
   status = database->WriteBatchToDatabase(options, &batch);
@@ -208,11 +205,11 @@ void BatchWorker::Execute () {
 
 ApproximateSizeWorker::ApproximateSizeWorker (
     Database* database
-  , Persistent<Function> callback
-  , Slice start
-  , Slice end
-  , Persistent<Value> startPtr
-  , Persistent<Value> endPtr
+  , v8::Persistent<v8::Function> callback
+  , leveldb::Slice start
+  , leveldb::Slice end
+  , v8::Persistent<v8::Value> startPtr
+  , v8::Persistent<v8::Value> endPtr
 ) : AsyncWorker(database, callback)
   , range(start, end)
   , startPtr(startPtr)
@@ -232,11 +229,12 @@ void ApproximateSizeWorker::WorkComplete() {
 }
 
 void ApproximateSizeWorker::HandleOKCallback () {
-  Local<Value> returnValue = Number::New((double) size);
-  Local<Value> argv[] = {
-      Local<Value>::New(Null())
+  v8::Local<v8::Value> returnValue = v8::Number::New((double) size);
+  v8::Local<v8::Value> argv[] = {
+      v8::Local<v8::Value>::New(v8::Null())
     , returnValue
   };
-  RunCallback(callback, argv, 2);
+  RUN_CALLBACK(callback, argv, 2);
 }
 
+} // namespleveldb::ace LevelUP

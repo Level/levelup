@@ -6,22 +6,20 @@
 #ifndef LU_ITERATOR_ASYNC_H
 #define LU_ITERATOR_ASYNC_H
 
-#include <cstdlib>
-#include <vector>
 #include <node.h>
+
 #include "async.h"
 #include "iterator.h"
 
-using namespace std;
-using namespace v8;
-using namespace leveldb;
+namespace levelup {
 
 class NextWorker : public AsyncWorker {
 public:
   NextWorker (
       levelup::Iterator* iterator
-    , Persistent<Function> dataCallback
-    , Persistent<Function> endCallback
+    , v8::Persistent<v8::Function> dataCallback
+    , v8::Persistent<v8::Function> endCallback
+    , void (*localCallback)(levelup::Iterator*)
   );
 
   virtual ~NextWorker ();
@@ -30,9 +28,10 @@ public:
 
 private:
   levelup::Iterator* iterator;
-  Persistent<Function> endCallback;
-  string key;
-  string value;
+  v8::Persistent<v8::Function> endCallback;
+  void (*localCallback)(levelup::Iterator*);
+  std::string key;
+  std::string value;
   bool ok;
 };
 
@@ -40,7 +39,7 @@ class EndWorker : public AsyncWorker {
 public:
   EndWorker (
       levelup::Iterator* iterator
-    , Persistent<Function> endCallback
+    , v8::Persistent<v8::Function> endCallback
   );
 
   virtual ~EndWorker ();
@@ -49,5 +48,7 @@ public:
 private:
   levelup::Iterator* iterator;
 };
+
+} // namespace levelup
 
 #endif

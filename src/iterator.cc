@@ -3,11 +3,8 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-#include <cstdlib>
 #include <node.h>
 #include <node_buffer.h>
-#include <iostream>
-#include <pthread.h>
 
 #include "database.h"
 #include "iterator.h"
@@ -68,17 +65,39 @@ void levelup::Iterator::IteratorEnd () {
   dbIterator = NULL;
 }
 
+void checkEndCallback (levelup::Iterator* iterator) {
+  iterator->nexting = false;
+  if (iterator->endWorker != NULL) {
+    AsyncQueueWorker(iterator->endWorker);
+    iterator->endWorker = NULL;
+  }
+}
+
 //void *ctx, void (*callback)(void *ctx, Slice key, Slice value)
 Handle<Value> levelup::Iterator::Next (const Arguments& args) {
   HandleScope scope;
   Iterator* iterator = ObjectWrap::Unwrap<Iterator>(args.This());
-  Persistent<Function> endCallback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
-  Persistent<Function> dataCallback = Persistent<Function>::New(Local<Function>::Cast(args[1]));
+
+  if (iterator->ended) {
+    THROW_RETURN("Cannot call next() after end()")
+  }
+
+  if (iterator->nexting) {
+    THROW_RETURN("Cannot call next() before previous next() has completed")
+  }
+
+  Persistent<Function> endCallback =
+      Persistent<Function>::New(Local<Function>::Cast(args[0]));
+  Persistent<Function> dataCallback =
+      Persistent<Function>::New(Local<Function>::Cast(args[1]));
+
   NextWorker* worker = new NextWorker(
       iterator
     , dataCallback
     , endCallback
+    , checkEndCallback
   );
+  iterator->nexting = true;
   AsyncQueueWorker(worker);
   return Undefined();
 }
@@ -86,12 +105,24 @@ Handle<Value> levelup::Iterator::Next (const Arguments& args) {
 Handle<Value> levelup::Iterator::End (const Arguments& args) {
   HandleScope scope;
   Iterator* iterator = ObjectWrap::Unwrap<Iterator>(args.This());
-  Persistent<Function> endCallback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
+
+  if (iterator->ended) {
+    THROW_RETURN("end() already called on iterator")
+  }
+
+  Persistent<Function> callback =
+      Persistent<Function>::New(Local<Function>::Cast(args[0]));
   EndWorker* worker = new EndWorker(
       iterator
-    , endCallback
+    , callback
   );
-  AsyncQueueWorker(worker);
+  iterator->ended = true;
+  if (iterator->nexting) {
+    // waiting for a next() to return, queue the end
+    iterator->endWorker = worker;
+  } else {
+    AsyncQueueWorker(worker);
+  }
   return Undefined();
 }
 
@@ -101,8 +132,14 @@ void levelup::Iterator::Init () {
   Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
   tpl->SetClassName(String::NewSymbol("Iterator"));
   tpl->InstanceTemplate()->SetInternalFieldCount(2);
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("next") , FunctionTemplate::New(Next)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("end")  , FunctionTemplate::New(End)->GetFunction());
+  tpl->PrototypeTemplate()->Set(
+      String::NewSymbol("next")
+    , FunctionTemplate::New(Next)->GetFunction()
+  );
+  tpl->PrototypeTemplate()->Set(
+      String::NewSymbol("end")
+    , FunctionTemplate::New(End)->GetFunction()
+  );
   constructor = Persistent<Function>::New(tpl->GetFunction());
 }
 
@@ -124,14 +161,16 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
   Database* database = ObjectWrap::Unwrap<Database>(args[0]->ToObject());
   Slice* start = NULL;
   if (args[1]->ToObject()->Has(option_start)
-      && (Buffer::HasInstance(args[1]->ToObject()->Get(option_start)) || args[1]->ToObject()->Get(option_start)->IsString())) {
+      && (Buffer::HasInstance(args[1]->ToObject()->Get(option_start))
+        || args[1]->ToObject()->Get(option_start)->IsString())) {
     Local<Value> startBuffer = Local<Value>::New(args[1]->ToObject()->Get(option_start));
     STRING_OR_BUFFER_TO_SLICE(_start, startBuffer)
     start = new Slice(_start.data(), _start.size());
   }
   string* end = NULL;
   if (args[1]->ToObject()->Has(option_end)
-      && (Buffer::HasInstance(args[1]->ToObject()->Get(option_end)) || args[1]->ToObject()->Get(option_end)->IsString())) {
+      && (Buffer::HasInstance(args[1]->ToObject()->Get(option_end))
+        || args[1]->ToObject()->Get(option_end)->IsString())) {
     Local<Value> endBuffer = Local<Value>::New(args[1]->ToObject()->Get(option_end));
     STRING_OR_BUFFER_TO_SLICE(_end, endBuffer)
     end = new string(_end.data(), _end.size());
@@ -147,7 +186,18 @@ Handle<Value> levelup::Iterator::New (const Arguments& args) {
   if (args[1]->ToObject()->Has(option_limit)) {
     limit = Local<Integer>::Cast(args[1]->ToObject()->Get(option_limit))->Value();
   }
-  Iterator* iterator = new Iterator(database, start, end, reverse, keys, values, limit, fillCache, keyAsBuffer, valueAsBuffer);
+  Iterator* iterator = new Iterator(
+      database
+    , start
+    , end
+    , reverse
+    , keys
+    , values
+    , limit
+    , fillCache
+    , keyAsBuffer
+    , valueAsBuffer
+  );
   iterator->Wrap(args.This());
 
   return args.This();

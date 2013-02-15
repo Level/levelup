@@ -3,14 +3,11 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-#include <cstdlib>
-#include <iostream>
-
 #include "leveldb/write_batch.h"
 
 #include "batch.h"
 
-using namespace std;
+namespace levelup {
 
 BatchOp::~BatchOp () {}
 
@@ -18,7 +15,7 @@ BatchDelete::~BatchDelete () {
   keyPtr.Dispose();
 }
 
-void BatchDelete::Execute (WriteBatch* batch) {
+void BatchDelete::Execute (leveldb::WriteBatch* batch) {
   batch->Delete(key);
 }
 
@@ -27,6 +24,8 @@ BatchWrite::~BatchWrite () {
   valuePtr.Dispose();
 }
 
-void BatchWrite::Execute (WriteBatch* batch) {
+void BatchWrite::Execute (leveldb::WriteBatch* batch) {
   batch->Put(key, value);
 }
+
+} // namespace LevelUP

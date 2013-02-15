@@ -6,54 +6,57 @@
 #ifndef LU_BATCH_H
 #define LU_BATCH_H
 
-#include <cstdlib>
+#include "leveldb/write_batch.h"
 
 #include "database.h"
-#include "leveldb/write_batch.h"
+
+namespace levelup {
 
 class BatchOp {
 public:
   BatchOp () {};
   virtual ~BatchOp ();
-  virtual void Execute (WriteBatch* batch) =0;
+  virtual void Execute (leveldb::WriteBatch* batch) =0;
 };
 
 class BatchDelete : public BatchOp {
 public:
   BatchDelete (
-      Slice key
-    , Persistent<Value> keyPtr
+      leveldb::Slice key
+    , v8::Persistent<v8::Value> keyPtr
   ) : key(key)
     , keyPtr(keyPtr)
   {};
   ~BatchDelete ();
-  void Execute (WriteBatch* batch);
+  void Execute (leveldb::WriteBatch* batch);
 
 private:
-  Slice key;
-  Persistent<Value> keyPtr;
+  leveldb::Slice key;
+  v8::Persistent<v8::Value> keyPtr;
 };
 
 class BatchWrite : public BatchOp {
 public:
   BatchWrite (
-      Slice key
-    , Slice value
-    , Persistent<Value> keyPtr
-    , Persistent<Value> valuePtr
+      leveldb::Slice key
+    , leveldb::Slice value
+    , v8::Persistent<v8::Value> keyPtr
+    , v8::Persistent<v8::Value> valuePtr
   ) : key(key)
     , keyPtr(keyPtr)
     , value(value)
     , valuePtr(valuePtr)
   {};
   ~BatchWrite ();
-  void Execute (WriteBatch* batch);
+  void Execute (leveldb::WriteBatch* batch);
 
 private:
-  Slice key;
-  Persistent<Value> keyPtr;
-  Slice value;
-  Persistent<Value> valuePtr;
+  leveldb::Slice key;
+  v8::Persistent<v8::Value> keyPtr;
+  leveldb::Slice value;
+  v8::Persistent<v8::Value> valuePtr;
 };
+
+} // namespace levelup
 
 #endif

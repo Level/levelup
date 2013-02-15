@@ -6,16 +6,13 @@
 #ifndef LU_DATABASE_H
 #define LU_DATABASE_H
 
-#include <cstdlib>
 #include <node.h>
 
 #include "leveldb/db.h"
 
 #include "levelup.h"
 
-using namespace std;
-using namespace v8;
-using namespace leveldb;
+namespace levelup {
 
 LU_OPTION ( createIfMissing ); // for open()
 LU_OPTION ( errorIfExists   ); // for open()
@@ -32,20 +29,34 @@ LU_STR    ( put   );
 
 struct AsyncDescriptor;
 
-Handle<Value> CreateDatabase (const Arguments& args);
+v8::Handle<v8::Value> CreateDatabase (const v8::Arguments& args);
 
 class Database : public node::ObjectWrap {
 public:
   static void Init ();
   static v8::Handle<v8::Value> NewInstance (const v8::Arguments& args);
 
-  Status OpenDatabase (Options* options, string location);
-  Status PutToDatabase (WriteOptions* options, Slice key, Slice value);
-  Status GetFromDatabase (ReadOptions* options, Slice key, string& value);
-  Status DeleteFromDatabase (WriteOptions* options, Slice key);
-  Status WriteBatchToDatabase (WriteOptions* options, WriteBatch* batch);
-  uint64_t ApproximateSizeFromDatabase (const Range* range);
-  leveldb::Iterator* NewIterator (ReadOptions* options);
+  leveldb::Status OpenDatabase (leveldb::Options* options, std::string location);
+  leveldb::Status PutToDatabase (
+      leveldb::WriteOptions* options
+    , leveldb::Slice key
+    , leveldb::Slice value
+  );
+  leveldb::Status GetFromDatabase (
+      leveldb::ReadOptions* options
+    , leveldb::Slice key
+    , std::string& value
+  );
+  leveldb::Status DeleteFromDatabase (
+      leveldb::WriteOptions* options
+    , leveldb::Slice key
+  );
+  leveldb::Status WriteBatchToDatabase (
+      leveldb::WriteOptions* options
+    , leveldb::WriteBatch* batch
+  );
+  uint64_t ApproximateSizeFromDatabase (const leveldb::Range* range);
+  leveldb::Iterator* NewIterator (leveldb::ReadOptions* options);
   const leveldb::Snapshot* NewSnapshot ();
   void ReleaseSnapshot (const leveldb::Snapshot* snapshot);
   void CloseDatabase ();
@@ -54,7 +65,7 @@ private:
   Database ();
   ~Database ();
 
-  DB* db;
+  leveldb::DB* db;
 
   static v8::Persistent<v8::Function> constructor;
 
@@ -67,5 +78,7 @@ private:
   LU_V8_METHOD( Batch    )
   LU_V8_METHOD( ApproximateSize)
 };
+
+} // namespace levelup
 
 #endif

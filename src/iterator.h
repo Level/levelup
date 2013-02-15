@@ -6,11 +6,11 @@
 #ifndef LU_ITERATOR_H
 #define LU_ITERATOR_H
 
-#include <cstdlib>
 #include <node.h>
 
 #include "levelup.h"
 #include "database.h"
+#include "async.h"
 
 using namespace std;
 using namespace v8;
@@ -26,7 +26,6 @@ LU_OPTION ( keys          );
 LU_OPTION ( values        );
 LU_OPTION ( keyAsBuffer   );
 LU_OPTION ( valueAsBuffer );
-LU_OPTION ( fillCache     );
 
 Handle<Value> CreateIterator (const Arguments& args);
 
@@ -60,10 +59,13 @@ public:
     , keyAsBuffer(keyAsBuffer)
     , valueAsBuffer(valueAsBuffer)
   {
-    options = new ReadOptions();
+    options    = new ReadOptions();
     options->fill_cache = fillCache;
     dbIterator = NULL;
-    count = 0;
+    count      = 0;
+    nexting    = false;
+    ended      = false;
+    endWorker  = NULL;
   };
 
   ~Iterator () {
@@ -89,6 +91,9 @@ private:
 public:
   bool keyAsBuffer;
   bool valueAsBuffer;
+  bool nexting;
+  bool ended;
+  AsyncWorker* endWorker;
 
 private:
   bool GetIterator ();

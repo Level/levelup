@@ -6,19 +6,15 @@
 #ifndef LU_ASYNC_H
 #define LU_ASYNC_H
 
-#include <cstdlib>
-#include <vector>
 #include <node.h>
 
-using namespace std;
-using namespace v8;
-using namespace leveldb;
+namespace levelup {
 
 /* abstract */ class AsyncWorker {
 public:
   AsyncWorker (
       Database* database
-    , Persistent<Function> callback
+    , v8::Persistent<v8::Function> callback
   );
 
   virtual ~AsyncWorker ();
@@ -28,8 +24,8 @@ public:
 
 protected:
   Database* database;
-  Persistent<Function> callback;
-  Status status;
+  v8::Persistent<v8::Function> callback;
+  leveldb::Status status;
   virtual void HandleOKCallback ();
   virtual void HandleErrorCallback ();
 };
@@ -37,5 +33,7 @@ protected:
 void AsyncExecute (uv_work_t* req);
 void AsyncExecuteComplete (uv_work_t* req);
 void AsyncQueueWorker (AsyncWorker* worker);
+
+} // namespace LevelUP
 
 #endif
