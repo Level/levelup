@@ -108,10 +108,10 @@ Handle<Value> levelup::Iterator::End (const Arguments& args) {
     THROW_RETURN("end() already called on iterator")
   }
 
-  Persistent<Function> endCallback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
+  Persistent<Function> callback = Persistent<Function>::New(Local<Function>::Cast(args[0]));
   EndWorker* worker = new EndWorker(
       iterator
-    , endCallback
+    , callback
   );
   iterator->ended = true;
   if (iterator->nexting) {

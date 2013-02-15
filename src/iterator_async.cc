@@ -29,7 +29,9 @@ NextWorker::NextWorker (
   , localCallback(localCallback)
 {};
 
-NextWorker::~NextWorker () {}
+NextWorker::~NextWorker () {
+  endCallback.Dispose();
+}
 
 void NextWorker::Execute () {
   ok = iterator->IteratorNext(key, value);
