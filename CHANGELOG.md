@@ -1,5 +1,5 @@
-0.5.4 (wip)
-===========
+0.5.4 @ Feb 16 2013
+===================
   * explicit namespaces in C++ @rvagg
   * memory leak, Persistent<Function> callback not Dispose()d for `readStream()` @rvagg
   * allow one next() at a time, improve end() handling @rvagg
