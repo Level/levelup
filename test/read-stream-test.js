@@ -27,7 +27,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream()
+          var rs = db.createReadStream()
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -66,7 +66,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          rs = db.readStream()
+          rs = db.createReadStream()
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -83,7 +83,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream()
+          var rs = db.createReadStream()
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -107,7 +107,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream()
+          var rs = db.createReadStream()
             , endSpy = this.spy()
             , calls = 0
           this.dataSpy = this.spy(function () {
@@ -148,7 +148,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ reverse: true })
+          var rs = db.createReadStream({ reverse: true })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -166,7 +166,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ start: '50' })
+          var rs = db.createReadStream({ start: '50' })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -185,7 +185,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ start: '50', reverse: true })
+          var rs = db.createReadStream({ start: '50', reverse: true })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -206,7 +206,7 @@ buster.testCase('ReadStream', {
           refute(err)
 
           // '49.5' doesn't actually exist but we expect it to start at '50' because '49' < '49.5' < '50' (in string terms as well as numeric)
-          var rs = db.readStream({ start: '49.5' })
+          var rs = db.createReadStream({ start: '49.5' })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -228,7 +228,7 @@ buster.testCase('ReadStream', {
           //NOTE: this is similar to the above case but we're going backwards, the important caveat with
           // reversable streams is that the start will always be the NEXT key if the actual key you specify
           // doesn't exist, not the PREVIOUS (i.e. it skips ahead to find a start key)
-          var rs = db.readStream({ start: '49.5', reverse: true })
+          var rs = db.createReadStream({ start: '49.5', reverse: true })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -250,7 +250,7 @@ buster.testCase('ReadStream', {
 
           // '499999' doesn't actually exist but we expect it to start at '50' because '49' < '499999' < '50' (in string terms)
           // the same as the previous test but we're relying solely on string ordering
-          var rs = db.readStream({ start: '499999' })
+          var rs = db.createReadStream({ start: '499999' })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -269,7 +269,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ end: '50' })
+          var rs = db.createReadStream({ end: '50' })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -288,7 +288,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ end: '50.5' })
+          var rs = db.createReadStream({ end: '50.5' })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -307,7 +307,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ end: '50555555' })
+          var rs = db.createReadStream({ end: '50555555' })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -326,7 +326,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ end: '50.5', reverse: true })
+          var rs = db.createReadStream({ end: '50.5', reverse: true })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -345,7 +345,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ start: 30, end: 70 })
+          var rs = db.createReadStream({ start: 30, end: 70 })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -364,7 +364,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ start: 70, end: 30, reverse: true })
+          var rs = db.createReadStream({ start: 70, end: 30, reverse: true })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -397,7 +397,7 @@ buster.testCase('ReadStream', {
         db.batch(data.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream()
+          var rs = db.createReadStream()
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -414,10 +414,10 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
           // read in reverse, assume all's good
-          var rs = db.readStream({ reverse: true })
+          var rs = db.createReadStream({ reverse: true })
           rs.on('close', function () {
             // now try reading the other way
-            var rs = db.readStream()
+            var rs = db.createReadStream()
             assert.isFalse(rs.writable)
             assert.isTrue(rs.readable)
             rs.on('ready', this.readySpy)
@@ -435,7 +435,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ start: 0 })
+          var rs = db.createReadStream({ start: 0 })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -454,7 +454,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ end: 0 })
+          var rs = db.createReadStream({ end: 0 })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -520,8 +520,8 @@ buster.testCase('ReadStream', {
               refute(err)
               if (err) return
               async.forEach([
-                  { readStream: dbs[0].readStream(), spy: dataSpy1 }
-                , { readStream: dbs[1].readStream(), spy: dataSpy2 }
+                  { readStream: dbs[0].createReadStream(), spy: dataSpy1 }
+                , { readStream: dbs[1].createReadStream(), spy: dataSpy2 }
               ], execute, verify)
             })
           }
@@ -530,7 +530,7 @@ buster.testCase('ReadStream', {
     }
 
 
-    // this is just a fancy way of testing levelup('/path').readStream()
+    // this is just a fancy way of testing levelup('/path').createReadStream()
     // i.e. not waiting for 'open' to complete
     // the logic for this is inside the ReadStream constructor which waits for 'ready'
   , 'test ReadStream on pre-opened db': function (done) {
@@ -539,7 +539,7 @@ buster.testCase('ReadStream', {
             refute(db.isOpen())
             refute(db.isClosed())
 
-            var rs = db.readStream()
+            var rs = db.createReadStream()
             assert.isFalse(rs.writable)
             assert.isTrue(rs.readable)
             rs.on('ready', this.readySpy)
@@ -566,7 +566,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ limit: 20 })
+          var rs = db.createReadStream({ limit: 20 })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -584,7 +584,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ start: '20', limit: 20 })
+          var rs = db.createReadStream({ start: '20', limit: 20 })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -602,7 +602,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ end: '50', limit: 20 })
+          var rs = db.createReadStream({ end: '50', limit: 20 })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -620,7 +620,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.readStream({ end: '30', limit: 50 })
+          var rs = db.createReadStream({ end: '30', limit: 50 })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs.on('ready', this.readySpy)
@@ -650,7 +650,7 @@ buster.testCase('ReadStream', {
       this.openTestDatabase(function (db) {
         db.batch(data, function (err) {
           refute(!!err)
-          var rs = db.readStream().on('close', done)
+          var rs = db.createReadStream().on('close', done)
           rs.once('data', rs.destroy.bind(rs))
         }.bind(this))
       }.bind(this))

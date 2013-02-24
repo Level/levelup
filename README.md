@@ -10,7 +10,7 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
 
 **LevelUP** aims to expose the features of LevelDB in a Node.js-friendly way. Both keys and values are treated as `Buffer` objects and are automatically converted using a specified `'encoding'`. LevelDB's iterators are exposed as a Node.js style object-`ReadStream` and writing can be peformed via an object-`WriteStream`.
 
-An important feature of LevelDB is that it stores entries sorted by keys. This makes LevelUP's <a href="#readStream"><code>ReadStream</code></a> interface is a very powerful way to look up items, particularly when combined with the `start` option.
+An important feature of LevelDB is that it stores entries sorted by keys. This makes LevelUP's <a href="#createReadStream"><code>ReadStream</code></a> interface is a very powerful way to look up items, particularly when combined with the `start` option.
 
 **LevelUP** is an **OPEN Open Source Project**, see the <a href="#contributing">Contributing</a> section to find out what this means.
 
@@ -75,10 +75,10 @@ db.put('name', 'LevelUP', function (err) {
   * <a href="#approximateSize"><code>db.<b>approximateSize()</b></code></a>
   * <a href="#isOpen"><code>db.<b>isOpen()</b></code></a>
   * <a href="#isClosed"><code>db.<b>isClosed()</b></code></a>
-  * <a href="#readStream"><code>db.<b>readStream()</b></code></a>
-  * <a href="#keyStream"><code>db.<b>keyStream()</b></code></a>
-  * <a href="#valueStream"><code>db.<b>valueStream()</b></code></a>
-  * <a href="#writeStream"><code>db.<b>writeStream()</b></code></a>
+  * <a href="#createReadStream"><code>db.<b>createReadStream()</b></code></a>
+  * <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
+  * <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
+  * <a href="#createWriteStream"><code>db.<b>createWriteStream()</b></code></a>
 
 
 --------------------------------------------------------
@@ -240,13 +240,13 @@ A LevelUP object can be in one of the following states:
 `isClosed()` will return `true` only when the state is "closing" *or* "closed", it can be useful for determining if read and write operations are permissible.
 
 --------------------------------------------------------
-<a name="readStream"></a>
-### db.readStream([options])
+<a name="createReadStream"></a>
+### db.createReadStream([options])
 
-You can obtain a **ReadStream** of the full database by calling the `readStream()` method. The resulting stream is a complete Node.js-style [Readable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_readable_stream) where `'data'` events emit objects with `'key'` and `'value'` pairs.
+You can obtain a **ReadStream** of the full database by calling the `createReadStream()` method. The resulting stream is a complete Node.js-style [Readable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_readable_stream) where `'data'` events emit objects with `'key'` and `'value'` pairs.
 
 ```js
-db.readStream()
+db.createReadStream()
   .on('data', function (data) {
     console.log(data.key, '=', data.value)
   })
@@ -263,7 +263,7 @@ db.readStream()
 
 The standard `pause()`, `resume()` and `destroy()` methods are implemented on the ReadStream, as is `pipe()` (see below). `'data'`, '`error'`, `'end'` and `'close'` events are emitted.
 
-Additionally, you can supply an options object as the first parameter to `readStream()` with the following options:
+Additionally, you can supply an options object as the first parameter to `createReadStream()` with the following options:
 
 * `'start'`: the key you wish to start the read at. By default it will start at the beginning of the store. Note that the *start* doesn't have to be an actual key that exists, LevelDB will simply find the *next* key, greater than the key you provide.
 
@@ -271,64 +271,64 @@ Additionally, you can supply an options object as the first parameter to `readSt
 
 * `'reverse'` *(boolean, default: `false`)*: a boolean, set to true if you want the stream to go in reverse order. Beware that due to the way LevelDB works, a reverse seek will be slower than a forward seek.
 
-* `'keys'` *(boolean, default: `true`)*: whether the `'data'` event should contain keys. If set to `true` and `'values'` set to `false` then `'data'` events will simply be keys, rather than objects with a `'key'` property. Used internally by the `keyStream()` method.
+* `'keys'` *(boolean, default: `true`)*: whether the `'data'` event should contain keys. If set to `true` and `'values'` set to `false` then `'data'` events will simply be keys, rather than objects with a `'key'` property. Used internally by the `createKeyStream()` method.
 
-* `'values'` *(boolean, default: `true`)*: whether the `'data'` event should contain values. If set to `true` and `'keys'` set to `false` then `'data'` events will simply be values, rather than objects with a `'value'` property. Used internally by the `valueStream()` method.
+* `'values'` *(boolean, default: `true`)*: whether the `'data'` event should contain values. If set to `true` and `'keys'` set to `false` then `'data'` events will simply be values, rather than objects with a `'value'` property. Used internally by the `createValueStream()` method.
 
 * `'limit'` *(number, default: `-1`)*: limit the number of results collected by this stream. This number represents a *maximum* number of results and may not be reached if you get to the end of the store or your `'end'` value first. A value of `-1` means there is no limit.
 
 * `'fillCache'` *(boolean, default: `false`)*: wheather LevelDB's LRU-cache should be filled with data read.
 
 --------------------------------------------------------
-<a name="keyStream"></a>
-### db.keyStream([options])
+<a name="createKeyStream"></a>
+### db.createKeyStream([options])
 
 A **KeyStream** is a **ReadStream** where the `'data'` events are simply the keys from the database so it can be used like a traditional stream rather than an object stream.
 
-You can obtain a KeyStream either by calling the `keyStream()` method on a LevelUP object or by passing passing an options object to `readStream()` with `keys` set to `true` and `values` set to `false`.
+You can obtain a KeyStream either by calling the `createKeyStream()` method on a LevelUP object or by passing passing an options object to `createReadStream()` with `keys` set to `true` and `values` set to `false`.
 
 ```js
-db.keyStream()
+db.createKeyStream()
   .on('data', function (data) {
     console.log('key=', data)
   })
 
 // same as:
-db.readStream({ keys: true, values: false })
+db.createReadStream({ keys: true, values: false })
   .on('data', function (data) {
     console.log('key=', data)
   })
 ```
 
 --------------------------------------------------------
-<a name="valueStream"></a>
-### db.valueStream([options])
+<a name="createValueStream"></a>
+### db.createValueStream([options])
 
 A **ValueStream** is a **ReadStream** where the `'data'` events are simply the values from the database so it can be used like a traditional stream rather than an object stream.
 
-You can obtain a ValueStream either by calling the `valueStream()` method on a LevelUP object or by passing passing an options object to `readStream()` with `values` set to `true` and `keys` set to `false`.
+You can obtain a ValueStream either by calling the `createValueStream()` method on a LevelUP object or by passing passing an options object to `createReadStream()` with `values` set to `true` and `keys` set to `false`.
 
 ```js
-db.valueStream()
+db.createValueStream()
   .on('data', function (data) {
     console.log('value=', data)
   })
 
 // same as:
-db.readStream({ keys: false, values: true })
+db.createReadStream({ keys: false, values: true })
   .on('data', function (data) {
     console.log('value=', data)
   })
 ```
 
 --------------------------------------------------------
-<a name="writeStream"></a>
-### db.writeStream([options])
+<a name="createWriteStream"></a>
+### db.createWriteStream([options])
 
-A **WriteStream** can be obtained by calling the `writeStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method. The WriteStream will buffer writes and submit them as a `batch()` operation where the writes occur on the same event loop tick, otherwise they are treated as simple `put()` operations.
+A **WriteStream** can be obtained by calling the `createWriteStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method. The WriteStream will buffer writes and submit them as a `batch()` operation where the writes occur on the same event loop tick, otherwise they are treated as simple `put()` operations.
 
 ```js
-db.writeStream()
+db.createWriteStream()
   .on('error', function (err) {
     console.log('Oh my!', err)
   })
@@ -350,7 +350,7 @@ A ReadStream can be piped directly to a WriteStream, allowing for easy copying o
 
 ```js
 function copy (srcdb, dstdb, callback) {
-  srcdb.readStream().pipe(dstdb.writeStream()).on('close', callback)
+  srcdb.createReadStream().pipe(dstdb.createWriteStream()).on('close', callback)
 }
 ```
 

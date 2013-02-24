@@ -48,7 +48,7 @@ buster.testCase('WriteStream', {
 
   , 'test simple WriteStream': function (done) {
       this.openTestDatabase(function (db) {
-        var ws = db.writeStream()
+        var ws = db.createWriteStream()
         ws.on('error', function (err) {
           refute(err)
         })
@@ -62,7 +62,7 @@ buster.testCase('WriteStream', {
 
   , 'test WriteStream with async writes': function (done) {
       this.openTestDatabase(function (db) {
-        var ws = db.writeStream()
+        var ws = db.createWriteStream()
 
         ws.on('error', function (err) {
           refute(err)
@@ -99,7 +99,7 @@ buster.testCase('WriteStream', {
           })
         }
 
-        var ws = db.writeStream({ useBatch: false })
+        var ws = db.createWriteStream({ useBatch: false })
 
         ws.on('error', function (err) {
           refute(err)
@@ -129,7 +129,7 @@ buster.testCase('WriteStream', {
     // at the moment, destroySoon() is basically just end()
   , 'test destroySoon()': function (done) {
       this.openTestDatabase(function (db) {
-        var ws = db.writeStream()
+        var ws = db.createWriteStream()
         ws.on('error', function (err) {
           refute(err)
         })
@@ -159,7 +159,7 @@ buster.testCase('WriteStream', {
       }
 
       this.openTestDatabase(function (db) {
-        var ws = db.writeStream()
+        var ws = db.createWriteStream()
         ws.on('error', function (err) {
           refute(err)
         })
@@ -192,7 +192,7 @@ buster.testCase('WriteStream', {
           ]
 
       this.openTestDatabase(options, function (db) {
-        var ws = db.writeStream()
+        var ws = db.createWriteStream()
         ws.on('error', function (err) {
           refute(err)
         })
