@@ -464,7 +464,7 @@ buster.testCase('Basic API', {
                     })
                   }
                 , function (callback) {
-                    db.approximateSize('', '99', function(err, size) {
+                    db.approximateSize('0', '99', function(err, size) {
                       refute(err) // sanity
                       refute.equals(size, 0)
                       callback()
