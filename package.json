@@ -21,10 +21,10 @@
       , "storage"
       , "json"
     ]
-  , "version"         : "0.6.0-rc1"
+  , "version"         : "0.6.0"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
-        "leveldown"       : "~0.1.0"
+        "leveldown"       : "~0.1.2"
       , "errno"           : "~0.0.3"
       , "concat-stream"   : "~0.1.1"
       , "simple-bufferstream" : "~0.0.2"
