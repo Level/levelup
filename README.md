@@ -12,6 +12,8 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
 
 An important feature of LevelDB is that it stores entries sorted by keys. This makes LevelUP's <a href="#createReadStream"><code>ReadStream</code></a> interface is a very powerful way to look up items, particularly when combined with the `start` option.
 
+The native LevelDB binding is now provided by a separate package, [LevelDOWN](https://github.com/rvagg/node-leveldown/).
+
 **LevelUP** is an **OPEN Open Source Project**, see the <a href="#contributing">Contributing</a> section to find out what this means.
 
   * <a href="#platforms">Tested & supported platforms</a>

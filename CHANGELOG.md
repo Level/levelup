@@ -1,3 +1,10 @@
+0.6.0 @ Feb 25 2013
+===================
+  * complete transition to LevelDOWN for the LevelDB binding. No native code left in LevelUP @rvagg
+    - LevelDOWN now keeps its own ChangeLog at: https://github.com/rvagg/node-leveldown/blob/master/CHANGELOG.md
+    - LevelDB@1.9.0 and Snappy@1.1.0 are included in LevelDOWN@0.1.2
+  * simplify callback signature (remove extra, undocumented properties from some callbacks) @rvagg / @dominictarr
+
 0.5.4 @ Feb 16 2013
 ===================
   * explicit namespaces in C++ @rvagg
