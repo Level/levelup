@@ -1,3 +1,8 @@
+0.6.1 @ 1 Mar 2013
+==================
+  * internal code cleanup & refactoring @ralphtheninja
+  * fix multiple iterator.end() calls in ReadStreams throwing errors (destroy() called while read/next is in progress) #82 #83 #84 @rvagg
+
 0.6.0 @ Feb 25 2013
 ===================
   * complete transition to LevelDOWN for the LevelDB binding. No native code left in LevelUP @rvagg
