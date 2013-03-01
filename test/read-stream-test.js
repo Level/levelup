@@ -655,4 +655,20 @@ buster.testCase('ReadStream', {
         }.bind(this))
       }.bind(this))
     }
+
+  , 'test can only end once': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.createReadStream()
+            .on('close', done)
+
+          process.nextTick(function () {
+            rs.destroy()
+          })
+
+        }.bind(this))
+      }.bind(this))
+    }
 })
