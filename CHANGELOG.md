@@ -1,3 +1,9 @@
+0.6.2 @ 4 Mar 2013
+==================
+  * use `xtend` package instead of internal util._extend @ralphtheninja
+  * internal cleanup of `callback` argument detection @ralphtheninja
+  * move deferred-open-operations into an internal `this._db` wrapper rather than make them call public .get()/.put() etc. for a second time @dominictarr
+
 0.6.1 @ 1 Mar 2013
 ==================
   * internal code cleanup & refactoring @ralphtheninja
