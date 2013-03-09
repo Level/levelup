@@ -558,5 +558,37 @@ buster.testCase('Basic API', {
             done()
           })
         }
+      , 'batch() with undefined value causes error': function (done) {
+          this.db.batch([{key: 'foo', value: undefined, type: 'put'}]
+          , function (err) {
+            assert.isInstanceOf(err, Error)
+            assert.isInstanceOf(err, errors.LevelUPError)
+            done()
+          })
+        }
+      , 'batch() with null value causes error': function (done) {
+          this.db.batch([{key: 'foo', value: null, type: 'put'}]
+          , function (err) {
+            assert.isInstanceOf(err, Error)
+            assert.isInstanceOf(err, errors.LevelUPError)
+            done()
+          })
+        }
+      , 'batch() with undefined key causes error': function (done) {
+          this.db.batch([{key: undefined, value: 'bar', type: 'put'}]
+          , function (err) {
+            assert.isInstanceOf(err, Error)
+            assert.isInstanceOf(err, errors.LevelUPError)
+            done()
+          })
+        }
+      , 'batch() with null key causes error': function (done) {
+          this.db.batch([{key: null, value: 'bar', type: 'put'}]
+          , function (err) {
+            assert.isInstanceOf(err, Error)
+            assert.isInstanceOf(err, errors.LevelUPError)
+            done()
+          })
+        }
     }
 })
