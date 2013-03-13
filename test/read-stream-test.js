@@ -3,14 +3,16 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var buster     = require('buster')
-  , assert     = buster.assert
-  , levelup    = require('../lib/levelup.js')
+var levelup    = require('../lib/levelup.js')
   , common     = require('./common')
   , SlowStream = require('slow-stream')
   , delayed    = require('delayed')
   , rimraf     = require('rimraf')
   , async      = require('async')
+
+  , assert  = require('referee').assert
+  , refute  = require('referee').refute
+  , buster  = require('bustermove')
 
   , bigBlob    = Array.apply(null, Array(1024 * 100)).map(function () { return 'aaaaaaaaaa' }).join('')
 
@@ -133,7 +135,7 @@ buster.testCase('ReadStream', {
                 refute.isNull(call.args[0].key, 'ReadStream "data" event #' + i + ' argument has "key" property')
                 refute.isNull(call.args[0].value, 'ReadStream "data" event #' + i + ' argument has "value" property')
                 assert.equals(call.args[0].key, d.key, 'ReadStream "data" event #' + i + ' argument has correct "key"')
-                assert.equals(call.args[0].value, d.value, 'ReadStream "data" event #' + i + ' argument has correct "value"')
+                assert.equals(+call.args[0].value, +d.value, 'ReadStream "data" event #' + i + ' argument has correct "value"')
               }
             }.bind(this))
             done()

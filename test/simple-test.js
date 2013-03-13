@@ -3,13 +3,15 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var buster  = require('buster')
-  , assert  = buster.assert
-  , levelup = require('../lib/levelup.js')
+var levelup = require('../lib/levelup.js')
   , errors  = require('../lib/errors.js')
   , async   = require('async')
   , fs      = require('fs')
   , common  = require('./common')
+
+  , assert  = require('referee').assert
+  , refute  = require('referee').refute
+  , buster  = require('bustermove')
 
 buster.testCase('Basic API', {
     'setUp': common.commonSetUp
@@ -24,6 +26,7 @@ buster.testCase('Basic API', {
   , 'default options': function (done) {
       var location = common.nextLocation()
       levelup(location, { createIfMissing: true, errorIfExists: true }, function (err, db) {
+        refute(err, 'no error')
         assert.isTrue(db.isOpen())
         this.closeableDatabases.push(db)
         this.cleanupDirs.push(location)

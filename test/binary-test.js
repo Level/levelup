@@ -3,18 +3,21 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var buster  = require('buster')
-  , assert  = buster.assert
-  , async   = require('async')
+var async   = require('async')
   , common  = require('./common')
+
+  , assert  = require('referee').assert
+  , refute  = require('referee').refute
+  , buster  = require('bustermove')
 
 buster.testCase('Binary API', {
     'setUp': function (done) {
-      common.commonSetUp.call(this)
-      common.loadBinaryTestData(function (err, data) {
-        refute(err)
-        this.testData = data
-        done()
+      common.commonSetUp.call(this, function () {
+        common.loadBinaryTestData(function (err, data) {
+          refute(err)
+          this.testData = data
+          done()
+        }.bind(this))
       }.bind(this))
     }
 
@@ -57,7 +60,8 @@ buster.testCase('Binary API', {
           refute(err)
           db.get(this.testData, { encoding: 'binary' }, function (err, value) {
             refute(err)
-            assert.equals(value, 'binarydata')
+            assert(value instanceof Buffer, 'value is buffer')
+            assert.equals(value.toString(), 'binarydata')
             done()
           }.bind(this))
         }.bind(this))
@@ -149,7 +153,8 @@ buster.testCase('Binary API', {
                     db.get(key, { encoding: 'binary' }, function (err, value) {
                       refute(err)
                       if (key == 'baz') {
-                        assert.equals(value, 'a' + key + 'value')
+                        assert(value instanceof Buffer, 'value is buffer')
+                        assert.equals(value.toString(), 'a' + key + 'value')
                         callback()
                       } else {
                         common.checkBinaryTestData(value, callback)
@@ -162,6 +167,4 @@ buster.testCase('Binary API', {
         )
       }.bind(this))
     }
-
-
 })

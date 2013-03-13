@@ -31,7 +31,9 @@
       , "xtend"               : "~2.0.3"
     }
   , "devDependencies" : {
-        "buster"          : "*"
+        "bustermove"      : "*"
+      , "tap"             : "*"
+      , "referee"         : "*"
       , "rimraf"          : "*"
       , "async"           : "*"
       , "fstream"         : "*"
@@ -48,7 +50,7 @@
       , "url"             : "https://github.com/rvagg/node-levelup.git"
     }
   , "scripts"         : {
-        "test"            : "buster-test"
+        "test"            : "tap test/*-test.js"
       , "functionaltests" : "node ./test/functional/fstream-test.js && node ./test/functional/binary-data-test.js && node ./test/functional/compat-test.js"
       , "alltests"        : "npm test && npm run-script functionaltests"
     }

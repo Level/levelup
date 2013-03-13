@@ -3,11 +3,12 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var buster  = require('buster')
-  , assert  = buster.assert
-  , levelup = require('../lib/levelup.js')
-  , async   = require('async')
+var levelup = require('../lib/levelup.js')
   , common  = require('./common')
+
+  , assert  = require('referee').assert
+  , refute  = require('referee').refute
+  , buster  = require('bustermove')
 
 function test(fun) {
   return function (done) {
@@ -34,7 +35,8 @@ buster.testCase('Deferred open() is patch-safe', {
 
   , 'put() on pre-opened database': test(function (db, done) {
       var put = db.put
-      var called = 0
+        , called = 0
+
       db.put = function () {
         called ++
         return put.apply(this, arguments)
@@ -47,7 +49,8 @@ buster.testCase('Deferred open() is patch-safe', {
     })
   , 'del() on pre-opened database': test(function (db, done) {
       var del = db.del
-      var called = 0
+        , called = 0
+
       db.del = function () {
         called ++
         return del.apply(this, arguments)
@@ -60,7 +63,8 @@ buster.testCase('Deferred open() is patch-safe', {
     })
   , 'batch() on pre-opened database': test(function (db, done) {
       var batch = db.batch
-      var called = 0
+        , called = 0
+
       db.batch = function () {
         called ++
         return batch.apply(this, arguments)
@@ -74,5 +78,4 @@ buster.testCase('Deferred open() is patch-safe', {
         done()
       })
     })
-
-  })
+})

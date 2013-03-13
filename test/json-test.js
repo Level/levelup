@@ -3,45 +3,49 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var buster  = require('buster')
-  , assert  = buster.assert
-  , levelup = require('../lib/levelup.js')
+var levelup = require('../lib/levelup.js')
   , async   = require('async')
   , common  = require('./common')
 
+  , assert  = require('referee').assert
+  , refute  = require('referee').refute
+  , buster  = require('bustermove')
+
 buster.testCase('JSON API', {
-    'setUp': function () {
-      common.commonSetUp.call(this)
-      this.runTest = function (testData, assertType, done) {
-        var location = common.nextLocation()
-        this.cleanupDirs.push(location)
-        levelup(location, { createIfMissing: true, errorIfExists: true, encoding: 'json' }, function (err, db) {
-          refute(err)
-          if (err) return
+    'setUp': function (done) {
+      common.commonSetUp.call(this, function () {
+        this.runTest = function (testData, assertType, done) {
+          var location = common.nextLocation()
+          this.cleanupDirs.push(location)
+          levelup(location, { createIfMissing: true, errorIfExists: true, encoding: 'json' }, function (err, db) {
+            refute(err)
+            if (err) return
 
-          this.closeableDatabases.push(db)
+            this.closeableDatabases.push(db)
 
-          async.parallel(
-              testData.map(function (d) { return db.put.bind(db, d.key, d.value) })
-            , function (err) {
-                refute(err)
+            async.parallel(
+                testData.map(function (d) { return db.put.bind(db, d.key, d.value) })
+              , function (err) {
+                  refute(err)
 
-                async.forEach(
-                    testData
-                  , function (d, callback) {
-                      db.get(d.key, function (err, value) {
-                        refute(err)
-                        assert[assertType](d.value, value)
-                        callback()
-                      })
-                    }
-                  , done
-                )
-              }
-          )
+                  async.forEach(
+                      testData
+                    , function (d, callback) {
+                        db.get(d.key, function (err, value) {
+                          refute(err)
+                          assert[assertType](d.value, value)
+                          callback()
+                        })
+                      }
+                    , done
+                  )
+                }
+            )
 
-        }.bind(this))
-      }
+          }.bind(this))
+        }
+        done()
+      }.bind(this))
     }
 
   , 'tearDown': common.commonTearDown

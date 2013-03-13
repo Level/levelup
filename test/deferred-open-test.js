@@ -3,11 +3,13 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var buster  = require('buster')
-  , assert  = buster.assert
-  , levelup = require('../lib/levelup.js')
+var levelup = require('../lib/levelup.js')
   , async   = require('async')
   , common  = require('./common')
+
+  , assert  = require('referee').assert
+  , refute  = require('referee').refute
+  , buster  = require('bustermove')
 
 buster.testCase('Deferred open()', {
     'setUp': common.commonSetUp

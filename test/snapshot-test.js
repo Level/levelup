@@ -3,11 +3,13 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var buster     = require('buster')
-  , assert     = buster.assert
-  , delayed    = require('delayed')
+var delayed    = require('delayed')
   , common     = require('./common')
   , SlowStream = require('slow-stream')
+
+  , assert  = require('referee').assert
+  , refute  = require('referee').refute
+  , buster  = require('bustermove')
 
 buster.testCase('Snapshots', {
     'setUp': common.readStreamSetUp
@@ -40,14 +42,16 @@ buster.testCase('Snapshots', {
           rs.once('close', delayed.delayed(this.verify.bind(this, rs, done), 0.05))
 
           process.nextTick(function () {
-
             // 3) Concoct and write new random data over the top of existing items.
             //    If we're not using a snapshot then then we'd expect the test
             //    to fail because it'll pick up these new values rather than the
             //    old ones.
             var newData = []
-            for (var i = 0; i < 100; i++) {
-              var k = (i < 10 ? '0' : '') + i
+              , i
+              , k
+
+            for (i = 0; i < 100; i++) {
+              k = (i < 10 ? '0' : '') + i
               newData.push({
                   type  : 'put'
                 , key   : k

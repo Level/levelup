@@ -3,43 +3,47 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var buster  = require('buster')
-  , assert  = buster.assert
-  , async   = require('async')
+var async   = require('async')
   , common  = require('./common')
 
+  , assert  = require('referee').assert
+  , refute  = require('referee').refute
+  , buster  = require('bustermove')
+
 buster.testCase('WriteStream', {
-    'setUp': function () {
-      common.commonSetUp.call(this)
+    'setUp': function (done) {
+      common.commonSetUp.call(this, function () {
+        this.timeout = 1000
 
-      this.timeout = 1000
+        this.sourceData = []
 
-      this.sourceData = []
+        for (var i = 0; i < 10; i++) {
+          this.sourceData.push({
+              type  : 'put'
+            , key   : i
+            , value : Math.random()
+          })
+        }
 
-      for (var i = 0; i < 10; i++) {
-        this.sourceData.push({
-            type  : 'put'
-          , key   : i
-          , value : Math.random()
-        })
-      }
+        this.verify = function (ws, db, done, data) {
+          if (!data) data = this.sourceData // can pass alternative data array for verification
+          assert.isFalse(ws.writable)
+          assert.isFalse(ws.readable)
+          async.forEach(
+              data
+            , function (data, callback) {
+                db.get(data.key, function (err, value) {
+                  refute(err)
+                  assert.equals(+value, +data.value, 'WriteStream data #' + data.key + ' has correct value')
+                  callback()
+                })
+              }
+            , done
+          )
+        }
 
-      this.verify = function (ws, db, done, data) {
-        if (!data) data = this.sourceData // can pass alternative data array for verification
-        assert.isFalse(ws.writable)
-        assert.isFalse(ws.readable)
-        async.forEach(
-            data
-          , function (data, callback) {
-              db.get(data.key, function (err, value) {
-                refute(err)
-                assert.equals(value, data.value, 'WriteStream data #' + data.key + ' has correct value')
-                callback()
-              })
-            }
-          , done
-        )
-      }
+        done()
+      }.bind(this))
     }
 
   , 'tearDown': common.commonTearDown

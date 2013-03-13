@@ -3,11 +3,13 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var buster  = require('buster')
-  , assert  = buster.assert
-  , levelup = require('../lib/levelup.js')
+var levelup = require('../lib/levelup.js')
   , async   = require('async')
   , common  = require('./common')
+
+  , assert  = require('referee').assert
+  , refute  = require('referee').refute
+  , buster  = require('bustermove')
 
 buster.testCase('Copy', {
     'setUp': common.commonSetUp
@@ -44,7 +46,7 @@ buster.testCase('Copy', {
               , function (data, callback) {
                   dstdb.get(data.key, function (err, value) {
                     refute(err)
-                    assert.equals(value, data.value, 'Destination data #' + data.key + ' has correct value')
+                    assert.equals(+value.toString(), data.value, 'Destination data #' + data.key + ' has correct value')
                     callback()
                   })
                 }

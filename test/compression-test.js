@@ -3,13 +3,15 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var buster     = require('buster')
-  , assert     = buster.assert
-  , async      = require('async')
+var async      = require('async')
   , du         = require('du')
   , delayed    = require('delayed')
   , levelup    = require('../')
   , common     = require('./common')
+
+  , assert  = require('referee').assert
+  , refute  = require('referee').refute
+  , buster  = require('bustermove')
 
   , compressableData = new Buffer(Array.apply(null, Array(1024 * 100)).map(function () { return 'aaaaaaaaaa' }).join(''))
   , multiples = 10

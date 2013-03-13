@@ -3,49 +3,53 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var buster  = require('buster')
-  , assert  = buster.assert
-  , common  = require('./common')
+var common  = require('./common')
+
+  , assert  = require('referee').assert
+  , refute  = require('referee').refute
+  , buster  = require('bustermove')
 
 buster.testCase('Key and Value Streams', {
-    'setUp': function () {
-      common.commonSetUp.call(this)
+    'setUp': function (done) {
+      common.commonSetUp.call(this, function () {
+        this.readySpy   = this.spy()
+        this.dataSpy    = this.spy()
+        this.endSpy     = this.spy()
+        this.sourceData = []
 
-      this.readySpy   = this.spy()
-      this.dataSpy    = this.spy()
-      this.endSpy     = this.spy()
-      this.sourceData = []
+        for (var i = 0; i < 100; i++) {
+          var k = (i < 10 ? '0' : '') + i
+          this.sourceData.push({
+              type  : 'put'
+            , key   : k
+            , value : Math.random()
+          })
+        }
 
-      for (var i = 0; i < 100; i++) {
-        var k = (i < 10 ? '0' : '') + i
-        this.sourceData.push({
-            type  : 'put'
-          , key   : k
-          , value : Math.random()
-        })
-      }
+        this.sourceKeys = Object.keys(this.sourceData)
+          .map(function (k) { return this.sourceData[k].key }.bind(this))
+        this.sourceValues = Object.keys(this.sourceData)
+          .map(function (k) { return this.sourceData[k].value }.bind(this))
 
-      this.sourceKeys = Object.keys(this.sourceData)
-        .map(function (k) { return this.sourceData[k].key }.bind(this))
-      this.sourceValues = Object.keys(this.sourceData)
-        .map(function (k) { return this.sourceData[k].value }.bind(this))
+        this.verify = function (rs, data, done) {
+          assert.isFalse(rs.writable)
+          assert.isFalse(rs.readable)
+          assert.equals(this.readySpy.callCount, 1, 'Stream emitted single "ready" event')
+          assert.equals(this.endSpy.callCount, 1, 'Stream emitted single "end" event')
+          assert.equals(this.dataSpy.callCount, data.length, 'Stream emitted correct number of "data" events')
+          data.forEach(function (d, i) {
+            var call = this.dataSpy.getCall(i)
+            if (call) {
+              //console.log('call', i, ':', call.args[0].key, '=', call.args[0].value, '(expected', d.key, '=', d.value, ')')
+              assert.equals(call.args.length, 1, 'Stream "data" event #' + i + ' fired with 1 argument')
+              assert.equals(+call.args[0].toString(), +d, 'Stream correct "data" event #' + i + ': ' + d)
+            }
+          }.bind(this))
+          done()
+        }.bind(this)
 
-      this.verify = function (rs, data, done) {
-        assert.isFalse(rs.writable)
-        assert.isFalse(rs.readable)
-        assert.equals(this.readySpy.callCount, 1, 'Stream emitted single "ready" event')
-        assert.equals(this.endSpy.callCount, 1, 'Stream emitted single "end" event')
-        assert.equals(this.dataSpy.callCount, data.length, 'Stream emitted correct number of "data" events')
-        data.forEach(function (d, i) {
-          var call = this.dataSpy.getCall(i)
-          if (call) {
-            //console.log('call', i, ':', call.args[0].key, '=', call.args[0].value, '(expected', d.key, '=', d.value, ')')
-            assert.equals(call.args.length, 1, 'Stream "data" event #' + i + ' fired with 1 argument')
-            assert.equals(call.args[0], d, 'Stream correct "data" event #' + i + ': ' + d)
-          }
-        }.bind(this))
         done()
-      }.bind(this)
+      }.bind(this))
     }
 
   , 'tearDown': common.commonTearDown
