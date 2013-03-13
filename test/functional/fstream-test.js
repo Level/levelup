@@ -3,8 +3,8 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var assert       = require('buster').assert
-  , refute       = require('buster').refute
+var assert       = require('referee').assert
+  , refute       = require('referee').refute
   , fstream      = require('fstream')
   , async        = require('async')
   , mkfiletree   = require('mkfiletree')

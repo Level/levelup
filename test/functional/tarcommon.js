@@ -3,7 +3,7 @@
  * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
  */
 
-var assert       = require('buster').assert
+var assert       = require('referee').assert
   , fs           = require('fs')
   , path         = require('path')
   , fstream      = require('fstream')
