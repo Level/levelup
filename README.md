@@ -33,11 +33,10 @@ See also a list of <a href="https://github.com/rvagg/node-levelup/wiki/Modules">
 Tested & supported platforms
 ----------------------------
 
-  * **Linux** (including ARM platforms such as Raspberry Pi)
+  * **Linux** (including ARM platforms such as Raspberry Pi *and Kindle!*)
   * **Mac OS**
   * **Solaris** (SmartOS & Nodejitsu)
-
-**Windows** support is a work in progress; see [issue #5](https://github.com/rvagg/node-levelup/issues/5) if you would like to help on that front. 
+  * **Windows** (Node 0.10 and above only, see [issue #5](https://github.com/rvagg/node-levelup/issues/5) for more info)
 
 <a name="basic"></a>
 Basic usage
@@ -417,6 +416,11 @@ LevelUP is only possible due to the excellent work of the following contributors
 <tr><th align="left">Julian Gruber</th><td><a href="https://github.com/juliangruber">GitHub/juliangruber</a></td><td><a href="http://twitter.com/juliangruber">Twitter/@juliangruber</a></td></tr>
 <tr><th align="left">Paolo Fragomeni</th><td><a href="https://github.com/hij1nx">GitHub/hij1nx</a></td><td><a href="http://twitter.com/hij1nx">Twitter/@hij1nx</a></td></tr>
 </tbody></table>
+
+### Windows
+
+A large portion of the Windows support comes from code by [Krzysztof Kowalczyk](http://blog.kowalczyk.info/) [@kjk](https://twitter.com/kjk), see his Windows LevelDB port [here](http://code.google.com/r/kkowalczyk-leveldb/). If you're using LevelUP on Windows, you should give him your thanks!
+
 
 <a name="licence"></a>
 Licence &amp; copyright
