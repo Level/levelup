@@ -6,6 +6,7 @@
 var referee = require('referee')
   , assert  = referee.assert
   , refute  = referee.refute
+  , crypto  = require('crypto')
   , async   = require('async')
   , rimraf  = require('rimraf')
   , fs      = require('fs')
@@ -97,19 +98,10 @@ module.exports.loadBinaryTestData = function (callback) {
 module.exports.binaryTestDataMD5Sum = '920725ef1a3b32af40ccd0b78f4a62fd'
 
 module.exports.checkBinaryTestData = function (testData, callback) {
-  var fname = '__tst.dat.' + Math.random()
-  fs.writeFile(fname, testData, function (err) {
-    refute(err)
-    child_process.exec('which md5sum', function (err, stdout) {
-      child_process.exec((stdout !== '' ? 'md5sum ' : 'md5 -r ') + fname, function (err, stdout, stderr) {
-        refute(err)
-        refute(stderr)
-        var md5Sum = stdout.split(' ')[0]
-        assert.equals(md5Sum, module.exports.binaryTestDataMD5Sum)
-        fs.unlink(fname, callback)
-      })
-    })
-  })
+  var md5sum = crypto.createHash('md5');
+  md5sum.update(testData)
+  assert.equals(md5sum.digest('hex'), module.exports.binaryTestDataMD5Sum)
+  callback()
 }
 
 module.exports.commonSetUp = function (done) {
