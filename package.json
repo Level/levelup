@@ -24,11 +24,12 @@
   , "version"         : "0.6.2"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
-        "leveldown"           : "~0.1.2"
+        "leveldown"           : "~0.2.1"
       , "errno"               : "~0.0.3"
       , "concat-stream"       : "~0.1.1"
       , "simple-bufferstream" : "~0.0.2"
       , "xtend"               : "~2.0.3"
+      , "prr"                 : "~0.0.0"
     }
   , "devDependencies" : {
         "bustermove"      : "*"
@@ -44,6 +45,7 @@
       , "delayed"         : "*"
       , "boganipsum"      : "*"
       , "du"              : "*"
+      , "memdown"         : "*"
     }
   , "repository"      : {
         "type"            : "git"

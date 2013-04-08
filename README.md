@@ -33,11 +33,12 @@ See also a list of <a href="https://github.com/rvagg/node-levelup/wiki/Modules">
 Tested & supported platforms
 ----------------------------
 
-  * **Linux** (including ARM platforms such as Raspberry Pi)
+  * **Linux** (including ARM platforms such as Raspberry Pi *and Kindle!*)
   * **Mac OS**
   * **Solaris** (SmartOS & Nodejitsu)
-
-**Windows** support is a work in progress; see [issue #5](https://github.com/rvagg/node-levelup/issues/5) if you would like to help on that front. 
+  * **Windows**
+    * Node 0.10 and above only, see [issue #5](https://github.com/rvagg/node-levelup/issues/5) for more info
+    * See installation instructions for *node-gyp* dependencies [here](https://github.com/TooTallNate/node-gyp#installation), you'll need these (free) components from Microsoft to compile and run any native Node add-on in Windows.
 
 <a name="basic"></a>
 Basic usage
@@ -83,6 +84,8 @@ db.put('name', 'LevelUP', function (err) {
   * <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
   * <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
   * <a href="#createWriteStream"><code>db.<b>createWriteStream()</b></code></a>
+  * <a href="#destroy"><code><b>levelup.destroy()</b></code></a>
+  * <a href="#repair"><code><b>levelup.repair()</b></code></a>
 
 
 --------------------------------------------------------
@@ -132,6 +135,8 @@ The `location` argument is available as a read-only property on the returned Lev
   <p><code>'json'</code> encoding is also supported, see below.</p>
 
 * `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: use instead of `encoding` to specify the exact encoding of both the keys and the values in this database.
+
+* `'db'` *(object, default: LevelDOWN)*: LevelUP is backed by [LevelDOWN](https://github.com/rvagg/node-leveldown/) to provide an interface to LevelDB. You can completely replace the use of LevelDOWN by providing a "factory" function that will return a LevelDOWN API compatible object given a `location` argument. For further information, see [MemDOWN](https://github.com/rvagg/node-mem/), a fully LevelDOWN API compatible replacement that uses a memory store rather than LevelDB. Also see [Abstract LevelDOWN](http://github.com/rvagg/node-abstract-leveldown), a partial implementation of the LevelDOWN API that can be used as a base prototype for a LevelDOWN substitute.
 
 Additionally, each of the main interface methods accept an optional options object that can be used to override `encoding` (or `keyEncoding` & `valueEncoding`).
 
@@ -362,6 +367,25 @@ The ReadStream is also [fstream](https://github.com/isaacs/fstream)-compatible w
 
 KeyStreams and ValueStreams can be treated like standard streams of raw data. If `'encoding'` is set to `'binary'` the `'data'` events will simply be standard Node `Buffer` objects straight out of the data store.
 
+--------------------------------------------------------
+<a name="destroy"></a>
+### levelup.destroy(location[, callback])
+<code>destroy()</code> is used to completely remove an existing LevelDB database directory. You can use this function in place of a full directory *rm* if you want to be sure to only remove LevelDB-related files. If the directory only contains LevelDB files, the directory itself will be removed as well. If there are additional, non-LevelDB files in the directory, those files, and the directory, will be left alone.
+
+The optional callback will be called when the destroy operation is complete, with a possible `error` argument.
+
+<a name="repair"></a>
+### levelup.repair(location[, callback])
+<code>repair()</code> can be used to attempt a restoration of a damaged LevelDB store. From the LevelDB documentation:
+
+> If a DB cannot be opened, you may attempt to call this method to resurrect as much of the contents of the database as possible. Some data may be lost, so be careful when calling this function on a database that contains important information.
+
+You will find information on the *repair* operation in the *LOG* file inside the store directory. 
+
+A `repair()` can also be used to perform a compaction of the LevelDB log into table files.
+
+The optional callback will be called when the repair operation is complete, with a possible `error` argument.
+
 <a name="events"></a>
 Events
 ------
@@ -415,6 +439,11 @@ LevelUP is only possible due to the excellent work of the following contributors
 <tr><th align="left">Julian Gruber</th><td><a href="https://github.com/juliangruber">GitHub/juliangruber</a></td><td><a href="http://twitter.com/juliangruber">Twitter/@juliangruber</a></td></tr>
 <tr><th align="left">Paolo Fragomeni</th><td><a href="https://github.com/hij1nx">GitHub/hij1nx</a></td><td><a href="http://twitter.com/hij1nx">Twitter/@hij1nx</a></td></tr>
 </tbody></table>
+
+### Windows
+
+A large portion of the Windows support comes from code by [Krzysztof Kowalczyk](http://blog.kowalczyk.info/) [@kjk](https://twitter.com/kjk), see his Windows LevelDB port [here](http://code.google.com/r/kkowalczyk-leveldb/). If you're using LevelUP on Windows, you should give him your thanks!
+
 
 <a name="licence"></a>
 Licence &amp; copyright
