@@ -1,3 +1,13 @@
+0.7.0 @ 8 Apr 2013
+==================
+  * Windows support in LevelDOWN @0.2.0 (@rvagg)
+  * added 'db' option on constructor to replace LevelDOWN (@rvagg)
+  * added repair() & destroy() aliases for LevelDOWN implementations (@rvagg)
+  * fix early 'close' emit in WriteStream (@rvagg)
+  * improved ReadStream reverse=true start key handling (@kesla)
+  * ReadStream empty start & end keys ignored rather than segfault (@kesla)
+  * 'encoding' option now an alias for 'valueEncoding' only, 'keyEncoding' defaults to 'utf8' and must be changed explicitly (@rvagg)
+
 0.6.2 @ 4 Mar 2013
 ==================
   * use `xtend` package instead of internal util._extend @ralphtheninja
