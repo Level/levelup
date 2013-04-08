@@ -227,9 +227,6 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          //NOTE: this is similar to the above case but we're going backwards, the important caveat with
-          // reversable streams is that the start will always be the NEXT key if the actual key you specify
-          // doesn't exist, not the PREVIOUS (i.e. it skips ahead to find a start key)
           var rs = db.createReadStream({ start: '49.5', reverse: true })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
@@ -240,7 +237,7 @@ buster.testCase('ReadStream', {
 
           // reverse & slice off the first 50 so verify() expects only the first 50 even though all 100 are in the db
           this.sourceData.reverse()
-          this.sourceData = this.sourceData.slice(49)
+          this.sourceData = this.sourceData.slice(50)
         }.bind(this))
       }.bind(this))
     }
