@@ -11,12 +11,11 @@ var errors  = require('../lib/errors.js')
   , refute  = require('referee').refute
   , buster  = require('bustermove')
 
-buster.testCase('Basic API', {
+buster.testCase('get() / put() / del()', {
     'setUp': common.commonSetUp
   , 'tearDown': common.commonTearDown
 
   , 'Simple operations': {
-
         'get() on empty database causes error': function (done) {
           this.openTestDatabase(function (db) {
             db.get('undefkey', function (err, value) {
@@ -92,5 +91,93 @@ buster.testCase('Basic API', {
             )
           })
         }
+    }
+
+  , 'test get() throwables': function (done) {
+      this.openTestDatabase(function (db) {
+
+        assert.exception(
+            db.get.bind(db)
+          , { name: 'ReadError', message: 'get() requires key and callback arguments' }
+          , 'no-arg get() throws'
+        )
+
+        assert.exception(
+            db.get.bind(db, 'foo')
+          , { name: 'ReadError', message: 'get() requires key and callback arguments' }
+          , 'callback-less, 1-arg get() throws'
+        )
+
+        assert.exception(
+            db.get.bind(db, 'foo', {})
+          , { name: 'ReadError', message: 'get() requires key and callback arguments' }
+          , 'callback-less, 2-arg get() throws'
+        )
+
+        done()
+      })
+    }
+
+  , 'test put() throwables': function (done) {
+      this.openTestDatabase(function (db) {
+
+        assert.exception(
+            db.put.bind(db)
+          , { name: 'WriteError', message: 'put() requires key and value arguments' }
+          , 'no-arg put() throws'
+        )
+
+        assert.exception(
+            db.put.bind(db, 'foo')
+          , { name: 'WriteError', message: 'put() requires key and value arguments' }
+          , 'callback-less, 1-arg put() throws'
+        )
+
+        done()
+      })
+    }
+
+  , 'test del() throwables': function (done) {
+      this.openTestDatabase(function (db) {
+
+        assert.exception(
+            db.del.bind(db)
+          , { name: 'WriteError', message: 'del() requires a key argument' }
+          , 'no-arg del() throws'
+        )
+
+        done()
+      })
+    }
+
+  , 'test approximateSize() throwables': function (done) {
+      this.openTestDatabase(function (db) {
+
+        assert.exception(
+            db.approximateSize.bind(db)
+          , { name: 'ReadError', message: 'approximateSize() requires start, end and callback arguments' }
+          , 'no-arg approximateSize() throws'
+        )
+
+        assert.exception(
+            db.approximateSize.bind(db, 'foo')
+          , { name: 'ReadError', message: 'approximateSize() requires start, end and callback arguments' }
+          , 'callback-less, 1-arg approximateSize() throws'
+        )
+
+        assert.exception(
+            db.approximateSize.bind(db, 'foo', 'bar')
+          , { name: 'ReadError', message: 'approximateSize() requires start, end and callback arguments' }
+          , 'callback-less, 2-arg approximateSize() throws'
+        )
+
+        assert.exception(
+            db.approximateSize.bind(db, 'foo', 'bar', {})
+          , { name: 'ReadError', message: 'approximateSize() requires start, end and callback arguments' }
+          , 'callback-less, 3-arg approximateSize(), no cb throws'
+        )
+
+        done()
+      })
     }
 })

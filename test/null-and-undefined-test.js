@@ -11,7 +11,7 @@ var levelup = require('../lib/levelup.js')
   , refute  = require('referee').refute
   , buster  = require('bustermove')
 
-buster.testCase('Basic API', {
+buster.testCase('null & undefined keys & values', {
     'setUp': common.commonSetUp
   , 'tearDown': common.commonTearDown
 
