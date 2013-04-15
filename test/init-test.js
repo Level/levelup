@@ -37,8 +37,11 @@ buster.testCase('Init & open()', {
           levelup(location, function (err, db) { // no options object
             refute(err)
             assert.isObject(db)
-            assert.isTrue(db._options.createIfMissing)
-            assert.isFalse(db._options.errorIfExists)
+            assert.isTrue(db.options.createIfMissing)
+            assert.isFalse(db.options.errorIfExists)
+            assert.equals(db.options.keyEncoding, 'utf8')
+            assert.equals(db.options.valueEncoding, null)
+            assert.equals(db.options.encoding, 'utf8')
             assert.equals(db.location, location)
 
             // read-only properties
@@ -53,23 +56,58 @@ buster.testCase('Init & open()', {
 
   , 'basic options': function (done) {
       var location = common.nextLocation()
-      levelup(location, { createIfMissing: true, errorIfExists: true }, function (err, db) {
-        refute(err)
+      levelup(
+          location
+        , { createIfMissing: true, errorIfExists: true, encoding: 'binary' }
+        , function (err, db) {
+            refute(err)
 
-        this.closeableDatabases.push(db)
-        this.cleanupDirs.push(location)
-        assert.isObject(db)
-        assert.isTrue(db._options.createIfMissing)
-        assert.isTrue(db._options.errorIfExists)
-        assert.equals(db.location, location)
+            this.closeableDatabases.push(db)
+            this.cleanupDirs.push(location)
+            assert.isObject(db)
+            assert.isTrue(db.options.createIfMissing)
+            assert.isTrue(db.options.errorIfExists)
+            assert.equals(db.options.keyEncoding, 'utf8')
+            assert.equals(db.options.valueEncoding, null)
+            assert.equals(db.options.encoding, 'binary')
+            assert.equals(db.location, location)
 
 
-        // read-only properties
-        db.location = 'bar'
-        assert.equals(db.location, location)
+            // read-only properties
+            db.location = 'bar'
+            assert.equals(db.location, location)
 
-        done()
-      }.bind(this))
+            done()
+          }.bind(this)
+      )
+    }
+
+  , 'options with encoding': function (done) {
+      var location = common.nextLocation()
+      levelup(
+          location
+        , { createIfMissing: true, errorIfExists: true, keyEncoding: 'ascii', valueEncoding: 'json' }
+        , function (err, db) {
+            refute(err)
+
+            this.closeableDatabases.push(db)
+            this.cleanupDirs.push(location)
+            assert.isObject(db)
+            assert.isTrue(db.options.createIfMissing)
+            assert.isTrue(db.options.errorIfExists)
+            assert.equals(db.options.keyEncoding, 'ascii')
+            assert.equals(db.options.valueEncoding, 'json')
+            assert.equals(db.options.encoding, 'utf8')
+            assert.equals(db.location, location)
+
+
+            // read-only properties
+            db.location = 'bar'
+            assert.equals(db.location, location)
+
+            done()
+          }.bind(this)
+      )
     }
 
   , 'without callback': function (done) {
@@ -79,8 +117,8 @@ buster.testCase('Init & open()', {
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
       assert.isObject(db)
-      assert.isTrue(db._options.createIfMissing)
-      assert.isTrue(db._options.errorIfExists)
+      assert.isTrue(db.options.createIfMissing)
+      assert.isTrue(db.options.errorIfExists)
       assert.equals(db.location, location)
 
       db.on("ready", function () {
