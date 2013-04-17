@@ -40,8 +40,7 @@ buster.testCase('Init & open()', {
             assert.isTrue(db.options.createIfMissing)
             assert.isFalse(db.options.errorIfExists)
             assert.equals(db.options.keyEncoding, 'utf8')
-            assert.equals(db.options.valueEncoding, null)
-            assert.equals(db.options.encoding, 'utf8')
+            assert.equals(db.options.valueEncoding, 'utf8')
             assert.equals(db.location, location)
 
             // read-only properties
@@ -68,8 +67,7 @@ buster.testCase('Init & open()', {
             assert.isTrue(db.options.createIfMissing)
             assert.isTrue(db.options.errorIfExists)
             assert.equals(db.options.keyEncoding, 'utf8')
-            assert.equals(db.options.valueEncoding, null)
-            assert.equals(db.options.encoding, 'binary')
+            assert.equals(db.options.valueEncoding, 'binary')
             assert.equals(db.location, location)
 
 
@@ -97,7 +95,6 @@ buster.testCase('Init & open()', {
             assert.isTrue(db.options.errorIfExists)
             assert.equals(db.options.keyEncoding, 'ascii')
             assert.equals(db.options.valueEncoding, 'json')
-            assert.equals(db.options.encoding, 'utf8')
             assert.equals(db.location, location)
 
 
