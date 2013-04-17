@@ -3,3 +3,4 @@ build/
 test-data.tar
 test-data.db.tar
 test/benchmarks/
+level/
