@@ -1,3 +1,10 @@
+0.8.0 @ 17 Apr 2013
+===================
+  * More comprehensive argument checking, will now report back directly or throw if there is a problem rather than on nextTick (@rvagg)
+  * Expose `.options` property on LevelUP instances. (@rvagg)
+  * Further clarify 'encoding' -> 'valueEncoding' shift. db.options.valueEncoding is now authoritative even if user used 'encoding' on initialisation. (@rvagg)
+  * 'level' package now published to npm that bundles LevelUP & LevelDOWN and exposes LevelUP directly; for planned shift to detaching LevelDOWN as a direct-dependency of LevelUP. (@rvagg)
+
 0.7.0 @ 8 Apr 2013
 ==================
   * Windows support in LevelDOWN @0.2.0 (@rvagg)
