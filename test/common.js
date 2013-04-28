@@ -116,7 +116,6 @@ module.exports.readStreamSetUp = function (done) {
   module.exports.commonSetUp.call(this, function () {
     var i, k
 
-    this.readySpy   = this.spy()
     this.dataSpy    = this.spy()
     this.endSpy     = this.spy()
     this.sourceData = []
@@ -134,7 +133,6 @@ module.exports.readStreamSetUp = function (done) {
       if (!data) data = this.sourceData // can pass alternative data array for verification
       assert.isFalse(rs.writable)
       assert.isFalse(rs.readable)
-      assert.equals(this.readySpy.callCount, 1, 'ReadStream emitted single "ready" event')
       assert.equals(this.endSpy.callCount, 1, 'ReadStream emitted single "end" event')
       assert.equals(this.dataSpy.callCount, data.length, 'ReadStream emitted correct number of "data" events')
       data.forEach(function (d, i) {
@@ -152,5 +150,6 @@ module.exports.readStreamSetUp = function (done) {
     }.bind(this)
 
     done()
+
   }.bind(this))
 }
