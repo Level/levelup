@@ -387,6 +387,21 @@ writeStream.write({
   keyEncoding: 'binary',
   valueEncoding: 'json'
 })
+
+A *WriteStream* can also invoke `del()` instead of `put()`, like so:
+```
+db.createWriteStream({ type: 'del' })
+  .on('error', function (err) {
+    console.log('Oh my!', err)
+  })
+  .on('close', function () {
+    console.log('Stream closed')
+  })
+  .write({ key: 'name', value: 'Yuri Irsenovich Kim' })
+  .write({ key: 'dob', value: '16 February 1941' })
+  .write({ key: 'spouse', value: 'Kim Young-sook' })
+  .write({ key: 'occupation', value: 'Clown' })
+  .end()
 ```
 
 #### Pipes and Node Stream compatibility
@@ -507,7 +522,7 @@ A large portion of the Windows support comes from code by [Krzysztof Kowalczyk](
 Licence &amp; copyright
 -------------------
 
-Copyright (c) 2012-2013 LevelUP contributors (listed above).
+[[Copyright]] (c) 2012-2013 LevelUP contributors (listed above).
 
 LevelUP is licensed under an MIT +no-false-attribs license. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
 

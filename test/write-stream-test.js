@@ -207,4 +207,69 @@ buster.testCase('WriteStream', {
         ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
       }.bind(this))
     }
+
+  , 'test del capabilities': function (done) {
+
+      var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'json' }
+        , data = [
+              { key: 'aa', value: { a: 'complex', obj: 100 } }
+            , { key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { key: 'ac', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { key: 'ba', value: { a: 'complex', obj: 100 } }
+            , { key: 'bb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { key: 'bc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { key: 'ca', value: { a: 'complex', obj: 100 } }
+            , { key: 'cb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+          ]
+
+      async.waterfall([
+        function(cb) {
+          this.openTestDatabase(options, function (db) {
+            cb(null, db);
+          });
+        }.bind(this),
+        function(db, cb) {
+          var ws = db.createWriteStream()
+          ws.on('error', function (err) {
+            refute(err)
+          })
+          ws.on('close', function() {
+            cb(null, db);
+          })
+          data.forEach(function (d) {
+            ws.write(d)
+          })
+          ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
+        },
+        function(db, cb) {
+          var delStream = db.createWriteStream({ type: 'del' })
+          delStream.on('error', function (err) {
+            refute(err)
+          })
+          delStream.on('close', function() {
+            cb(null, db);
+          })
+          data.forEach(function (d) {
+            delStream.write(d)
+          })
+          delStream.once('ready', delStream.end) // end after it's ready, nextTick makes this work OK
+        },
+        function(db, cb) {
+          async.forEach(
+              data
+            , function (data, callback) {
+                db.get(data.key, function (err, value) {
+                  console.log(value)
+                  // none of them should exist
+                  assert(err)
+                  refute(value)
+                  callback()
+                })
+              }
+            , cb
+          )
+        }
+      ], done)
+    }
 })
