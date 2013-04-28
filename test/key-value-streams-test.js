@@ -12,7 +12,6 @@ var common  = require('./common')
 buster.testCase('Key and Value Streams', {
     'setUp': function (done) {
       common.commonSetUp.call(this, function () {
-        this.readySpy   = this.spy()
         this.dataSpy    = this.spy()
         this.endSpy     = this.spy()
         this.sourceData = []
@@ -34,7 +33,6 @@ buster.testCase('Key and Value Streams', {
         this.verify = function (rs, data, done) {
           assert.isFalse(rs.writable)
           assert.isFalse(rs.readable)
-          assert.equals(this.readySpy.callCount, 1, 'Stream emitted single "ready" event')
           assert.equals(this.endSpy.callCount, 1, 'Stream emitted single "end" event')
           assert.equals(this.dataSpy.callCount, data.length, 'Stream emitted correct number of "data" events')
           data.forEach(function (d, i) {
@@ -63,7 +61,6 @@ buster.testCase('Key and Value Streams', {
           var rs = db.keyStream()
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
-          rs.on('ready', this.readySpy)
           rs.on('data', this.dataSpy)
           rs.on('end', this.endSpy)
           rs.on('close', this.verify.bind(this, rs, this.sourceKeys, done))
@@ -80,7 +77,6 @@ buster.testCase('Key and Value Streams', {
           var rs = db.readStream({ keys: true, values: false })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
-          rs.on('ready', this.readySpy)
           rs.on('data', this.dataSpy)
           rs.on('end', this.endSpy)
           rs.on('close', this.verify.bind(this, rs, this.sourceKeys, done))
@@ -97,7 +93,6 @@ buster.testCase('Key and Value Streams', {
           var rs = db.valueStream()
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
-          rs.on('ready', this.readySpy)
           rs.on('data', this.dataSpy)
           rs.on('end', this.endSpy)
           rs.on('close', this.verify.bind(this, rs, this.sourceValues, done))
@@ -114,7 +109,6 @@ buster.testCase('Key and Value Streams', {
           var rs = db.readStream({ keys: false, values: true })
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
-          rs.on('ready', this.readySpy)
           rs.on('data', this.dataSpy)
           rs.on('end', this.endSpy)
           rs.on('close', this.verify.bind(this, rs, this.sourceValues, done))
