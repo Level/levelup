@@ -31,7 +31,6 @@ buster.testCase('Snapshots', {
           assert.isFalse(rs.writable)
           assert.isTrue(rs.readable)
           rs = rs.pipe(new SlowStream({ maxWriteInterval: 5 }))
-          this.readySpy()
           rs.on('data' , this.dataSpy)
           rs.once('end'  , this.endSpy)
           rs.on('end', function () {
