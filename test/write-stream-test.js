@@ -212,15 +212,15 @@ buster.testCase('WriteStream', {
 
       var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'json' }
         , data = [
-              { key: 'aa', value: { a: 'complex', obj: 100 } }
-            , { key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
-            , { key: 'ac', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
-            , { key: 'ba', value: { a: 'complex', obj: 100 } }
-            , { key: 'bb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
-            , { key: 'bc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
-            , { key: 'ca', value: { a: 'complex', obj: 100 } }
-            , { key: 'cb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
-            , { key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+              { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } }
+            , { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { type: 'put', key: 'ac', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { type: 'put', key: 'ba', value: { a: 'complex', obj: 100 } }
+            , { type: 'put', key: 'bb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { type: 'put', key: 'bc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { type: 'put', key: 'ca', value: { a: 'complex', obj: 100 } }
+            , { type: 'put', key: 'cb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
           ]
 
       async.waterfall([
@@ -243,7 +243,7 @@ buster.testCase('WriteStream', {
           ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
         },
         function(db, cb) {
-          var delStream = db.createWriteStream({ type: 'del' })
+          var delStream = db.createWriteStream()
           delStream.on('error', function (err) {
             refute(err)
           })
@@ -251,6 +251,7 @@ buster.testCase('WriteStream', {
             cb(null, db);
           })
           data.forEach(function (d) {
+            d.type = "del"
             delStream.write(d)
           })
           delStream.once('ready', delStream.end) // end after it's ready, nextTick makes this work OK

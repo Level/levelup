@@ -388,17 +388,17 @@ writeStream.write({
 
 A *WriteStream* can also invoke `del()` instead of `put()`, like so:
 ```
-db.createWriteStream({ type: 'del' })
+db.createWriteStream()
   .on('error', function (err) {
     console.log('Oh my!', err)
   })
   .on('close', function () {
     console.log('Stream closed')
   })
-  .write({ key: 'name', value: 'Yuri Irsenovich Kim' })
-  .write({ key: 'dob', value: '16 February 1941' })
-  .write({ key: 'spouse', value: 'Kim Young-sook' })
-  .write({ key: 'occupation', value: 'Clown' })
+  .write({ type: 'del', key: 'name' })
+  .write({ type: 'del', key: 'dob' })
+  .write({ type: 'del', key: 'spouse' })
+  .write({ type: 'del', key: 'occupation' })
   .end()
 ```
 
