@@ -522,7 +522,7 @@ A large portion of the Windows support comes from code by [Krzysztof Kowalczyk](
 Licence &amp; copyright
 -------------------
 
-[[Copyright]] (c) 2012-2013 LevelUP contributors (listed above).
+Copyright (c) 2012-2013 LevelUP contributors (listed above).
 
 LevelUP is licensed under an MIT +no-false-attribs license. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
 
