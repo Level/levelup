@@ -123,4 +123,38 @@ buster.testCase('Encoding', {
         ws.end()
       })
     }
+  , 'test batch op encoding': function (done) {
+      this.openTestDatabase({ encoding: 'json' }, function (db) {
+        db.batch([
+            {
+              type : 'put',
+              key : new Buffer([1, 2, 3]),
+              value : new Buffer([4, 5, 6]),
+              keyEncoding : 'binary',
+              valueEncoding : 'binary'
+            }
+          , {
+              type : 'put',
+              key : 'string',
+              value : 'string'
+            }
+        ], { keyEncoding : 'utf8', valueEncoding : 'utf8' },
+        function (err) {
+          refute(err)
+          db.get(new Buffer([1, 2, 3]), {
+            keyEncoding : 'binary',
+            valueEncoding : 'binary'
+          }, function (err, val) {
+            refute(err)
+            assert.equals(val.toString(), '\u0004\u0005\u0006')
+
+            db.get('string', { encoding : 'utf8' }, function (err, val) {
+              refute(err)
+              assert.equals(val, 'string')
+              db.close(done)
+            })
+          })
+        })
+      })
+    }
 })
