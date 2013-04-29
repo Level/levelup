@@ -148,7 +148,7 @@ buster.testCase('Encoding', {
             refute(err)
             assert.equals(val.toString(), '\u0004\u0005\u0006')
 
-            db.get('string', { encoding : 'utf8' }, function (err, val) {
+            db.get('string', { valueEncoding : 'utf8' }, function (err, val) {
               refute(err)
               assert.equals(val, 'string')
               db.close(done)
