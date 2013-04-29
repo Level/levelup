@@ -16,6 +16,7 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
   * <a href="#json">JSON data</a>
   * <a href="#extending">Extending LevelUP</a>
   * <a href="#multiproc">Multi-process access</a>
+  * <a href="#support">Getting support</a>
   * <a href="#contributing">Contributing</a>
   * <a href="#licence">Licence & copyright</a>
 
@@ -427,6 +428,16 @@ Multi-process access
 LevelDB is thread-safe but is **not** suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process. Node.js clusters are made up of multiple processes so a LevelUP instance cannot be shared between them either.
 
 See the <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>wiki</b></a> for some LevelUP extensions, including [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single data store to be shared across processes.
+
+<a name="support"></a>
+Getting support
+---------------
+
+There are multiple ways you can find help in using LevelDB in Node.js:
+
+ * **IRC:** you'll find an active group of LevelUP users in the **##leveldb** channel on Freenode, including most of the contributors to this project.
+ * **Mailing list:** there is an active [Node.js LevelDB](https://groups.google.com/forum/#!forum/node-levelup) Google Group.
+ * **GitHub:** you're welcome to open an issue here on this GitHub repository if you have a question.
 
 <a name="contributing"></a>
 Contributing
