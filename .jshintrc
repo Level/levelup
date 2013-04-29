@@ -1,30 +1,60 @@
 {
     "predef": [ ]
-  , "boss": true
-  , "bitwise": true
-  , "shadow": true
-  , "trailing": true
-  , "immed": true
-  , "latedef": true
-  , "forin": false
+  , "bitwise": false
+  , "camelcase": false
   , "curly": false
-  , "debug": true
-  , "devel": false
-  , "evil": true
+  , "eqeqeq": false
+  , "forin": false
+  , "immed": false
+  , "latedef": false
+  , "noarg": true
+  , "noempty": true
+  , "nonew": true
+  , "plusplus": false
+  , "quotmark": true
   , "regexp": false
   , "undef": true
-  , "sub": true
-  , "white": false
+  , "unused": true
+  , "strict": false
+  , "trailing": true
+  , "maxlen": 120
   , "asi": true
-  , "laxbreak": true
+  , "boss": true
+  , "debug": true
   , "eqnull": true
-  , "browser": true
-  , "node": true
-  , "laxcomma": true
-  , "proto": true
-  , "expr": true
   , "es5": true
   , "esnext": true
-  , "strict": false
+  , "evil": true
+  , "expr": true
+  , "funcscope": false
+  , "globalstrict": false
+  , "iterator": false
+  , "lastsemic": true
+  , "laxbreak": true
+  , "laxcomma": true
+  , "loopfunc": true
+  , "multistr": false
+  , "onecase": false
+  , "proto": false
+  , "regexdash": false
+  , "scripturl": true
+  , "smarttabs": false
+  , "shadow": false
+  , "sub": true
+  , "supernew": false
+  , "validthis": true
+  , "browser": true
+  , "couch": false
+  , "devel": false
+  , "dojo": false
+  , "mootools": false
+  , "node": true
+  , "nonstandard": true
+  , "prototypejs": false
+  , "rhino": false
+  , "worker": true
+  , "wsh": false
+  , "nomen": false
   , "onevar": true
+  , "passfail": false
 }
