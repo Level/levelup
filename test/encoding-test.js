@@ -78,4 +78,49 @@ buster.testCase('Encoding', {
         })
       })
     }
+  , 'test write-stream encoding': function (done) {
+      this.openTestDatabase({ encoding: 'json' }, function (db) {
+        var ws = db.createWriteStream({
+          keyEncoding : 'utf8',
+          valueEncoding : 'binary'
+        })
+        ws.on('close', function () {
+          db.get('foo', {
+            keyEncoding : 'utf8',
+            valueEncoding : 'binary'
+          }, function (err, val) {
+            refute(err)
+            assert.equals(val.toString(), '\u0001\u0002\u0003')
+            db.close(done)
+          })
+        })
+        ws.write({ key : 'foo', value : new Buffer([1, 2, 3]) })
+        ws.end()
+      })
+    }
+  , 'test write-stream chunk encoding': function (done) {
+      this.openTestDatabase({ encoding: 'json' }, function (db) {
+        var ws = db.createWriteStream({
+          keyEncoding : 'utf8',
+          valueEncoding : 'binary'
+        })
+        ws.on('close', function () {
+          db.get(new Buffer([1, 2, 3]), {
+            keyEncoding : 'binary',
+            valueEncoding : 'json'
+          }, function (err, val) {
+            refute(err)
+            assert.equals(val.some, 'json')
+            db.close(done)
+          })
+        })
+        ws.write({
+          key : new Buffer([1, 2, 3]),
+          value : { some : 'json' },
+          keyEncoding : 'binary',
+          valueEncoding : 'json'
+        })
+        ws.end()
+      })
+    }
 })
