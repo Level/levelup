@@ -8,6 +8,21 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
 
 [![Build Status](https://secure.travis-ci.org/rvagg/node-levelup.png)](http://travis-ci.org/rvagg/node-levelup)
 
+  * <a href="#intro">Introduction</a>
+  * <a href="#platforms">Tested & supported platforms</a>
+  * <a href="#basic">Basic usage</a>
+  * <a href="#api">API</a>
+  * <a href="#events">Events</a>
+  * <a href="#json">JSON data</a>
+  * <a href="#extending">Extending LevelUP</a>
+  * <a href="#multiproc">Multi-process access</a>
+  * <a href="#contributing">Contributing</a>
+  * <a href="#licence">Licence & copyright</a>
+
+<a name="intro"></a>
+Introduction
+------------
+
 **[LevelDB](http://code.google.com/p/leveldb/)** is a simple key/value data store built by Google, inspired by BigTable. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, forward and reverse iteration and simple compression using the [Snappy](http://code.google.com/p/snappy/) algorithm which is optimised for speed over compression.
 
 **LevelUP** aims to expose the features of LevelDB in a Node.js-friendly way. Both keys and values are treated as `Buffer` objects and are automatically converted using a specified `'encoding'`. LevelDB's iterators are exposed as a Node.js style object-`ReadStream` and writing can be peformed via an object-`WriteStream`.
@@ -17,17 +32,6 @@ An important feature of LevelDB is that it stores entries sorted by keys. This m
 The native LevelDB binding is now provided by a separate package, [LevelDOWN](https://github.com/rvagg/node-leveldown/).
 
 **LevelUP** is an **OPEN Open Source Project**, see the <a href="#contributing">Contributing</a> section to find out what this means.
-
-  * <a href="#platforms">Tested & supported platforms</a>
-  * <a href="#basic">Basic usage</a>
-  * <a href="#api">API</a>
-  * <a href="#events">Events</a>
-  * <a href="#json">JSON data</a>
-  * <a href="#considerations">Important considerations</a>
-  * <a href="#contributing">Contributing</a>
-  * <a href="#licence">Licence & copyright</a>
-
-See also a list of <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>Node.js LevelDB modules and projects</b></a> in the wiki.
 
 <a name="platforms"></a>
 Tested & supported platforms
@@ -406,11 +410,21 @@ JSON data
 
 You specify `'json'` encoding for both keys and/or values, you can then supply JavaScript objects to LevelUP and receive them from all fetch operations, including ReadStreams. LevelUP will automatically *stringify* your objects and store them as *utf8* and parse the strings back into objects before passing them back to you.
 
-<a name="considerations"></a>
-Important considerations
-------------------------
+<a name="extending"></a>
+Extending LevelUP
+-----------------
 
-* LevelDB is thread-safe but is **not** suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process.
+A list of <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>Node.js LevelDB modules and projects</b></a> can be found in the wiki.
+
+When attempting to extend the functionality of LevelUP, it is recommended that you consider using [level-hooks](https://github.com/dominictarr/level-hooks) and/or [level-sublevel](https://github.com/dominictarr/level-sublevel). **level-sublevel** is particularly helpful for keeping additional, extension-specific, data in a LevelDB store. It allows you to partition a LevelUP instance into multiple sub-instances that each correspond to discrete namespaced key ranges.
+
+<a name="multiproc"></a>
+Multi-process access
+--------------------
+
+LevelDB is thread-safe but is **not** suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process. Node.js clusters are made up of multiple processes so a LevelUP instance cannot be shared between them either.
+
+See the <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>wiki</b></a> for some LevelUP extensions, including [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single data store to be shared across processes.
 
 <a name="contributing"></a>
 Contributing
