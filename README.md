@@ -134,7 +134,7 @@ The `location` argument is available as a read-only property on the returned Lev
 
 * `'cacheSize'` *(number, default: `8 * 1024 * 1024`)*: The size (in bytes) of the in-memory [LRU](http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used) cache with frequently used uncompressed block contents. 
 
-* `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)). You may also use `'encoding'` as an alias for `'valueEncoding'`.
+* `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)).
   <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and conversion will be performed.</p>
   <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
   <p><code>'json'</code> encoding is also supported, see below.</p>
@@ -305,7 +305,7 @@ Additionally, you can supply an options object as the first parameter to `create
 
 * `'fillCache'` *(boolean, default: `false`)*: wheather LevelDB's LRU-cache should be filled with data read.
 
-* `'keyEncoding'` / `'valueEncoding'` / `'encoding'` *(string)*: the encoding applied to each read piece of data.
+* `'keyEncoding'` / `'valueEncoding'` *(string)*: the encoding applied to each read piece of data.
 
 --------------------------------------------------------
 <a name="createKeyStream"></a>
@@ -374,13 +374,9 @@ ws.end()
 
 The standard `write()`, `end()`, `destroy()` and `destroySoon()` methods are implemented on the WriteStream. `'drain'`, `'error'`, `'close'` and `'pipe'` events are emitted.
 
-You can specify encodings both for the whole stream and individual entries.
+You can specify encodings both for the whole stream and individual entries:
 
-To set the encoding for the whole stream, provide an options object as the first parameter to `createWriteStream()` with some of those values:
-
-* `'keyEncoding'`
-* `'valueEncoding'`
-* `'encoding'`
+To set the encoding for the whole stream, provide an options object as the first parameter to `createWriteStream()` with `'keyEncoding'` and/or `'valueEncoding'`.
 
 To set the encoding for an individual entry:
 
