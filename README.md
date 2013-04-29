@@ -212,6 +212,20 @@ db.batch(ops, function (err) {
 
 See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can overwrite default `'keyEncoding'` and `'valueEncoding'` and also specify the use of `sync` filesystem operations.
 
+In addition to encoding options for the whole batch you can also overwrite the encoding per operation, like:
+
+```js
+var ops = [
+  {
+    type: 'put',
+    key: new Buffer([1, 2, 3]),
+    value: { some: 'json' },
+    keyEncoding: 'binary',
+    valueEncoding: 'json'
+  }
+]
+```
+
 --------------------------------------------------------
 <a name='approximateSize'></a>
 ### db.approximateSize(start, end, callback)
@@ -286,6 +300,8 @@ Additionally, you can supply an options object as the first parameter to `create
 
 * `'fillCache'` *(boolean, default: `false`)*: wheather LevelDB's LRU-cache should be filled with data read.
 
+* `'keyEncoding'` / `'valueEncoding'` / `'encoding'` *(string)*: the encoding applied to each read piece of data.
+
 --------------------------------------------------------
 <a name="createKeyStream"></a>
 ### db.createKeyStream([options])
@@ -350,6 +366,25 @@ db.createWriteStream()
 ```
 
 The standard `write()`, `end()`, `destroy()` and `destroySoon()` methods are implemented on the WriteStream. `'drain'`, `'error'`, `'close'` and `'pipe'` events are emitted.
+
+You can specify encodings both for the whole stream and individual entries.
+
+To set the encoding for the whole stream, provide an options object as the first parameter to `createWriteStream()` with some of those values:
+
+* `'keyEncoding'`
+* `'valueEncoding'`
+* `'encoding'`
+
+To set the encoding for an individual entry:
+
+```js
+writeStream.write({
+  key: new Buffer([1, 2, 3]),
+  value: { some: 'json' },
+  keyEncoding: 'binary',
+  valueEncoding: 'json'
+})
+```
 
 #### Pipes and Node Stream compatibility
 
