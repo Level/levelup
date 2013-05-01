@@ -8,6 +8,22 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
 
 [![Build Status](https://secure.travis-ci.org/rvagg/node-levelup.png)](http://travis-ci.org/rvagg/node-levelup)
 
+  * <a href="#intro">Introduction</a>
+  * <a href="#platforms">Tested & supported platforms</a>
+  * <a href="#basic">Basic usage</a>
+  * <a href="#api">API</a>
+  * <a href="#events">Events</a>
+  * <a href="#json">JSON data</a>
+  * <a href="#extending">Extending LevelUP</a>
+  * <a href="#multiproc">Multi-process access</a>
+  * <a href="#support">Getting support</a>
+  * <a href="#contributing">Contributing</a>
+  * <a href="#licence">Licence & copyright</a>
+
+<a name="intro"></a>
+Introduction
+------------
+
 **[LevelDB](http://code.google.com/p/leveldb/)** is a simple key/value data store built by Google, inspired by BigTable. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, forward and reverse iteration and simple compression using the [Snappy](http://code.google.com/p/snappy/) algorithm which is optimised for speed over compression.
 
 **LevelUP** aims to expose the features of LevelDB in a Node.js-friendly way. Both keys and values are treated as `Buffer` objects and are automatically converted using a specified `'encoding'`. LevelDB's iterators are exposed as a Node.js style object-`ReadStream` and writing can be peformed via an object-`WriteStream`.
@@ -17,17 +33,6 @@ An important feature of LevelDB is that it stores entries sorted by keys. This m
 The native LevelDB binding is now provided by a separate package, [LevelDOWN](https://github.com/rvagg/node-leveldown/).
 
 **LevelUP** is an **OPEN Open Source Project**, see the <a href="#contributing">Contributing</a> section to find out what this means.
-
-  * <a href="#platforms">Tested & supported platforms</a>
-  * <a href="#basic">Basic usage</a>
-  * <a href="#api">API</a>
-  * <a href="#events">Events</a>
-  * <a href="#json">JSON data</a>
-  * <a href="#considerations">Important considerations</a>
-  * <a href="#contributing">Contributing</a>
-  * <a href="#licence">Licence & copyright</a>
-
-See also a list of <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>Node.js LevelDB modules and projects</b></a> in the wiki.
 
 <a name="platforms"></a>
 Tested & supported platforms
@@ -129,7 +134,7 @@ The `location` argument is available as a read-only property on the returned Lev
 
 * `'cacheSize'` *(number, default: `8 * 1024 * 1024`)*: The size (in bytes) of the in-memory [LRU](http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used) cache with frequently used uncompressed block contents. 
 
-* `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)). You may also use `'encoding'` as an alias for `'valueEncoding'`.
+* `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)).
   <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and conversion will be performed.</p>
   <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
   <p><code>'json'</code> encoding is also supported, see below.</p>
@@ -212,6 +217,20 @@ db.batch(ops, function (err) {
 
 See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can overwrite default `'keyEncoding'` and `'valueEncoding'` and also specify the use of `sync` filesystem operations.
 
+In addition to encoding options for the whole batch you can also overwrite the encoding per operation, like:
+
+```js
+var ops = [
+  {
+    type: 'put',
+    key: new Buffer([1, 2, 3]),
+    value: { some: 'json' },
+    keyEncoding: 'binary',
+    valueEncoding: 'json'
+  }
+]
+```
+
 --------------------------------------------------------
 <a name='approximateSize'></a>
 ### db.approximateSize(start, end, callback)
@@ -286,6 +305,8 @@ Additionally, you can supply an options object as the first parameter to `create
 
 * `'fillCache'` *(boolean, default: `false`)*: wheather LevelDB's LRU-cache should be filled with data read.
 
+* `'keyEncoding'` / `'valueEncoding'` *(string)*: the encoding applied to each read piece of data.
+
 --------------------------------------------------------
 <a name="createKeyStream"></a>
 ### db.createKeyStream([options])
@@ -351,6 +372,53 @@ db.createWriteStream()
 
 The standard `write()`, `end()`, `destroy()` and `destroySoon()` methods are implemented on the WriteStream. `'drain'`, `'error'`, `'close'` and `'pipe'` events are emitted.
 
+You can specify encodings both for the whole stream and individual entries:
+
+To set the encoding for the whole stream, provide an options object as the first parameter to `createWriteStream()` with `'keyEncoding'` and/or `'valueEncoding'`.
+
+To set the encoding for an individual entry:
+
+```js
+writeStream.write({
+  key: new Buffer([1, 2, 3]),
+  value: { some: 'json' },
+  keyEncoding: 'binary',
+  valueEncoding: 'json'
+})
+
+A *WriteStream* can also invoke `del()` instead of `put()`, like so:
+```
+db.createWriteStream()
+  .on('error', function (err) {
+    console.log('Oh my!', err)
+  })
+  .on('close', function () {
+    console.log('Stream closed')
+  })
+  .write({ type: 'del', key: 'name' })
+  .write({ type: 'del', key: 'dob' })
+  .write({ type: 'put', key: 'spouse' })
+  .write({ type: 'del', key: 'occupation' })
+  .end()
+```
+
+A *WriteStream* can also be created with `del` as the default type, like so:
+```
+db.createWriteStream({ type: 'del' })
+  .on('error', function (err) {
+    console.log('Oh my!', err)
+  })
+  .on('close', function () {
+    console.log('Stream closed')
+  })
+  .write({ key: 'name' })
+  .write({ key: 'dob' })
+  // but it can be overridden
+  .write({ type: 'put', key: 'spouse' })
+  .write({ key: 'occupation' })
+  .end()
+```
+
 #### Pipes and Node Stream compatibility
 
 A ReadStream can be piped directly to a WriteStream, allowing for easy copying of an entire database. A simple `copy()` operation is included in LevelUP that performs exactly this on two open databases:
@@ -406,11 +474,31 @@ JSON data
 
 You specify `'json'` encoding for both keys and/or values, you can then supply JavaScript objects to LevelUP and receive them from all fetch operations, including ReadStreams. LevelUP will automatically *stringify* your objects and store them as *utf8* and parse the strings back into objects before passing them back to you.
 
-<a name="considerations"></a>
-Important considerations
-------------------------
+<a name="extending"></a>
+Extending LevelUP
+-----------------
 
-* LevelDB is thread-safe but is **not** suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process.
+A list of <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>Node.js LevelDB modules and projects</b></a> can be found in the wiki.
+
+When attempting to extend the functionality of LevelUP, it is recommended that you consider using [level-hooks](https://github.com/dominictarr/level-hooks) and/or [level-sublevel](https://github.com/dominictarr/level-sublevel). **level-sublevel** is particularly helpful for keeping additional, extension-specific, data in a LevelDB store. It allows you to partition a LevelUP instance into multiple sub-instances that each correspond to discrete namespaced key ranges.
+
+<a name="multiproc"></a>
+Multi-process access
+--------------------
+
+LevelDB is thread-safe but is **not** suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process. Node.js clusters are made up of multiple processes so a LevelUP instance cannot be shared between them either.
+
+See the <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>wiki</b></a> for some LevelUP extensions, including [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single data store to be shared across processes.
+
+<a name="support"></a>
+Getting support
+---------------
+
+There are multiple ways you can find help in using LevelDB in Node.js:
+
+ * **IRC:** you'll find an active group of LevelUP users in the **##leveldb** channel on Freenode, including most of the contributors to this project.
+ * **Mailing list:** there is an active [Node.js LevelDB](https://groups.google.com/forum/#!forum/node-levelup) Google Group.
+ * **GitHub:** you're welcome to open an issue here on this GitHub repository if you have a question.
 
 <a name="contributing"></a>
 Contributing

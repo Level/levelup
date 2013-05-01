@@ -207,4 +207,251 @@ buster.testCase('WriteStream', {
         ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
       }.bind(this))
     }
+
+  , 'test del capabilities for each key/value': function (done) {
+
+      var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'json' }
+        , data = [
+              { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } }
+            , { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { type: 'put', key: 'ac', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { type: 'put', key: 'ba', value: { a: 'complex', obj: 100 } }
+            , { type: 'put', key: 'bb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { type: 'put', key: 'bc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { type: 'put', key: 'ca', value: { a: 'complex', obj: 100 } }
+            , { type: 'put', key: 'cb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+          ]
+
+      async.waterfall([
+        function(cb) {
+          this.openTestDatabase(options, function (db) {
+            cb(null, db);
+          });
+        }.bind(this),
+        function(db, cb) {
+          var ws = db.createWriteStream()
+          ws.on('error', function (err) {
+            refute(err)
+          })
+          ws.on('close', function() {
+            cb(null, db);
+          })
+          data.forEach(function (d) {
+            ws.write(d)
+          })
+
+          // end after it's ready, nextTick makes this work OK
+          ws.once('ready', ws.end)
+        },
+        function(db, cb) {
+          var delStream = db.createWriteStream()
+          delStream.on('error', function (err) {
+            refute(err)
+          })
+          delStream.on('close', function() {
+            cb(null, db);
+          })
+          data.forEach(function (d) {
+            d.type = 'del'
+            delStream.write(d)
+          })
+
+          // end after it's ready, nextTick makes this work OK
+          delStream.once('ready', delStream.end)
+        },
+        function(db, cb) {
+          async.forEach(
+              data
+            , function (data, callback) {
+                db.get(data.key, function (err, value) {
+                  // none of them should exist
+                  assert(err)
+                  refute(value)
+                  callback()
+                })
+              }
+            , cb
+          )
+        }
+      ], done)
+    }
+
+  , 'test del capabilities as constructor option': function (done) {
+
+      var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'json' }
+        , data = [
+              { key: 'aa', value: { a: 'complex', obj: 100 } }
+            , { key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { key: 'ac', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { key: 'ba', value: { a: 'complex', obj: 100 } }
+            , { key: 'bb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { key: 'bc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { key: 'ca', value: { a: 'complex', obj: 100 } }
+            , { key: 'cb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+          ]
+
+      async.waterfall([
+        function(cb) {
+          this.openTestDatabase(options, function (db) {
+            cb(null, db);
+          });
+        }.bind(this),
+        function(db, cb) {
+          var ws = db.createWriteStream()
+          ws.on('error', function (err) {
+            refute(err)
+          })
+          ws.on('close', function() {
+            cb(null, db);
+          })
+          data.forEach(function (d) {
+            ws.write(d)
+          })
+
+          // end after it's ready, nextTick makes this work OK
+          ws.once('ready', ws.end)
+        },
+        function(db, cb) {
+          var delStream = db.createWriteStream({ type: 'del' })
+          delStream.on('error', function (err) {
+            refute(err)
+          })
+          delStream.on('close', function() {
+            cb(null, db);
+          })
+          data.forEach(function (d) {
+            delStream.write(d)
+          })
+
+          // end after it's ready, nextTick makes this work OK
+          delStream.once('ready', delStream.end)
+        },
+        function(db, cb) {
+          async.forEach(
+              data
+            , function (data, callback) {
+                db.get(data.key, function (err, value) {
+                  // none of them should exist
+                  assert(err)
+                  refute(value)
+                  callback()
+                })
+              }
+            , cb
+          )
+        }
+      ], done)
+    }
+
+  , 'test type at key/value level must take precedence on the constructor': function (done) {
+
+      var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'json' }
+        , data = [
+              { key: 'aa', value: { a: 'complex', obj: 100 } }
+            , { key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { key: 'ac', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { key: 'ba', value: { a: 'complex', obj: 100 } }
+            , { key: 'bb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { key: 'bc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+            , { key: 'ca', value: { a: 'complex', obj: 100 } }
+            , { key: 'cb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
+            , { key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+          ]
+        , exception = data[0]
+
+      exception['type'] = 'put'
+
+      async.waterfall([
+        function(cb) {
+          this.openTestDatabase(options, function (db) {
+            cb(null, db);
+          });
+        }.bind(this),
+        function(db, cb) {
+          var ws = db.createWriteStream()
+          ws.on('error', function (err) {
+            refute(err)
+          })
+          ws.on('close', function() {
+            cb(null, db);
+          })
+          data.forEach(function (d) {
+            ws.write(d)
+          })
+
+          // end after it's ready, nextTick makes this work OK
+          ws.once('ready', ws.end)
+        },
+        function(db, cb) {
+          var delStream = db.createWriteStream({ type: 'del' })
+          delStream.on('error', function (err) {
+            refute(err)
+          })
+          delStream.on('close', function() {
+            cb(null, db);
+          })
+          data.forEach(function (d) {
+            delStream.write(d)
+          })
+
+          // end after it's ready, nextTick makes this work OK
+          delStream.once('ready', delStream.end)
+        },
+        function(db, cb) {
+          async.forEach(
+              data
+            , function (data, callback) {
+                db.get(data.key, function (err, value) {
+                  if (data.type === 'put') {
+                    assert(value)
+                    callback()
+                  } else {
+                    assert(err)
+                    refute(value)
+                    callback()
+                  }
+                })
+              }
+            , cb
+          )
+        }
+      ], done)
+    }
+
+  , 'test ignoring pairs with the wrong type': function (done) {
+
+      async.waterfall([
+        function(cb) {
+          this.openTestDatabase(cb.bind(null, null))
+        }.bind(this),
+        function(db, cb) {
+          var ws = db.createWriteStream()
+          ws.on('error', function (err) {
+            refute(err)
+          })
+          ws.on('close', cb.bind(null, db))
+          this.sourceData.forEach(function (d) {
+            d.type = "x" + Math.random()
+            ws.write(d)
+          })
+          ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
+        }.bind(this),
+        function(db, cb) {
+          async.forEach(
+              this.sourceData
+            , function (data, callback) {
+                db.get(data.key, function (err, value) {
+                  assert(err)
+                  refute(value)
+                  callback()
+                })
+              }
+            , cb
+          )
+
+        }.bind(this)
+      ], done)
+    }
 })
