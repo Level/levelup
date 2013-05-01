@@ -419,4 +419,39 @@ buster.testCase('WriteStream', {
         }
       ], done)
     }
+
+  , 'test ignoring pairs with the wrong type': function (done) {
+
+      async.waterfall([
+        function(cb) {
+          this.openTestDatabase(cb.bind(null, null))
+        }.bind(this),
+        function(db, cb) {
+          var ws = db.createWriteStream()
+          ws.on('error', function (err) {
+            refute(err)
+          })
+          ws.on('close', cb.bind(null, db))
+          this.sourceData.forEach(function (d) {
+            d.type = "x" + Math.random()
+            ws.write(d)
+          })
+          ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
+        }.bind(this),
+        function(db, cb) {
+          async.forEach(
+              this.sourceData
+            , function (data, callback) {
+                db.get(data.key, function (err, value) {
+                  assert(err)
+                  refute(value)
+                  callback()
+                })
+              }
+            , cb
+          )
+
+        }.bind(this)
+      ], done)
+    }
 })
