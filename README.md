@@ -399,8 +399,25 @@ db.createWriteStream()
   })
   .write({ type: 'del', key: 'name' })
   .write({ type: 'del', key: 'dob' })
-  .write({ type: 'del', key: 'spouse' })
+  .write({ type: 'put', key: 'spouse' })
   .write({ type: 'del', key: 'occupation' })
+  .end()
+```
+
+A *WriteStream* can also be created with `del` as the default type, like so:
+```
+db.createWriteStream({ type: 'del' })
+  .on('error', function (err) {
+    console.log('Oh my!', err)
+  })
+  .on('close', function () {
+    console.log('Stream closed')
+  })
+  .write({ key: 'name' })
+  .write({ key: 'dob' })
+  // but it can be overridden
+  .write({ type: 'put', key: 'spouse' })
+  .write({ key: 'occupation' })
   .end()
 ```
 
