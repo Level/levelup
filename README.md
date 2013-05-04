@@ -335,18 +335,20 @@ db.createReadStream({ keys: false, values: true })
 A **WriteStream** can be obtained by calling the `createWriteStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method. The WriteStream will buffer writes and submit them as a `batch()` operation where the writes occur on the same event loop tick, otherwise they are treated as simple `put()` operations.
 
 ```js
-db.createWriteStream()
-  .on('error', function (err) {
-    console.log('Oh my!', err)
-  })
-  .on('close', function () {
-    console.log('Stream closed')
-  })
-  .write({ key: 'name', value: 'Yuri Irsenovich Kim' })
-  .write({ key: 'dob', value: '16 February 1941' })
-  .write({ key: 'spouse', value: 'Kim Young-sook' })
-  .write({ key: 'occupation', value: 'Clown' })
-  .end()
+var ws = db.createWriteStream()
+
+ws.on('error', function (err) {
+  console.log('Oh my!', err)
+})
+ws.on('close', function () {
+  console.log('Stream closed')
+})
+
+ws.write({ key: 'name', value: 'Yuri Irsenovich Kim' })
+ws.write({ key: 'dob', value: '16 February 1941' })
+ws.write({ key: 'spouse', value: 'Kim Young-sook' })
+ws.write({ key: 'occupation', value: 'Clown' })
+ws.end()
 ```
 
 The standard `write()`, `end()`, `destroy()` and `destroySoon()` methods are implemented on the WriteStream. `'drain'`, `'error'`, `'close'` and `'pipe'` events are emitted.
