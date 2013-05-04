@@ -390,35 +390,39 @@ writeStream.write({
 
 A *WriteStream* can also invoke `del()` instead of `put()`, like so:
 ```
-db.createWriteStream()
-  .on('error', function (err) {
-    console.log('Oh my!', err)
-  })
-  .on('close', function () {
-    console.log('Stream closed')
-  })
-  .write({ type: 'del', key: 'name' })
-  .write({ type: 'del', key: 'dob' })
-  .write({ type: 'put', key: 'spouse' })
-  .write({ type: 'del', key: 'occupation' })
-  .end()
+var ws = db.createWriteStream()
+
+ws.on('error', function (err) {
+  console.log('Oh my!', err)
+})
+ws.on('close', function () {
+  console.log('Stream closed')
+})
+
+ws.write({ type: 'del', key: 'name' })
+ws.write({ type: 'del', key: 'dob' })
+ws.write({ type: 'put', key: 'spouse' })
+ws.write({ type: 'del', key: 'occupation' })
+ws.end()
 ```
 
 A *WriteStream* can also be created with `del` as the default type, like so:
 ```
-db.createWriteStream({ type: 'del' })
-  .on('error', function (err) {
-    console.log('Oh my!', err)
-  })
-  .on('close', function () {
-    console.log('Stream closed')
-  })
-  .write({ key: 'name' })
-  .write({ key: 'dob' })
-  // but it can be overridden
-  .write({ type: 'put', key: 'spouse' })
-  .write({ key: 'occupation' })
-  .end()
+var ws = db.createWriteStream({ type: 'del' })
+
+ws.on('error', function (err) {
+  console.log('Oh my!', err)
+})
+ws.on('close', function () {
+  console.log('Stream closed')
+})
+
+ws.write({ key: 'name' })
+ws.write({ key: 'dob' })
+// but it can be overridden
+ws.write({ type: 'put', key: 'spouse', value: 'Ri Sol-ju' })
+ws.write({ key: 'occupation' })
+ws.end()
 ```
 
 #### Pipes and Node Stream compatibility
