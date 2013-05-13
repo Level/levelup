@@ -31,6 +31,7 @@
       , "simple-bufferstream" : "~0.0.2"
       , "xtend"               : "~2.0.3"
       , "prr"                 : "~0.0.0"
+      , "semver"              : "~1.1.4"
     }
   , "devDependencies" : {
         "leveldown"       : "~0.2.1"
@@ -49,12 +50,16 @@
       , "du"              : "*"
       , "memdown"         : "*"
     }
+  , "browser"         : {
+        "leveldown"       : false
+      , "semver"          : false
+    }
   , "repository"      : {
         "type"            : "git"
       , "url"             : "https://github.com/rvagg/node-levelup.git"
     }
   , "scripts"         : {
-        "test"            : "tap test/*-test.js"
+        "test"            : "tap test/*-test.js --stderr"
       , "functionaltests" : "node ./test/functional/fstream-test.js && node ./test/functional/binary-data-test.js && node ./test/functional/compat-test.js"
       , "alltests"        : "npm test && npm run-script functionaltests"
     }
