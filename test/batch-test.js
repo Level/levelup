@@ -108,6 +108,10 @@ buster.testCase('batch()', {
           refute(err)
 
           db.batch()
+            .put('one', '1')
+            .del('two')
+            .put('three', '3')
+            .clear()
             .del('1')
             .put('2', 'two')
             .put('3', 'three')
@@ -116,11 +120,13 @@ buster.testCase('batch()', {
               refute(err)
 
               async.forEach(
-                  ['1', '2', '3']
+                  [ 'one', 'three', '1', '2', '3']
                 , function (key, callback) {
                     db.get(key, function (err) {
-                      if (key == '1' || key == '3') assert(err)
-                      else refute(err)
+                      if ([ 'one', 'three', '1', '3' ].indexOf(key) > -1)
+                        assert(err)
+                      else
+                        refute(err)
                       callback()
                     })
                   }
@@ -228,5 +234,100 @@ buster.testCase('batch()', {
           , done
         )
       })
+    }
+
+  , 'chained batch() arguments': {
+        'setUp': function (done) {
+          this.openTestDatabase(function (db) {
+            this.db = db
+            this.batch = db.batch()
+            done()
+          }.bind(this))
+        }
+
+      , 'test batch#put() with missing `value`': function () {
+          // value = undefined
+          assert.exception(this.batch.put.bind(this.batch, 'foo1'), function (err) {
+            console.log('err.name', err.name, 'err.message', err.message)
+            if (err.name != 'WriteError')
+              return false
+            if ('value cannot be `null` or `undefined`' != err.message)
+              return false
+            return true
+          })
+
+          // value = null
+          assert.exception(this.batch.put.bind(this.batch, 'foo1', null), function (err) {
+            if (err.name != 'WriteError')
+              return false
+            if ('value cannot be `null` or `undefined`' != err.message)
+              return false
+            return true
+          })
+        }
+
+      , 'test batch#put() with missing `key`': function () {
+          // key = undefined
+          assert.exception(this.batch.put.bind(this.batch, undefined, 'foo1'), function (err) {
+            if (err.name != 'WriteError')
+              return false
+            if ('key cannot be `null` or `undefined`' != err.message)
+              return false
+            return true
+          })
+
+          // key = null
+          assert.exception(this.batch.put.bind(this.batch, null, 'foo1'), function (err) {
+            if (err.name != 'WriteError')
+              return false
+            if ('key cannot be `null` or `undefined`' != err.message)
+              return false
+            return true
+          })
+        }
+
+      , 'test batch#put() with missing `key` and `value`': function () {
+          // undefined
+          assert.exception(this.batch.put.bind(this.batch), function (err) {
+            if (err.name != 'WriteError')
+              return false
+            if ('key cannot be `null` or `undefined`' != err.message)
+              return false
+            return true
+          })
+
+          // null
+          assert.exception(this.batch.put.bind(this.batch, null, null), function (err) {
+            if (err.name != 'WriteError')
+              return false
+            if ('key cannot be `null` or `undefined`' != err.message)
+              return false
+            return true
+          })
+        }
+
+      , 'test batch#del() with missing `key`': function () {
+          // key = undefined
+          assert.exception(this.batch.del.bind(this.batch, undefined, 'foo1'), function (err) {
+            if (err.name != 'WriteError')
+              return false
+            if ('key cannot be `null` or `undefined`' != err.message)
+              return false
+            return true
+          })
+
+          // key = null
+          assert.exception(this.batch.del.bind(this.batch, null, 'foo1'), function (err) {
+            if (err.name != 'WriteError')
+              return false
+            if ('key cannot be `null` or `undefined`' != err.message)
+              return false
+            return true
+          })
+        }
+
+      , 'test batch#write() with no callback': function () {
+          this.batch.write() // should not cause an error with no cb
+        }
     }
 })
