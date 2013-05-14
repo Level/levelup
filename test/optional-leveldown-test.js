@@ -8,13 +8,16 @@ var assert  = require('referee').assert
   , buster  = require('bustermove')
   , errors  = require('../lib/errors')
 
+function clearCache () {
+  delete require.cache[require.resolve('..')]
+  delete require.cache[require.resolve('leveldown')]
+  delete require.cache[require.resolve('leveldown/package')]
+  delete require.cache[require.resolve('../lib/util')]
+}
+
 buster.testCase('Optional LevelDOWN', {
-    'setUp': function () {
-      delete require.cache[require.resolve('..')]
-      delete require.cache[require.resolve('leveldown')]
-      delete require.cache[require.resolve('leveldown/package')]
-      delete require.cache[require.resolve('../lib/util')]
-    }
+    'setUp': clearCache
+  , 'tearDown': clearCache
 
   , 'test getLevelDOWN()': function () {
       var util = require('../lib/util')
