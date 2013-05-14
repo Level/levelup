@@ -102,6 +102,35 @@ buster.testCase('batch()', {
       })
     }
 
+  , 'batch() with chained interface': function (done) {
+      this.openTestDatabase(function (db) {
+        db.put('1', 'one', function (err) {
+          refute(err)
+
+          db.batch()
+            .del('1')
+            .put('2', 'two')
+            .put('3', 'three')
+            .del('3')
+            .write(function (err) {
+              refute(err)
+
+              async.forEach(
+                  ['1', '2', '3']
+                , function (key, callback) {
+                    db.get(key, function (err) {
+                      if (key == '1' || key == '3') assert(err)
+                      else refute(err)
+                      callback()
+                    })
+                  }
+                , done
+              )
+            })
+        })
+      })
+    }
+
   , 'batch() with can manipulate data from put()': function (done) {
       // checks encoding and whatnot
       this.openTestDatabase(function (db) {
