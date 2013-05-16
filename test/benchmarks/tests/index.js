@@ -61,4 +61,34 @@ module.exports = {
       , 'LevelUP (no Snappy)' : require('./batch_int_string_x100000_levelup')
       , 'Leveled'             : require('./batch_int_string_x100000_leveled')
     }
+
+  , 'readStream x 10': {
+        'LevelUP'             : require('./readStream_x10_levelup')
+      , 'LevelUP (release)'   : require('./readStream_x10_levelup')
+      , 'LevelUP (no Snappy)' : require('./readStream_x10_levelup')
+    }
+
+  , 'readStream x 100': {
+        'LevelUP'             : require('./readStream_x100_levelup')
+      , 'LevelUP (release)'   : require('./readStream_x100_levelup')
+      , 'LevelUP (no Snappy)' : require('./readStream_x100_levelup')
+    }
+
+  , 'readStream x 1,000': {
+        'LevelUP'             : require('./readStream_x1000_levelup')
+      , 'LevelUP (release)'   : require('./readStream_x1000_levelup')
+      , 'LevelUP (no Snappy)' : require('./readStream_x1000_levelup')
+    }
+
+  , 'readStream x 10,000': {
+        'LevelUP'             : require('./readStream_x10000_levelup')
+      , 'LevelUP (release)'   : require('./readStream_x10000_levelup')
+      , 'LevelUP (no Snappy)' : require('./readStream_x10000_levelup')
+    }
+
+  , 'readStream x 100,000': {
+        'LevelUP'             : require('./readStream_x100000_levelup')
+      , 'LevelUP (release)'   : require('./readStream_x100000_levelup')
+      , 'LevelUP (no Snappy)' : require('./readStream_x100000_levelup')
+    }
 }
