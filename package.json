@@ -51,8 +51,9 @@
       , "memdown"         : "*"
     }
   , "browser"         : {
-        "leveldown"       : false
-      , "semver"          : false
+        "leveldown"         : false
+      , "leveldown/package" : false
+      , "semver"            : false
     }
   , "repository"      : {
         "type"            : "git"
