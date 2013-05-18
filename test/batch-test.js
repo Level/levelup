@@ -329,5 +329,44 @@ buster.testCase('batch()', {
       , 'test batch#write() with no callback': function () {
           this.batch.write() // should not cause an error with no cb
         }
+
+      , 'test batch operations after write()': {
+            'setUp': function (done) {
+              this.batch.put('foo', 'bar').put('boom', 'bang').del('foo').write(done)
+              this.verify = function (cb) {
+                assert.exception(cb, function (err) {
+                  if (err.name != 'WriteError')
+                    return false
+                  if ('write() already called on this batch' != err.message)
+                    return false
+                  return true
+                })
+              }
+            }
+
+          , 'test put()': function () {
+              this.verify(function () {
+                this.batch.put('whoa', 'dude')
+              }.bind(this))
+            }
+
+          , 'test del()': function () {
+              this.verify(function () {
+                this.batch.del('foo')
+              }.bind(this))
+            }
+
+          , 'test clear()': function () {
+              this.verify(function () {
+                this.batch.clear()
+              }.bind(this))
+            }
+
+          , 'test write()': function () {
+              this.verify(function () {
+                this.batch.write()
+              }.bind(this))
+            }
+        }
     }
 })
