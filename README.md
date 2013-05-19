@@ -24,13 +24,13 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
 Introduction
 ------------
 
-**[LevelDB](http://code.google.com/p/leveldb/)** is a simple key/value data store built by Google, inspired by BigTable. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, forward and reverse iteration and simple compression using the [Snappy](http://code.google.com/p/snappy/) algorithm which is optimised for speed over compression.
+**[LevelDB](http://code.google.com/p/leveldb/)** is a simple key/value data store built by Google, inspired by BigTable. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, bi-directional iterators and simple compression using the very fast [Snappy](http://code.google.com/p/snappy/) algorithm.
 
-**LevelUP** aims to expose the features of LevelDB in a Node.js-friendly way. Both keys and values are treated as `Buffer` objects and are automatically converted using a specified `'encoding'`. LevelDB's iterators are exposed as a Node.js style object-`ReadStream` and writing can be peformed via an object-`WriteStream`.
+**LevelUP** aims to expose the features of LevelDB in a **Node.js-friendly way**. All standard `Buffer` encoding types are supported, as is a special JSON encoding. LevelDB's iterators are exposed as a Node.js-style **readable stream** a matching **writeable stream* converts writes to *batch* operations.
 
-An important feature of LevelDB is that it stores entries sorted by keys. This makes LevelUP's <a href="#createReadStream"><code>ReadStream</code></a> interface is a very powerful way to look up items, particularly when combined with the `start` option.
+LevelDB stores entries **sorted lexicographically by keys**. This makes LevelUP's <a href="#createReadStream"><code>ReadStream</code></a> interface is a very powerful query mechanism.
 
-The native LevelDB binding is now provided by a separate package, [LevelDOWN](https://github.com/rvagg/node-leveldown/).
+LevelUP is backed by [LevelDOWN](https://github.com/rvagg/node-leveldown/) which provides a pure C++ binding to LevelDB and can be used as a stand-along package if required.
 
 **LevelUP** is an **OPEN Open Source Project**, see the <a href="#contributing">Contributing</a> section to find out what this means.
 
@@ -38,12 +38,10 @@ The native LevelDB binding is now provided by a separate package, [LevelDOWN](ht
 Tested & supported platforms
 ----------------------------
 
-  * **Linux** (including ARM platforms such as Raspberry Pi *and Kindle!*)
+  * **Linux**: including ARM platforms such as Raspberry Pi *and Kindle!*
   * **Mac OS**
-  * **Solaris** (SmartOS & Nodejitsu)
-  * **Windows**
-    * Node 0.10 and above only, see [issue #5](https://github.com/rvagg/node-levelup/issues/5) for more info
-    * See installation instructions for *node-gyp* dependencies [here](https://github.com/TooTallNate/node-gyp#installation), you'll need these (free) components from Microsoft to compile and run any native Node add-on in Windows.
+  * **Solaris**: including Joyent's SmartOS & Nodejitsu
+  * **Windows**: Node 0.10 and above only. See installation instructions for *node-gyp's* dependencies [here](https://github.com/TooTallNate/node-gyp#installation), you'll need these (free) components from Microsoft to compile and run any native Node add-on in Windows.
 
 <a name="basic"></a>
 Basic usage
@@ -81,16 +79,21 @@ db.put('name', 'LevelUP', function (err) {
   * <a href="#put"><code>db.<b>put()</b></code></a>
   * <a href="#get"><code>db.<b>get()</b></code></a>
   * <a href="#del"><code>db.<b>del()</b></code></a>
-  * <a href="#batch"><code>db.<b>batch()</b></code></a>
-  * <a href="#approximateSize"><code>db.<b>approximateSize()</b></code></a>
+  * <a href="#batch"><code>db.<b>batch()</b></code> *(array form)*</a>
+  * <a href="#batch_chained"><code>db.<b>batch()</b></code> *(chained form)*</a>
   * <a href="#isOpen"><code>db.<b>isOpen()</b></code></a>
   * <a href="#isClosed"><code>db.<b>isClosed()</b></code></a>
   * <a href="#createReadStream"><code>db.<b>createReadStream()</b></code></a>
   * <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
   * <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
   * <a href="#createWriteStream"><code>db.<b>createWriteStream()</b></code></a>
-  * <a href="#destroy"><code><b>levelup.destroy()</b></code></a>
-  * <a href="#repair"><code><b>levelup.repair()</b></code></a>
+
+### Special operations exposed by LevelDOWN
+
+  * <a href="#approximateSize"><code>db.db.<b>approximateSize()</b></code></a>
+  * <a href="#getProperty"><code>db.db.<b>getProperty()</b></code></a>
+  * <a href="#destroy"><code><b>leveldown.destroy()</b></code></a>
+  * <a href="#repair"><code><b>leveldown.repair()</b></code></a>
 
 
 --------------------------------------------------------
@@ -194,7 +197,7 @@ A `'sync'` option can also be passed, see <a href="#put"><code>put()</code></a> 
 
 --------------------------------------------------------
 <a name="batch"></a>
-### db.batch(array[, options][, callback])
+### db.batch(array[, options][, callback]) *(array form)*
 <code>batch()</code> can be used for very fast bulk-write operations (both *put* and *delete*). The `array` argument should contain a list of operations to be executed sequentially, although as a whole they are performed as an atomic operation inside LevelDB. Each operation is contained in an object having the following properties: `type`, `key`, `value`, where the *type* is either `'put'` or `'del'`. In the case of `'del'` the `'value'` property is ignored. Any entries with a `'key'` of `null` or `undefined` will cause an error to be returned on the `callback` and any `'type': 'put'` entry with a `'value'` of `null` or `undefined` will return an error.
 
 ```js
@@ -211,7 +214,6 @@ db.batch(ops, function (err) {
   console.log('Great success dear leader!')
 })
 ```
-
 
 #### `options`
 
@@ -232,16 +234,40 @@ var ops = [
 ```
 
 --------------------------------------------------------
-<a name='approximateSize'></a>
-### db.approximateSize(start, end, callback)
-<code>approximateSize()</code> can used to get the approximate number of bytes of file system space used by the range `[start..end)`. The result may not include recently written data.
+<a name="batch_chained"></a>
+### db.batch() *(chained form)*
+<code>batch()</code>, when called with no arguments will return a `Batch` object which can be used to build, and eventually commit, an atomic LevelDB batch operation. Depending on how it's used, it is possible to obtain greater performance when using the chained form of `batch()` over the array form.
 
 ```js
-db.approximateSize('a', 'c', function (err, size) {
-  if (err) return console.error('Ooops!', err)
-  console.log('Approximate size of range is %d', size)
-})
+db.batch()
+  .del('father')
+  .put('name', 'Yuri Irsenovich Kim')
+  .put('dob', '16 February 1941')
+  .put('spouse', 'Kim Young-sook')
+  .put('occupation', 'Clown')
+  .write(function () { console.log('Done!') })
 ```
+
+<b><code>batch.put(key, value[, options])</code></b>
+
+Queue a *put* operation on the current batch, not committed until a `write()` is called on the batch.
+
+The optional `options` argument can be used to override the default `'keyEncoding'` and/or `'valueEncoding'`.
+
+<b><code>batch.del(key[, options])</code></b>
+
+Queue a *del* operation on the current batch, not committed until a `write()` is called on the batch.
+
+The optional `options` argument can be used to override the default `'keyEncoding'`.
+
+<b><code>batch.clear()</code></b>
+
+Clear all queued operations on the current batch, any previous operations will be discarded.
+
+<b><code>batch.write([callback])</code></b>
+
+Commit the queued operations for this batch. All operations not *cleared* will be written to the database atomically, that is, they will either all succeed or fail with no partial commits. The optional `callback` will be called when the operation has completed with an *error* argument if an error has occurred.
+
 
 --------------------------------------------------------
 <a name="isOpen"></a>
@@ -353,7 +379,9 @@ db.createReadStream({ keys: false, values: true })
 <a name="createWriteStream"></a>
 ### db.createWriteStream([options])
 
-A **WriteStream** can be obtained by calling the `createWriteStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method. The WriteStream will buffer writes and submit them as a `batch()` operation where the writes occur on the same event loop tick, otherwise they are treated as simple `put()` operations.
+A **WriteStream** can be obtained by calling the `createWriteStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method.
+
+The WriteStream will buffer writes and submit them as a `batch()` operations where writes occur *within the same tick*.
 
 ```js
 var ws = db.createWriteStream()
@@ -387,9 +415,13 @@ writeStream.write({
   keyEncoding: 'binary',
   valueEncoding: 'json'
 })
-
-A *WriteStream* can also invoke `del()` instead of `put()`, like so:
 ```
+
+#### write({ type: 'put' })
+
+If individual `write()` operations are performed with a `'type'` property of `'del'`, they will be passed on as `'del'` operations to the batch.
+
+```js
 var ws = db.createWriteStream()
 
 ws.on('error', function (err) {
@@ -406,8 +438,11 @@ ws.write({ type: 'del', key: 'occupation' })
 ws.end()
 ```
 
-A *WriteStream* can also be created with `del` as the default type, like so:
-```
+#### db.createWriteStream({ type: 'put' })
+
+If the *WriteStream* is created a `'type'` option of `'del'`, all `write()` operations will be interpreted as `'del'`, unless explicitly specified as `'put'`.
+
+```js
 var ws = db.createWriteStream({ type: 'del' })
 
 ws.on('error', function (err) {
@@ -439,15 +474,63 @@ The ReadStream is also [fstream](https://github.com/isaacs/fstream)-compatible w
 
 KeyStreams and ValueStreams can be treated like standard streams of raw data. If `'keyEncoding'` or `'valueEncoding'` is set to `'binary'` the `'data'` events will simply be standard Node `Buffer` objects straight out of the data store.
 
+
+--------------------------------------------------------
+<a name='approximateSize'></a>
+### db.db.approximateSize(start, end, callback)
+<code>approximateSize()</code> can used to get the approximate number of bytes of file system space used by the range `[start..end)`. The result may not include recently written data.
+
+```js
+var db = require('level')('./huge.db')
+
+db.db.approximateSize('a', 'c', function (err, size) {
+  if (err) return console.error('Ooops!', err)
+  console.log('Approximate size of range is %d', size)
+})
+```
+
+**Note:** `approximateSize()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/), which by default is accessible as the `db` property of your LevelUP instance. This is a specific LevelDB operation and is not likely to be available where you replace LevelDOWN with an alternative back-end via the `'db'` option.
+
+
+--------------------------------------------------------
+<a name='getProperty'></a>
+### db.db.getProperty(property)
+<code>getProperty</code> can be used to get internal details from LevelDB. When issued with a valid property string, a readable string will be returned (this method is synchronous).
+
+Currently, the only valid properties are:
+
+* <b><code>'leveldb.num-files-at-levelN'</code></b>: return the number of files at level *N*, where N is an integer representing a valid level (e.g. "0").
+
+* <b><code>'leveldb.stats'</code></b>: returns a multi-line string describing statistics about LevelDB's internal operation.
+
+* <b><code>'leveldb.sstables'</code></b>: returns a multi-line string describing all of the *sstables* that make up contents of the current database.
+
+
+```js
+var db = require('level')('./huge.db')
+console.log(db.db.getProperty('leveldb.num-files-at-level3'))
+// → '243'
+```
+
+**Note:** `getProperty()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/), which by default is accessible as the `db` property of your LevelUP instance. This is a specific LevelDB operation and is not likely to be available where you replace LevelDOWN with an alternative back-end via the `'db'` option.
+
+
 --------------------------------------------------------
 <a name="destroy"></a>
-### levelup.destroy(location[, callback])
+### leveldown.destroy(location, callback)
 <code>destroy()</code> is used to completely remove an existing LevelDB database directory. You can use this function in place of a full directory *rm* if you want to be sure to only remove LevelDB-related files. If the directory only contains LevelDB files, the directory itself will be removed as well. If there are additional, non-LevelDB files in the directory, those files, and the directory, will be left alone.
 
-The optional callback will be called when the destroy operation is complete, with a possible `error` argument.
+The callback will be called when the destroy operation is complete, with a possible `error` argument.
 
+**Note:** `destroy()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/) which you will have to have available to `require()`, e.g.:
+
+```js
+require('leveldown').destroy('./huge.db', function () { console.log('done!') })
+```
+
+--------------------------------------------------------
 <a name="repair"></a>
-### levelup.repair(location[, callback])
+### leveldown.repair(location, callback)
 <code>repair()</code> can be used to attempt a restoration of a damaged LevelDB store. From the LevelDB documentation:
 
 > If a DB cannot be opened, you may attempt to call this method to resurrect as much of the contents of the database as possible. Some data may be lost, so be careful when calling this function on a database that contains important information.
@@ -456,7 +539,15 @@ You will find information on the *repair* operation in the *LOG* file inside the
 
 A `repair()` can also be used to perform a compaction of the LevelDB log into table files.
 
-The optional callback will be called when the repair operation is complete, with a possible `error` argument.
+The callback will be called when the repair operation is complete, with a possible `error` argument.
+
+**Note:** `destroy()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/) which you will have to have available to `require()`, e.g.:
+
+```js
+require('leveldown').repair('./huge.db', function () { console.log('done!') })
+```
+
+--------------------------------------------------------
 
 <a name="events"></a>
 Events
