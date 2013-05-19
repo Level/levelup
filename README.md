@@ -8,41 +8,73 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
 
 [![Build Status](https://secure.travis-ci.org/rvagg/node-levelup.png)](http://travis-ci.org/rvagg/node-levelup)
 
-**[LevelDB](http://code.google.com/p/leveldb/)** is a simple key/value data store built by Google, inspired by BigTable. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, forward and reverse iteration and simple compression using the [Snappy](http://code.google.com/p/snappy/) algorithm which is optimised for speed over compression.
-
-**LevelUP** aims to expose the features of LevelDB in a Node.js-friendly way. Both keys and values are treated as `Buffer` objects and are automatically converted using a specified `'encoding'`. LevelDB's iterators are exposed as a Node.js style object-`ReadStream` and writing can be peformed via an object-`WriteStream`.
-
-An important feature of LevelDB is that it stores entries sorted by keys. This makes LevelUP's <a href="#createReadStream"><code>ReadStream</code></a> interface is a very powerful way to look up items, particularly when combined with the `start` option.
-
-The native LevelDB binding is now provided by a separate package, [LevelDOWN](https://github.com/rvagg/node-leveldown/).
-
-**LevelUP** is an **OPEN Open Source Project**, see the <a href="#contributing">Contributing</a> section to find out what this means.
-
+  * <a href="#intro">Introduction</a>
+  * <a href="#leveldown">Relationship to LevelDOWN</a>
   * <a href="#platforms">Tested & supported platforms</a>
   * <a href="#basic">Basic usage</a>
   * <a href="#api">API</a>
   * <a href="#events">Events</a>
   * <a href="#json">JSON data</a>
-  * <a href="#considerations">Important considerations</a>
+  * <a href="#extending">Extending LevelUP</a>
+  * <a href="#multiproc">Multi-process access</a>
+  * <a href="#support">Getting support</a>
   * <a href="#contributing">Contributing</a>
   * <a href="#licence">Licence & copyright</a>
 
-See also a list of <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>Node.js LevelDB modules and projects</b></a> in the wiki.
+<a name="intro"></a>
+Introduction
+------------
+
+**[LevelDB](http://code.google.com/p/leveldb/)** is a simple key/value data store built by Google, inspired by BigTable. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, bi-directional iterators and simple compression using the very fast [Snappy](http://code.google.com/p/snappy/) algorithm.
+
+**LevelUP** aims to expose the features of LevelDB in a **Node.js-friendly way**. All standard `Buffer` encoding types are supported, as is a special JSON encoding. LevelDB's iterators are exposed as a Node.js-style **readable stream** a matching **writeable stream* converts writes to *batch* operations.
+
+LevelDB stores entries **sorted lexicographically by keys**. This makes LevelUP's <a href="#createReadStream"><code>ReadStream</code></a> interface is a very powerful query mechanism.
+
+**LevelUP** is an **OPEN Open Source Project**, see the <a href="#contributing">Contributing</a> section to find out what this means.
+
+<a name="leveldown"></a>
+Relationship to LevelDOWN
+-------------------------
+
+LevelUP is designed to be backed by **[LevelDOWN](https://github.com/rvagg/node-leveldown/)** which provides a pure C++ binding to LevelDB and can be used as a stand-along package if required.
+
+**As of version 0.9, LevelUP no longer requires LevelDOWN as a dependency so you must `npm install leveldown` when you install LevelUP.**
+
+LevelDOWN is now optional because LevelUP can be used with alternative backends, such as **[level.js](https://github.com/maxogden/level.js)** in the browser or [MemDOWN](https://github.com/rvagg/node-memdown) for a pure in-memory store.
+
+LevelUP will look for LevelDOWN and throw an error if it can't find it in its Node `require()` path. It will also tell you if the installed version of LevelDOWN is incompatible.
+
+**The [level](https://github.com/level/level) package is available as an alternative installation mechanism.** Install it instead to automatically get both LevelUP & LevelDOWN. It exposes LevelUP on its export (i.e. you can `var leveldb = require('level')`).
+
 
 <a name="platforms"></a>
 Tested & supported platforms
 ----------------------------
 
-  * **Linux** (including ARM platforms such as Raspberry Pi *and Kindle!*)
+  * **Linux**: including ARM platforms such as Raspberry Pi *and Kindle!*
   * **Mac OS**
-  * **Solaris** (SmartOS & Nodejitsu)
-  * **Windows**
-    * Node 0.10 and above only, see [issue #5](https://github.com/rvagg/node-levelup/issues/5) for more info
-    * See installation instructions for *node-gyp* dependencies [here](https://github.com/TooTallNate/node-gyp#installation), you'll need these (free) components from Microsoft to compile and run any native Node add-on in Windows.
+  * **Solaris**: including Joyent's SmartOS & Nodejitsu
+  * **Windows**: Node 0.10 and above only. See installation instructions for *node-gyp's* dependencies [here](https://github.com/TooTallNate/node-gyp#installation), you'll need these (free) components from Microsoft to compile and run any native Node add-on in Windows.
 
 <a name="basic"></a>
 Basic usage
 -----------
+
+First you need to install LevelUP!
+
+```sh
+$ npm install levelup leveldown
+```
+
+Or
+
+```sh
+$ npm install level
+```
+
+*(this second option requires you to use LevelUP by calling `var levelup = require('level')`)*
+
 
 All operations are asynchronous although they don't necessarily require a callback if you don't need to know when the operation was performed.
 
@@ -76,16 +108,21 @@ db.put('name', 'LevelUP', function (err) {
   * <a href="#put"><code>db.<b>put()</b></code></a>
   * <a href="#get"><code>db.<b>get()</b></code></a>
   * <a href="#del"><code>db.<b>del()</b></code></a>
-  * <a href="#batch"><code>db.<b>batch()</b></code></a>
-  * <a href="#approximateSize"><code>db.<b>approximateSize()</b></code></a>
+  * <a href="#batch"><code>db.<b>batch()</b></code> *(array form)*</a>
+  * <a href="#batch_chained"><code>db.<b>batch()</b></code> *(chained form)*</a>
   * <a href="#isOpen"><code>db.<b>isOpen()</b></code></a>
   * <a href="#isClosed"><code>db.<b>isClosed()</b></code></a>
   * <a href="#createReadStream"><code>db.<b>createReadStream()</b></code></a>
   * <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
   * <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
   * <a href="#createWriteStream"><code>db.<b>createWriteStream()</b></code></a>
-  * <a href="#destroy"><code><b>levelup.destroy()</b></code></a>
-  * <a href="#repair"><code><b>levelup.repair()</b></code></a>
+
+### Special operations exposed by LevelDOWN
+
+  * <a href="#approximateSize"><code>db.db.<b>approximateSize()</b></code></a>
+  * <a href="#getProperty"><code>db.db.<b>getProperty()</b></code></a>
+  * <a href="#destroy"><code><b>leveldown.destroy()</b></code></a>
+  * <a href="#repair"><code><b>leveldown.repair()</b></code></a>
 
 
 --------------------------------------------------------
@@ -129,7 +166,7 @@ The `location` argument is available as a read-only property on the returned Lev
 
 * `'cacheSize'` *(number, default: `8 * 1024 * 1024`)*: The size (in bytes) of the in-memory [LRU](http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used) cache with frequently used uncompressed block contents. 
 
-* `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)). You may also use `'encoding'` as an alias for `'valueEncoding'`.
+* `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)).
   <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and conversion will be performed.</p>
   <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
   <p><code>'json'</code> encoding is also supported, see below.</p>
@@ -189,7 +226,7 @@ A `'sync'` option can also be passed, see <a href="#put"><code>put()</code></a> 
 
 --------------------------------------------------------
 <a name="batch"></a>
-### db.batch(array[, options][, callback])
+### db.batch(array[, options][, callback]) *(array form)*
 <code>batch()</code> can be used for very fast bulk-write operations (both *put* and *delete*). The `array` argument should contain a list of operations to be executed sequentially, although as a whole they are performed as an atomic operation inside LevelDB. Each operation is contained in an object having the following properties: `type`, `key`, `value`, where the *type* is either `'put'` or `'del'`. In the case of `'del'` the `'value'` property is ignored. Any entries with a `'key'` of `null` or `undefined` will cause an error to be returned on the `callback` and any `'type': 'put'` entry with a `'value'` of `null` or `undefined` will return an error.
 
 ```js
@@ -207,22 +244,59 @@ db.batch(ops, function (err) {
 })
 ```
 
-
 #### `options`
 
 See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can overwrite default `'keyEncoding'` and `'valueEncoding'` and also specify the use of `sync` filesystem operations.
 
---------------------------------------------------------
-<a name='approximateSize'></a>
-### db.approximateSize(start, end, callback)
-<code>approximateSize()</code> can used to get the approximate number of bytes of file system space used by the range `[start..end)`. The result may not include recently written data.
+In addition to encoding options for the whole batch you can also overwrite the encoding per operation, like:
 
 ```js
-db.approximateSize('a', 'c', function (err, size) {
-  if (err) return console.error('Ooops!', err)
-  console.log('Approximate size of range is %d', size)
-})
+var ops = [
+  {
+    type: 'put',
+    key: new Buffer([1, 2, 3]),
+    value: { some: 'json' },
+    keyEncoding: 'binary',
+    valueEncoding: 'json'
+  }
+]
 ```
+
+--------------------------------------------------------
+<a name="batch_chained"></a>
+### db.batch() *(chained form)*
+<code>batch()</code>, when called with no arguments will return a `Batch` object which can be used to build, and eventually commit, an atomic LevelDB batch operation. Depending on how it's used, it is possible to obtain greater performance when using the chained form of `batch()` over the array form.
+
+```js
+db.batch()
+  .del('father')
+  .put('name', 'Yuri Irsenovich Kim')
+  .put('dob', '16 February 1941')
+  .put('spouse', 'Kim Young-sook')
+  .put('occupation', 'Clown')
+  .write(function () { console.log('Done!') })
+```
+
+<b><code>batch.put(key, value[, options])</code></b>
+
+Queue a *put* operation on the current batch, not committed until a `write()` is called on the batch.
+
+The optional `options` argument can be used to override the default `'keyEncoding'` and/or `'valueEncoding'`.
+
+<b><code>batch.del(key[, options])</code></b>
+
+Queue a *del* operation on the current batch, not committed until a `write()` is called on the batch.
+
+The optional `options` argument can be used to override the default `'keyEncoding'`.
+
+<b><code>batch.clear()</code></b>
+
+Clear all queued operations on the current batch, any previous operations will be discarded.
+
+<b><code>batch.write([callback])</code></b>
+
+Commit the queued operations for this batch. All operations not *cleared* will be written to the database atomically, that is, they will either all succeed or fail with no partial commits. The optional `callback` will be called when the operation has completed with an *error* argument if an error has occurred.
+
 
 --------------------------------------------------------
 <a name="isOpen"></a>
@@ -286,6 +360,8 @@ Additionally, you can supply an options object as the first parameter to `create
 
 * `'fillCache'` *(boolean, default: `false`)*: wheather LevelDB's LRU-cache should be filled with data read.
 
+* `'keyEncoding'` / `'valueEncoding'` *(string)*: the encoding applied to each read piece of data.
+
 --------------------------------------------------------
 <a name="createKeyStream"></a>
 ### db.createKeyStream([options])
@@ -332,7 +408,9 @@ db.createReadStream({ keys: false, values: true })
 <a name="createWriteStream"></a>
 ### db.createWriteStream([options])
 
-A **WriteStream** can be obtained by calling the `createWriteStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method. The WriteStream will buffer writes and submit them as a `batch()` operation where the writes occur on the same event loop tick, otherwise they are treated as simple `put()` operations.
+A **WriteStream** can be obtained by calling the `createWriteStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method.
+
+The WriteStream will buffer writes and submit them as a `batch()` operations where writes occur *within the same tick*.
 
 ```js
 var ws = db.createWriteStream()
@@ -353,6 +431,64 @@ ws.end()
 
 The standard `write()`, `end()`, `destroy()` and `destroySoon()` methods are implemented on the WriteStream. `'drain'`, `'error'`, `'close'` and `'pipe'` events are emitted.
 
+You can specify encodings both for the whole stream and individual entries:
+
+To set the encoding for the whole stream, provide an options object as the first parameter to `createWriteStream()` with `'keyEncoding'` and/or `'valueEncoding'`.
+
+To set the encoding for an individual entry:
+
+```js
+writeStream.write({
+  key: new Buffer([1, 2, 3]),
+  value: { some: 'json' },
+  keyEncoding: 'binary',
+  valueEncoding: 'json'
+})
+```
+
+#### write({ type: 'put' })
+
+If individual `write()` operations are performed with a `'type'` property of `'del'`, they will be passed on as `'del'` operations to the batch.
+
+```js
+var ws = db.createWriteStream()
+
+ws.on('error', function (err) {
+  console.log('Oh my!', err)
+})
+ws.on('close', function () {
+  console.log('Stream closed')
+})
+
+ws.write({ type: 'del', key: 'name' })
+ws.write({ type: 'del', key: 'dob' })
+ws.write({ type: 'put', key: 'spouse' })
+ws.write({ type: 'del', key: 'occupation' })
+ws.end()
+```
+
+#### db.createWriteStream({ type: 'put' })
+
+If the *WriteStream* is created a `'type'` option of `'del'`, all `write()` operations will be interpreted as `'del'`, unless explicitly specified as `'put'`.
+
+```js
+var ws = db.createWriteStream({ type: 'del' })
+
+ws.on('error', function (err) {
+  console.log('Oh my!', err)
+})
+ws.on('close', function () {
+  console.log('Stream closed')
+})
+
+ws.write({ key: 'name' })
+ws.write({ key: 'dob' })
+// but it can be overridden
+ws.write({ type: 'put', key: 'spouse', value: 'Ri Sol-ju' })
+ws.write({ key: 'occupation' })
+ws.end()
+```
+
 #### Pipes and Node Stream compatibility
 
 A ReadStream can be piped directly to a WriteStream, allowing for easy copying of an entire database. A simple `copy()` operation is included in LevelUP that performs exactly this on two open databases:
@@ -367,15 +503,63 @@ The ReadStream is also [fstream](https://github.com/isaacs/fstream)-compatible w
 
 KeyStreams and ValueStreams can be treated like standard streams of raw data. If `'keyEncoding'` or `'valueEncoding'` is set to `'binary'` the `'data'` events will simply be standard Node `Buffer` objects straight out of the data store.
 
+
+--------------------------------------------------------
+<a name='approximateSize'></a>
+### db.db.approximateSize(start, end, callback)
+<code>approximateSize()</code> can used to get the approximate number of bytes of file system space used by the range `[start..end)`. The result may not include recently written data.
+
+```js
+var db = require('level')('./huge.db')
+
+db.db.approximateSize('a', 'c', function (err, size) {
+  if (err) return console.error('Ooops!', err)
+  console.log('Approximate size of range is %d', size)
+})
+```
+
+**Note:** `approximateSize()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/), which by default is accessible as the `db` property of your LevelUP instance. This is a specific LevelDB operation and is not likely to be available where you replace LevelDOWN with an alternative back-end via the `'db'` option.
+
+
+--------------------------------------------------------
+<a name='getProperty'></a>
+### db.db.getProperty(property)
+<code>getProperty</code> can be used to get internal details from LevelDB. When issued with a valid property string, a readable string will be returned (this method is synchronous).
+
+Currently, the only valid properties are:
+
+* <b><code>'leveldb.num-files-at-levelN'</code></b>: return the number of files at level *N*, where N is an integer representing a valid level (e.g. "0").
+
+* <b><code>'leveldb.stats'</code></b>: returns a multi-line string describing statistics about LevelDB's internal operation.
+
+* <b><code>'leveldb.sstables'</code></b>: returns a multi-line string describing all of the *sstables* that make up contents of the current database.
+
+
+```js
+var db = require('level')('./huge.db')
+console.log(db.db.getProperty('leveldb.num-files-at-level3'))
+// → '243'
+```
+
+**Note:** `getProperty()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/), which by default is accessible as the `db` property of your LevelUP instance. This is a specific LevelDB operation and is not likely to be available where you replace LevelDOWN with an alternative back-end via the `'db'` option.
+
+
 --------------------------------------------------------
 <a name="destroy"></a>
-### levelup.destroy(location[, callback])
+### leveldown.destroy(location, callback)
 <code>destroy()</code> is used to completely remove an existing LevelDB database directory. You can use this function in place of a full directory *rm* if you want to be sure to only remove LevelDB-related files. If the directory only contains LevelDB files, the directory itself will be removed as well. If there are additional, non-LevelDB files in the directory, those files, and the directory, will be left alone.
 
-The optional callback will be called when the destroy operation is complete, with a possible `error` argument.
+The callback will be called when the destroy operation is complete, with a possible `error` argument.
 
+**Note:** `destroy()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/) which you will have to have available to `require()`, e.g.:
+
+```js
+require('leveldown').destroy('./huge.db', function () { console.log('done!') })
+```
+
+--------------------------------------------------------
 <a name="repair"></a>
-### levelup.repair(location[, callback])
+### leveldown.repair(location, callback)
 <code>repair()</code> can be used to attempt a restoration of a damaged LevelDB store. From the LevelDB documentation:
 
 > If a DB cannot be opened, you may attempt to call this method to resurrect as much of the contents of the database as possible. Some data may be lost, so be careful when calling this function on a database that contains important information.
@@ -384,7 +568,15 @@ You will find information on the *repair* operation in the *LOG* file inside the
 
 A `repair()` can also be used to perform a compaction of the LevelDB log into table files.
 
-The optional callback will be called when the repair operation is complete, with a possible `error` argument.
+The callback will be called when the repair operation is complete, with a possible `error` argument.
+
+**Note:** `destroy()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/) which you will have to have available to `require()`, e.g.:
+
+```js
+require('leveldown').repair('./huge.db', function () { console.log('done!') })
+```
+
+--------------------------------------------------------
 
 <a name="events"></a>
 Events
@@ -408,11 +600,31 @@ JSON data
 
 You specify `'json'` encoding for both keys and/or values, you can then supply JavaScript objects to LevelUP and receive them from all fetch operations, including ReadStreams. LevelUP will automatically *stringify* your objects and store them as *utf8* and parse the strings back into objects before passing them back to you.
 
-<a name="considerations"></a>
-Important considerations
-------------------------
+<a name="extending"></a>
+Extending LevelUP
+-----------------
 
-* LevelDB is thread-safe but is **not** suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process.
+A list of <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>Node.js LevelDB modules and projects</b></a> can be found in the wiki.
+
+When attempting to extend the functionality of LevelUP, it is recommended that you consider using [level-hooks](https://github.com/dominictarr/level-hooks) and/or [level-sublevel](https://github.com/dominictarr/level-sublevel). **level-sublevel** is particularly helpful for keeping additional, extension-specific, data in a LevelDB store. It allows you to partition a LevelUP instance into multiple sub-instances that each correspond to discrete namespaced key ranges.
+
+<a name="multiproc"></a>
+Multi-process access
+--------------------
+
+LevelDB is thread-safe but is **not** suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process. Node.js clusters are made up of multiple processes so a LevelUP instance cannot be shared between them either.
+
+See the <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>wiki</b></a> for some LevelUP extensions, including [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single data store to be shared across processes.
+
+<a name="support"></a>
+Getting support
+---------------
+
+There are multiple ways you can find help in using LevelDB in Node.js:
+
+ * **IRC:** you'll find an active group of LevelUP users in the **##leveldb** channel on Freenode, including most of the contributors to this project.
+ * **Mailing list:** there is an active [Node.js LevelDB](https://groups.google.com/forum/#!forum/node-levelup) Google Group.
+ * **GitHub:** you're welcome to open an issue here on this GitHub repository if you have a question.
 
 <a name="contributing"></a>
 Contributing

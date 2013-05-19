@@ -105,7 +105,7 @@ buster.testCase('Argument checking', {
       this.openTestDatabase(function (db) {
 
         assert.exception(
-            db.batch.bind(db)
+            db.batch.bind(db, null, {})
           , { name: 'WriteError', message: 'batch() requires an array argument' }
           , 'no-arg batch() throws'
         )
