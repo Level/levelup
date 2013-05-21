@@ -11,7 +11,7 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
   * <a href="#news">News</a>
   * <a href="#intro">Introduction</a>
   * <a href="#leveldown">Relationship to LevelDOWN</a>
-  * <a href="#platforms">Tested & supported platforms</a>
+  * <a href="#platforms">Tested &amp; supported platforms</a>
   * <a href="#basic">Basic usage</a>
   * <a href="#api">API</a>
   * <a href="#events">Events</a>
@@ -20,13 +20,15 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
   * <a href="#multiproc">Multi-process access</a>
   * <a href="#support">Getting support</a>
   * <a href="#contributing">Contributing</a>
-  * <a href="#licence">Licence & copyright</a>
+  * <a href="#licence">Licence &amp; copyright</a>
 
 
 <a name="news"></a>
 News
 ----
 
+ * *2013-05-21* **[LevelUP v0.9 Released](http://r.va.gg/2013/05/levelup-v0.9-released.html)** &mdash; explains the main items in the [CHANGELOG](https://raw.github.com/rvagg/node-levelup/master/CHANGELOG.md) for 0.9 and who you should thank for the hard work.
+ * *2013-05-20* **[LevelUP v0.9 - Some Major Changes](http://r.va.gg/2013/05/levelup-v0.9-some-major-changes.html)** &mdash; discussing why we've removed [LevelDOWN](https://github.com/rvagg/node-leveldown/) as a dependency and the growing collection of LevelDOWN-compatible back-ends for LevelUP.
 
 <a name="intro"></a>
 Introduction
@@ -535,7 +537,7 @@ db.db.approximateSize('a', 'c', function (err, size) {
 
 Currently, the only valid properties are:
 
-* <b><code>'leveldb.num-files-at-levelN'</code></b>: return the number of files at level *N*, where N is an integer representing a valid level (e.g. "0").
+* <b><code>'leveldb.num-files-at-levelN'</code></b>: returns the number of files at level *N*, where N is an integer representing a valid level (e.g. "0").
 
 * <b><code>'leveldb.stats'</code></b>: returns a multi-line string describing statistics about LevelDB's internal operation.
 

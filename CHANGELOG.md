@@ -1,3 +1,18 @@
+0.9.0 @ 21 May 2013
+===================
+  * Use LevelDOWN@0.5.0, see https://github.com/rvagg/node-leveldown/blob/master/CHANGELOG.md for details
+  * Race-condition(ish) fixed in ReadStream--createReadStream() does not start immediately and therefore allowed put()s to happen before the stream starts (@dominictarr)
+  * ReadStream doesn't emit "ready" event (@dominictarr)
+  * Allow separate encodings per operation in db.batch() (@juliangruber)
+  * Allow separate encodings per write() in WriteStream (@juliangruber)
+  * WriteStream supports "type" option ("put" [default] or "del") on constructor and individual write()s (@mcollina)
+  * Remove "leveldown" from dependencies (see http://r.va.gg/2013/05/levelup-v0.9-some-major-changes.html) (@rvagg)
+  * Expose LevelDOWN (or LevelDOWN substitute) as `db` property on LevelUP instance (e.g. db.db.approximateSize())
+  * Chained batch exposed from LevelDOWN, invoked with argument-less db.batch() (@juliangruber, @rvagg)
+  * Significantly improve ReadStream performance by replacing .bind() and .apply() (@mcollina, @kesla)
+  * Better Browserify support (@rvagg, @juliangruber, @maxogden, etc.)
+  * Deprecate secondary LevelDB-specific operations on LevelUP, prefer direct LevelDOWN access (approximateSize(), repair(), destroy(), getProperty()--new in LevelDOWN@0.5.0) (@rvagg)
+
 0.8.0 @ 17 Apr 2013
 ===================
   * More comprehensive argument checking, will now report back directly or throw if there is a problem rather than on nextTick (@rvagg)
