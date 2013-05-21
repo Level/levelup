@@ -5,3 +5,5 @@ libleveldb.a
 test-data/
 _benchdb_*
 *.sw*
+bulk2ssd_pop.config
+libpeerconnection.log
