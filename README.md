@@ -8,6 +8,7 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
 
 [![Build Status](https://secure.travis-ci.org/rvagg/node-levelup.png)](http://travis-ci.org/rvagg/node-levelup)
 
+  * <a href="#news">News</a>
   * <a href="#intro">Introduction</a>
   * <a href="#leveldown">Relationship to LevelDOWN</a>
   * <a href="#platforms">Tested & supported platforms</a>
@@ -20,6 +21,12 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
   * <a href="#support">Getting support</a>
   * <a href="#contributing">Contributing</a>
   * <a href="#licence">Licence & copyright</a>
+
+
+<a name="news"></a>
+News
+----
+
 
 <a name="intro"></a>
 Introduction
