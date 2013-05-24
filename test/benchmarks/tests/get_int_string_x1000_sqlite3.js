@@ -22,8 +22,11 @@ var async = require('async')
             if (++received == count) cb()
           }
 
+      var s = db.prepare('SELECT value FROM bench WHERE key = ?')
       for (var i = 0; i < count; i++)
-        db.get('SELECT value FROM bench WHERE key = "' + i + '"', after)
+        s.get(String(i), after)
+
+      s.finalize()
     }
 
 
