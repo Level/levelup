@@ -1,3 +1,7 @@
+0.10.0 @ Jun 14 2013
+===================
+  * Upgrade to LevelDOWN@0.6.0 which upgrades to LevelDB@1.11.0, some important bugfixes: https://groups.google.com/forum/#!topic/leveldb/vS1JvmGlp4E
+
 0.9.0 @ 21 May 2013
 ===================
   * Use LevelDOWN@0.5.0, see https://github.com/rvagg/node-leveldown/blob/master/CHANGELOG.md for details
