@@ -6,18 +6,28 @@
 var levelup = require('../lib/levelup.js')
   , async   = require('async')
   , common  = require('./common')
+  , msgpack = require('msgpack-js')
 
   , assert  = require('referee').assert
   , refute  = require('referee').refute
   , buster  = require('bustermove')
-
+  
 buster.testCase('JSON API', {
     'setUp': function (done) {
       common.commonSetUp.call(this, function () {
         this.runTest = function (testData, assertType, done) {
           var location = common.nextLocation()
           this.cleanupDirs.push(location)
-          levelup(location, { createIfMissing: true, errorIfExists: true, encoding: {encode: JSON.stringify, decode: JSON.parse }}, function (err, db) {
+          console.log(location)
+          levelup(location, {
+            createIfMissing: true,
+            errorIfExists: true,
+            encoding: {
+              encode: msgpack.encode,
+              decode: msgpack.decode,
+              buffer: true
+            }
+          }, function (err, db) {
             refute(err)
             if (err) return
 
