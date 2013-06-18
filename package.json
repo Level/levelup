@@ -49,6 +49,7 @@
       , "boganipsum"      : "*"
       , "du"              : "*"
       , "memdown"         : "*"
+      , "msgpack-js"      : "*"
     }
   , "browser"         : {
         "leveldown"         : false
