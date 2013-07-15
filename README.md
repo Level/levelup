@@ -8,7 +8,7 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
 
 [![Build Status](https://secure.travis-ci.org/rvagg/node-levelup.png)](http://travis-ci.org/rvagg/node-levelup)
 
-[![NPM](http://nodei.co/npm/levelup.png)](http://nodei.co/npm/levelup/)
+[![NPM](https://nodei.co/npm/levelup.png)](https://nodei.co/npm/levelup/)
 
 
   * <a href="#news">News</a>
