@@ -130,6 +130,25 @@ buster.testCase('WriteStream', {
     }
   */
 
+  , 'test end accepts data': function (done) {
+      this.openTestDatabase(function (db) {
+        var ws = db.createWriteStream()
+        ws.on('error', function (err) {
+          refute(err)
+        })
+        ws.on('close', this.verify.bind(this, ws, db, done))
+        var i = 0
+        this.sourceData.forEach(function (d) {
+          i ++
+          if (i < this.sourceData.length) {
+            ws.write(d)
+          } else {
+            ws.end(d)
+          }
+        }.bind(this))
+      }.bind(this))
+  }
+
     // at the moment, destroySoon() is basically just end()
   , 'test destroySoon()': function (done) {
       this.openTestDatabase(function (db) {
