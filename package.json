@@ -36,7 +36,7 @@
       , "bops"                : "~0.0.6"
     }
   , "devDependencies" : {
-        "leveldown"       : "~0.5.0"
+        "leveldown"       : "~0.6.0"
       , "bustermove"      : "*"
       , "tap"             : "*"
       , "referee"         : "*"
