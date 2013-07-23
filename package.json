@@ -34,6 +34,7 @@
       , "prr"                 : "~0.0.0"
       , "semver"              : "~1.1.4"
       , "bops"                : "~0.0.6"
+      , "batch-write-stream"  : "~0.1.5"
     }
   , "devDependencies" : {
         "leveldown"       : "~0.5.0"

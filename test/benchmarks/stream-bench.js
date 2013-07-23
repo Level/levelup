@@ -5,7 +5,7 @@ const levelup = require('../../')
 
     , batch   = 10000
     , total   = 200000
- 
+
 function fillBatch (start, callback) {
   var b = []
   for (var i = start; i < start + batch; i++) {
@@ -28,16 +28,23 @@ srcdb.on('ready', function () {
 
   populate(0, function () {
     var batchTime = Date.now() - start
+    var readTime
 
     console.log('--------------------------------------------------------------')
     console.log('Filled source! Took', batchTime + 'ms, streaming to destination...')
 
+    var ws = dstdb.createWriteStream()
+    ws.once('close', function () {
+      var copyTime = Date.now() - start
+      console.log('Done! Took', copyTime + 'ms,', Math.round((copyTime / batchTime) * 100) + '% of batch time')
+    })
+
     start = Date.now()
-    srcdb.createReadStream()
-      .on('end', function () {
-        var copyTime = Date.now() - start
-        console.log('Done! Took', copyTime + 'ms,', Math.round((copyTime / batchTime) * 100) + '% of batch time')
-      })
-      .pipe(dstdb.createWriteStream())
+    var rs = srcdb.createReadStream()
+    rs.once('end', function () {
+      readTime = Date.now() - start
+      console.log('Read finished! Took %dms', readTime)
+    })
+    rs.pipe(ws)
   })
 })
