@@ -1,3 +1,7 @@
+0.12.0 @ Jul 25 2013
+====================
+  * Update LevelDOWN dependency version ~0.6.2
+
 0.11.0 @ Jul 17 2013
 ====================
   * Remove all Function#bind calls for better browser compatibility (@juliangruber)
