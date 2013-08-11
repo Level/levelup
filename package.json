@@ -24,7 +24,7 @@
       , "storage"
       , "json"
     ]
-  , "version"         : "0.12.0"
+  , "version"         : "0.13.0"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
         "errno"               : "~0.0.3"
@@ -36,7 +36,7 @@
       , "bops"                : "~0.0.6"
     }
   , "devDependencies" : {
-        "leveldown"       : "~0.6.2"
+        "leveldown"       : "~0.7.0"
       , "bustermove"      : "*"
       , "tap"             : "*"
       , "referee"         : "*"

@@ -1,3 +1,7 @@
+0.13.0 @ Aug 11 2013
+====================
+ * Update LevelDOWN dependency version ~0.7.0 for Node 0.8->0.11 compatibility
+
 0.12.0 @ Jul 25 2013
 ====================
   * Update LevelDOWN dependency version ~0.6.2
