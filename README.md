@@ -609,6 +609,24 @@ JSON data
 
 You specify `'json'` encoding for both keys and/or values, you can then supply JavaScript objects to LevelUP and receive them from all fetch operations, including ReadStreams. LevelUP will automatically *stringify* your objects and store them as *utf8* and parse the strings back into objects before passing them back to you.
 
+<a name="custom_encodings"></a>
+Custom Encodings
+----------------
+
+A custom encoding may be provided by passing in an object as an value for `keyEncoding` or `valueEncoding`, it must have the following properties:
+
+``` js
+{
+  encode: function (val) {...},
+  decode: function (val) {...},
+  buffer: boolean //true if encode returns a bufferlike and decode accepts a buffer.
+  type: string //name of this encoding type.
+}
+```
+
+`bufferlike` means either a `Buffer` if running in node.js, or a Uint8Array if in a webbrowser.
+Use [bops](https://github.com/chrisdickinson/bops) to get portable binary operations.
+
 <a name="extending"></a>
 Extending LevelUP
 -----------------
@@ -676,4 +694,3 @@ Copyright (c) 2012-2013 LevelUP contributors (listed above).
 
 LevelUP is licensed under an MIT +no-false-attribs license. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
 
-*LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).*
