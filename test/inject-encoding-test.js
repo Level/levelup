@@ -25,7 +25,8 @@ buster.testCase('JSON API', {
             encoding: {
               encode: msgpack.encode,
               decode: msgpack.decode,
-              buffer: true
+              buffer: true,
+              type: 'msgpack'
             }
           }, function (err, db) {
             refute(err)
