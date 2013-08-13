@@ -1,3 +1,18 @@
+0.13.0 @ Aug 11 2013
+====================
+ * Update LevelDOWN dependency version ~0.7.0 for Node 0.8->0.11 compatibility
+
+0.12.0 @ Jul 25 2013
+====================
+  * Update LevelDOWN dependency version ~0.6.2
+
+0.11.0 @ Jul 17 2013
+====================
+  * Remove all Function#bind calls for better browser compatibility (@juliangruber)
+  * Switch from direct Buffer access to bops for better browser compatibility (@juliangruber)
+  * WriteStream#end accepts `data` argument (@pgte)
+  * Added @pgte as contributor
+
 0.10.0 @ Jun 14 2013
 ===================
   * Upgrade to LevelDOWN@0.6.0 which upgrades to LevelDB@1.11.0, some important bugfixes: https://groups.google.com/forum/#!topic/leveldb/vS1JvmGlp4E

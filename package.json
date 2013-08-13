@@ -13,6 +13,7 @@
       , "Paolo Fragomeni <paolo@async.ly> (https://github.com/hij1nx)"
       , "Anton Whalley <anton.whalley@nearform.com> (https://github.com/No9)"
       , "Matteo Collina <matteo.collina@gmail.com> (https://github.com/mcollina)"
+      , "Pedro Teixeira <pedro.teixeira@gmail.com> (https://github.com/pgte)"
     ]
   , "keywords": [
         "leveldb"
@@ -23,7 +24,7 @@
       , "storage"
       , "json"
     ]
-  , "version"         : "0.10.0"
+  , "version"         : "0.13.0"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
         "errno"               : "~0.0.3"
@@ -32,9 +33,10 @@
       , "xtend"               : "~2.0.3"
       , "prr"                 : "~0.0.0"
       , "semver"              : "~1.1.4"
+      , "bops"                : "~0.0.6"
     }
   , "devDependencies" : {
-        "leveldown"       : "~0.5.0"
+        "leveldown"       : "~0.7.0"
       , "bustermove"      : "*"
       , "tap"             : "*"
       , "referee"         : "*"

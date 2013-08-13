@@ -130,6 +130,25 @@ buster.testCase('WriteStream', {
     }
   */
 
+  , 'test end accepts data': function (done) {
+      this.openTestDatabase(function (db) {
+        var ws = db.createWriteStream()
+        ws.on('error', function (err) {
+          refute(err)
+        })
+        ws.on('close', this.verify.bind(this, ws, db, done))
+        var i = 0
+        this.sourceData.forEach(function (d) {
+          i ++
+          if (i < this.sourceData.length) {
+            ws.write(d)
+          } else {
+            ws.end(d)
+          }
+        }.bind(this))
+      }.bind(this))
+    }
+
     // at the moment, destroySoon() is basically just end()
   , 'test destroySoon()': function (done) {
       this.openTestDatabase(function (db) {
@@ -224,17 +243,17 @@ buster.testCase('WriteStream', {
           ]
 
       async.waterfall([
-        function(cb) {
+        function (cb) {
           this.openTestDatabase(options, function (db) {
             cb(null, db);
           });
         }.bind(this),
-        function(db, cb) {
+        function (db, cb) {
           var ws = db.createWriteStream()
           ws.on('error', function (err) {
             refute(err)
           })
-          ws.on('close', function() {
+          ws.on('close', function () {
             cb(null, db);
           })
           data.forEach(function (d) {
@@ -244,12 +263,12 @@ buster.testCase('WriteStream', {
           // end after it's ready, nextTick makes this work OK
           ws.once('ready', ws.end)
         },
-        function(db, cb) {
+        function (db, cb) {
           var delStream = db.createWriteStream()
           delStream.on('error', function (err) {
             refute(err)
           })
-          delStream.on('close', function() {
+          delStream.on('close', function () {
             cb(null, db);
           })
           data.forEach(function (d) {
@@ -260,7 +279,7 @@ buster.testCase('WriteStream', {
           // end after it's ready, nextTick makes this work OK
           delStream.once('ready', delStream.end)
         },
-        function(db, cb) {
+        function (db, cb) {
           async.forEach(
               data
             , function (data, callback) {
@@ -293,17 +312,17 @@ buster.testCase('WriteStream', {
           ]
 
       async.waterfall([
-        function(cb) {
+        function (cb) {
           this.openTestDatabase(options, function (db) {
             cb(null, db);
           });
         }.bind(this),
-        function(db, cb) {
+        function (db, cb) {
           var ws = db.createWriteStream()
           ws.on('error', function (err) {
             refute(err)
           })
-          ws.on('close', function() {
+          ws.on('close', function () {
             cb(null, db);
           })
           data.forEach(function (d) {
@@ -313,12 +332,12 @@ buster.testCase('WriteStream', {
           // end after it's ready, nextTick makes this work OK
           ws.once('ready', ws.end)
         },
-        function(db, cb) {
+        function (db, cb) {
           var delStream = db.createWriteStream({ type: 'del' })
           delStream.on('error', function (err) {
             refute(err)
           })
-          delStream.on('close', function() {
+          delStream.on('close', function () {
             cb(null, db);
           })
           data.forEach(function (d) {
@@ -328,7 +347,7 @@ buster.testCase('WriteStream', {
           // end after it's ready, nextTick makes this work OK
           delStream.once('ready', delStream.end)
         },
-        function(db, cb) {
+        function (db, cb) {
           async.forEach(
               data
             , function (data, callback) {
@@ -364,17 +383,17 @@ buster.testCase('WriteStream', {
       exception['type'] = 'put'
 
       async.waterfall([
-        function(cb) {
+        function (cb) {
           this.openTestDatabase(options, function (db) {
             cb(null, db);
           });
         }.bind(this),
-        function(db, cb) {
+        function (db, cb) {
           var ws = db.createWriteStream()
           ws.on('error', function (err) {
             refute(err)
           })
-          ws.on('close', function() {
+          ws.on('close', function () {
             cb(null, db);
           })
           data.forEach(function (d) {
@@ -384,12 +403,12 @@ buster.testCase('WriteStream', {
           // end after it's ready, nextTick makes this work OK
           ws.once('ready', ws.end)
         },
-        function(db, cb) {
+        function (db, cb) {
           var delStream = db.createWriteStream({ type: 'del' })
           delStream.on('error', function (err) {
             refute(err)
           })
-          delStream.on('close', function() {
+          delStream.on('close', function () {
             cb(null, db);
           })
           data.forEach(function (d) {
@@ -399,7 +418,7 @@ buster.testCase('WriteStream', {
           // end after it's ready, nextTick makes this work OK
           delStream.once('ready', delStream.end)
         },
-        function(db, cb) {
+        function (db, cb) {
           async.forEach(
               data
             , function (data, callback) {
@@ -423,10 +442,10 @@ buster.testCase('WriteStream', {
   , 'test ignoring pairs with the wrong type': function (done) {
 
       async.waterfall([
-        function(cb) {
+        function (cb) {
           this.openTestDatabase(cb.bind(null, null))
         }.bind(this),
-        function(db, cb) {
+        function (db, cb) {
           var ws = db.createWriteStream()
           ws.on('error', function (err) {
             refute(err)
@@ -438,7 +457,7 @@ buster.testCase('WriteStream', {
           })
           ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
         }.bind(this),
-        function(db, cb) {
+        function (db, cb) {
           async.forEach(
               this.sourceData
             , function (data, callback) {
