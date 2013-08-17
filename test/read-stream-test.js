@@ -73,7 +73,7 @@ buster.testCase('ReadStream', {
           assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
-          rs.on('close', verify.bind(this))
+          rs.on('end', verify.bind(this))
 
         }.bind(this))
       }.bind(this))
