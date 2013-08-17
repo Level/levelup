@@ -44,8 +44,7 @@ buster.testCase('ReadStream', {
       var calls = 0
         , rs
         , pauseVerify = function () {
-            // NOTE: another one *will* slip through because the stream triggers an async read before triggering the event
-            assert.equals(calls, 6, 'stream should still be paused')
+            assert.equals(calls, 5, 'stream should still be paused')
             rs.resume()
             pauseVerify.called = true
           }
