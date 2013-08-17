@@ -92,7 +92,7 @@ buster.testCase('ReadStream', {
             assert.isFalse(rs.writable)
             assert.isFalse(rs.readable)
             assert.equals(this.dataSpy.callCount , 0, '"data" event was not fired')
-            assert.equals(this.endSpy.callCount  , 1, '"end" event was not fired')
+            assert.equals(this.endSpy.callCount  , 0, '"end" event was not fired')
             done()
           }.bind(this))
           rs.destroy()
