@@ -437,6 +437,7 @@ buster.testCase('ReadStream', {
             rs.on('end'  , this.endSpy)
             rs.on('close', this.verify.bind(this, rs, done))
           }.bind(this))
+          rs.resume()
         }.bind(this))
       }.bind(this))
     }
