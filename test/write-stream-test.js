@@ -60,7 +60,7 @@ buster.testCase('WriteStream', {
         this.sourceData.forEach(function (d) {
           ws.write(d)
         })
-        ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
+        ws.end()
       }.bind(this))
     }
 
@@ -160,7 +160,7 @@ buster.testCase('WriteStream', {
         this.sourceData.forEach(function (d) {
           ws.write(d)
         })
-        ws.once('ready', ws.destroySoon) // end after it's ready, nextTick makes this work OK
+        ws.destroySoon()
       }.bind(this))
     }
 
@@ -196,7 +196,7 @@ buster.testCase('WriteStream', {
         })
         assert.isTrue(ws.writable)
         assert.isFalse(ws.readable)
-        ws.once('ready', ws.destroy)
+        ws.destroy()
       }.bind(this))
     }
 
@@ -223,7 +223,7 @@ buster.testCase('WriteStream', {
         data.forEach(function (d) {
           ws.write(d)
         })
-        ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
+        ws.end()
       }.bind(this))
     }
 
@@ -260,8 +260,7 @@ buster.testCase('WriteStream', {
             ws.write(d)
           })
 
-          // end after it's ready, nextTick makes this work OK
-          ws.once('ready', ws.end)
+          ws.end()
         },
         function (db, cb) {
           var delStream = db.createWriteStream()
@@ -276,8 +275,7 @@ buster.testCase('WriteStream', {
             delStream.write(d)
           })
 
-          // end after it's ready, nextTick makes this work OK
-          delStream.once('ready', delStream.end)
+          delStream.end()
         },
         function (db, cb) {
           async.forEach(
@@ -329,8 +327,7 @@ buster.testCase('WriteStream', {
             ws.write(d)
           })
 
-          // end after it's ready, nextTick makes this work OK
-          ws.once('ready', ws.end)
+          ws.end()
         },
         function (db, cb) {
           var delStream = db.createWriteStream({ type: 'del' })
@@ -344,8 +341,7 @@ buster.testCase('WriteStream', {
             delStream.write(d)
           })
 
-          // end after it's ready, nextTick makes this work OK
-          delStream.once('ready', delStream.end)
+          delStream.end()
         },
         function (db, cb) {
           async.forEach(
@@ -400,8 +396,7 @@ buster.testCase('WriteStream', {
             ws.write(d)
           })
 
-          // end after it's ready, nextTick makes this work OK
-          ws.once('ready', ws.end)
+          ws.end()
         },
         function (db, cb) {
           var delStream = db.createWriteStream({ type: 'del' })
@@ -415,8 +410,7 @@ buster.testCase('WriteStream', {
             delStream.write(d)
           })
 
-          // end after it's ready, nextTick makes this work OK
-          delStream.once('ready', delStream.end)
+          delStream.end()
         },
         function (db, cb) {
           async.forEach(
@@ -455,7 +449,7 @@ buster.testCase('WriteStream', {
             d.type = "x" + Math.random()
             ws.write(d)
           })
-          ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
+          ws.end()
         }.bind(this),
         function (db, cb) {
           async.forEach(
