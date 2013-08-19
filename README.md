@@ -612,8 +612,8 @@ A custom encoding may be provided by passing in an object as an value for `keyEn
 {
     encode : function (val) { ... }
   , decode : function (val) { ... }
-  , buffer : boolean // true if encode returns a buffer-like and decode accepts a buffer.
-  , type   : string  // name of this encoding type.
+  , buffer : boolean // encode returns a buffer-like and decode accepts a buffer
+  , type   : String  // name of this encoding type.
 }
 ```
 
