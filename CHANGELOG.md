@@ -1,3 +1,7 @@
+0.14.0 @ Aug 19 2013
+====================
+ * Encodings overhaul, allow custom encoders/decoders for `keyEncoding` or `valueEncoding` (@dominictarr)
+
 0.13.0 @ Aug 11 2013
 ====================
  * Update LevelDOWN dependency version ~0.7.0 for Node 0.8->0.11 compatibility
