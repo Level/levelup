@@ -28,7 +28,6 @@
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
         "errno"               : "~0.0.3"
-      , "concat-stream"       : "~0.1.1"
       , "simple-bufferstream" : "~0.0.2"
       , "xtend"               : "~2.0.3"
       , "prr"                 : "~0.0.0"
@@ -64,7 +63,7 @@
     }
   , "scripts"         : {
         "test"            : "tap test/*-test.js --stderr"
-      , "functionaltests" : "node ./test/functional/fstream-test.js && node ./test/functional/binary-data-test.js && node ./test/functional/compat-test.js"
+      , "functionaltests" : "node ./test/functional/compat-test.js"
       , "alltests"        : "npm test && npm run-script functionaltests"
     }
   , "license"         : "MIT"
