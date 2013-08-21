@@ -41,7 +41,7 @@ LevelDB stores entries **sorted lexicographically by keys**. This makes LevelUP'
 Relationship to LevelDOWN
 -------------------------
 
-LevelUP is designed to be backed by **[LevelDOWN](https://github.com/rvagg/node-leveldown/)** which provides a pure C++ binding to LevelDB and can be used as a stand-along package if required.
+LevelUP is designed to be backed by **[LevelDOWN](https://github.com/rvagg/node-leveldown/)** which provides a pure C++ binding to LevelDB and can be used as a stand-alone package if required.
 
 **As of version 0.9, LevelUP no longer requires LevelDOWN as a dependency so you must `npm install leveldown` when you install LevelUP.**
 
