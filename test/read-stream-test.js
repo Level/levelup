@@ -31,8 +31,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream()
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -68,8 +66,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           rs = db.createReadStream()
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('end', verify.bind(this))
@@ -84,13 +80,9 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream()
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', function () {
-            assert.isFalse(rs.writable)
-            assert.isFalse(rs.readable)
             assert.equals(this.dataSpy.callCount , 0, '"data" event was not fired')
             assert.equals(this.endSpy.callCount  , 0, '"end" event was not fired')
             done()
@@ -112,13 +104,9 @@ buster.testCase('ReadStream', {
             if (++calls == 5)
               rs.destroy()
           })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , endSpy)
           rs.on('close', function () {
-            assert.isFalse(rs.writable)
-            assert.isFalse(rs.readable)
           //  assert.equals(this.readySpy.callCount, 1, 'ReadStream emitted single "ready" event')
             // should do "data" 5 times ONLY
             assert.equals(this.dataSpy.callCount, 5, 'ReadStream emitted correct number of "data" events (5)')
@@ -146,8 +134,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ reverse: true })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -163,8 +149,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ start: '50' })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -181,8 +165,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ start: '50', reverse: true })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -201,8 +183,6 @@ buster.testCase('ReadStream', {
 
           // '49.5' doesn't actually exist but we expect it to start at '50' because '49' < '49.5' < '50' (in string terms as well as numeric)
           var rs = db.createReadStream({ start: '49.5' })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -219,8 +199,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ start: '49.5', reverse: true })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -240,8 +218,6 @@ buster.testCase('ReadStream', {
           // '499999' doesn't actually exist but we expect it to start at '50' because '49' < '499999' < '50' (in string terms)
           // the same as the previous test but we're relying solely on string ordering
           var rs = db.createReadStream({ start: '499999' })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -258,8 +234,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ end: '50' })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -276,8 +250,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ end: '50.5' })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -294,8 +266,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ end: '50555555' })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -312,8 +282,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ end: '50.5', reverse: true })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -330,8 +298,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ start: 30, end: 70 })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -348,8 +314,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ start: 70, end: 30, reverse: true })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -380,8 +344,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream()
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done, data))
@@ -412,8 +374,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream()
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done, data))
@@ -431,8 +391,6 @@ buster.testCase('ReadStream', {
           rs.on('close', function () {
             // now try reading the other way
             var rs = db.createReadStream()
-            assert.isFalse(rs.writable)
-            assert.isTrue(rs.readable)
             rs.on('data' , this.dataSpy)
             rs.on('end'  , this.endSpy)
             rs.on('close', this.verify.bind(this, rs, done))
@@ -449,8 +407,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ start: 0 })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -467,8 +423,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ end: 0 })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -551,8 +505,6 @@ buster.testCase('ReadStream', {
             refute(db.isClosed())
 
             var rs = db.createReadStream()
-            assert.isFalse(rs.writable)
-            assert.isTrue(rs.readable)
             rs.on('data' , this.dataSpy)
             rs.on('end'  , this.endSpy)
             rs.on('close', this.verify.bind(this, rs, done))
@@ -577,8 +529,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ limit: 20 })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -594,8 +544,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ start: '20', limit: 20 })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           //rs.on('ready', this.readySpy)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
@@ -612,8 +560,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ end: '50', limit: 20 })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -629,8 +575,6 @@ buster.testCase('ReadStream', {
           refute(err)
 
           var rs = db.createReadStream({ end: '30', limit: 50 })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))

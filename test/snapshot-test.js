@@ -28,15 +28,9 @@ buster.testCase('Snapshots', {
           //    takes to overwrite the data in there.
 
           var rs = db.readStream()
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs = rs.pipe(new SlowStream({ maxWriteInterval: 5 }))
           rs.on('data' , this.dataSpy)
           rs.once('end'  , this.endSpy)
-          rs.on('end', function () {
-            rs.readable = false
-            rs.writable = false
-          })
 
           rs.once('close', delayed.delayed(this.verify.bind(this, rs, done), 0.05))
 
