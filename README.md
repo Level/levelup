@@ -8,10 +8,9 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
 
 [![Build Status](https://secure.travis-ci.org/rvagg/node-levelup.png)](http://travis-ci.org/rvagg/node-levelup)
 
-[![NPM](https://nodei.co/npm/levelup.png)](https://nodei.co/npm/levelup/)
+[![NPM](https://nodei.co/npm/levelup.png?stars&downloads)](https://nodei.co/npm/levelup/) [![NPM](https://nodei.co/npm-dl/levelup.png)](https://nodei.co/npm/levelup/)
 
 
-  * <a href="#news">News</a>
   * <a href="#intro">Introduction</a>
   * <a href="#leveldown">Relationship to LevelDOWN</a>
   * <a href="#platforms">Tested &amp; supported platforms</a>
@@ -19,19 +18,12 @@ Fast & simple storage - a Node.js-style LevelDB wrapper
   * <a href="#api">API</a>
   * <a href="#events">Events</a>
   * <a href="#json">JSON data</a>
+  * <a href="#custom_encodings">Custom encodings</a>
   * <a href="#extending">Extending LevelUP</a>
   * <a href="#multiproc">Multi-process access</a>
   * <a href="#support">Getting support</a>
   * <a href="#contributing">Contributing</a>
   * <a href="#licence">Licence &amp; copyright</a>
-
-
-<a name="news"></a>
-News
-----
-
- * *2013-05-21* **[LevelUP v0.9 Released](http://r.va.gg/2013/05/levelup-v0.9-released.html)** &mdash; explains the main items in the [CHANGELOG](https://raw.github.com/rvagg/node-levelup/master/CHANGELOG.md) for 0.9 and who you should thank for the hard work.
- * *2013-05-20* **[LevelUP v0.9 - Some Major Changes](http://r.va.gg/2013/05/levelup-v0.9-some-major-changes.html)** &mdash; discussing why we've removed [LevelDOWN](https://github.com/rvagg/node-leveldown/) as a dependency and the growing collection of LevelDOWN-compatible back-ends for LevelUP.
 
 <a name="intro"></a>
 Introduction
@@ -49,7 +41,7 @@ LevelDB stores entries **sorted lexicographically by keys**. This makes LevelUP'
 Relationship to LevelDOWN
 -------------------------
 
-LevelUP is designed to be backed by **[LevelDOWN](https://github.com/rvagg/node-leveldown/)** which provides a pure C++ binding to LevelDB and can be used as a stand-along package if required.
+LevelUP is designed to be backed by **[LevelDOWN](https://github.com/rvagg/node-leveldown/)** which provides a pure C++ binding to LevelDB and can be used as a stand-alone package if required.
 
 **As of version 0.9, LevelUP no longer requires LevelDOWN as a dependency so you must `npm install leveldown` when you install LevelUP.**
 
@@ -263,15 +255,13 @@ See <a href="#put"><code>put()</code></a> for a discussion on the `options` obje
 In addition to encoding options for the whole batch you can also overwrite the encoding per operation, like:
 
 ```js
-var ops = [
-  {
-    type: 'put',
-    key: new Buffer([1, 2, 3]),
-    value: { some: 'json' },
-    keyEncoding: 'binary',
-    valueEncoding: 'json'
-  }
-]
+var ops = [{
+    type          : 'put'
+  , key           : new Buffer([1, 2, 3])
+  , value         : { some: 'json' }
+  , keyEncoding   : 'binary'
+  , valueEncoding : 'json'
+}]
 ```
 
 --------------------------------------------------------
@@ -451,10 +441,10 @@ To set the encoding for an individual entry:
 
 ```js
 writeStream.write({
-  key: new Buffer([1, 2, 3]),
-  value: { some: 'json' },
-  keyEncoding: 'binary',
-  valueEncoding: 'json'
+    key           : new Buffer([1, 2, 3])
+  , value         : { some: 'json' }
+  , keyEncoding   : 'binary'
+  , valueEncoding : 'json'
 })
 ```
 
@@ -613,22 +603,21 @@ JSON data
 You specify `'json'` encoding for both keys and/or values, you can then supply JavaScript objects to LevelUP and receive them from all fetch operations, including ReadStreams. LevelUP will automatically *stringify* your objects and store them as *utf8* and parse the strings back into objects before passing them back to you.
 
 <a name="custom_encodings"></a>
-Custom Encodings
+Custom encodings
 ----------------
 
-A custom encoding may be provided by passing in an object as an value for `keyEncoding` or `valueEncoding`, it must have the following properties:
+A custom encoding may be provided by passing in an object as an value for `keyEncoding` or `valueEncoding` (wherever accepted), it must have the following properties:
 
-``` js
+```js
 {
-  encode: function (val) {...},
-  decode: function (val) {...},
-  buffer: boolean //true if encode returns a bufferlike and decode accepts a buffer.
-  type: string //name of this encoding type.
+    encode : function (val) { ... }
+  , decode : function (val) { ... }
+  , buffer : boolean // encode returns a buffer-like and decode accepts a buffer
+  , type   : String  // name of this encoding type.
 }
 ```
 
-`bufferlike` means either a `Buffer` if running in node.js, or a Uint8Array if in a webbrowser.
-Use [bops](https://github.com/chrisdickinson/bops) to get portable binary operations.
+*"buffer-like"* means either a `Buffer` if running in Node, or a Uint8Array if in a browser. Use [bops](https://github.com/chrisdickinson/bops) to get portable binary operations.
 
 <a name="extending"></a>
 Extending LevelUP
