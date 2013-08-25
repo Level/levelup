@@ -29,7 +29,7 @@
   , "dependencies"    : {
         "errno"               : "~0.0.3"
       , "concat-stream"       : "~0.1.1"
-      , "simple-bufferstream" : "~0.0.2"
+      , "readable-stream"     : "~1.0.15"
       , "xtend"               : "~2.0.3"
       , "prr"                 : "~0.0.0"
       , "semver"              : "~1.1.4"

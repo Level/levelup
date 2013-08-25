@@ -131,8 +131,6 @@ module.exports.readStreamSetUp = function (done) {
 
     this.verify = function (rs, done, data) {
       if (!data) data = this.sourceData // can pass alternative data array for verification
-      assert.isFalse(rs.writable)
-      assert.isFalse(rs.readable)
       assert.equals(this.endSpy.callCount, 1, 'ReadStream emitted single "end" event')
       assert.equals(this.dataSpy.callCount, data.length, 'ReadStream emitted correct number of "data" events')
       data.forEach(function (d, i) {

@@ -31,8 +31,6 @@ buster.testCase('Key and Value Streams', {
           .map(function (k) { return this.sourceData[k].value }.bind(this))
 
         this.verify = function (rs, data, done) {
-          assert.isFalse(rs.writable)
-          assert.isFalse(rs.readable)
           assert.equals(this.endSpy.callCount, 1, 'Stream emitted single "end" event')
           assert.equals(this.dataSpy.callCount, data.length, 'Stream emitted correct number of "data" events')
           data.forEach(function (d, i) {
@@ -59,8 +57,6 @@ buster.testCase('Key and Value Streams', {
           refute(err)
 
           var rs = db.keyStream()
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data', this.dataSpy)
           rs.on('end', this.endSpy)
           rs.on('close', this.verify.bind(this, rs, this.sourceKeys, done))
@@ -75,8 +71,6 @@ buster.testCase('Key and Value Streams', {
           refute(err)
 
           var rs = db.readStream({ keys: true, values: false })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data', this.dataSpy)
           rs.on('end', this.endSpy)
           rs.on('close', this.verify.bind(this, rs, this.sourceKeys, done))
@@ -91,8 +85,6 @@ buster.testCase('Key and Value Streams', {
           refute(err)
 
           var rs = db.valueStream()
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data', this.dataSpy)
           rs.on('end', this.endSpy)
           rs.on('close', this.verify.bind(this, rs, this.sourceValues, done))
@@ -107,8 +99,6 @@ buster.testCase('Key and Value Streams', {
           refute(err)
 
           var rs = db.readStream({ keys: false, values: true })
-          assert.isFalse(rs.writable)
-          assert.isTrue(rs.readable)
           rs.on('data', this.dataSpy)
           rs.on('end', this.endSpy)
           rs.on('close', this.verify.bind(this, rs, this.sourceValues, done))

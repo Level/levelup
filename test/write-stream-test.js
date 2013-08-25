@@ -27,8 +27,6 @@ buster.testCase('WriteStream', {
 
         this.verify = function (ws, db, done, data) {
           if (!data) data = this.sourceData // can pass alternative data array for verification
-          assert.isFalse(ws.writable)
-          assert.isFalse(ws.readable)
           async.forEach(
               data
             , function (data, callback) {
@@ -166,7 +164,6 @@ buster.testCase('WriteStream', {
 
   , 'test destroy()': function (done) {
       var verify = function (ws, db) {
-        assert.isFalse(ws.writable)
         async.forEach(
             this.sourceData
           , function (data, callback) {
@@ -186,16 +183,10 @@ buster.testCase('WriteStream', {
         ws.on('error', function (err) {
           refute(err)
         })
-        assert.isTrue(ws.writable)
-        assert.isFalse(ws.readable)
         ws.on('close', verify.bind(this, ws, db))
         this.sourceData.forEach(function (d) {
           ws.write(d)
-          assert.isTrue(ws.writable)
-          assert.isFalse(ws.readable)
         })
-        assert.isTrue(ws.writable)
-        assert.isFalse(ws.readable)
         ws.once('ready', ws.destroy)
       }.bind(this))
     }
