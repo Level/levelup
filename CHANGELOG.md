@@ -1,3 +1,9 @@
+0.15.0 @ Aug 25 2013
+====================
+ * New ReadStream: upgrade to streams2, remove all state-management cruft, remove fstream support (@substack)
+ * Update LevelDOWN dependency to ~0.8.0 with Iterator lt/lte/gt/gte support and NAN as a dependency
+ * Added @substack as contributor
+
 0.14.0 @ Aug 19 2013
 ====================
  * Encodings overhaul, allow custom encoders/decoders for `keyEncoding` or `valueEncoding` (@dominictarr)
