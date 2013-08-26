@@ -131,6 +131,7 @@ buster.testCase('Init & open()', {
         assert.isInstanceOf(err, Error)
         assert.isInstanceOf(err, errors.LevelUPError)
         assert.isInstanceOf(err, errors.OpenError)
+        assert(err.notFound === undefined, 'err.notFound is `undefined`, should only be on NotFoundError')
         done()
       }.bind(this))
     }
