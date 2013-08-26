@@ -214,11 +214,12 @@ If you provide a `'sync'` value of `true` in your `options` object, LevelDB will
 ```js
 db.get('foo', function (err, value) {
   if (err) {
-    if (!err.notFound) {
-      // I/O or other error, pass it up the callback chain
-      return callback(err)
+    if (err.notFound) {
+      // handle a 'NotFoundError' here
+      return
     }
-    // handle a 'NotFoundError' here
+    // I/O or other error, pass it up the callback chain
+    return callback(err)
   }
 
   // .. handle `value` here

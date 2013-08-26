@@ -24,7 +24,7 @@ buster.testCase('get() / put() / del()', {
               assert.isInstanceOf(err, errors.LevelUPError)
               assert.isInstanceOf(err, errors.NotFoundError)
               assert(err.notFound === true, 'err.notFound is `true`')
-              assert(err[404] === true, 'err[404] is `true`')
+              assert.equals(err.status, 404, 'err.status is 404')
               assert.match(err, '[undefkey]')
               done()
             })
