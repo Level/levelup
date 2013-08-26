@@ -1,6 +1,7 @@
 {
     "name"            : "levelup"
   , "description"     : "Fast & simple storage - a Node.js-style LevelDB wrapper"
+  , "version"         : "0.15.0"
   , "contributors"    : [
         "Rod Vagg <r@va.gg> (https://github.com/rvagg)"
       , "John Chesley <john@chesl.es> (https://github.com/chesles/)"
@@ -14,7 +15,13 @@
       , "Anton Whalley <anton.whalley@nearform.com> (https://github.com/No9)"
       , "Matteo Collina <matteo.collina@gmail.com> (https://github.com/mcollina)"
       , "Pedro Teixeira <pedro.teixeira@gmail.com> (https://github.com/pgte)"
+      , "James Halliday <mail@substack.net> (https://github.com/substack)"
     ]
+  , "repository"      : {
+        "type"            : "git"
+      , "url"             : "https://github.com/rvagg/node-levelup.git"
+    }
+  , "homepage"        : "https://github.com/rvagg/node-levelup"
   , "keywords": [
         "leveldb"
       , "stream"
@@ -24,7 +31,6 @@
       , "storage"
       , "json"
     ]
-  , "version"         : "0.15.0"
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
         "errno"               : "~0.0.3"
@@ -57,10 +63,6 @@
         "leveldown"         : false
       , "leveldown/package" : false
       , "semver"            : false
-    }
-  , "repository"      : {
-        "type"            : "git"
-      , "url"             : "https://github.com/rvagg/node-levelup.git"
     }
   , "scripts"         : {
         "test"            : "tap test/*-test.js --stderr"
