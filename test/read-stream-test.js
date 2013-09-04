@@ -92,6 +92,37 @@ buster.testCase('ReadStream', {
       }.bind(this))
     }
 
+  , 'test destroy() after close': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.createReadStream()
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', function () {
+            rs.destroy()
+            done()
+          }.bind(this))
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test destroy() twice': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.createReadStream()
+          rs.on('data' , function () {
+            rs.destroy()
+            rs.destroy()
+            done()
+          })
+        }.bind(this))
+      }.bind(this))
+    }
+
   , 'test destroy() half way through': function (done) {
       this.openTestDatabase(function (db) {
         db.batch(this.sourceData.slice(), function (err) {
