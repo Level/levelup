@@ -33,7 +33,7 @@
     ]
   , "main"            : "lib/levelup.js"
   , "dependencies"    : {
-        "errno"               : "~0.0.3"
+        "errno"               : "~0.1.0"
       , "concat-stream"       : "~0.1.1"
       , "readable-stream"     : "~1.0.15"
       , "xtend"               : "~2.0.3"
