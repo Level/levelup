@@ -1,3 +1,9 @@
+### 0.16.0 @ Sep 10 2013
+
+ * Added `notFound` boolean property and `status=404` property to NotFoundError (@rvagg)
+ * Upgrade to errno@0.1.0 which aliases .type and .name properties (@rvagg)
+ * ReadStream gracefully handles multiple destroy() calls (@mcollina)
+
 ### 0.15.0 @ Aug 25 2013
 
  * New ReadStream: upgrade to streams2, remove all state-management cruft, remove fstream support (@substack)
