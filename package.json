@@ -36,7 +36,7 @@
         "errno"               : "~0.1.0"
       , "concat-stream"       : "~0.1.1"
       , "readable-stream"     : "~1.0.15"
-      , "xtend"               : "~2.0.3"
+      , "xtend"               : "~2.1.1"
       , "prr"                 : "~0.0.0"
       , "semver"              : "~1.1.4"
       , "bops"                : "~0.0.6"
