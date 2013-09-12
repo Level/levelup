@@ -209,7 +209,7 @@ If you provide a `'sync'` value of `true` in your `options` object, LevelDB will
 --------------------------------------------------------
 <a name="get"></a>
 ### db.get(key[, options][, callback])
-<code>get()</code> is the primary method for fetching data from the store. The `key` can be an arbitrary data object. If it doesn't exist in the store then the callback will receive an error as its first argument. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError' or you can perform a truthy test on the property `err.notFound`.
+<code>get()</code> is the primary method for fetching data from the store. The `key` can be an arbitrary data object. If it doesn't exist in the store then the callback will receive an error as its first argument. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
 
 ```js
 db.get('foo', function (err, value) {
