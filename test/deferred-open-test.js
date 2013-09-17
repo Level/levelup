@@ -144,7 +144,28 @@ buster.testCase('Deferred open()', {
       refute(db.isOpen())
       refute(db.isClosed())
     }
-    
+
+  , 'test deferred ReadStream': {
+        'setUp': common.readStreamSetUp
+
+      , 'simple ReadStream': function (done) {
+          this.openTestDatabase(function (db) {
+            var location = db.location
+            db.batch(this.sourceData.slice(), function (err) {
+              refute(err)
+              db.close(function (err) {
+                refute(err, 'no error')
+                db = levelup(location, { createIfMissing: false, errorIfExists: false })
+                var rs = db.createReadStream()
+                rs.on('data' , this.dataSpy)
+                rs.on('end'  , this.endSpy)
+                rs.on('close', this.verify.bind(this, rs, done))
+              }.bind(this))
+            }.bind(this))
+          }.bind(this))
+        }
+    }
+
   , 'maxListeners warning': function (done) {
       var location   = common.nextLocation()
       // 1) open database without callback, opens in worker thread
