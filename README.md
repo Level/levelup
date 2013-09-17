@@ -484,9 +484,9 @@ ws.write({ type: 'del', key: 'occupation' })
 ws.end()
 ```
 
-#### db.createWriteStream({ type: 'put' })
+#### db.createWriteStream({ type: 'del' })
 
-If the *WriteStream* is created a `'type'` option of `'del'`, all `write()` operations will be interpreted as `'del'`, unless explicitly specified as `'put'`.
+If the *WriteStream* is created with a `'type'` option of `'del'`, all `write()` operations will be interpreted as `'del'`, unless explicitly specified as `'put'`.
 
 ```js
 var ws = db.createWriteStream({ type: 'del' })
