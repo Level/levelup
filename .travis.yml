@@ -4,7 +4,9 @@ node_js:
   - "0.10"
   - "0.11"
 before_install:
-  - rm -rf ~/.nvm
+  - rm -rf ~/.nvm/
+  - rm -rf ~/tmp/
+  - rm -rf ~/.npm/
   - curl https://raw.github.com/creationix/nvm/master/install.sh | sh
   - source ~/.nvm/nvm.sh
   - nvm install ${TRAVIS_NODE_VERSION}
