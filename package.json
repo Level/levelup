@@ -16,6 +16,7 @@
       , "Matteo Collina <matteo.collina@gmail.com> (https://github.com/mcollina)"
       , "Pedro Teixeira <pedro.teixeira@gmail.com> (https://github.com/pgte)"
       , "James Halliday <mail@substack.net> (https://github.com/substack)"
+      , "Yunong J Xiao <yjxiao@gmail.com> (https://github.com/yunong)"
     ]
   , "repository"      : {
         "type"            : "git"
@@ -58,6 +59,9 @@
       , "du"              : "*"
       , "memdown"         : "*"
       , "msgpack-js"      : "*"
+    }
+  , "optionalDependencies": {
+      "dtrace-provider"     : "~0.2.8"
     }
   , "browser"         : {
         "leveldown"         : false
