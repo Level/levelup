@@ -40,6 +40,7 @@
       , "prr"                 : "~0.0.0"
       , "semver"              : "~1.1.4"
       , "bops"                : "~0.0.6"
+      , "deferred-open"       : "~1.3.0"
     }
   , "devDependencies" : {
         "leveldown"       : "~0.8.0"
