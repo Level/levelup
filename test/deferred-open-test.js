@@ -101,7 +101,71 @@ buster.testCase('Deferred open()', {
       refute(db.isClosed())
     }
     
-    
+  , 'chained batch() on pre-opened database': function (done) {
+      var location = common.nextLocation()
+      // 1) open database without callback, opens in worker thread
+        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, encoding: 'utf8' })
+
+      this.closeableDatabases.push(db)
+      this.cleanupDirs.push(location)
+      assert.isObject(db)
+      assert.equals(db.location, location)
+
+      // 2) insert 3 values with batch(), these should be deferred until the database is actually open
+      db.batch()
+      .put('k1', 'v1')
+      .put('k2', 'v2')
+      .put('k3', 'v3')
+      .write(function () {
+      // 3) when the callbacks have returned, the database should be open and those values should be in
+      //    verify that the values are there
+        async.forEach(
+            [1,2,3]
+          , function (k, cb) {
+              db.get('k' + k, function (err, v) {
+                refute(err)
+                assert.equals(v, 'v' + k)
+                cb()
+              })
+            }
+            // sanity, this shouldn't exist
+          , function () {
+              db.get('k4', function (err) {
+                assert(err)
+                // DONE
+                done()
+              })
+            }
+        )
+        
+      })
+
+      // we should still be in a state of limbo down here, not opened or closed, but 'new'
+      refute(db.isOpen())
+      refute(db.isClosed())
+    }
+
+  , 'test deferred ReadStream': {
+        'setUp': common.readStreamSetUp
+
+      , 'simple ReadStream': function (done) {
+          this.openTestDatabase(function (db) {
+            var location = db.location
+            db.batch(this.sourceData.slice(), function (err) {
+              refute(err)
+              db.close(function (err) {
+                refute(err, 'no error')
+                db = levelup(location, { createIfMissing: false, errorIfExists: false })
+                var rs = db.createReadStream()
+                rs.on('data' , this.dataSpy)
+                rs.on('end'  , this.endSpy)
+                rs.on('close', this.verify.bind(this, rs, done))
+              }.bind(this))
+            }.bind(this))
+          }.bind(this))
+        }
+    }
+
   , 'maxListeners warning': function (done) {
       var location   = common.nextLocation()
       // 1) open database without callback, opens in worker thread
