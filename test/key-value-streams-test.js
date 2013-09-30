@@ -8,6 +8,7 @@ var common  = require('./common')
   , assert  = require('referee').assert
   , refute  = require('referee').refute
   , buster  = require('bustermove')
+  , delayed = require('delayed').delayed
 
 buster.testCase('Key and Value Streams', {
     'setUp': function (done) {
@@ -30,7 +31,7 @@ buster.testCase('Key and Value Streams', {
         this.sourceValues = Object.keys(this.sourceData)
           .map(function (k) { return this.sourceData[k].value }.bind(this))
 
-        this.verify = function (rs, data, done) {
+        this.verify = delayed(function (rs, data, done) {
           assert.equals(this.endSpy.callCount, 1, 'Stream emitted single "end" event')
           assert.equals(this.dataSpy.callCount, data.length, 'Stream emitted correct number of "data" events')
           data.forEach(function (d, i) {
@@ -42,7 +43,7 @@ buster.testCase('Key and Value Streams', {
             }
           }.bind(this))
           done()
-        }.bind(this)
+        }, 0.05, this)
 
         done()
       }.bind(this))
