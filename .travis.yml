@@ -2,13 +2,6 @@ language: node_js
 node_js:
   - "0.8"
   - "0.10"
-before_install:
-  - rm -rf ~/.nvm/
-  - curl https://raw.github.com/creationix/nvm/master/install.sh | sh
-  - source ~/.nvm/nvm.sh
-  - nvm install ${TRAVIS_NODE_VERSION}
-  - rm -rf ~/tmp/
-  - rm -rf ~/.npm/
 branches:
   only:
     - master
