@@ -1,3 +1,10 @@
+### 0.17.0 @ Oct 01 2013
+
+ * Undo factory pattern, use plain prototypal object and expose full prototype (@rvagg)
+ * Move Batch object to batch.js and expose (@rvagg)
+ * Use new package, DeferredLevelDOWN to handle all deferred open logic (@rvagg)
+ * Code cleanup, update deps (xtend) (@rvagg, @juliangruber)
+
 ### 0.16.0 @ Sep 10 2013
 
  * Added `notFound` boolean property and `status=404` property to NotFoundError (@rvagg)

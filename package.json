@@ -1,7 +1,7 @@
 {
     "name"            : "levelup"
   , "description"     : "Fast & simple storage - a Node.js-style LevelDB wrapper"
-  , "version"         : "0.16.0"
+  , "version"         : "0.17.0"
   , "contributors"    : [
         "Rod Vagg <r@va.gg> (https://github.com/rvagg)"
       , "John Chesley <john@chesl.es> (https://github.com/chesles/)"
@@ -43,7 +43,7 @@
       , "deferred-leveldown"  : "~0.0.1"
     }
   , "devDependencies" : {
-        "leveldown"       : "~0.8.0"
+        "leveldown"       : "~0.9.0"
       , "bustermove"      : "*"
       , "tap"             : "*"
       , "referee"         : "*"
