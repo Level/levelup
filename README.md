@@ -300,11 +300,15 @@ Queue a *put* operation on the current batch, not committed until a `write()` is
 
 The optional `options` argument can be used to override the default `'keyEncoding'` and/or `'valueEncoding'`.
 
+This method may `throw` a `WriteError` if there is a problem with your put (such as the `value` being `null` or `undefined`).
+
 <b><code>batch.del(key[, options])</code></b>
 
 Queue a *del* operation on the current batch, not committed until a `write()` is called on the batch.
 
 The optional `options` argument can be used to override the default `'keyEncoding'`.
+
+This method may `throw` a `WriteError` if there is a problem with your delete.
 
 <b><code>batch.clear()</code></b>
 
@@ -312,7 +316,7 @@ Clear all queued operations on the current batch, any previous operations will b
 
 <b><code>batch.write([callback])</code></b>
 
-Commit the queued operations for this batch. All operations not *cleared* will be written to the database atomically, that is, they will either all succeed or fail with no partial commits. The optional `callback` will be called when the operation has completed with an *error* argument if an error has occurred.
+Commit the queued operations for this batch. All operations not *cleared* will be written to the database atomically, that is, they will either all succeed or fail with no partial commits. The optional `callback` will be called when the operation has completed with an *error* argument if an error has occurred; if no `callback` is supplied and an error occurs then this method will `throw` a `WriteError`.
 
 
 --------------------------------------------------------
