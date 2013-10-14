@@ -11,6 +11,7 @@ var levelup = require('../lib/levelup.js')
   , assert  = require('referee').assert
   , refute  = require('referee').refute
   , buster  = require('bustermove')
+  , MemDOWN = require('memdown')
 
 buster.testCase('Init & open()', {
     'setUp': common.commonSetUp
@@ -180,5 +181,37 @@ buster.testCase('Init & open()', {
           }.bind(this))
         }.bind(this))
       }.bind(this))
+    }
+
+  , 'constructor with options argument uses factory': function (done) {
+      var db = levelup({ db: MemDOWN })
+      assert.isNull(db.location, 'location property is null')
+      db.on('open', function () {
+        assert(db.db instanceof MemDOWN, 'using a memdown backend')
+        assert.same(db.db.location, '', 'db location property is ""')
+        db.put('foo', 'bar', function (err) {
+          refute(err, 'no error')
+          db.get('foo', function (err, value) {
+            assert.equals(value, 'bar', 'correct value')
+            done()
+          })
+        })
+      })
+    }
+
+  , 'constructor with only function argument uses factory': function (done) {
+      var db = levelup(MemDOWN)
+      assert.isNull(db.location, 'location property is null')
+      db.on('open', function () {
+        assert(db.db instanceof MemDOWN, 'using a memdown backend')
+        assert.same(db.db.location, '', 'db location property is ""')
+        db.put('foo', 'bar', function (err) {
+          refute(err, 'no error')
+          db.get('foo', function (err, value) {
+            assert.equals(value, 'bar', 'correct value')
+            done()
+          })
+        })
+      })
     }
 })
