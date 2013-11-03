@@ -40,7 +40,7 @@
       , "prr"                 : "~0.0.0"
       , "semver"              : "~1.1.4"
       , "bops"                : "~0.0.6"
-      , "deferred-leveldown"  : "~0.0.1"
+      , "deferred-leveldown"  : "~0.1.0"
     }
   , "devDependencies" : {
         "leveldown"       : "~0.9.0"

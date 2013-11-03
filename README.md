@@ -132,6 +132,8 @@ db.put('name', 'LevelUP', function (err) {
 --------------------------------------------------------
 <a name="ctor"></a>
 ### levelup(location[, options[, callback]])
+### levelup(options[, callback ])
+### levelup(db[, callback ])
 <code>levelup()</code> is the main entry point for creating a new LevelUP instance and opening the underlying store with LevelDB.
 
 This function returns a new instance of LevelUP and will also initiate an <a href="#open"><code>open()</code></a> operation. Opening the database is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form: `function (err, db) {}` where the `db` is the LevelUP instance. If you don't provide a callback, any read & write operations are simply queued internally until the database is fully opened.
@@ -157,6 +159,26 @@ db.get('foo', function (err, value) {
 ```
 
 The `location` argument is available as a read-only property on the returned LevelUP instance.
+
+The `levelup(options, callback)` form (with optional `callback`) is only available where you provide a valid `'db'` property on the options object (see below). Only for back-ends that don't require a `location` argument, such as [MemDOWN](https://github.com/rvagg/memdown).
+
+For example:
+
+```js
+var levelup = require('levelup')
+var memdown = require('memdown')
+var db = levelup({ db: memdown })
+```
+
+The `levelup(db, callback)` form (with optional `callback`) is only available where `db` is a factory function, as would be provided as a `'db'` property on an `options` object (see below). Only for back-ends that don't require a `location` argument, such as [MemDOWN](https://github.com/rvagg/memdown).
+
+For example:
+
+```js
+var levelup = require('levelup')
+var memdown = require('memdown')
+var db = levelup(memdown)
+```
 
 #### `options`
 
