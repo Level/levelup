@@ -1,4 +1,8 @@
+### 0.18.1 @ Nov 20 2013
+ * Make chained-batch obey global LevelUP object options (@mcavage)
+
 ### 0.18.0 @ Nov 18 2013
+
  * Upgrade to LevelDOWN@0.10.0 (and bops@0.1.0 and readable-stream@1.1.9) (@rvagg)
 
 ### 0.17.0 @ Oct 01 2013
