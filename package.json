@@ -35,7 +35,7 @@
   "dependencies": {
     "errno": "~0.1.0",
     "concat-stream": "~0.1.1",
-    "readable-stream": "~1.1.9",
+    "readable-stream": "~1.0.17",
     "xtend": "~2.1.1",
     "prr": "~0.0.0",
     "semver": "~2.2.1",
