@@ -3,8 +3,7 @@ LevelUP
 
 ![LevelDB Logo](https://0.gravatar.com/avatar/a498b122aecb7678490a38bb593cc12d)
 
-Fast & simple storage - a Node.js-style LevelDB wrapper
--------------------------------------------------------
+**Fast & simple storage - a Node.js-style LevelDB wrapper**
 
 [![Build Status](https://secure.travis-ci.org/rvagg/node-levelup.png)](http://travis-ci.org/rvagg/node-levelup)
 
