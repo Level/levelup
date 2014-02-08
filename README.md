@@ -593,10 +593,10 @@ console.log(db.db.getProperty('leveldb.num-files-at-level3'))
 
 The callback will be called when the destroy operation is complete, with a possible `error` argument.
 
-**Note:** `destroy()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/) which you will have to have available to `require()`, e.g.:
+**Note:** `destroy()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/) which you will have available to `require()`, e.g.:
 
 ```js
-require('leveldown').destroy('./huge.db', function () { console.log('done!') })
+require('leveldown').destroy('./huge.db', function (err) { console.log('done!') })
 ```
 
 --------------------------------------------------------
@@ -612,10 +612,10 @@ A `repair()` can also be used to perform a compaction of the LevelDB log into ta
 
 The callback will be called when the repair operation is complete, with a possible `error` argument.
 
-**Note:** `destroy()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/) which you will have to have available to `require()`, e.g.:
+**Note:** `repair()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/) which you will have available to `require()`, e.g.:
 
 ```js
-require('leveldown').repair('./huge.db', function () { console.log('done!') })
+require('leveldown').repair('./huge.db', function (err) { console.log('done!') })
 ```
 
 --------------------------------------------------------
