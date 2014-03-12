@@ -366,7 +366,7 @@ A LevelUP object can be in one of the following states:
 <a name="createReadStream"></a>
 ### db.createReadStream([options])
 
-You can obtain a **ReadStream** of the full database by calling the `createReadStream()` method. The resulting stream is a complete Node.js-style [Readable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_readable_stream) where `'data'` events emit objects with `'key'` and `'value'` pairs.
+You can obtain a **ReadStream** of the full database by calling the `createReadStream()` method. The resulting stream is a complete Node.js-style [Readable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_readable_stream) where `'data'` events emit objects with `'key'` and `'value'` pairs. You can also use the `start`, `end` and `limit` options to control the range of keys that are streamed.
 
 ```js
 db.createReadStream()
