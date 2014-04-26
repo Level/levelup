@@ -39,7 +39,7 @@
     "xtend": "~2.1.1",
     "prr": "~0.0.0",
     "semver": "~2.2.1",
-    "deferred-leveldown": "~0.1.0"
+    "deferred-leveldown": "~0.2.0"
   },
   "devDependencies": {
     "leveldown": "~0.10.0",
