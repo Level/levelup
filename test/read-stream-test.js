@@ -108,6 +108,19 @@ buster.testCase('ReadStream', {
       }.bind(this))
     }
 
+  , 'test destroy() after closing db': function (done) {
+    this.openTestDatabase(function (db) {
+      db.batch(this.sourceData.slice(), function (err) {
+        refute(err)
+        db.close(function (err) {
+          var rs = db.createReadStream()
+          rs.destroy()
+          done()
+        }.bind(this))
+      }.bind(this))
+    }.bind(this))
+  }
+
   , 'test destroy() twice': function (done) {
       this.openTestDatabase(function (db) {
         db.batch(this.sourceData.slice(), function (err) {
