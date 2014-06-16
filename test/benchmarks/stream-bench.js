@@ -1,4 +1,4 @@
-const levelup = require('../../')
+const levelup = require(process.argv[2] || '../../')
     , crypto  = require('crypto')
     , srcdb   = levelup('/tmp/source.db')
     , dstdb   = levelup('/tmp/destination.db')
