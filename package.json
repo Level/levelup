@@ -1,7 +1,7 @@
 {
   "name": "levelup",
   "description": "Fast & simple storage - a Node.js-style LevelDB wrapper",
-  "version": "0.18.2",
+  "version": "0.18.3",
   "contributors": [
     "Rod Vagg <r@va.gg> (https://github.com/rvagg)",
     "John Chesley <john@chesl.es> (https://github.com/chesles/)",
@@ -33,14 +33,13 @@
   ],
   "main": "lib/levelup.js",
   "dependencies": {
-    "errno": "~0.1.0",
     "concat-stream": "~0.1.1",
-    "readable-stream": "~1.0.17",
-    "xtend": "~2.1.1",
+    "deferred-leveldown": "~0.2.0",
+    "errno": "~0.1.0",
     "prr": "~0.0.0",
+    "readable-stream": "~1.0.17",
     "semver": "~2.2.1",
-    "bops": "~0.1.0",
-    "deferred-leveldown": "~0.1.0"
+    "xtend": "~2.1.1"
   },
   "devDependencies": {
     "leveldown": "~0.10.0",
