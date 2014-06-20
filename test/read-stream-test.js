@@ -582,6 +582,79 @@ buster.testCase('ReadStream', {
       }.bind(this))
     }
 
+  , 'test invalid readStream() options': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+          var message = null
+
+          // Forward direction
+          try       { db.createReadStream({ start: '20', ge: '20'}) }
+          catch (e) { message = e.message }
+          assert.equals(message, 'Conflicting options "start" and "ge" in stream')
+          try       { db.createReadStream({ end: '20', le: '20'}) }
+          catch (e) { message = e.message }
+          assert.equals(message, 'Conflicting options "end" and "le" in stream')
+
+          // Reverse direction
+          try       { db.createReadStream({ start: '20', le: '20', reverse:true}) }
+          catch (e) { message = e.message }
+          assert.equals(message, 'Conflicting options "start" and "le" in reversed stream')
+
+          try       { db.createReadStream({ end: '20', ge: '20', reverse:true}) }
+          catch (e) { message = e.message }
+          assert.equals(message, 'Conflicting options "end" and "ge" in reversed stream')
+
+          done()
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with "ge" and "limit"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.createReadStream({ ge: '20', limit: 20 })
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          this.sourceData = this.sourceData.slice(20, 40)
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test readStream() with "ge" and "le"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.createReadStream({ ge: '20', le: '30' })
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          this.sourceData = this.sourceData.slice(20, 31) // Eleven rows, 20-30.
+        }.bind(this))
+      }.bind(this))
+    }
+
+  , 'test reversed readStream() with "ge" and "le"': function (done) {
+      this.openTestDatabase(function (db) {
+        db.batch(this.sourceData.slice(), function (err) {
+          refute(err)
+
+          var rs = db.createReadStream({ ge: '20', le: '30', reverse:true })
+          rs.on('data' , this.dataSpy)
+          rs.on('end'  , this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
+
+          this.sourceData = this.sourceData.slice(20, 31).reverse() // Eleven rows, 30-20.
+        }.bind(this))
+      }.bind(this))
+    }
+
   , 'test readStream() with "start" and "limit"': function (done) {
       this.openTestDatabase(function (db) {
         db.batch(this.sourceData.slice(), function (err) {
