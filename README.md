@@ -394,9 +394,9 @@ Additionally, you can supply an options object as the first parameter to `create
 
 * `'reverse'` *(boolean, default: `false`)*: a boolean, set to true if you want the stream to go in reverse order. Beware that due to the way LevelDB works, a reverse seek will be slower than a forward seek.
 
-* `'ge'`: the lowest value key the stream may contain (mnemonic: "Scan keys **G**reater than or **E**qual to this"). A normal read stream will "start" from this key; but a reversed stream will "end" with this key.
+* `'ge'`: the lowest value key the stream may contain (mnemonic: "Scan keys (g)reater than or (e)qual to this"). A normal read stream will "start" from this key; but a reversed stream will "end" with this key.
 
-* `'le'`: the greatest value key the stream may contain (mnemonic: "Scan keys **L**ess than or **E**qual this"). A normal read stream will "end" with this key; but a reversed stream will "start" from this key.
+* `'le'`: the greatest value key the stream may contain (mnemonic: "Scan keys (l)ess than or (e)qual this"). A normal read stream will "end" with this key; but a reversed stream will "start" from this key.
 
 * `'keys'` *(boolean, default: `true`)*: whether the `'data'` event should contain keys. If set to `true` and `'values'` set to `false` then `'data'` events will simply be keys, rather than objects with a `'key'` property. Used internally by the `createKeyStream()` method.
 

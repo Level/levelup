@@ -600,7 +600,6 @@ buster.testCase('ReadStream', {
           try       { db.createReadStream({ start: '20', le: '20', reverse:true}) }
           catch (e) { message = e.message }
           assert.equals(message, 'Conflicting options "start" and "le" in reversed stream')
-
           try       { db.createReadStream({ end: '20', ge: '20', reverse:true}) }
           catch (e) { message = e.message }
           assert.equals(message, 'Conflicting options "end" and "ge" in reversed stream')
