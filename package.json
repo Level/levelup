@@ -33,13 +33,13 @@
   ],
   "main": "lib/levelup.js",
   "dependencies": {
-    "concat-stream": "~0.1.1",
+    "concat-stream": "~1.4.6",
     "deferred-leveldown": "~0.2.0",
-    "errno": "~0.1.0",
+    "errno": "~0.1.1",
     "prr": "~0.0.0",
-    "readable-stream": "~1.0.17",
-    "semver": "~2.2.1",
-    "xtend": "~2.1.1"
+    "readable-stream": "~1.0.26",
+    "semver": "~2.3.1",
+    "xtend": "~3.0.0"
   },
   "devDependencies": {
     "leveldown": "~0.10.0",
