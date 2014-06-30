@@ -18,13 +18,13 @@ buster.testCase('LevelDOWN Substitution', {
             levelup('/somewhere/not/writable/booya!', { db: function () { return md } })
         , entries  = []
         , expected = [
-              { key: 'a', value: 'A' }
-            , { key: 'b', value: 'B' }
-            , { key: 'c', value: 'C' }
-            , { key: 'd', value: 'D' }
-            , { key: 'e', value: 'E' }
-            , { key: 'f', value: 'F' }
-            , { key: 'i', value: 'I' }
+              { key: 'a', value: 'A', extra: undefined }
+            , { key: 'b', value: 'B', extra: undefined }
+            , { key: 'c', value: 'C', extra: undefined }
+            , { key: 'd', value: 'D', extra: undefined }
+            , { key: 'e', value: 'E', extra: undefined }
+            , { key: 'f', value: 'F', extra: undefined }
+            , { key: 'i', value: 'I', extra: undefined }
           ]
 
       db.put('f', 'F')
