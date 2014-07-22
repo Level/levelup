@@ -720,13 +720,13 @@ LevelUP is only possible due to the excellent work of the following contributors
 A large portion of the Windows support comes from code by [Krzysztof Kowalczyk](http://blog.kowalczyk.info/) [@kjk](https://twitter.com/kjk), see his Windows LevelDB port [here](http://code.google.com/r/kkowalczyk-leveldb/). If you're using LevelUP on Windows, you should give him your thanks!
 
 
-<a name="licence"></a>
-Licence &amp; copyright
+<a name="license"></a>
+License &amp; copyright
 -------------------
 
-Copyright (c) 2012-2013 LevelUP contributors (listed above).
+Copyright (c) 2012-2014 LevelUP contributors (listed above).
 
-LevelUP is licensed under an MIT +no-false-attribs license. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
+LevelUP is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE.md file for more details.
 
 =======
 *LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).*
