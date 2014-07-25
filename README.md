@@ -388,11 +388,13 @@ The standard `pause()`, `resume()` and `destroy()` methods are implemented on th
 
 Additionally, you can supply an options object as the first parameter to `createReadStream()` with the following options:
 
-* `'start'`: the key you wish to start the read at. By default it will start at the beginning of the store. Note that the *start* doesn't have to be an actual key that exists, LevelDB will simply find the *next* key, greater than the key you provide.
+* `'gt', 'gte'` (greater than (or equal)) if either of these options are provided, the stream output will only include keys that are greater than (or equal) to this option. (can be either a string or a buffer, or a value supported by the current encoding) If not provided the output will include from the lowest key in the database. See also (`'lt', 'lte'`, and `'range'`). keys are compared by comparing the bytes in their binary encoded value.
 
-* `'end'`: the key you wish to end the read on. By default it will continue until the end of the store. Again, the *end* doesn't have to be an actual key as an (inclusive) `<=`-type operation is performed to detect the end. You can also use the `destroy()` method instead of supplying an `'end'` parameter to achieve the same effect.
+* `'lt', 'lte'` (less than (or equal)) if either of these options are provided, the stream output will only include keys that are less than (or equal) to this option. If not provided the output will go to the highest key in the database.
 
-* `'reverse'` *(boolean, default: `false`)*: a boolean, set to true if you want the stream to go in reverse order. Beware that due to the way LevelDB works, a reverse seek will be slower than a forward seek.
+* `'start', 'end'` legacy ranges - instead use `'gte', 'lte'`
+
+* `'reverse'` *(boolean, default: `false`)*: a boolean, set true and the stream output will be reversed. Beware that due to the way LevelDB works, a reverse seek will be slower than a forward seek.
 
 * `'keys'` *(boolean, default: `true`)*: whether the `'data'` event should contain keys. If set to `true` and `'values'` set to `false` then `'data'` events will simply be keys, rather than objects with a `'key'` property. Used internally by the `createKeyStream()` method.
 
