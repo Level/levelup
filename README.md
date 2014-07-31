@@ -388,9 +388,9 @@ The standard `pause()`, `resume()` and `destroy()` methods are implemented on th
 
 Additionally, you can supply an options object as the first parameter to `createReadStream()` with the following options:
 
-* `'gt', 'gte'` (greater than (or equal)) if either of these options are provided, the stream output will only include keys that are greater than (or equal) to this option. (can be either a string or a buffer, or a value supported by the current encoding) If not provided the output will include from the lowest key in the database. See also (`'lt', 'lte'`, and `'range'`). keys are compared by comparing the bytes in their binary encoded value.
+* `'gt'` (greater than), `'gte'` (greater than or equal) define the lower bound of the range to be streamed. Only records where the key is greater than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the records streamed will be the same.
 
-* `'lt', 'lte'` (less than (or equal)) if either of these options are provided, the stream output will only include keys that are less than (or equal) to this option. If not provided the output will go to the highest key in the database.
+* `'lt'` (less than), `'lte'` (less than or equal) define the higher bound of the range to be streamed. Only key/value pairs where the key is less than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the records streamed will be the same.
 
 * `'start', 'end'` legacy ranges - instead use `'gte', 'lte'`
 
