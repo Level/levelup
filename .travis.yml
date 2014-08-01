@@ -21,3 +21,4 @@ notifications:
     - pedro.teixeira@gmail.com
     - mail@substack.net
 script: npm run-script alltests
+

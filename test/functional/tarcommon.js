@@ -1,6 +1,6 @@
-/* Copyright (c) 2012-2013 LevelUP contributors
+/* Copyright (c) 2012-2014 LevelUP contributors
  * See list at <https://github.com/rvagg/node-levelup#contributing>
- * MIT +no-false-attribs License <https://github.com/rvagg/node-levelup/blob/master/LICENSE>
+ * MIT License <https://github.com/rvagg/node-levelup/blob/master/LICENSE.md>
  */
 
 var assert       = require('referee').assert
