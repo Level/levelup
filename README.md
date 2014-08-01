@@ -652,12 +652,10 @@ A custom encoding may be provided by passing in an object as an value for `keyEn
 {
     encode : function (val) { ... }
   , decode : function (val) { ... }
-  , buffer : boolean // encode returns a buffer-like and decode accepts a buffer
+  , buffer : boolean // encode returns a buffer and decode accepts a buffer
   , type   : String  // name of this encoding type.
 }
 ```
-
-*"buffer-like"* means either a `Buffer` if running in Node, or a Uint8Array if in a browser. Use [bops](https://github.com/chrisdickinson/bops) to get portable binary operations.
 
 <a name="extending"></a>
 Extending LevelUP
