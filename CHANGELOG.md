@@ -1,3 +1,8 @@
+### 0.18.6 @ Aug 26 2014
+ * (lots of stuff since 0.18.1 not recorded in changelog, ooops)
+ * Extracted encoding / codec to separate modules (@dominictarr)
+
+
 ### 0.18.1 @ Nov 20 2013
  * Make chained-batch obey global LevelUP object options (@mcavage)
 
