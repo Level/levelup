@@ -130,9 +130,9 @@ db.put('name', 'LevelUP', function (err) {
 
 --------------------------------------------------------
 <a name="ctor"></a>
-### levelup(location[, options[, callback]])
-### levelup(options[, callback ])
-### levelup(db[, callback ])
+### levelup(location[, options][, callback])
+### levelup(options[, callback])
+### levelup(db[, callback])
 <code>levelup()</code> is the main entry point for creating a new LevelUP instance and opening the underlying store with LevelDB.
 
 This function returns a new instance of LevelUP and will also initiate an <a href="#open"><code>open()</code></a> operation. Opening the database is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form: `function (err, db) {}` where the `db` is the LevelUP instance. If you don't provide a callback, any read & write operations are simply queued internally until the database is fully opened.
