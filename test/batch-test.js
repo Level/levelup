@@ -247,23 +247,9 @@ buster.testCase('batch()', {
 
       , 'test batch#put() with missing `value`': function () {
           // value = undefined
-          assert.exception(this.batch.put.bind(this.batch, 'foo1'), function (err) {
-            console.log('err.name', err.name, 'err.message', err.message)
-            if (err.name != 'WriteError')
-              return false
-            if ('value cannot be `null` or `undefined`' != err.message)
-              return false
-            return true
-          })
+          this.batch.put('foo1')
 
-          // value = null
-          assert.exception(this.batch.put.bind(this.batch, 'foo1', null), function (err) {
-            if (err.name != 'WriteError')
-              return false
-            if ('value cannot be `null` or `undefined`' != err.message)
-              return false
-            return true
-          })
+          this.batch.put('foo1', null)
         }
 
       , 'test batch#put() with missing `key`': function () {

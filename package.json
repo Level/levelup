@@ -42,7 +42,7 @@
     "xtend": "~3.0.0"
   },
   "devDependencies": {
-    "leveldown": "~0.10.0",
+    "leveldown": "~1.0.0",
     "bustermove": "*",
     "tap": "*",
     "referee": "*",

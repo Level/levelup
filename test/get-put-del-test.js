@@ -125,14 +125,8 @@ buster.testCase('get() / put() / del()', {
 
         assert.exception(
             db.put.bind(db)
-          , { name: 'WriteError', message: 'put() requires key and value arguments' }
+          , { name: 'WriteError', message: 'put() requires a key argument' }
           , 'no-arg put() throws'
-        )
-
-        assert.exception(
-            db.put.bind(db, 'foo')
-          , { name: 'WriteError', message: 'put() requires key and value arguments' }
-          , 'callback-less, 1-arg put() throws'
         )
 
         done()
