@@ -48,7 +48,7 @@
     "delayed": "~1.0.1",
     "du": "~0.1.0",
     "fstream": "~1.0.3",
-    "leveldown": "~0.10.0",
+    "leveldown": "~1.0.0",
     "memdown": "~1.0.0",
     "mkfiletree": "~1.0.0",
     "msgpack-js": "~0.3.0",
