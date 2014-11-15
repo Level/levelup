@@ -257,6 +257,12 @@ LevelDB will by default fill the in-memory LRU Cache with data from a call to ge
 <a name="del"></a>
 ### db.del(key[, options][, callback])
 <code>del()</code> is the primary method for removing data from the store.
+```js
+db.del('foo', function (err) {
+  if (err)
+    // handle I/O or other error
+});
+```
 
 #### `options`
 
