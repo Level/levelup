@@ -46,7 +46,7 @@ buster.testCase('LevelDOWN Substitution', {
         .on('close', function () {
           assert.equals(entries, expected, 'correct entries')
           assert.equals(
-              md._keys
+              md._store['$foo'].keys
             , expected.map(function (e) { return e.key })
             , 'memdown has the entries'
           )
