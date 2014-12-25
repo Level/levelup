@@ -3,12 +3,14 @@
  * MIT License <https://github.com/rvagg/node-levelup/blob/master/LICENSE.md>
  */
 
-var async   = require('async')
-  , common  = require('./common')
+var async       = require('async')
+  , common      = require('./common')
+  , WriteStream = require('level-ws')
+  , delayed     = require('delayed').delayed
 
-  , assert  = require('referee').assert
-  , refute  = require('referee').refute
-  , buster  = require('bustermove')
+  , assert      = require('referee').assert
+  , refute      = require('referee').refute
+  , buster      = require('bustermove')
 
 buster.testCase('WriteStream', {
     'setUp': function (done) {
@@ -25,7 +27,7 @@ buster.testCase('WriteStream', {
           })
         }
 
-        this.verify = function (ws, db, done, data) {
+        this.verify = delayed(function (ws, db, done, data) {
           if (!data) data = this.sourceData // can pass alternative data array for verification
           async.forEach(
               data
@@ -38,7 +40,7 @@ buster.testCase('WriteStream', {
               }
             , done
           )
-        }
+        }, 100, this)
 
         done()
       }.bind(this))
@@ -50,26 +52,26 @@ buster.testCase('WriteStream', {
 
   , 'test simple WriteStream': function (done) {
       this.openTestDatabase(function (db) {
-        var ws = db.createWriteStream()
+        var ws = new WriteStream(db)
         ws.on('error', function (err) {
           refute(err)
         })
-        ws.on('close', this.verify.bind(this, ws, db, done))
+        ws.on('finish', this.verify.bind(this, ws, db, done))
         this.sourceData.forEach(function (d) {
           ws.write(d)
         })
-        ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
+        ws.end()
       }.bind(this))
     }
 
   , 'test WriteStream with async writes': function (done) {
       this.openTestDatabase(function (db) {
-        var ws = db.createWriteStream()
+        var ws = new WriteStream(db)
 
         ws.on('error', function (err) {
           refute(err)
         })
-        ws.on('close', this.verify.bind(this, ws, db, done))
+        ws.on('finish', this.verify.bind(this, ws, db, done))
         async.forEachSeries(
             this.sourceData
           , function (d, callback) {
@@ -101,12 +103,12 @@ buster.testCase('WriteStream', {
           })
         }
 
-        var ws = db.createWriteStream({ useBatch: false })
+        var ws = new WriteStream(db, { useBatch: false })
 
         ws.on('error', function (err) {
           refute(err)
         })
-        ws.on('close', this.verify.bind(this, ws, db, done))
+        ws.on('finish', this.verify.bind(this, ws, db, done))
         async.forEachSeries(
             this.sourceData
           , function (d, callback) {
@@ -130,11 +132,16 @@ buster.testCase('WriteStream', {
 
   , 'test end accepts data': function (done) {
       this.openTestDatabase(function (db) {
-        var ws = db.createWriteStream()
+        var ws = new WriteStream(db)
+          , self = this
         ws.on('error', function (err) {
           refute(err)
         })
-        ws.on('close', this.verify.bind(this, ws, db, done))
+        ws.on('finish', function () {
+          setTimeout(function () {
+            self.verify(ws, db, done)
+          }, 500)
+        })
         var i = 0
         this.sourceData.forEach(function (d) {
           i ++
@@ -150,15 +157,15 @@ buster.testCase('WriteStream', {
     // at the moment, destroySoon() is basically just end()
   , 'test destroySoon()': function (done) {
       this.openTestDatabase(function (db) {
-        var ws = db.createWriteStream()
+        var ws = new WriteStream(db)
         ws.on('error', function (err) {
           refute(err)
         })
-        ws.on('close', this.verify.bind(this, ws, db, done))
+        ws.on('finish', this.verify.bind(this, ws, db, done))
         this.sourceData.forEach(function (d) {
           ws.write(d)
         })
-        ws.once('ready', ws.destroySoon) // end after it's ready, nextTick makes this work OK
+        ws.destroySoon()
       }.bind(this))
     }
 
@@ -179,7 +186,7 @@ buster.testCase('WriteStream', {
       }
 
       this.openTestDatabase(function (db) {
-        var ws = db.createWriteStream()
+        var ws = new WriteStream(db)
         ws.on('error', function (err) {
           refute(err)
         })
@@ -187,7 +194,7 @@ buster.testCase('WriteStream', {
         this.sourceData.forEach(function (d) {
           ws.write(d)
         })
-        ws.once('ready', ws.destroy)
+        ws.destroy()
       }.bind(this))
     }
 
@@ -206,15 +213,15 @@ buster.testCase('WriteStream', {
           ]
 
       this.openTestDatabase(options, function (db) {
-        var ws = db.createWriteStream()
+        var ws = new WriteStream(db)
         ws.on('error', function (err) {
           refute(err)
         })
-        ws.on('close', this.verify.bind(this, ws, db, done, data))
+        ws.on('finish', this.verify.bind(this, ws, db, done, data))
         data.forEach(function (d) {
           ws.write(d)
         })
-        ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
+        ws.end()
       }.bind(this))
     }
 
@@ -240,26 +247,25 @@ buster.testCase('WriteStream', {
           });
         }.bind(this),
         function (db, cb) {
-          var ws = db.createWriteStream()
+          var ws = new WriteStream(db)
           ws.on('error', function (err) {
             refute(err)
           })
-          ws.on('close', function () {
+          ws.on('finish', function () {
             cb(null, db);
           })
           data.forEach(function (d) {
             ws.write(d)
           })
 
-          // end after it's ready, nextTick makes this work OK
-          ws.once('ready', ws.end)
+          ws.end()
         },
         function (db, cb) {
-          var delStream = db.createWriteStream()
+          var delStream = new WriteStream(db)
           delStream.on('error', function (err) {
             refute(err)
           })
-          delStream.on('close', function () {
+          delStream.on('finish', function () {
             cb(null, db);
           })
           data.forEach(function (d) {
@@ -268,7 +274,7 @@ buster.testCase('WriteStream', {
           })
 
           // end after it's ready, nextTick makes this work OK
-          delStream.once('ready', delStream.end)
+          delStream.end()
         },
         function (db, cb) {
           async.forEach(
@@ -309,11 +315,11 @@ buster.testCase('WriteStream', {
           });
         }.bind(this),
         function (db, cb) {
-          var ws = db.createWriteStream()
+          var ws = new WriteStream(db)
           ws.on('error', function (err) {
             refute(err)
           })
-          ws.on('close', function () {
+          ws.on('finish', function () {
             cb(null, db);
           })
           data.forEach(function (d) {
@@ -321,14 +327,14 @@ buster.testCase('WriteStream', {
           })
 
           // end after it's ready, nextTick makes this work OK
-          ws.once('ready', ws.end)
+          ws.end()
         },
         function (db, cb) {
-          var delStream = db.createWriteStream({ type: 'del' })
+          var delStream = new WriteStream(db, { type: 'del' })
           delStream.on('error', function (err) {
             refute(err)
           })
-          delStream.on('close', function () {
+          delStream.on('finish', function () {
             cb(null, db);
           })
           data.forEach(function (d) {
@@ -336,7 +342,7 @@ buster.testCase('WriteStream', {
           })
 
           // end after it's ready, nextTick makes this work OK
-          delStream.once('ready', delStream.end)
+          delStream.end()
         },
         function (db, cb) {
           async.forEach(
@@ -380,11 +386,11 @@ buster.testCase('WriteStream', {
           });
         }.bind(this),
         function (db, cb) {
-          var ws = db.createWriteStream()
+          var ws = new WriteStream(db)
           ws.on('error', function (err) {
             refute(err)
           })
-          ws.on('close', function () {
+          ws.on('finish', function () {
             cb(null, db);
           })
           data.forEach(function (d) {
@@ -392,22 +398,21 @@ buster.testCase('WriteStream', {
           })
 
           // end after it's ready, nextTick makes this work OK
-          ws.once('ready', ws.end)
+          ws.end()
         },
         function (db, cb) {
-          var delStream = db.createWriteStream({ type: 'del' })
+          var delStream = new WriteStream(db, { type: 'del' })
           delStream.on('error', function (err) {
             refute(err)
           })
-          delStream.on('close', function () {
+          delStream.on('finish', function () {
             cb(null, db);
           })
           data.forEach(function (d) {
             delStream.write(d)
           })
 
-          // end after it's ready, nextTick makes this work OK
-          delStream.once('ready', delStream.end)
+          delStream.end()
         },
         function (db, cb) {
           async.forEach(
@@ -437,16 +442,16 @@ buster.testCase('WriteStream', {
           this.openTestDatabase(cb.bind(null, null))
         }.bind(this),
         function (db, cb) {
-          var ws = db.createWriteStream()
+          var ws = new WriteStream(db)
           ws.on('error', function (err) {
             refute(err)
           })
-          ws.on('close', cb.bind(null, db))
+          ws.on('finish', cb.bind(null, db))
           this.sourceData.forEach(function (d) {
             d.type = "x" + Math.random()
             ws.write(d)
           })
-          ws.once('ready', ws.end) // end after it's ready, nextTick makes this work OK
+          ws.end()
         }.bind(this),
         function (db, cb) {
           async.forEach(

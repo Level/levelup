@@ -3,13 +3,23 @@
  * MIT License <https://github.com/rvagg/node-levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
-  , async   = require('async')
-  , common  = require('./common')
+var levelup     = require('../lib/levelup.js')
+  , async       = require('async')
+  , common      = require('./common')
+  , WriteStream = require('level-ws')
 
-  , assert  = require('referee').assert
-  , refute  = require('referee').refute
-  , buster  = require('bustermove')
+  , assert      = require('referee').assert
+  , refute      = require('referee').refute
+  , buster      = require('bustermove')
+
+
+function copy (srcdb, dstdb, callback) {
+  srcdb.readStream()
+    .pipe(new WriteStream(dstdb))
+    .on('close', callback ? callback : function () {})
+    .on('error', callback ? callback : function (err) { throw err })
+}
+
 
 buster.testCase('Copy', {
     'setUp': common.commonSetUp
@@ -58,7 +68,7 @@ buster.testCase('Copy', {
           { src: opensrc, dst: opendst }
         , function (err, dbs) {
             refute(err)
-            levelup.copy(dbs.src, dbs.dst, function (err) {
+            copy(dbs.src, dbs.dst, function (err) {
               refute(err)
               verify(dbs.dst)
             })
