@@ -3,11 +3,13 @@
  * MIT License <https://github.com/rvagg/node-levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
-  , common  = require('./common')
-  , assert  = require('referee').assert
-  , refute  = require('referee').refute
-  , buster  = require('bustermove')
+var levelup     = require('../lib/levelup.js')
+  , common      = require('./common')
+  , WriteStream = require('level-ws')
+
+  , assert      = require('referee').assert
+  , refute      = require('referee').refute
+  , buster      = require('bustermove')
 
 buster.testCase('Encoding', {
     'setUp': common.readStreamSetUp
@@ -80,7 +82,7 @@ buster.testCase('Encoding', {
     }
   , 'test write-stream encoding': function (done) {
       this.openTestDatabase({ encoding: 'json' }, function (db) {
-        var ws = db.createWriteStream({
+        var ws = new WriteStream(db, {
           keyEncoding : 'utf8',
           valueEncoding : 'binary'
         })
@@ -100,7 +102,7 @@ buster.testCase('Encoding', {
     }
   , 'test write-stream chunk encoding': function (done) {
       this.openTestDatabase({ encoding: 'json' }, function (db) {
-        var ws = db.createWriteStream({
+        var ws = new WriteStream(db, {
           keyEncoding : 'utf8',
           valueEncoding : 'binary'
         })
