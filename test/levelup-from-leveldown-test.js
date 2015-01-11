@@ -125,11 +125,11 @@ buster.testCase('levelup from leveldown', {
       ])
       db.createReadStream()
         .on('data', function (data) { entries.push(data) })
-        //.on('error', function (err) { refute(err, 'readStream emitted an error') })
+        .on('error', function (err) { refute(err, 'readStream emitted an error') })
         .on('close', function () {
           assert.equals(entries, expected, 'correct entries')
           assert.equals(
-              md._store['$foo2'].keys
+              md._store['$foo2'].keys.map(function (e) { return e + '!D' })
             , expected.map(function (e) { return e.key })
             , 'memdown has the entries'
           )
@@ -173,7 +173,7 @@ buster.testCase('levelup from leveldown', {
         .on('close', function () {
           assert.equals(entries, expected, 'correct entries')
           assert.equals(
-              md._store['$foo3'].keys
+              md._store['$foo3'].keys.map(function (e) { return e + '!D' })
             , expected.map(function (e) { return e.key })
             , 'memdown has the entries'
           )
