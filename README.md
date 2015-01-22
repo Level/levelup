@@ -118,7 +118,6 @@ db.put('name', 'LevelUP', function (err) {
   * <a href="#createReadStream"><code>db.<b>createReadStream()</b></code></a>
   * <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
   * <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
-  * <a href="#createWriteStream"><code>db.<b>createWriteStream()</b></code></a>
 
 ### Special operations exposed by LevelDOWN
 
@@ -126,6 +125,9 @@ db.put('name', 'LevelUP', function (err) {
   * <a href="#getProperty"><code>db.db.<b>getProperty()</b></code></a>
   * <a href="#destroy"><code><b>leveldown.destroy()</b></code></a>
   * <a href="#repair"><code><b>leveldown.repair()</b></code></a>
+
+### Special Notes
+  * <a href="#writeStreams">What happened to <code><b>db.createWriteStream()</b></code></a>
 
 
 --------------------------------------------------------
@@ -189,7 +191,7 @@ var db = levelup(memdown)
 
 * `'compression'` *(boolean, default: `true`)*: If `true`, all *compressible* data will be run through the Snappy compression algorithm before being stored. Snappy is very fast and shouldn't gain much speed by disabling so leave this on unless you have good reason to turn it off.
 
-* `'cacheSize'` *(number, default: `8 * 1024 * 1024`)*: The size (in bytes) of the in-memory [LRU](http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used) cache with frequently used uncompressed block contents. 
+* `'cacheSize'` *(number, default: `8 * 1024 * 1024`)*: The size (in bytes) of the in-memory [LRU](http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used) cache with frequently used uncompressed block contents.
 
 * `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)).
   <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and conversion will be performed.</p>
@@ -251,7 +253,7 @@ db.get('foo', function (err, value) {
 
 Encoding of the `key` object will adhere to the `'keyEncoding'` option provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `get()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
 
-LevelDB will by default fill the in-memory LRU Cache with data from a call to get. Disabling this is done by setting `fillCache` to `false`. 
+LevelDB will by default fill the in-memory LRU Cache with data from a call to get. Disabling this is done by setting `fillCache` to `false`.
 
 --------------------------------------------------------
 <a name="del"></a>
@@ -455,104 +457,13 @@ db.createReadStream({ keys: false, values: true })
 ```
 
 --------------------------------------------------------
-<a name="createWriteStream"></a>
-### db.createWriteStream([options])
+<a name="writeStreams"></a>
+#### What happened to `db.createWriteStream`?
 
-A **WriteStream** can be obtained by calling the `createWriteStream()` method. The resulting stream is a complete Node.js-style [Writable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_writable_stream) which accepts objects with `'key'` and `'value'` pairs on its `write()` method.
+Yes we have removed `db.createWriteStream` but not to worry, there is good reason for this. *Disclaimper*: if you are not in a stage where you are worried about performance but want a streaming interface
+into your database, please checkout [`level-ws`][level-ws].
 
-The WriteStream will buffer writes and submit them as a `batch()` operations where writes occur *within the same tick*.
-
-```js
-var ws = db.createWriteStream()
-
-ws.on('error', function (err) {
-  console.log('Oh my!', err)
-})
-ws.on('close', function () {
-  console.log('Stream closed')
-})
-
-ws.write({ key: 'name', value: 'Yuri Irsenovich Kim' })
-ws.write({ key: 'dob', value: '16 February 1941' })
-ws.write({ key: 'spouse', value: 'Kim Young-sook' })
-ws.write({ key: 'occupation', value: 'Clown' })
-ws.end()
-```
-
-The standard `write()`, `end()`, `destroy()` and `destroySoon()` methods are implemented on the WriteStream. `'drain'`, `'error'`, `'close'` and `'pipe'` events are emitted.
-
-You can specify encodings both for the whole stream and individual entries:
-
-To set the encoding for the whole stream, provide an options object as the first parameter to `createWriteStream()` with `'keyEncoding'` and/or `'valueEncoding'`.
-
-To set the encoding for an individual entry:
-
-```js
-writeStream.write({
-    key           : new Buffer([1, 2, 3])
-  , value         : { some: 'json' }
-  , keyEncoding   : 'binary'
-  , valueEncoding : 'json'
-})
-```
-
-#### write({ type: 'put' })
-
-If individual `write()` operations are performed with a `'type'` property of `'del'`, they will be passed on as `'del'` operations to the batch.
-
-```js
-var ws = db.createWriteStream()
-
-ws.on('error', function (err) {
-  console.log('Oh my!', err)
-})
-ws.on('close', function () {
-  console.log('Stream closed')
-})
-
-ws.write({ type: 'del', key: 'name' })
-ws.write({ type: 'del', key: 'dob' })
-ws.write({ type: 'put', key: 'spouse' })
-ws.write({ type: 'del', key: 'occupation' })
-ws.end()
-```
-
-#### db.createWriteStream({ type: 'del' })
-
-If the *WriteStream* is created with a `'type'` option of `'del'`, all `write()` operations will be interpreted as `'del'`, unless explicitly specified as `'put'`.
-
-```js
-var ws = db.createWriteStream({ type: 'del' })
-
-ws.on('error', function (err) {
-  console.log('Oh my!', err)
-})
-ws.on('close', function () {
-  console.log('Stream closed')
-})
-
-ws.write({ key: 'name' })
-ws.write({ key: 'dob' })
-// but it can be overridden
-ws.write({ type: 'put', key: 'spouse', value: 'Ri Sol-ju' })
-ws.write({ key: 'occupation' })
-ws.end()
-```
-
-#### Pipes and Node Stream compatibility
-
-A ReadStream can be piped directly to a WriteStream, allowing for easy copying of an entire database. A simple `copy()` operation is included in LevelUP that performs exactly this on two open databases:
-
-```js
-function copy (srcdb, dstdb, callback) {
-  srcdb.createReadStream().pipe(dstdb.createWriteStream()).on('close', callback)
-}
-```
-
-The ReadStream is also [fstream](https://github.com/isaacs/fstream)-compatible which means you should be able to pipe to and from fstreams. So you can serialize and deserialize an entire database to a directory where keys are filenames and values are their contents, or even into a *tar* file using [node-tar](https://github.com/isaacs/node-tar). See the [fstream functional test](https://github.com/rvagg/node-levelup/blob/master/test/functional/fstream-test.js) for an example. *(Note: I'm not really sure there's a great use-case for this but it's a fun example and it helps to harden the stream implementations.)*
-
-KeyStreams and ValueStreams can be treated like standard streams of raw data. If `'keyEncoding'` or `'valueEncoding'` is set to `'binary'` the `'data'` events will simply be standard Node `Buffer` objects straight out of the data store.
-
+TODO: talk about performance and multiple writeStream implementations
 
 --------------------------------------------------------
 <a name='approximateSize'></a>
@@ -614,7 +525,7 @@ require('leveldown').destroy('./huge.db', function (err) { console.log('done!') 
 
 > If a DB cannot be opened, you may attempt to call this method to resurrect as much of the contents of the database as possible. Some data may be lost, so be careful when calling this function on a database that contains important information.
 
-You will find information on the *repair* operation in the *LOG* file inside the store directory. 
+You will find information on the *repair* operation in the *LOG* file inside the store directory.
 
 A `repair()` can also be used to perform a compaction of the LevelDB log into table files.
 
@@ -736,3 +647,5 @@ LevelUP is licensed under the MIT license. All rights not explicitly granted in 
 
 =======
 *LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).*
+
+[level-ws]: https://github.com/level/level-ws
