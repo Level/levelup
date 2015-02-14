@@ -13,7 +13,10 @@ var referee = require('referee')
   , path    = require('path')
   , delayed = require('delayed').delayed
   , levelup = require('../lib/levelup.js')
+  , errors  = require('../lib/errors')
   , dbidx   = 0
+
+assert(levelup.errors === errors);
 
 referee.add('isInstanceOf', {
     assert: function (actual, expected) {

@@ -3,7 +3,8 @@
  * MIT License <https://github.com/rvagg/node-levelup/blob/master/LICENSE.md>
  */
 
-var errors  = require('../lib/errors.js')
+var levelup = require('../lib/levelup')
+  , errors  = levelup.errors
   , async   = require('async')
   , common  = require('./common')
 
