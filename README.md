@@ -460,10 +460,11 @@ db.createReadStream({ keys: false, values: true })
 <a name="writeStreams"></a>
 #### What happened to `db.createWriteStream`?
 
-Yes we have removed `db.createWriteStream` but not to worry, there is good reason for this. *Disclaimper*: if you are not in a stage where you are worried about performance but want a streaming interface
-into your database, please checkout [`level-ws`][level-ws].
+`db.createWriteStream()` has been removed in order to provide a smaller and more maintainable core. It primarily existed to create symmetry with `db.createReadStream()` but through much [discussion](https://github.com/rvagg/node-levelup/issues/199), removing it was the best cause of action.
 
-TODO: talk about performance and multiple writeStream implementations
+The main driver for this was performance. While `db.createReadStream()` performs well under most use cases, `db.createWriteStream()` was highly dependent on the application keys and values. Thus we can't provide a standard implementation and encourage more `write-stream` implementations to be created to solve the broad spectrum of use cases.
+
+Check out the implementations that the community has already produced [here](https://github.com/rvagg/node-levelup/wiki/Modules#write-streams).
 
 --------------------------------------------------------
 <a name='approximateSize'></a>
