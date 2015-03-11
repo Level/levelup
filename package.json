@@ -33,7 +33,6 @@
   ],
   "main": "lib/levelup.js",
   "dependencies": {
-    "bl": "~0.8.1",
     "deferred-leveldown": "~0.2.0",
     "errno": "~0.1.1",
     "prr": "~0.0.0",
@@ -43,21 +42,16 @@
   },
   "devDependencies": {
     "async": "~0.9.0",
-    "boganipsum": "~0.1.0",
     "bustermove": "~0.4.1",
     "delayed": "~1.0.1",
     "du": "~0.1.0",
-    "fstream": "~1.0.3",
     "leveldown": "~1.0.0",
     "memdown": "~1.0.0",
-    "mkfiletree": "~1.0.0",
     "msgpack-js": "~0.3.0",
-    "readfiletree": "0.0.1",
     "referee": "~1.1.1",
     "rimraf": "~2.2.8",
     "slow-stream": "0.0.4",
-    "tap": "~0.4.13",
-    "tar": "~1.0.3"
+    "tap": "~0.4.13"
   },
   "browser": {
     "leveldown": false,
