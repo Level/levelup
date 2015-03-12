@@ -649,5 +649,3 @@ LevelUP is licensed under the MIT license. All rights not explicitly granted in 
 
 =======
 *LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).*
-
-[level-ws]: https://github.com/level/level-ws
