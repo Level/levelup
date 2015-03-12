@@ -460,10 +460,11 @@ db.createReadStream({ keys: false, values: true })
 <a name="writeStreams"></a>
 #### What happened to `db.createWriteStream`?
 
-Yes we have removed `db.createWriteStream` but not to worry, there is good reason for this. *Disclaimper*: if you are not in a stage where you are worried about performance but want a streaming interface
-into your database, please checkout [`level-ws`][level-ws].
+`db.createWriteStream()` has been removed in order to provide a smaller and more maintainable core. It primarily existed to create symmetry with `db.createReadStream()` but through much [discussion](https://github.com/rvagg/node-levelup/issues/199), removing it was the best cause of action.
 
-TODO: talk about performance and multiple writeStream implementations
+The main driver for this was performance. While `db.createReadStream()` performs well under most use cases, `db.createWriteStream()` was highly dependent on the application keys and values. Thus we can't provide a standard implementation and encourage more `write-stream` implementations to be created to solve the broad spectrum of use cases.
+
+Check out the implementations that the community has already produced [here](https://github.com/rvagg/node-levelup/wiki/Modules#write-streams).
 
 --------------------------------------------------------
 <a name='approximateSize'></a>
@@ -630,6 +631,7 @@ LevelUP is only possible due to the excellent work of the following contributors
 <tr><th align="left">Matteo Collina</th><td><a href="https://github.com/mcollina">GitHub/mcollina</a></td><td><a href="https://twitter.com/matteocollina">Twitter/@matteocollina</a></td></tr>
 <tr><th align="left">Pedro Teixeira</th><td><a href="https://github.com/pgte">GitHub/pgte</a></td><td><a href="https://twitter.com/pgte">Twitter/@pgte</a></td></tr>
 <tr><th align="left">James Halliday</th><td><a href="https://github.com/substack">GitHub/substack</a></td><td><a href="https://twitter.com/substack">Twitter/@substack</a></td></tr>
+<tr><th align="left">Jarrett Cruger</th><td><a href="https://github.com/jcrugzz">GitHub/jcrugzz</a></td><td><a href="https://twitter.com/jcrugzz">Twitter/@jcrugzz</a></td></tr>
 </tbody></table>
 
 ### Windows
