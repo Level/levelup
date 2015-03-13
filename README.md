@@ -1,7 +1,7 @@
 LevelUP
 =======
 
-![LevelDB Logo](https://0.gravatar.com/avatar/a498b122aecb7678490a38bb593cc12d)
+<img alt="LevelDB Logo" height="100" src="http://leveldb.org/img/logo.svg">
 
 **Fast & simple storage - a Node.js-style LevelDB wrapper**
 
@@ -643,7 +643,7 @@ A large portion of the Windows support comes from code by [Krzysztof Kowalczyk](
 License &amp; copyright
 -------------------
 
-Copyright (c) 2012-2014 LevelUP contributors (listed above).
+Copyright (c) 2012-2015 LevelUP contributors (listed above).
 
 LevelUP is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE.md file for more details.
 

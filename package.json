@@ -51,8 +51,8 @@
     "msgpack-js": "~0.3.0",
     "referee": "~1.1.1",
     "rimraf": "~2.2.8",
-    "slow-stream": "0.0.4",
-    "tap": "~0.4.13"
+    "tap": "~0.4.13",
+    "slow-stream": "0.0.4"
   },
   "browser": {
     "leveldown": false,
