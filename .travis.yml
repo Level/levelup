@@ -19,5 +19,4 @@ notifications:
     - matteo.collina@gmail.com
     - pedro.teixeira@gmail.com
     - mail@substack.net
-script: npm run-script alltests
-
+script: npm test

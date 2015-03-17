@@ -80,36 +80,30 @@ buster.testCase('null & undefined keys & values', {
           })
         }
 
-      , 'put() with null value causes error': function (done) {
+      , 'put() with null value works': function (done) {
           this.db.put('foo', null, function (err, value) {
-            refute(value)
-            assert.isInstanceOf(err, Error)
-            assert.isInstanceOf(err, errors.LevelUPError)
+            refute(err)
             done()
           })
         }
 
-      , 'put() with undefined value causes error': function (done) {
+      , 'put() with undefined value works': function (done) {
           this.db.put('foo', undefined, function (err, value) {
-            refute(value)
-            assert.isInstanceOf(err, Error)
-            assert.isInstanceOf(err, errors.LevelUPError)
+            refute(err)
             done()
           })
         }
-      , 'batch() with undefined value causes error': function (done) {
+      , 'batch() with undefined value works': function (done) {
           this.db.batch([{key: 'foo', value: undefined, type: 'put'}]
           , function (err) {
-            assert.isInstanceOf(err, Error)
-            assert.isInstanceOf(err, errors.LevelUPError)
+            refute(err)
             done()
           })
         }
-      , 'batch() with null value causes error': function (done) {
+      , 'batch() with null value works': function (done) {
           this.db.batch([{key: 'foo', value: null, type: 'put'}]
           , function (err) {
-            assert.isInstanceOf(err, Error)
-            assert.isInstanceOf(err, errors.LevelUPError)
+            refute(err)
             done()
           })
         }
