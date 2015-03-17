@@ -3,10 +3,11 @@
  * MIT License <https://github.com/rvagg/node-levelup/blob/master/LICENSE.md>
  */
 
-var assert  = require('referee').assert
+var levelup = require('../lib/levelup')
+  , assert  = require('referee').assert
   , refute  = require('referee').refute
   , buster  = require('bustermove')
-  , errors  = require('../lib/errors')
+  , errors  = levelup.errors
 
 function clearCache () {
   delete require.cache[require.resolve('..')]

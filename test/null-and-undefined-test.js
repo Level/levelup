@@ -4,7 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
-  , errors  = require('../lib/errors.js')
+  , errors  = levelup.errors
   , common  = require('./common')
 
   , assert  = require('referee').assert
