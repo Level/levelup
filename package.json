@@ -36,6 +36,7 @@
   "dependencies": {
     "deferred-leveldown": "~0.2.0",
     "errno": "~0.1.1",
+    "level-codec": "^5.0.0",
     "prr": "~0.0.0",
     "readable-stream": "~1.0.26",
     "semver": "~2.3.1",

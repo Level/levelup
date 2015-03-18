@@ -58,7 +58,7 @@ buster.testCase('Init & open()', {
       var location = common.nextLocation()
       levelup(
           location
-        , { createIfMissing: true, errorIfExists: true, encoding: 'binary' }
+        , { createIfMissing: true, errorIfExists: true, valueEncoding: 'binary' }
         , function (err, db) {
             refute(err)
 
