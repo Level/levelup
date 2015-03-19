@@ -16,7 +16,7 @@ buster.testCase('Encoding', {
 
   , 'test safe decode in get()': function (done) {
       this.openTestDatabase(
-          { createIfMissing: true, errorIfExists: true, encoding: 'utf8' }
+          { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' }
         , function (db) {
             db.put('foo', 'this {} is [] not : json', function (err) {
               refute(err)
@@ -37,7 +37,7 @@ buster.testCase('Encoding', {
 
   , 'test safe decode in readStream()': function (done) {
       this.openTestDatabase(
-          { createIfMissing: true, errorIfExists: true, encoding: 'utf8' }
+          { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' }
         , function (db) {
             db.put('foo', 'this {} is [] not : json', function (err) {
               refute(err)
@@ -67,7 +67,7 @@ buster.testCase('Encoding', {
       // write a value as JSON, read as utf8 and check
       // the fact that we can get with keyEncoding of utf8 should demonstrate that
       // the key is not encoded as JSON
-      this.openTestDatabase({ encoding: 'json' }, function (db) {
+      this.openTestDatabase({ valueEncoding: 'json' }, function (db) {
         db.put('foo:foo', { bar: 'bar' }, function (err) {
           refute(err)
           db.get('foo:foo', { keyEncoding: 'utf8', valueEncoding: 'utf8' }, function (err, value) {
@@ -79,7 +79,7 @@ buster.testCase('Encoding', {
       })
     }
   , 'test batch op encoding': function (done) {
-      this.openTestDatabase({ encoding: 'json' }, function (db) {
+      this.openTestDatabase({ valueEncoding: 'json' }, function (db) {
         db.batch([
             {
               type : 'put',
