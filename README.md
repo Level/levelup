@@ -251,7 +251,7 @@ db.get('foo', function (err, value) {
 
 #### `options`
 
-Encoding of the `key` object will adhere to the `'keyEncoding'` option provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `get()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
+Encoding of the `key` and `value` objects is the same as in <a href="#put"><code>put</code></a>. 
 
 LevelDB will by default fill the in-memory LRU Cache with data from a call to get. Disabling this is done by setting `fillCache` to `false`.
 
