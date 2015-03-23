@@ -13,7 +13,7 @@ var referee = require('referee')
   , path    = require('path')
   , delayed = require('delayed').delayed
   , levelup = require('../lib/levelup.js')
-  , errors  = require('../lib/errors')
+  , errors  = require('level-errors')
   , dbidx   = 0
 
 assert(levelup.errors === errors);
