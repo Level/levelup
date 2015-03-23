@@ -1,16 +1,17 @@
 {
-    "name": "levelup-benchmarks"
-  , "version": "0.0.0"
-  , "description": "benchmarks for LevelUP"
-  , "main": "index.js"
-  , "private": true
-  , "dependencies": {
-        "benchmark": "~1.0.0"
-      , "colors": "~0.6.0-1"
-      , "rimraf": "~2.0.2"
-      , "async": "~0.1.22"
-      , "levelup": "*"
-      , "leveled": "*"
-      , "sqlite3": "*"
-    }
+  "name": "levelup-benchmarks",
+  "version": "0.0.0",
+  "description": "benchmarks for LevelUP",
+  "main": "index.js",
+  "private": true,
+  "dependencies": {
+    "async": "~0.1.22",
+    "benchmark": "~1.0.0",
+    "colors": "~0.6.0-1",
+    "leveldown": "^0.10.4",
+    "leveled": "*",
+    "levelup": "*",
+    "rimraf": "~2.0.2",
+    "sqlite3": "*"
+  }
 }
