@@ -18,7 +18,7 @@ buster.testCase('Deferred open()', {
   , 'put() and get() on pre-opened database': function (done) {
       var location = common.nextLocation()
       // 1) open database without callback, opens in worker thread
-        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, encoding: 'utf8' })
+        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
@@ -61,7 +61,7 @@ buster.testCase('Deferred open()', {
   , 'batch() on pre-opened database': function (done) {
       var location = common.nextLocation()
       // 1) open database without callback, opens in worker thread
-        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, encoding: 'utf8' })
+        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
@@ -104,7 +104,7 @@ buster.testCase('Deferred open()', {
   , 'chained batch() on pre-opened database': function (done) {
       var location = common.nextLocation()
       // 1) open database without callback, opens in worker thread
-        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, encoding: 'utf8' })
+        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
@@ -169,7 +169,7 @@ buster.testCase('Deferred open()', {
   , 'maxListeners warning': function (done) {
       var location   = common.nextLocation()
       // 1) open database without callback, opens in worker thread
-        , db         = levelup(location, { createIfMissing: true, errorIfExists: true, encoding: 'utf8' })
+        , db         = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
         , stderrMock = this.mock(console)
 
       this.closeableDatabases.push(db)

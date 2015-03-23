@@ -28,11 +28,11 @@ buster.testCase('Binary API', {
       common.checkBinaryTestData(this.testData, done)
     }
 
-  , 'test put() and get() with binary value {encoding:binary}': function (done) {
+  , 'test put() and get() with binary value {valueEncoding:binary}': function (done) {
       this.openTestDatabase(function (db) {
-        db.put('binarydata', this.testData, { encoding: 'binary' }, function (err) {
+        db.put('binarydata', this.testData, { valueEncoding: 'binary' }, function (err) {
           refute(err)
-          db.get('binarydata', { encoding: 'binary' }, function (err, value) {
+          db.get('binarydata', { valueEncoding: 'binary' }, function (err, value) {
             refute(err)
             assert(value)
             common.checkBinaryTestData(value, done)
@@ -41,8 +41,8 @@ buster.testCase('Binary API', {
       }.bind(this))
     }
 
-  , 'test put() and get() with binary value {encoding:binary} on createDatabase()': function (done) {
-      this.openTestDatabase({ createIfMissing: true, errorIfExists: true, encoding: 'binary' }, function (db) {
+  , 'test put() and get() with binary value {valueEncoding:binary} on createDatabase()': function (done) {
+      this.openTestDatabase({ createIfMissing: true, errorIfExists: true, valueEncoding: 'binary' }, function (db) {
         db.put('binarydata', this.testData, function (err) {
           refute(err)
           db.get('binarydata', function (err, value) {
@@ -54,11 +54,11 @@ buster.testCase('Binary API', {
       }.bind(this))
     }
 
-  , 'test put() and get() with binary key {encoding:binary}': function (done) {
+  , 'test put() and get() with binary key {valueEncoding:binary}': function (done) {
       this.openTestDatabase(function (db) {
-        db.put(this.testData, 'binarydata', { encoding: 'binary' }, function (err) {
+        db.put(this.testData, 'binarydata', { valueEncoding: 'binary' }, function (err) {
           refute(err)
-          db.get(this.testData, { encoding: 'binary' }, function (err, value) {
+          db.get(this.testData, { valueEncoding: 'binary' }, function (err, value) {
             refute(err)
             assert(value instanceof Buffer, 'value is buffer')
             assert.equals(value.toString(), 'binarydata')
@@ -107,11 +107,11 @@ buster.testCase('Binary API', {
       }.bind(this))
     }
 
-  , 'test put() and get() with binary key & value {encoding:binary}': function (done) {
+  , 'test put() and get() with binary key & value {valueEncoding:binary}': function (done) {
       this.openTestDatabase(function (db) {
-        db.put(this.testData, this.testData, { encoding: 'binary' }, function (err) {
+        db.put(this.testData, this.testData, { valueEncoding: 'binary' }, function (err) {
           refute(err)
-          db.get(this.testData, { encoding: 'binary' }, function (err, value) {
+          db.get(this.testData, { valueEncoding: 'binary' }, function (err, value) {
             refute(err)
             common.checkBinaryTestData(value, done)
           }.bind(this))
@@ -120,13 +120,13 @@ buster.testCase('Binary API', {
     }
 
 
-  , 'test put() and del() and get() with binary key {encoding:binary}': function (done) {
+  , 'test put() and del() and get() with binary key {valueEncoding:binary}': function (done) {
       this.openTestDatabase(function (db) {
-        db.put(this.testData, 'binarydata', { encoding: 'binary' }, function (err) {
+        db.put(this.testData, 'binarydata', { valueEncoding: 'binary' }, function (err) {
           refute(err)
-          db.del(this.testData, { encoding: 'binary' }, function (err) {
+          db.del(this.testData, { valueEncoding: 'binary' }, function (err) {
             refute(err)
-            db.get(this.testData, { encoding: 'binary' }, function (err, value) {
+            db.get(this.testData, { valueEncoding: 'binary' }, function (err, value) {
               assert(err)
               refute(value)
               done()
@@ -150,7 +150,7 @@ buster.testCase('Binary API', {
               async.forEach(
                   ['foo', 'bar', 'baz']
                 , function (key, callback) {
-                    db.get(key, { encoding: 'binary' }, function (err, value) {
+                    db.get(key, { valueEncoding: 'binary' }, function (err, value) {
                       refute(err)
                       if (key == 'baz') {
                         assert(value instanceof Buffer, 'value is buffer')

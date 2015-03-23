@@ -558,7 +558,7 @@ buster.testCase('ReadStream', {
               refute(err)
               db.close(function (err) {
                 refute(err)
-                var db2 = levelup(db.location, { createIfMissing: false, errorIfExists: false, encoding: 'utf8' })
+                var db2 = levelup(db.location, { createIfMissing: false, errorIfExists: false, valueEncoding: 'utf8' })
                 execute(db2)
               })
             }.bind(this))

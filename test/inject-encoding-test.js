@@ -22,7 +22,7 @@ buster.testCase('JSON API', {
           levelup(location, {
             createIfMissing: true,
             errorIfExists: true,
-            encoding: {
+            valueEncoding: {
               encode: msgpack.encode,
               decode: msgpack.decode,
               buffer: true,
