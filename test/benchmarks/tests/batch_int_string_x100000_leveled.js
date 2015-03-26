@@ -1,1 +1,0 @@
-module.exports = require('./batch_int_string_x1000_leveled').fn.bind(null, 100000)

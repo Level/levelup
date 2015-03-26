@@ -21,9 +21,7 @@ The goal of this benchmark suite is to:
 
 ## About
 
-Currently, we the benchmarks run for the current version of LevelUP (i.e. `require('../../')`), the version of LevelUP currently in npm, [Leveled](https://github.com/juliangruber/node-leveled) and [node-sqlite3](https://github.com/developmentseed/node-sqlite3/). Benchmarks for LevelUP with compression disabled can also be run by editing the *engins/index.js* file.
-
-**Leveled** is a minimal binding that is mostly implemented in C++ with few options, only `String` data-types and minimal safety checks. Therefore it's an excellent baseline for performance that LevelUP can aspire to.
+Currently, we the benchmarks run for the current version of LevelUP (i.e. `require('../../')`), the version of LevelUP currently in npm and [node-sqlite3](https://github.com/developmentseed/node-sqlite3/). Benchmarks for LevelUP with compression disabled can also be run by editing the *engins/index.js* file.
 
 **SQLite3** is included to see how an alternative persistent k/v store can perform. The comparison is only fair when considering a simple k/v store and in this regard the main SQLite3 binding performs poorly.
 
