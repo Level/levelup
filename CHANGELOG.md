@@ -1,9 +1,25 @@
-### 0.18.6 @ Aug 26 2014
+### 0.19.0 @ Aug 26 2014
+
+ * [[`7f14058440`](https://github.com/level/levelup/commit/7f14058440)] - minor whitespace changes (Rod Vagg)
+ * [[`9e6d335df2`](https://github.com/level/levelup/commit/9e6d335df2)] - fix license (Rod Vagg)
+ * [[`74caa18c09`](https://github.com/level/levelup/commit/74caa18c09)] - minor style fixes (Rod Vagg)
+ * [[`1c7bc43d01`](https://github.com/level/levelup/commit/1c7bc43d01)] - update nodeico badge (Rod Vagg)
+ * [[`b6357cc323`](https://github.com/level/levelup/commit/b6357cc323)] - Use highest/lowest instead of largest/smallest (Arnout Engelen)
+ * [[`e45ce4e9d5`](https://github.com/level/levelup/commit/e45ce4e9d5)] - Document what 'limit' does in 'reverse' mode (Arnout Engelen)
+ * [[`9004e9db69`](https://github.com/level/levelup/commit/9004e9db69)] - Discourage the use of start/end a bit (Arnout Engelen)
+ * [[`6178d69cdc`](https://github.com/level/levelup/commit/6178d69cdc)] - merge (Dominic Tarr)
+ * [[`e3ab0ebe03`](https://github.com/level/levelup/commit/e3ab0ebe03)] - document with comments (Dominic Tarr)
+ * [[`bb88572c15`](https://github.com/level/levelup/commit/bb88572c15)] - unmention bops (Dominic Tarr)
+ * [[`45df8e668e`](https://github.com/level/levelup/commit/45df8e668e)] - clarify ltgt (Dominic Tarr)
+ * [[`54eba03305`](https://github.com/level/levelup/commit/54eba03305)] - binary encoding in the browser (Calvin Metcalf)
+
+### 0.18.6 @ Jul 26 2014
+
  * (lots of stuff since 0.18.1 not recorded in changelog, ooops)
  * Extracted encoding / codec to separate modules (@dominictarr)
 
-
 ### 0.18.1 @ Nov 20 2013
+
  * Make chained-batch obey global LevelUP object options (@mcavage)
 
 ### 0.18.0 @ Nov 18 2013
@@ -54,7 +70,7 @@
 
 ### 0.9.0 @ 21 May 2013
 
-  * Use LevelDOWN@0.5.0, see https://github.com/rvagg/node-leveldown/blob/master/CHANGELOG.md for details
+  * Use LevelDOWN@0.5.0, see https://github.com/level/leveldown/blob/master/CHANGELOG.md for details
   * Race-condition(ish) fixed in ReadStream--createReadStream() does not start immediately and therefore allowed put()s to happen before the stream starts (@dominictarr)
   * ReadStream doesn't emit "ready" event (@dominictarr)
   * Allow separate encodings per operation in db.batch() (@juliangruber)
@@ -98,7 +114,7 @@
 ### 0.6.0 @ Feb 25 2013
 
   * complete transition to LevelDOWN for the LevelDB binding. No native code left in LevelUP @rvagg
-    - LevelDOWN now keeps its own ChangeLog at: https://github.com/rvagg/node-leveldown/blob/master/CHANGELOG.md
+    - LevelDOWN now keeps its own ChangeLog at: https://github.com/level/leveldown/blob/master/CHANGELOG.md
     - LevelDB@1.9.0 and Snappy@1.1.0 are included in LevelDOWN@0.1.2
   * simplify callback signature (remove extra, undocumented properties from some callbacks) @rvagg / @dominictarr
 

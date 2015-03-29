@@ -1,6 +1,6 @@
-/* Copyright (c) 2012-2014 LevelUP contributors
- * See list at <https://github.com/rvagg/node-levelup#contributing>
- * MIT License <https://github.com/rvagg/node-levelup/blob/master/LICENSE.md>
+/* Copyright (c) 2012-2015 LevelUP contributors
+ * See list at <https://github.com/level/levelup#contributing>
+ * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
 var levelup    = require('../lib/levelup.js')
@@ -369,6 +369,27 @@ buster.testCase('ReadStream', {
       }.bind(this))
     }
 
+  , 'test hex encoding': function (done) {
+      var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'hex'}
+        , data = [
+              { type: 'put', key: 'ab', value: 'abcdef0123456789' }
+           ]
+
+      this.openTestDatabase({}, function (db) {
+        db.batch(data.slice(), options, function (err) {
+          refute(err);
+
+          var rs = db.createReadStream(options)
+          rs.on('data' , function(data) {
+            assert.equals(data.value, 'abcdef0123456789');
+          })
+          rs.on('end'  , this.endSpy)
+          rs.on('close', done)
+
+        }.bind(this))
+      }.bind(this));
+   }
+
   , 'test json encoding': function (done) {
       var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'json' }
         , data = [
@@ -665,21 +686,5 @@ buster.testCase('ReadStream', {
 
         }.bind(this))
       }.bind(this))
-    }
-
-  , 'test readable-stream@1.0.x': function () {
-      // this is here to be an explicit reminder that we're tied to
-      // readable-stream@1.0.x so if someone comes along and wants
-      // to bump version they'll have to come here and read that we're
-      // using Streams2 explicitly across Node versions and will
-      // probably delay Streams3 adoption until Node 0.12 is released
-      // as readable-stream@1.1.x causes some problems with downstream
-      // modules
-      // see: https://github.com/rvagg/node-levelup/issues/216
-
-      assert(
-          (/^~1\.0\.\d+$/).test(require('../package.json').dependencies['readable-stream'])
-        , 'using readable-stream@1.0.x'
-      )
     }
 })

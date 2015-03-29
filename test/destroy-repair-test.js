@@ -1,6 +1,6 @@
-/* Copyright (c) 2012-2014 LevelUP contributors
- * See list at <https://github.com/rvagg/node-levelup#contributing>
- * MIT License <https://github.com/rvagg/node-levelup/blob/master/LICENSE.md>
+/* Copyright (c) 2012-2015 LevelUP contributors
+ * See list at <https://github.com/level/levelup#contributing>
+ * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
 var levelup   = require('../lib/levelup.js')
