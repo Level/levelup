@@ -39,7 +39,6 @@
     "level-errors": "~1.0.3",
     "level-iterator-stream": "^1.1.0",
     "prr": "~0.0.0",
-    "readable-stream": "~1.0.26",
     "semver": "~2.3.1",
     "xtend": "~3.0.0"
   },

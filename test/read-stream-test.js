@@ -666,20 +666,4 @@ buster.testCase('ReadStream', {
         }.bind(this))
       }.bind(this))
     }
-
-  , 'test readable-stream@1.0.x': function () {
-      // this is here to be an explicit reminder that we're tied to
-      // readable-stream@1.0.x so if someone comes along and wants
-      // to bump version they'll have to come here and read that we're
-      // using Streams2 explicitly across Node versions and will
-      // probably delay Streams3 adoption until Node 0.12 is released
-      // as readable-stream@1.1.x causes some problems with downstream
-      // modules
-      // see: https://github.com/rvagg/node-levelup/issues/216
-
-      assert(
-          (/^~1\.0\.\d+$/).test(require('../package.json').dependencies['readable-stream'])
-        , 'using readable-stream@1.0.x'
-      )
-    }
 })
