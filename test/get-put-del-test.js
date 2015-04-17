@@ -147,34 +147,4 @@ buster.testCase('get() / put() / del()', {
       })
     }
 
-  , 'test approximateSize() throwables': function (done) {
-      this.openTestDatabase(function (db) {
-
-        assert.exception(
-            db.approximateSize.bind(db)
-          , { name: 'ReadError', message: 'approximateSize() requires start, end and callback arguments' }
-          , 'no-arg approximateSize() throws'
-        )
-
-        assert.exception(
-            db.approximateSize.bind(db, 'foo')
-          , { name: 'ReadError', message: 'approximateSize() requires start, end and callback arguments' }
-          , 'callback-less, 1-arg approximateSize() throws'
-        )
-
-        assert.exception(
-            db.approximateSize.bind(db, 'foo', 'bar')
-          , { name: 'ReadError', message: 'approximateSize() requires start, end and callback arguments' }
-          , 'callback-less, 2-arg approximateSize() throws'
-        )
-
-        assert.exception(
-            db.approximateSize.bind(db, 'foo', 'bar', {})
-          , { name: 'ReadError', message: 'approximateSize() requires start, end and callback arguments' }
-          , 'callback-less, 3-arg approximateSize(), no cb throws'
-        )
-
-        done()
-      })
-    }
 })
