@@ -1,7 +1,6 @@
 const levelup = require(process.argv[2] || '../../')
     , crypto  = require('crypto')
     , srcdb   = levelup('/tmp/source.db')
-    , dstdb   = levelup('/tmp/destination.db')
 
     , batch   = 10000
     , total   = 200000
@@ -28,16 +27,33 @@ srcdb.on('ready', function () {
 
   populate(0, function () {
     var batchTime = Date.now() - start
+    console.log('Filled source! Took %sms, reading data now...', batchTime)
 
-    console.log('--------------------------------------------------------------')
-    console.log('Filled source! Took', batchTime + 'ms, streaming to destination...')
-
-    start = Date.now()
-    srcdb.createReadStream()
-      .on('end', function () {
-        var copyTime = Date.now() - start
-        console.log('Done! Took', copyTime + 'ms,', Math.round((copyTime / batchTime) * 100) + '% of batch time')
+    run(function () {
+      run(function () {
+        run()
       })
-      .pipe(dstdb.createWriteStream())
+    })
   })
 })
+
+function run (cb) {
+  stream({}, function () {
+    stream({ keys: true }, function () {
+      stream({ values: true }, function () {
+        stream({ keys: true, values: true }, cb)
+      })
+    })
+  })
+}
+
+function stream (opts, cb) {
+  var start = Date.now()
+  srcdb.createReadStream()
+    .on('end', function () {
+      var copyTime = Date.now() - start
+      console.log('Done! Took %sms with %j', copyTime, opts)
+      if (cb) cb()
+    })
+    .on('data', function(){})
+}
