@@ -5,7 +5,7 @@ LevelUP
 
 **Fast & simple storage - a Node.js-style LevelDB wrapper**
 
-[![Build Status](https://secure.travis-ci.org/rvagg/node-levelup.png)](http://travis-ci.org/rvagg/node-levelup)
+[![Build Status](https://secure.travis-ci.org/Level/levelup.png)](http://travis-ci.org/Level/levelup)
 
 [![NPM](https://nodei.co/npm/levelup.png?stars&downloads&downloadRank)](https://nodei.co/npm/levelup/) [![NPM](https://nodei.co/npm-dl/levelup.png?months=6&height=3)](https://nodei.co/npm/levelup/)
 
@@ -40,11 +40,11 @@ LevelDB stores entries **sorted lexicographically by keys**. This makes LevelUP'
 Relationship to LevelDOWN
 -------------------------
 
-LevelUP is designed to be backed by **[LevelDOWN](https://github.com/rvagg/node-leveldown/)** which provides a pure C++ binding to LevelDB and can be used as a stand-alone package if required.
+LevelUP is designed to be backed by **[LevelDOWN](https://github.com/level/leveldown/)** which provides a pure C++ binding to LevelDB and can be used as a stand-alone package if required.
 
 **As of version 0.9, LevelUP no longer requires LevelDOWN as a dependency so you must `npm install leveldown` when you install LevelUP.**
 
-LevelDOWN is now optional because LevelUP can be used with alternative backends, such as **[level.js](https://github.com/maxogden/level.js)** in the browser or [MemDOWN](https://github.com/rvagg/node-memdown) for a pure in-memory store.
+LevelDOWN is now optional because LevelUP can be used with alternative backends, such as **[level.js](https://github.com/maxogden/level.js)** in the browser or [MemDOWN](https://github.com/level/memdown) for a pure in-memory store.
 
 LevelUP will look for LevelDOWN and throw an error if it can't find it in its Node `require()` path. It will also tell you if the installed version of LevelDOWN is incompatible.
 
@@ -161,7 +161,7 @@ db.get('foo', function (err, value) {
 
 The `location` argument is available as a read-only property on the returned LevelUP instance.
 
-The `levelup(options, callback)` form (with optional `callback`) is only available where you provide a valid `'db'` property on the options object (see below). Only for back-ends that don't require a `location` argument, such as [MemDOWN](https://github.com/rvagg/memdown).
+The `levelup(options, callback)` form (with optional `callback`) is only available where you provide a valid `'db'` property on the options object (see below). Only for back-ends that don't require a `location` argument, such as [MemDOWN](https://github.com/level/memdown).
 
 For example:
 
@@ -171,7 +171,7 @@ var memdown = require('memdown')
 var db = levelup({ db: memdown })
 ```
 
-The `levelup(db, callback)` form (with optional `callback`) is only available where `db` is a factory function, as would be provided as a `'db'` property on an `options` object (see below). Only for back-ends that don't require a `location` argument, such as [MemDOWN](https://github.com/rvagg/memdown).
+The `levelup(db, callback)` form (with optional `callback`) is only available where `db` is a factory function, as would be provided as a `'db'` property on an `options` object (see below). Only for back-ends that don't require a `location` argument, such as [MemDOWN](https://github.com/level/memdown).
 
 For example:
 
@@ -198,7 +198,7 @@ var db = levelup(memdown)
   <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
   <p><code>'json'</code> encoding is also supported, see below.</p>
 
-* `'db'` *(object, default: LevelDOWN)*: LevelUP is backed by [LevelDOWN](https://github.com/rvagg/node-leveldown/) to provide an interface to LevelDB. You can completely replace the use of LevelDOWN by providing a "factory" function that will return a LevelDOWN API compatible object given a `location` argument. For further information, see [MemDOWN](https://github.com/rvagg/node-memdown/), a fully LevelDOWN API compatible replacement that uses a memory store rather than LevelDB. Also see [Abstract LevelDOWN](http://github.com/rvagg/node-abstract-leveldown), a partial implementation of the LevelDOWN API that can be used as a base prototype for a LevelDOWN substitute.
+* `'db'` *(object, default: LevelDOWN)*: LevelUP is backed by [LevelDOWN](https://github.com/level/leveldown/) to provide an interface to LevelDB. You can completely replace the use of LevelDOWN by providing a "factory" function that will return a LevelDOWN API compatible object given a `location` argument. For further information, see [MemDOWN](https://github.com/level/memdown), a fully LevelDOWN API compatible replacement that uses a memory store rather than LevelDB. Also see [Abstract LevelDOWN](http://github.com/level/abstract-leveldown), a partial implementation of the LevelDOWN API that can be used as a base prototype for a LevelDOWN substitute.
 
 Additionally, each of the main interface methods accept an optional options object that can be used to override `'keyEncoding'` and `'valueEncoding'`.
 
@@ -460,11 +460,11 @@ db.createReadStream({ keys: false, values: true })
 <a name="writeStreams"></a>
 #### What happened to `db.createWriteStream`?
 
-`db.createWriteStream()` has been removed in order to provide a smaller and more maintainable core. It primarily existed to create symmetry with `db.createReadStream()` but through much [discussion](https://github.com/rvagg/node-levelup/issues/199), removing it was the best cause of action.
+`db.createWriteStream()` has been removed in order to provide a smaller and more maintainable core. It primarily existed to create symmetry with `db.createReadStream()` but through much [discussion](https://github.com/level/levelup/issues/199), removing it was the best cause of action.
 
 The main driver for this was performance. While `db.createReadStream()` performs well under most use cases, `db.createWriteStream()` was highly dependent on the application keys and values. Thus we can't provide a standard implementation and encourage more `write-stream` implementations to be created to solve the broad spectrum of use cases.
 
-Check out the implementations that the community has already produced [here](https://github.com/rvagg/node-levelup/wiki/Modules#write-streams).
+Check out the implementations that the community has already produced [here](https://github.com/level/levelup/wiki/Modules#write-streams).
 
 --------------------------------------------------------
 <a name='approximateSize'></a>
@@ -480,7 +480,7 @@ db.db.approximateSize('a', 'c', function (err, size) {
 })
 ```
 
-**Note:** `approximateSize()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/), which by default is accessible as the `db` property of your LevelUP instance. This is a specific LevelDB operation and is not likely to be available where you replace LevelDOWN with an alternative back-end via the `'db'` option.
+**Note:** `approximateSize()` is available via [LevelDOWN](https://github.com/level/leveldown/), which by default is accessible as the `db` property of your LevelUP instance. This is a specific LevelDB operation and is not likely to be available where you replace LevelDOWN with an alternative back-end via the `'db'` option.
 
 
 --------------------------------------------------------
@@ -503,7 +503,7 @@ console.log(db.db.getProperty('leveldb.num-files-at-level3'))
 // → '243'
 ```
 
-**Note:** `getProperty()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/), which by default is accessible as the `db` property of your LevelUP instance. This is a specific LevelDB operation and is not likely to be available where you replace LevelDOWN with an alternative back-end via the `'db'` option.
+**Note:** `getProperty()` is available via [LevelDOWN](https://github.com/level/leveldown/), which by default is accessible as the `db` property of your LevelUP instance. This is a specific LevelDB operation and is not likely to be available where you replace LevelDOWN with an alternative back-end via the `'db'` option.
 
 
 --------------------------------------------------------
@@ -513,7 +513,7 @@ console.log(db.db.getProperty('leveldb.num-files-at-level3'))
 
 The callback will be called when the destroy operation is complete, with a possible `error` argument.
 
-**Note:** `destroy()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/) which you will have to install seperately, e.g.:
+**Note:** `destroy()` is available via [LevelDOWN](https://github.com/level/leveldown/) which you will have to install seperately, e.g.:
 
 ```js
 require('leveldown').destroy('./huge.db', function (err) { console.log('done!') })
@@ -532,7 +532,7 @@ A `repair()` can also be used to perform a compaction of the LevelDB log into ta
 
 The callback will be called when the repair operation is complete, with a possible `error` argument.
 
-**Note:** `repair()` is available via [LevelDOWN](https://github.com/rvagg/node-leveldown/) which you will have to install seperately, e.g.:
+**Note:** `repair()` is available via [LevelDOWN](https://github.com/level/leveldown/) which you will have to install seperately, e.g.:
 
 ```js
 require('leveldown').repair('./huge.db', function (err) { console.log('done!') })
@@ -581,7 +581,7 @@ A custom encoding may be provided by passing in an object as an value for `keyEn
 Extending LevelUP
 -----------------
 
-A list of <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>Node.js LevelDB modules and projects</b></a> can be found in the wiki.
+A list of <a href="https://github.com/level/levelup/wiki/Modules"><b>Node.js LevelDB modules and projects</b></a> can be found in the wiki.
 
 When attempting to extend the functionality of LevelUP, it is recommended that you consider using [level-hooks](https://github.com/dominictarr/level-hooks) and/or [level-sublevel](https://github.com/dominictarr/level-sublevel). **level-sublevel** is particularly helpful for keeping additional, extension-specific, data in a LevelDB store. It allows you to partition a LevelUP instance into multiple sub-instances that each correspond to discrete namespaced key ranges.
 
@@ -591,7 +591,7 @@ Multi-process access
 
 LevelDB is thread-safe but is **not** suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process. Node.js clusters are made up of multiple processes so a LevelUP instance cannot be shared between them either.
 
-See the <a href="https://github.com/rvagg/node-levelup/wiki/Modules"><b>wiki</b></a> for some LevelUP extensions, including [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single data store to be shared across processes.
+See the <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for some LevelUP extensions, including [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single data store to be shared across processes.
 
 <a name="support"></a>
 Getting support
@@ -611,7 +611,7 @@ LevelUP is an **OPEN Open Source Project**. This means that:
 
 > Individuals making significant and valuable contributions are given commit-access to the project to contribute as they see fit. This project is more like an open wiki than a standard guarded open source project.
 
-See the [CONTRIBUTING.md](https://github.com/rvagg/node-levelup/blob/master/CONTRIBUTING.md) file for more details.
+See the [CONTRIBUTING.md](https://github.com/level/levelup/blob/master/CONTRIBUTING.md) file for more details.
 
 ### Contributors
 

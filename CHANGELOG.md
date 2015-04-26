@@ -54,7 +54,7 @@
 
 ### 0.9.0 @ 21 May 2013
 
-  * Use LevelDOWN@0.5.0, see https://github.com/rvagg/node-leveldown/blob/master/CHANGELOG.md for details
+  * Use LevelDOWN@0.5.0, see https://github.com/level/leveldown/blob/master/CHANGELOG.md for details
   * Race-condition(ish) fixed in ReadStream--createReadStream() does not start immediately and therefore allowed put()s to happen before the stream starts (@dominictarr)
   * ReadStream doesn't emit "ready" event (@dominictarr)
   * Allow separate encodings per operation in db.batch() (@juliangruber)
@@ -98,7 +98,7 @@
 ### 0.6.0 @ Feb 25 2013
 
   * complete transition to LevelDOWN for the LevelDB binding. No native code left in LevelUP @rvagg
-    - LevelDOWN now keeps its own ChangeLog at: https://github.com/rvagg/node-leveldown/blob/master/CHANGELOG.md
+    - LevelDOWN now keeps its own ChangeLog at: https://github.com/level/leveldown/blob/master/CHANGELOG.md
     - LevelDB@1.9.0 and Snappy@1.1.0 are included in LevelDOWN@0.1.2
   * simplify callback signature (remove extra, undocumented properties from some callbacks) @rvagg / @dominictarr
 
