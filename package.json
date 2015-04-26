@@ -20,9 +20,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/rvagg/node-levelup.git"
+    "url": "https://github.com/level/levelup.git"
   },
-  "homepage": "https://github.com/rvagg/node-levelup",
+  "homepage": "https://github.com/level/levelup",
   "keywords": [
     "leveldb",
     "stream",
