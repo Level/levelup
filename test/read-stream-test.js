@@ -369,6 +369,27 @@ buster.testCase('ReadStream', {
       }.bind(this))
     }
 
+  , 'test hex encoding': function (done) {
+      var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'hex'}
+        , data = [
+              { type: 'put', key: 'ab', value: 'abcdef0123456789' }
+           ]
+
+      this.openTestDatabase({}, function (db) {
+        db.batch(data.slice(), options, function (err) {
+          refute(err);
+
+          var rs = db.createReadStream(options)
+          rs.on('data' , function(data) {
+            assert.equals(data.value, 'abcdef0123456789');
+          })
+          rs.on('end'  , this.endSpy)
+          rs.on('close', done)
+
+        }.bind(this))
+      }.bind(this));
+   }
+
   , 'test json encoding': function (done) {
       var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'json' }
         , data = [
