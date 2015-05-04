@@ -1,7 +1,7 @@
 {
   "name": "levelup",
   "description": "Fast & simple storage - a Node.js-style LevelDB wrapper",
-  "version": "0.19.0",
+  "version": "1.0.0-2",
   "contributors": [
     "Rod Vagg <r@va.gg> (https://github.com/rvagg)",
     "John Chesley <john@chesl.es> (https://github.com/chesles/)",
@@ -20,9 +20,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/rvagg/node-levelup.git"
+    "url": "https://github.com/level/levelup.git"
   },
-  "homepage": "https://github.com/rvagg/node-levelup",
+  "homepage": "https://github.com/level/levelup",
   "keywords": [
     "leveldb",
     "stream",
@@ -34,13 +34,13 @@
   ],
   "main": "lib/levelup.js",
   "dependencies": {
-    "deferred-leveldown": "^0.3.0",
-    "level-codec": "^6.0.0",
+    "deferred-leveldown": "~1.0.0",
+    "level-codec": "~6.0.0",
     "level-errors": "~1.0.3",
     "level-iterator-stream": "^1.2.0",
-    "prr": "~0.0.0",
-    "semver": "~2.3.1",
-    "xtend": "~3.0.0"
+    "prr": "~1.0.1",
+    "semver": "~4.3.3",
+    "xtend": "~4.0.0"
   },
   "devDependencies": {
     "async": "~0.9.0",
@@ -51,7 +51,7 @@
     "memdown": "~1.0.0",
     "msgpack-js": "~0.3.0",
     "referee": "~1.1.1",
-    "rimraf": "~2.2.8",
+    "rimraf": "~2.3.2",
     "tap": "~0.4.13",
     "slow-stream": "0.0.4"
   },
