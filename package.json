@@ -35,9 +35,9 @@
   "main": "lib/levelup.js",
   "dependencies": {
     "deferred-leveldown": "^0.3.0",
-    "level-codec": "^5.5.0",
+    "level-codec": "^6.0.0",
     "level-errors": "~1.0.3",
-    "level-iterator-stream": "^1.1.0",
+    "level-iterator-stream": "^1.2.0",
     "prr": "~0.0.0",
     "semver": "~2.3.1",
     "xtend": "~3.0.0"
