@@ -15,6 +15,18 @@ buster.testCase('approximateSize()', {
     'setUp': common.commonSetUp
   , 'tearDown': common.commonTearDown
 
+  , 'approximateSize() is deprecated': function (done) {
+      this.openTestDatabase(function (db) {
+        var error = console.error
+        console.error = function(str){
+          console.error = error
+          assert.equals(str, 'db.approximateSize() is deprecated. Use db.db.approximateSize() instead')
+          done()
+        }
+        db.approximateSize('a', 'z', function(){})
+      })
+    }
+
   , 'approximateSize() works on empty database': function (done) {
       this.openTestDatabase(function (db) {
         db.approximateSize('a', 'z', function(err, size) {
