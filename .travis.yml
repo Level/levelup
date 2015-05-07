@@ -1,24 +1,13 @@
 language: node_js
+
+before_install:
+  - export JOBS=max
+
 node_js:
-  - "0.10"
+  - "2.0.0"
+  - "1.8.1"
   - "0.12"
-  - "iojs"
-branches:
-  only:
-    - master
-notifications:
-  email:
-    - r@va.gg
-    - john@chesl.es
-    - raynos2@gmail.com
-    - dominic.tarr@gmail.com
-    - max@maxogden.com
-    - lars.magnus.skog@gmail.com
-    - david.bjorklund@gmail.com
-    - julian@juliangruber.com
-    - paolo@async.ly
-    - anton.whalley@nearform.com
-    - matteo.collina@gmail.com
-    - pedro.teixeira@gmail.com
-    - mail@substack.net
-script: npm test
+  - "0.10"
+
+script:
+  - npm test
