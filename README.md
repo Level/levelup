@@ -82,11 +82,12 @@ $ npm install level
 All operations are asynchronous although they don't necessarily require a callback if you don't need to know when the operation was performed.
 
 ```js
-var levelup = require('levelup')
+var levelup   = require('levelup')
+  , leveldown = require('leveldown')
 
 // 1) Create our database, supply location and options.
 //    This will create or open the underlying LevelDB store.
-var db = levelup('./mydb')
+var db = levelup('./mydb', { db: leveldown })
 
 // 2) put a key & value
 db.put('name', 'LevelUP', function (err) {
@@ -132,7 +133,7 @@ db.put('name', 'LevelUP', function (err) {
 
 --------------------------------------------------------
 <a name="ctor"></a>
-### levelup(location[, options[, callback]])
+### levelup(location, options[, callback]])
 ### levelup(options[, callback ])
 ### levelup(db[, callback ])
 <code>levelup()</code> is the main entry point for creating a new LevelUP instance and opening the underlying store with LevelDB.
