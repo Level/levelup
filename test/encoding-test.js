@@ -3,11 +3,12 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
-  , common  = require('./common')
-  , assert  = require('referee').assert
-  , refute  = require('referee').refute
-  , buster  = require('bustermove')
+var levelup   = require('../lib/levelup.js')
+  , leveldown = require('leveldown')
+  , common    = require('./common')
+  , assert    = require('referee').assert
+  , refute    = require('referee').refute
+  , buster    = require('bustermove')
 
 buster.testCase('Encoding', {
     'setUp': common.readStreamSetUp
@@ -22,7 +23,7 @@ buster.testCase('Encoding', {
               refute(err)
               db.close(function (err) {
                 refute(err)
-                db = levelup(db.location, { createIfMissing: false, errorIfExists: false, valueEncoding: 'json' })
+                db = levelup(db.location, { createIfMissing: false, errorIfExists: false, valueEncoding: 'json', db: leveldown })
                 db.get('foo', function (err, value) {
                   assert(err)
                   assert.equals('EncodingError', err.name)
@@ -47,7 +48,7 @@ buster.testCase('Encoding', {
                 var dataSpy  = this.spy()
                   , errorSpy = this.spy()
 
-                db = levelup(db.location, { createIfMissing: false, errorIfExists: false, valueEncoding: 'json' })
+                db = levelup(db.location, { createIfMissing: false, errorIfExists: false, valueEncoding: 'json', db: leveldown })
                 db.readStream()
                   .on('data', dataSpy)
                   .on('error', errorSpy)

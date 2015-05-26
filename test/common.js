@@ -3,18 +3,19 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var referee = require('referee')
-  , assert  = referee.assert
-  , refute  = referee.refute
-  , crypto  = require('crypto')
-  , async   = require('async')
-  , rimraf  = require('rimraf')
-  , fs      = require('fs')
-  , path    = require('path')
-  , delayed = require('delayed').delayed
-  , levelup = require('../lib/levelup.js')
-  , errors  = require('level-errors')
-  , dbidx   = 0
+var referee   = require('referee')
+  , assert    = referee.assert
+  , refute    = referee.refute
+  , crypto    = require('crypto')
+  , async     = require('async')
+  , rimraf    = require('rimraf')
+  , fs        = require('fs')
+  , path      = require('path')
+  , delayed   = require('delayed').delayed
+  , levelup   = require('../lib/levelup.js')
+  , errors    = require('level-errors')
+  , dbidx     = 0
+  , leveldown = require('leveldown')
 
 assert(levelup.errors === errors);
 
@@ -70,6 +71,8 @@ module.exports.openTestDatabase = function () {
   var options = typeof arguments[0] == 'object' ? arguments[0] : { createIfMissing: true, errorIfExists: true }
     , callback = typeof arguments[0] == 'function' ? arguments[0] : arguments[1]
     , location = typeof arguments[0] == 'string' ? arguments[0] : module.exports.nextLocation()
+
+  options.db = leveldown
 
   rimraf(location, function (err) {
     refute(err)

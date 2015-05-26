@@ -3,13 +3,14 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
-  , errors  = levelup.errors
-  , common  = require('./common')
+var levelup   = require('../lib/levelup.js')
+  , leveldown = require('leveldown')
+  , errors    = levelup.errors
+  , common    = require('./common')
 
-  , assert  = require('referee').assert
-  , refute  = require('referee').refute
-  , buster  = require('bustermove')
+  , assert    = require('referee').assert
+  , refute    = require('referee').refute
+  , buster    = require('bustermove')
 
 buster.testCase('null & undefined keys & values', {
     'setUp': common.commonSetUp
@@ -17,7 +18,7 @@ buster.testCase('null & undefined keys & values', {
 
   , 'null and undefined': {
         'setUp': function (done) {
-          levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true }, function (err, db) {
+          levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true, db: leveldown }, function (err, db) {
             refute(err) // sanity
             this.closeableDatabases.push(db)
             assert.isTrue(db.isOpen())

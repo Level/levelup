@@ -4,6 +4,7 @@
  */
 
 var levelup    = require('../lib/levelup.js')
+  , leveldown  = require('leveldown')
   , common     = require('./common')
   , SlowStream = require('slow-stream')
   , delayed    = require('delayed')
@@ -530,7 +531,7 @@ buster.testCase('ReadStream', {
               .on('close', delayed.delayed(callback, 0.05))
           }
         , open       = function (reopen, location, callback) {
-            levelup(location, { createIfMissing: !reopen, errorIfExists: !reopen }, callback)
+            levelup(location, { createIfMissing: !reopen, errorIfExists: !reopen, db: leveldown }, callback)
           }
         , write      = function (db, callback) { db.batch(sourceData.slice(), callback) }
         , close      = function (db, callback) { db.close(callback) }
@@ -579,7 +580,7 @@ buster.testCase('ReadStream', {
               refute(err)
               db.close(function (err) {
                 refute(err)
-                var db2 = levelup(db.location, { createIfMissing: false, errorIfExists: false, valueEncoding: 'utf8' })
+                var db2 = levelup(db.location, { createIfMissing: false, errorIfExists: false, valueEncoding: 'utf8', db: leveldown })
                 execute(db2)
               })
             }.bind(this))

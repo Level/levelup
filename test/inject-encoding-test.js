@@ -3,14 +3,15 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
-  , async   = require('async')
-  , common  = require('./common')
-  , msgpack = require('msgpack-js')
+var levelup   = require('../lib/levelup.js')
+  , leveldown = require('leveldown')
+  , async     = require('async')
+  , common    = require('./common')
+  , msgpack   = require('msgpack-js')
 
-  , assert  = require('referee').assert
-  , refute  = require('referee').refute
-  , buster  = require('bustermove')
+  , assert    = require('referee').assert
+  , refute    = require('referee').refute
+  , buster    = require('bustermove')
   
 buster.testCase('JSON API', {
     'setUp': function (done) {
@@ -27,7 +28,8 @@ buster.testCase('JSON API', {
               decode: msgpack.decode,
               buffer: true,
               type: 'msgpack'
-            }
+            },
+            db: leveldown
           }, function (err, db) {
             refute(err)
             if (err) return
