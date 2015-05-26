@@ -3,13 +3,14 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
-  , async   = require('async')
-  , common  = require('./common')
+var levelup   = require('../lib/levelup.js')
+  , leveldown = require('leveldown')
+  , async     = require('async')
+  , common    = require('./common')
 
-  , assert  = require('referee').assert
-  , refute  = require('referee').refute
-  , buster  = require('bustermove')
+  , assert    = require('referee').assert
+  , refute    = require('referee').refute
+  , buster    = require('bustermove')
 
 buster.testCase('Deferred open()', {
     'setUp': common.commonSetUp
@@ -18,7 +19,7 @@ buster.testCase('Deferred open()', {
   , 'put() and get() on pre-opened database': function (done) {
       var location = common.nextLocation()
       // 1) open database without callback, opens in worker thread
-        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8', db: leveldown })
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
@@ -61,7 +62,7 @@ buster.testCase('Deferred open()', {
   , 'batch() on pre-opened database': function (done) {
       var location = common.nextLocation()
       // 1) open database without callback, opens in worker thread
-        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8', db: leveldown })
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
@@ -104,7 +105,7 @@ buster.testCase('Deferred open()', {
   , 'chained batch() on pre-opened database': function (done) {
       var location = common.nextLocation()
       // 1) open database without callback, opens in worker thread
-        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+        , db       = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8', db: leveldown })
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
@@ -155,7 +156,7 @@ buster.testCase('Deferred open()', {
               refute(err)
               db.close(function (err) {
                 refute(err, 'no error')
-                db = levelup(location, { createIfMissing: false, errorIfExists: false })
+                db = levelup(location, { createIfMissing: false, errorIfExists: false, db: leveldown })
                 var rs = db.createReadStream()
                 rs.on('data' , this.dataSpy)
                 rs.on('end'  , this.endSpy)
@@ -169,7 +170,7 @@ buster.testCase('Deferred open()', {
   , 'maxListeners warning': function (done) {
       var location   = common.nextLocation()
       // 1) open database without callback, opens in worker thread
-        , db         = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+        , db         = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8', db: leveldown })
         , stderrMock = this.mock(console)
 
       this.closeableDatabases.push(db)

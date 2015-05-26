@@ -7,6 +7,7 @@ var async      = require('async')
   , du         = require('du')
   , delayed    = require('delayed')
   , levelup    = require('../')
+  , leveldown  = require('leveldown')
   , common     = require('./common')
 
   , assert  = require('referee').assert
@@ -34,7 +35,7 @@ var async      = require('async')
       var location = db.location
       db.close(function (err) {
         if (err) return refute(err)
-        levelup(location, { errorIfExists: false, compression: compression }, function (err, db) {
+        levelup(location, { errorIfExists: false, compression: compression, db: leveldown }, function (err, db) {
           if (err) return refute(err)
           db.close(function (err) {
             if (err) return refute(err)
