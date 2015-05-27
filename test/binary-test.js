@@ -42,7 +42,7 @@ buster.testCase('Binary API', {
     }
 
   , 'test put() and get() with binary value {valueEncoding:binary} on createDatabase()': function (done) {
-      this.openTestDatabase({ createIfMissing: true, errorIfExists: true, valueEncoding: 'binary' }, function (db) {
+      this.openTestDatabase({ createIfMissing: true, valueEncoding: 'binary' }, function (db) {
         db.put('binarydata', this.testData, function (err) {
           refute(err)
           db.get('binarydata', function (err, value) {
@@ -82,7 +82,7 @@ buster.testCase('Binary API', {
     }
 
   , 'test put() and get() with binary value {keyEncoding:utf8,valueEncoding:binary} on createDatabase()': function (done) {
-      this.openTestDatabase({ createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'binary' }, function (db) {
+      this.openTestDatabase({ createIfMissing: true, keyEncoding: 'utf8', valueEncoding: 'binary' }, function (db) {
         db.put('binarydata', this.testData, function (err) {
           refute(err)
           db.get('binarydata', function (err, value) {

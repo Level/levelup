@@ -26,7 +26,7 @@ buster.testCase('Init & open()', {
 
   , 'default options': function (done) {
       var location = common.nextLocation()
-      levelup(location, { createIfMissing: true, errorIfExists: true, db: leveldown }, function (err, db) {
+      levelup(location, { createIfMissing: true, db: leveldown }, function (err, db) {
         refute(err, 'no error')
         assert.isTrue(db.isOpen())
         this.closeableDatabases.push(db)
@@ -40,7 +40,6 @@ buster.testCase('Init & open()', {
             refute(err)
             assert.isObject(db)
             assert.isTrue(db.options.createIfMissing)
-            assert.isFalse(db.options.errorIfExists)
             assert.equals(db.options.keyEncoding, 'utf8')
             assert.equals(db.options.valueEncoding, 'utf8')
             assert.equals(db.location, location)
@@ -59,7 +58,7 @@ buster.testCase('Init & open()', {
       var location = common.nextLocation()
       levelup(
           location
-        , { createIfMissing: true, errorIfExists: true, valueEncoding: 'binary', db: leveldown }
+        , { createIfMissing: true, valueEncoding: 'binary', db: leveldown }
         , function (err, db) {
             refute(err)
 
@@ -67,7 +66,6 @@ buster.testCase('Init & open()', {
             this.cleanupDirs.push(location)
             assert.isObject(db)
             assert.isTrue(db.options.createIfMissing)
-            assert.isTrue(db.options.errorIfExists)
             assert.equals(db.options.keyEncoding, 'utf8')
             assert.equals(db.options.valueEncoding, 'binary')
             assert.equals(db.location, location)
@@ -86,7 +84,7 @@ buster.testCase('Init & open()', {
       var location = common.nextLocation()
       levelup(
           location
-        , { createIfMissing: true, errorIfExists: true, keyEncoding: 'ascii', valueEncoding: 'json', db: leveldown }
+        , { createIfMissing: true, keyEncoding: 'ascii', valueEncoding: 'json', db: leveldown }
         , function (err, db) {
             refute(err)
 
@@ -94,7 +92,6 @@ buster.testCase('Init & open()', {
             this.cleanupDirs.push(location)
             assert.isObject(db)
             assert.isTrue(db.options.createIfMissing)
-            assert.isTrue(db.options.errorIfExists)
             assert.equals(db.options.keyEncoding, 'ascii')
             assert.equals(db.options.valueEncoding, 'json')
             assert.equals(db.location, location)
@@ -111,13 +108,12 @@ buster.testCase('Init & open()', {
 
   , 'without callback': function (done) {
       var location = common.nextLocation()
-        , db = levelup(location, { createIfMissing: true, errorIfExists: true, db: leveldown })
+        , db = levelup(location, { createIfMissing: true, db: leveldown })
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
       assert.isObject(db)
       assert.isTrue(db.options.createIfMissing)
-      assert.isTrue(db.options.errorIfExists)
       assert.equals(db.location, location)
 
       db.on("ready", function () {
@@ -148,39 +144,6 @@ buster.testCase('Init & open()', {
           assert(stat.isDirectory())
           done()
         })
-      }.bind(this))
-    }
-
-  , 'open() with errorIfExists expects error if exists': function (done) {
-      levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true, db: leveldown }, function (err, db) {
-        this.closeableDatabases.push(db)
-        refute(err) // sanity
-        levelup(this.cleanupDirs[0], { errorIfExists: true, db: leveldown }, function (err) {
-          assert(err)
-          assert.isInstanceOf(err, Error)
-          assert.isInstanceOf(err, errors.LevelUPError)
-          assert.isInstanceOf(err, errors.OpenError)
-          done()
-        })
-      }.bind(this))
-    }
-
-  , 'open() with !errorIfExists does not expect error if exists': function (done) {
-      levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true, db: leveldown }, function (err, db) {
-        refute(err) // sanity
-        this.closeableDatabases.push(db)
-        assert.isTrue(db.isOpen())
-
-        db.close(function () {
-          assert.isFalse(db.isOpen())
-
-          levelup(this.cleanupDirs[0], { errorIfExists: false, db: leveldown }, function (err, db) {
-            refute(err)
-            this.closeableDatabases.push(db)
-            assert.isTrue(db.isOpen())
-            done()
-          }.bind(this))
-        }.bind(this))
       }.bind(this))
     }
 
