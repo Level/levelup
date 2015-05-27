@@ -371,7 +371,7 @@ buster.testCase('ReadStream', {
     }
 
   , 'test hex encoding': function (done) {
-      var options = { createIfMissing: true, keyEncoding: 'utf8', valueEncoding: 'hex'}
+      var options = { keyEncoding: 'utf8', valueEncoding: 'hex'}
         , data = [
               { type: 'put', key: 'ab', value: 'abcdef0123456789' }
            ]
@@ -392,7 +392,7 @@ buster.testCase('ReadStream', {
    }
 
   , 'test json encoding': function (done) {
-      var options = { createIfMissing: true, keyEncoding: 'utf8', valueEncoding: 'json' }
+      var options = { keyEncoding: 'utf8', valueEncoding: 'json' }
         , data = [
               { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } }
             , { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
@@ -418,7 +418,7 @@ buster.testCase('ReadStream', {
     }
 
   , 'test injectable encoding': function (done) {
-      var options = { createIfMissing: true, keyEncoding: 'utf8', valueEncoding: {
+      var options = { keyEncoding: 'utf8', valueEncoding: {
           decode: msgpack.decode,
           encode: msgpack.encode,
           buffer: true
@@ -531,7 +531,7 @@ buster.testCase('ReadStream', {
               .on('close', delayed.delayed(callback, 0.05))
           }
         , open       = function (reopen, location, callback) {
-            levelup(location, { createIfMissing: !reopen, db: leveldown }, callback)
+            levelup(location, { db: leveldown }, callback)
           }
         , write      = function (db, callback) { db.batch(sourceData.slice(), callback) }
         , close      = function (db, callback) { db.close(callback) }
@@ -580,7 +580,7 @@ buster.testCase('ReadStream', {
               refute(err)
               db.close(function (err) {
                 refute(err)
-                var db2 = levelup(db.location, { createIfMissing: false, valueEncoding: 'utf8', db: leveldown })
+                var db2 = levelup(db.location, { valueEncoding: 'utf8', db: leveldown })
                 execute(db2)
               })
             }.bind(this))

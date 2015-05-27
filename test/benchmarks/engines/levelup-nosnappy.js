@@ -6,7 +6,7 @@
 var levelup = require('../../../')
 
   , createDb = function (location, callback) {
-      levelup(location, { createIfMissing: true, compression: false }, function (err, db) {
+      levelup(location, { compression: false }, function (err, db) {
         setTimeout(callback.bind(null, err, db), 50)
       })
     }
