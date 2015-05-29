@@ -3,8 +3,7 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup   = require('../../../')
-  , leveldown = require('leveldown')
+var levelup = require('../../../')
 
   , createDb = function (location, callback) {
       levelup(location, { compression: false }, function (err, db) {
