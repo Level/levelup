@@ -78,7 +78,8 @@ var path = require('path')
               )
             })
           }
-        , function () {
+        , function (err) {
+            if (err) throw err
             console.log()
             callback.apply(null, arguments)
           }
