@@ -87,7 +87,7 @@ var levelup   = require('levelup')
 
 // 1) Create our database, supply location and options.
 //    This will create or open the underlying LevelDB store.
-var db = levelup('./mydb', { db: leveldown })
+var db = levelup(leveldown('./mydb'))
 
 // 2) put a key & value
 db.put('name', 'LevelUP', function (err) {
@@ -133,9 +133,7 @@ db.put('name', 'LevelUP', function (err) {
 
 --------------------------------------------------------
 <a name="ctor"></a>
-### levelup(location, options[, callback]])
-### levelup(options[, callback ])
-### levelup(db[, callback ])
+### levelup(db[, options][, callback]])
 <code>levelup()</code> is the main entry point for creating a new LevelUP instance and opening the underlying store with LevelDB.
 
 This function returns a new instance of LevelUP and will also initiate an <a href="#open"><code>open()</code></a> operation. Opening the database is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form: `function (err, db) {}` where the `db` is the LevelUP instance. If you don't provide a callback, any read & write operations are simply queued internally until the database is fully opened.
@@ -143,7 +141,7 @@ This function returns a new instance of LevelUP and will also initiate an <a hre
 This leads to two alternative ways of managing a new LevelUP instance:
 
 ```js
-levelup(location, options, function (err, db) {
+levelup(leveldown(location), function (err, db) {
   if (err) throw err
   db.get('foo', function (err, value) {
     if (err) return console.log('foo does not exist')
@@ -153,33 +151,11 @@ levelup(location, options, function (err, db) {
 
 // vs the equivalent:
 
-var db = levelup(location, options) // will throw if an error occurs
+var db = levelup(leveldown(location)) // will throw if an error occurs
 db.get('foo', function (err, value) {
   if (err) return console.log('foo does not exist')
   console.log('got foo =', value)
 })
-```
-
-The `location` argument is available as a read-only property on the returned LevelUP instance.
-
-The `levelup(options, callback)` form (with optional `callback`) is only available where you provide a valid `'db'` property on the options object (see below). Only for back-ends that don't require a `location` argument, such as [MemDOWN](https://github.com/level/memdown).
-
-For example:
-
-```js
-var levelup = require('levelup')
-var memdown = require('memdown')
-var db = levelup({ db: memdown })
-```
-
-The `levelup(db, callback)` form (with optional `callback`) is only available where `db` is a factory function, as would be provided as a `'db'` property on an `options` object (see below). Only for back-ends that don't require a `location` argument, such as [MemDOWN](https://github.com/level/memdown).
-
-For example:
-
-```js
-var levelup = require('levelup')
-var memdown = require('memdown')
-var db = levelup(memdown)
 ```
 
 #### `options`
@@ -194,8 +170,6 @@ var db = levelup(memdown)
   <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and conversion will be performed.</p>
   <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
   <p><code>'json'</code> encoding is also supported, see below.</p>
-
-* `'db'` *(object, default: LevelDOWN)*: LevelUP is backed by [LevelDOWN](https://github.com/level/leveldown/) to provide an interface to LevelDB. You can completely replace the use of LevelDOWN by providing a "factory" function that will return a LevelDOWN API compatible object given a `location` argument. For further information, see [MemDOWN](https://github.com/level/memdown), a fully LevelDOWN API compatible replacement that uses a memory store rather than LevelDB. Also see [Abstract LevelDOWN](http://github.com/level/abstract-leveldown), a partial implementation of the LevelDOWN API that can be used as a base prototype for a LevelDOWN substitute.
 
 Additionally, each of the main interface methods accept an optional options object that can be used to override `'keyEncoding'` and `'valueEncoding'`.
 

@@ -26,7 +26,7 @@ buster.testCase('Init & open()', {
 
   , 'default options': function (done) {
       var location = common.nextLocation()
-      levelup(location, { db: leveldown }, function (err, db) {
+      levelup(leveldown(location), function (err, db) {
         refute(err, 'no error')
         assert.isTrue(db.isOpen())
         this.closeableDatabases.push(db)
@@ -36,16 +36,11 @@ buster.testCase('Init & open()', {
 
           assert.isFalse(db.isOpen())
 
-          levelup(location, { db: leveldown }, function (err, db) { // no options object
+          levelup(leveldown(location), function (err, db) { // no options object
             refute(err)
             assert.isObject(db)
             assert.equals(db.options.keyEncoding, 'utf8')
             assert.equals(db.options.valueEncoding, 'utf8')
-            assert.equals(db.location, location)
-
-            // read-only properties
-            db.location = 'foo'
-            assert.equals(db.location, location)
 
             done()
           }.bind(this))
@@ -56,8 +51,8 @@ buster.testCase('Init & open()', {
   , 'basic options': function (done) {
       var location = common.nextLocation()
       levelup(
-          location
-        , { valueEncoding: 'binary', db: leveldown }
+          leveldown(location)
+        , { valueEncoding: 'binary' }
         , function (err, db) {
             refute(err)
 
@@ -66,12 +61,6 @@ buster.testCase('Init & open()', {
             assert.isObject(db)
             assert.equals(db.options.keyEncoding, 'utf8')
             assert.equals(db.options.valueEncoding, 'binary')
-            assert.equals(db.location, location)
-
-
-            // read-only properties
-            db.location = 'bar'
-            assert.equals(db.location, location)
 
             done()
           }.bind(this)
@@ -81,8 +70,8 @@ buster.testCase('Init & open()', {
   , 'options with encoding': function (done) {
       var location = common.nextLocation()
       levelup(
-          location
-        , { keyEncoding: 'ascii', valueEncoding: 'json', db: leveldown }
+          leveldown(location)
+        , { keyEncoding: 'ascii', valueEncoding: 'json' }
         , function (err, db) {
             refute(err)
 
@@ -91,12 +80,6 @@ buster.testCase('Init & open()', {
             assert.isObject(db)
             assert.equals(db.options.keyEncoding, 'ascii')
             assert.equals(db.options.valueEncoding, 'json')
-            assert.equals(db.location, location)
-
-
-            // read-only properties
-            db.location = 'bar'
-            assert.equals(db.location, location)
 
             done()
           }.bind(this)
@@ -105,48 +88,15 @@ buster.testCase('Init & open()', {
 
   , 'without callback': function (done) {
       var location = common.nextLocation()
-        , db = levelup(location, { db: leveldown })
+        , db = levelup(leveldown(location))
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
       assert.isObject(db)
-      assert.equals(db.location, location)
 
       db.on("ready", function () {
         assert.isTrue(db.isOpen())
         done()
-      })
-    }
-
-  , 'constructor with options argument uses factory': function (done) {
-      var db = levelup({ db: MemDOWN })
-      assert.isNull(db.location, 'location property is null')
-      db.on('open', function () {
-        assert(db.db instanceof MemDOWN, 'using a memdown backend')
-        assert.same(db.db.location, '', 'db location property is ""')
-        db.put('foo', 'bar', function (err) {
-          refute(err, 'no error')
-          db.get('foo', function (err, value) {
-            assert.equals(value, 'bar', 'correct value')
-            done()
-          })
-        })
-      })
-    }
-
-  , 'constructor with only function argument uses factory': function (done) {
-      var db = levelup(MemDOWN)
-      assert.isNull(db.location, 'location property is null')
-      db.on('open', function () {
-        assert(db.db instanceof MemDOWN, 'using a memdown backend')
-        assert.same(db.db.location, '', 'db location property is ""')
-        db.put('foo', 'bar', function (err) {
-          refute(err, 'no error')
-          db.get('foo', function (err, value) {
-            assert.equals(value, 'bar', 'correct value')
-            done()
-          })
-        })
       })
     }
 })
