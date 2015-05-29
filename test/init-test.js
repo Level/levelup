@@ -99,4 +99,18 @@ buster.testCase('Init & open()', {
         done()
       })
     }
+
+  , 'validate leveldown': function (done) {
+      var down = leveldown(common.nextLocation())
+      Object.defineProperty(down, 'status', {
+        get: function () { return null },
+        set: function () {}
+      })
+      try {
+        levelup(down)
+      } catch (err) {
+        return done()
+      }
+      throw new Error('did not throw')
+    }
 })
