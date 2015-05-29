@@ -38,8 +38,7 @@ buster.testCase('Idempotent open & close', {
       this.cleanupDirs.push(location)
 
       db = levelup(
-          location
-        , { db: leveldown }
+          leveldown(location)
         , function () {
             assert.equals(n++, 0, 'callback should fire only once')
             if (n && m)

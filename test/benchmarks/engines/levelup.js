@@ -3,15 +3,16 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../../../')
+var levelup   = require('../../../')
+  , leveldown = require('leveldown')
 
-  , createDb = function (location, callback) {
-      levelup(location, function (err, db) {
+  , createDb  = function (location, callback) {
+      levelup(leveldown(location), function (err, db) {
         setTimeout(callback.bind(null, err, db), 50)
       })
     }
 
-  , closeDb = function (db, callback) {
+  , closeDb  = function (db, callback) {
       db.close(callback)
     }
 

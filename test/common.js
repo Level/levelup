@@ -72,12 +72,10 @@ module.exports.openTestDatabase = function () {
     , callback = typeof arguments[0] == 'function' ? arguments[0] : arguments[1]
     , location = typeof arguments[0] == 'string' ? arguments[0] : module.exports.nextLocation()
 
-  options.db = leveldown
-
   rimraf(location, function (err) {
     refute(err)
     this.cleanupDirs.push(location)
-    levelup(location, options, function (err, db) {
+    levelup(leveldown(location), options, function (err, db) {
       refute(err)
       if (!err) {
         this.closeableDatabases.push(db)

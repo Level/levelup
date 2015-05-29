@@ -8,7 +8,7 @@
     "async": "~0.1.22",
     "benchmark": "~1.0.0",
     "colors": "~0.6.0-1",
-    "leveldown": "^0.10.4",
+    "leveldown": "^1.1.0",
     "levelup": "*",
     "rimraf": "~2.0.2",
     "sqlite3": "*"

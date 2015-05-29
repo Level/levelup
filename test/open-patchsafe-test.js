@@ -15,12 +15,11 @@ function test(fun) {
   return function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-      , db       = levelup(location, { valueEncoding: 'utf8', db: leveldown })
+      , db       = levelup(leveldown(location), { valueEncoding: 'utf8' })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
     assert.isObject(db)
-    assert.equals(db.location, location)
 
     fun(db, done)
     // we should still be in a state of limbo down here, not opened or closed, but 'new'

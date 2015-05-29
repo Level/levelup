@@ -34,7 +34,7 @@
   ],
   "main": "lib/levelup.js",
   "dependencies": {
-    "deferred-leveldown": "~1.2.1",
+    "deferred-leveldown": "^2.0.0-2",
     "level-codec": "~6.1.0",
     "level-errors": "~1.0.3",
     "level-iterator-stream": "~1.3.0",
