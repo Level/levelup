@@ -31,7 +31,7 @@ buster.testCase('Optional LevelDOWN', {
       assert.exception(levelup.bind(null, '/foo/bar'), function (err) {
         if (err.name != 'LevelUPError')
           return false
-        if (!/Installed version of LevelDOWN \(0\.0\.0\) does not match required version \(~\d+\.\d+\.\d+\)/.test(err.message))
+        if (!/Installed version of LevelDOWN \(0\.0\.0\) does not match required version \(\^\d+\.\d+\.\d+\)/.test(err.message))
           return false
         return true
       })
