@@ -6,6 +6,7 @@
 var levelup = require('../lib/levelup')
   , assert  = require('referee').assert
   , refute  = require('referee').refute
+  , format  = require('util').format
   , buster  = require('bustermove')
   , errors  = levelup.errors
 
@@ -38,36 +39,29 @@ buster.testCase('Optional LevelDOWN', {
     }
 
   , 'test no leveldown/package': function () {
-      var levelup = require('..')
-      // simulate an exception from a require() that doesn't resolved a package
-      Object.defineProperty(require.cache, require.resolve('leveldown/package'), {
-        get: function() {
-          throw new Error('Wow, this is kind of evil isn\'t it?')
-        }
-      })
-      assert.exception(levelup.bind(null, '/foo/bar'), function (err) {
-        if (err.name != 'LevelUPError')
-          return false
-        if ('Could not locate LevelDOWN, try `npm install leveldown`' != err.message)
-          return false
-        return true
-      })
+      assertRequireThrows('leveldown/package')
     }
 
   , 'test no leveldown': function () {
-      var levelup = require('..')
-      // simulate an exception from a require() that doesn't resolved a package
-      Object.defineProperty(require.cache, require.resolve('leveldown'), {
-        get: function() {
-          throw new Error('Wow, this is kind of evil isn\'t it?')
-        }
-      })
-      assert.exception(levelup.bind(null, '/foo/bar'), function (err) {
-        if (err.name != 'LevelUPError')
-          return false
-        if ('Could not locate LevelDOWN, try `npm install leveldown`' != err.message)
-          return false
-        return true
-      })
+      assertRequireThrows('leveldown')
     }
 })
+
+function assertRequireThrows (module) {
+  var levelup = require('..')
+    , error   = 'Wow, this is kind of evil isn\'t it?'
+  // simulate an exception from a require() that doesn't resolved a package
+  Object.defineProperty(require.cache, require.resolve(module), {
+    get: function() {
+      throw new Error(error)
+    }
+  })
+  assert.exception(levelup.bind(null, '/foo/bar'), function (err) {
+    if (err.name != 'LevelUPError')
+      return false
+    var template = 'Failed to require LevelDOWN (%s). Try `npm install leveldown` if it\'s missing'
+    if (format(template, error) != err.message)
+      return false
+    return true
+  })
+}
