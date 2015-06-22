@@ -16,52 +16,46 @@ buster.testCase('Encoding', {
   , 'tearDown': common.commonTearDown
 
   , 'test safe decode in get()': function (done) {
-      this.openTestDatabase(
-          { valueEncoding: 'utf8' }
-        , function (db) {
-            db.put('foo', 'this {} is [] not : json', function (err) {
-              refute(err)
-              db.close(function (err) {
-                refute(err)
-                db = levelup(db.location, { valueEncoding: 'json', db: leveldown })
-                db.get('foo', function (err, value) {
-                  assert(err)
-                  assert.equals('EncodingError', err.name)
-                  refute(value)
-                  db.close(done)
-                })
-              })
-            })
-          }
-      )
+      var location = common.nextLocation()
+        , db       = levelup(leveldown(location), { valueEncoding: 'utf8' })
+      db.put('foo', 'this {} is [] not : json', function (err) {
+        refute(err)
+        db.close(function (err) {
+          refute(err)
+          db = levelup(leveldown(location), { valueEncoding: 'json' })
+          db.get('foo', function (err, value) {
+            assert(err)
+            assert.equals('EncodingError', err.name)
+            refute(value)
+            db.close(done)
+          })
+        })
+      })
     }
 
   , 'test safe decode in readStream()': function (done) {
-      this.openTestDatabase(
-          { valueEncoding: 'utf8' }
-        , function (db) {
-            db.put('foo', 'this {} is [] not : json', function (err) {
-              refute(err)
-              db.close(function (err) {
-                refute(err)
+      var location = common.nextLocation()
+        , db       = levelup(leveldown(location), { valueEncoding: 'utf8' })
+      db.put('foo', 'this {} is [] not : json', function (err) {
+        refute(err)
+        db.close(function (err) {
+          refute(err)
 
-                var dataSpy  = this.spy()
-                  , errorSpy = this.spy()
+          var dataSpy  = this.spy()
+            , errorSpy = this.spy()
 
-                db = levelup(db.location, { valueEncoding: 'json', db: leveldown })
-                db.readStream()
-                  .on('data', dataSpy)
-                  .on('error', errorSpy)
-                  .on('close', function () {
-                    assert.equals(dataSpy.callCount, 0, 'no data')
-                    assert.equals(errorSpy.callCount, 1, 'error emitted')
-                    assert.equals('EncodingError', errorSpy.getCall(0).args[0].name)
-                    db.close(done)
-                  })
-              }.bind(this))
-            }.bind(this))
-          }.bind(this)
-      )
+          db = levelup(leveldown(location), { valueEncoding: 'json' })
+          db.readStream()
+            .on('data', dataSpy)
+            .on('error', errorSpy)
+            .on('close', function () {
+              assert.equals(dataSpy.callCount, 0, 'no data')
+              assert.equals(errorSpy.callCount, 1, 'error emitted')
+              assert.equals('EncodingError', errorSpy.getCall(0).args[0].name)
+              db.close(done)
+            })
+        }.bind(this))
+      }.bind(this))
     }
 
   , 'test encoding = valueEncoding': function (done) {

@@ -20,14 +20,13 @@ buster.testCase('JSON API', {
           var location = common.nextLocation()
           this.cleanupDirs.push(location)
           console.log(location)
-          levelup(location, {
+          levelup(leveldown(location), {
             valueEncoding: {
               encode: msgpack.encode,
               decode: msgpack.decode,
               buffer: true,
               type: 'msgpack'
-            },
-            db: leveldown
+            }
           }, function (err, db) {
             refute(err)
             if (err) return

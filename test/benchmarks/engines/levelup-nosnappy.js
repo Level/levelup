@@ -11,7 +11,7 @@ var levelup = require('../../../')
       })
     }
 
-  , closeDb = function (db, callback) {
+  , closeDb  = function (db, callback) {
       db.close(callback)
     }
 
