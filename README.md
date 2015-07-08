@@ -22,7 +22,7 @@ LevelUP
   * <a href="#multiproc">Multi-process access</a>
   * <a href="#support">Getting support</a>
   * <a href="#contributing">Contributing</a>
-  * <a href="#licence">Licence &amp; copyright</a>
+  * <a href="#license">Licence &amp; copyright</a>
 
 <a name="intro"></a>
 Introduction
