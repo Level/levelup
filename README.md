@@ -22,7 +22,7 @@ LevelUP
   * <a href="#multiproc">Multi-process access</a>
   * <a href="#support">Getting support</a>
   * <a href="#contributing">Contributing</a>
-  * <a href="#license">Licence &amp; copyright</a>
+  * <a href="#license">License &amp; copyright</a>
 
 <a name="intro"></a>
 Introduction
@@ -631,4 +631,4 @@ Copyright &copy; 2012-2015 **LevelUP** [contributors](https://github.com/level/c
 **LevelUP** is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included `LICENSE.md` file for more details.
 
 =======
-*LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).*
+*LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD License](http://opensource.org/licenses/BSD-3-Clause).*
