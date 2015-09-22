@@ -181,6 +181,24 @@ var memdown = require('memdown')
 var db = levelup(memdown)
 ```
 
+Both `levelup(options, callback)` and `levelup(db, callback)` can be called with an already created LevelDOWN API compatible object. The database object must not have been opened (see below).
+
+For example:
+
+```js
+var levelup = require('levelup')
+var leveldown = require('leveldown')
+var db = levelup({ db: leveldown('./mydb') })
+```
+
+or
+
+```js
+var levelup = require('levelup')
+var leveldown = require('leveldown')
+var db = levelup(leveldown('./mydb'))
+```
+
 #### `options`
 
 `levelup()` takes an optional options object as its second argument; the following properties are accepted:
@@ -198,7 +216,7 @@ var db = levelup(memdown)
   <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
   <p><code>'json'</code> encoding is also supported, see below.</p>
 
-* `'db'` *(object, default: LevelDOWN)*: LevelUP is backed by [LevelDOWN](https://github.com/level/leveldown/) to provide an interface to LevelDB. You can completely replace the use of LevelDOWN by providing a "factory" function that will return a LevelDOWN API compatible object given a `location` argument. For further information, see [MemDOWN](https://github.com/level/memdown), a fully LevelDOWN API compatible replacement that uses a memory store rather than LevelDB. Also see [Abstract LevelDOWN](http://github.com/level/abstract-leveldown), a partial implementation of the LevelDOWN API that can be used as a base prototype for a LevelDOWN substitute.
+* `'db'` *(function | object, default: LevelDOWN)*: LevelUP is backed by [LevelDOWN](https://github.com/level/leveldown/) to provide an interface to LevelDB. You can completely replace the use of LevelDOWN by providing a "factory" function that will return a LevelDOWN API compatible object given a `location` argument. You can also pass an already created LevelDOWN API compatible object if it's in a non opened state. For further information, see [MemDOWN](https://github.com/level/memdown), a fully LevelDOWN API compatible replacement that uses a memory store rather than LevelDB. Also see [Abstract LevelDOWN](http://github.com/level/abstract-leveldown), a partial implementation of the LevelDOWN API that can be used as a base prototype for a LevelDOWN substitute.
 
 Additionally, each of the main interface methods accept an optional options object that can be used to override `'keyEncoding'` and `'valueEncoding'`.
 
