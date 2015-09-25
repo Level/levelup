@@ -22,7 +22,7 @@ buster.testCase('Key and Value Streams', {
           this.sourceData.push({
               type  : 'put'
             , key   : k
-            , value : Math.random()
+            , value : Math.random().toString()
           })
         }
 
@@ -36,10 +36,11 @@ buster.testCase('Key and Value Streams', {
           assert.equals(this.dataSpy.callCount, data.length, 'Stream emitted correct number of "data" events')
           data.forEach(function (d, i) {
             var call = this.dataSpy.getCall(i)
+            console.log('d', d, 'call', call.args)
             if (call) {
               //console.log('call', i, ':', call.args[0].key, '=', call.args[0].value, '(expected', d.key, '=', d.value, ')')
               assert.equals(call.args.length, 1, 'Stream "data" event #' + i + ' fired with 1 argument')
-              assert.equals(+call.args[0].toString(), +d, 'Stream correct "data" event #' + i + ': ' + d)
+              assert.equals(call.args[0].toString(), d.toString(), 'Stream correct "data" event #' + i + ': ' + d)
             }
           }.bind(this))
           done()

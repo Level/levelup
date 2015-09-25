@@ -40,7 +40,9 @@ buster.testCase('LevelDOWN Substitution', {
       ])
 
       db.createReadStream()
-        .on('data', function (data) { entries.push(data) })
+        .on('data', function (data) {
+          entries.push({ key: data.key.toString(), value: data.value.toString() })
+        })
         .on('error', function (err) { refute(err, 'readStream emitted an error') })
         .on('close', function () {
           assert.equals(entries, expected, 'correct entries')

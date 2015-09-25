@@ -38,7 +38,7 @@ buster.testCase('get() / put() / del()', {
               refute(err)
               db.get('some key', function (err, value) {
                 refute(err)
-                assert.equals(value, 'some value stored in the database')
+                assert.equals(value.toString(), 'some value stored in the database')
                 done()
               })
             })

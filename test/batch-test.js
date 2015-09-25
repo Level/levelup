@@ -31,7 +31,7 @@ buster.testCase('batch()', {
                 , function (key, callback) {
                     db.get(key, function (err, value) {
                       refute(err)
-                      assert.equals(value, 'a' + key + 'value')
+                      assert.equals(value.toString(), 'a' + key + 'value')
                       callback()
                     })
                   }
@@ -57,7 +57,7 @@ buster.testCase('batch()', {
                 , function (key, callback) {
                     db.get(key, function (err, value) {
                       refute(err)
-                      assert.equals(value, 'a' + key + 'value')
+                      assert.equals(value.toString(), 'a' + key + 'value')
                       callback()
                     })
                   }
@@ -184,7 +184,6 @@ buster.testCase('batch()', {
     }
 
   , 'batch() with can manipulate data from put()': function (done) {
-      // checks encoding and whatnot
       this.openTestDatabase(function (db) {
         async.series(
             [

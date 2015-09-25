@@ -143,9 +143,9 @@ module.exports.readStreamSetUp = function (done) {
           assert.equals(call.args.length, 1, 'ReadStream "data" event #' + i + ' fired with 1 argument')
           refute.isNull(call.args[0].key, 'ReadStream "data" event #' + i + ' argument has "key" property')
           refute.isNull(call.args[0].value, 'ReadStream "data" event #' + i + ' argument has "value" property')
-          assert.equals(call.args[0].key, d.key, 'ReadStream "data" event #' + i + ' argument has correct "key"')
+          assert.equals(call.args[0].key.toString(), d.key, 'ReadStream "data" event #' + i + ' argument has correct "key"')
           assert.equals(
-              +call.args[0].value
+              +call.args[0].value.toString()
             , +d.value
             , 'ReadStream "data" event #' + i + ' argument has correct "value"'
           )

@@ -39,8 +39,6 @@ buster.testCase('Init & open()', {
           levelup(leveldown(location), function (err, db) { // no options object
             refute(err)
             assert.isObject(db)
-            assert.equals(db.options.keyEncoding, 'utf8')
-            assert.equals(db.options.valueEncoding, 'utf8')
 
             done()
           }.bind(this))
@@ -52,34 +50,12 @@ buster.testCase('Init & open()', {
       var location = common.nextLocation()
       levelup(
           leveldown(location)
-        , { valueEncoding: 'binary' }
         , function (err, db) {
             refute(err)
 
             this.closeableDatabases.push(db)
             this.cleanupDirs.push(location)
             assert.isObject(db)
-            assert.equals(db.options.keyEncoding, 'utf8')
-            assert.equals(db.options.valueEncoding, 'binary')
-
-            done()
-          }.bind(this)
-      )
-    }
-
-  , 'options with encoding': function (done) {
-      var location = common.nextLocation()
-      levelup(
-          leveldown(location)
-        , { keyEncoding: 'ascii', valueEncoding: 'json' }
-        , function (err, db) {
-            refute(err)
-
-            this.closeableDatabases.push(db)
-            this.cleanupDirs.push(location)
-            assert.isObject(db)
-            assert.equals(db.options.keyEncoding, 'ascii')
-            assert.equals(db.options.valueEncoding, 'json')
 
             done()
           }.bind(this)
