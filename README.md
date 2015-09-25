@@ -198,8 +198,6 @@ The callback argument is optional but if you don't provide one and an error occu
 
 Encoding of the `key` and `value` objects will adhere to `'keyEncoding'` and `'valueEncoding'` options provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `put()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
 
-If you provide a `'sync'` value of `true` in your `options` object, LevelDB will perform a synchronous write of the data; although the operation will be asynchronous as far as Node is concerned. Normally, LevelDB passes the data to the operating system for writing and returns immediately, however a synchronous write will use `fsync()` or equivalent so your callback won't be triggered until the data is actually on disk. Synchronous filesystem writes are **significantly** slower than asynchronous writes but if you want to be absolutely sure that the data is flushed then you can use `'sync': true`.
-
 --------------------------------------------------------
 <a name="get"></a>
 ### db.get(key[, options][, callback])
@@ -241,8 +239,6 @@ db.del('foo', function (err) {
 
 Encoding of the `key` object will adhere to the `'keyEncoding'` option provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `del()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
 
-A `'sync'` option can also be passed, see <a href="#put"><code>put()</code></a> for details on how this works.
-
 --------------------------------------------------------
 <a name="batch"></a>
 ### db.batch(array[, options][, callback]) *(array form)*
@@ -269,7 +265,7 @@ db.batch(ops, function (err) {
 
 #### `options`
 
-See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can overwrite default `'keyEncoding'` and `'valueEncoding'` and also specify the use of `sync` filesystem operations.
+See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can overwrite default `'keyEncoding'` and `'valueEncoding'`.
 
 In addition to encoding options for the whole batch you can also overwrite the encoding per operation, like:
 
