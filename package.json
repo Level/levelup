@@ -45,6 +45,7 @@
   "devDependencies": {
     "async": "~1.4.2",
     "bustermove": "~1.0.0",
+    "tap": "0.x.x",
     "delayed": "~1.0.1",
     "faucet": "~0.0.1",
     "leveldown": "^1.1.0",
