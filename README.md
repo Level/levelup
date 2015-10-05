@@ -6,6 +6,7 @@ LevelUP
 **Fast & simple storage - a Node.js-style LevelDB wrapper**
 
 [![Build Status](https://secure.travis-ci.org/Level/levelup.png)](http://travis-ci.org/Level/levelup)
+[![dependencies](https://david-dm.org/Level/levelup.svg)](https://david-dm.org/level/levelup)
 
 [![NPM](https://nodei.co/npm/levelup.png?stars&downloads&downloadRank)](https://nodei.co/npm/levelup/) [![NPM](https://nodei.co/npm-dl/levelup.png?months=6&height=3)](https://nodei.co/npm/levelup/)
 
