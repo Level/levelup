@@ -164,6 +164,25 @@ buster.testCase('batch()', {
       })
     }
 
+  , 'batch() exposes ops queue length': function (done) {
+      this.openTestDatabase(function (db) {
+        var batch = db.batch()
+          .put('one', '1')
+          .del('two')
+          .put('three', '3')
+        assert.equals(batch.length, 3)
+        batch.clear()
+        assert.equals(batch.length, 0)
+        batch
+          .del('1')
+          .put('2', 'two')
+          .put('3', 'three')
+          .del('3')
+        assert.equals(batch.length, 4)
+        done()
+      })
+    }
+
   , 'batch() with can manipulate data from put()': function (done) {
       // checks encoding and whatnot
       this.openTestDatabase(function (db) {
