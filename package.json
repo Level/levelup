@@ -54,7 +54,7 @@
     "referee": "~1.2.0",
     "rimraf": "~2.4.3",
     "slow-stream": "0.0.4",
-    "tape": "~4.2.1"
+    "tape": "~4.3.0"
   },
   "browser": {
     "leveldown": false,
