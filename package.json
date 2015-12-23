@@ -52,7 +52,7 @@
     "memdown": "~1.1.0",
     "msgpack-js": "~0.3.0",
     "referee": "~1.2.0",
-    "rimraf": "~2.4.3",
+    "rimraf": "~2.5.0",
     "slow-stream": "0.0.4",
     "tape": "~4.2.1"
   },
