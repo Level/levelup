@@ -91,11 +91,12 @@ var db = levelup('./mydb')
 
 // 2) put a key & value
 db.put('name', 'LevelUP', function (err) {
-  if (err) return console.log('Ooops!', err) // some kind of I/O error
+  if (err) return console.log('Some kind of I/O error', err)
 
   // 3) fetch by key
   db.get('name', function (err, value) {
-    if (err) return console.log('Ooops!', err) // likely the key was not found
+    if (err && err.notFound) return console.log('Key not found!')
+    else if (err) return console.log('Some kind of I/O error', err)
 
     // ta da!
     console.log('name=' + value)
@@ -146,8 +147,7 @@ This leads to two alternative ways of managing a new LevelUP instance:
 levelup(location, options, function (err, db) {
   if (err) throw err
   db.get('foo', function (err, value) {
-    if (err) return console.log('foo does not exist')
-    console.log('got foo =', value)
+    if (!err) console.log('got foo =', value)
   })
 })
 
@@ -155,8 +155,7 @@ levelup(location, options, function (err, db) {
 
 var db = levelup(location, options) // will throw if an error occurs
 db.get('foo', function (err, value) {
-  if (err) return console.log('foo does not exist')
-  console.log('got foo =', value)
+  if (!err) console.log('got foo =', value)
 })
 ```
 
@@ -196,6 +195,7 @@ var db = levelup(memdown)
 
 * `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)).
   <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and conversion will be performed.</p>
+  <p>If you want `get()` operations to return values as `Buffer` objects, set `valueEncoding` to `'binary'`.</p>
   <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
   <p><code>'json'</code> encoding is also supported, see below.</p>
 
@@ -252,9 +252,17 @@ db.get('foo', function (err, value) {
 
 #### `options`
 
-Encoding of the `key` and `value` objects is the same as in <a href="#put"><code>put</code></a>. 
+Encoding of the `key` and `value` objects is the same as in <a href="#put"><code>put</code></a>.
 
 LevelDB will by default fill the in-memory LRU Cache with data from a call to get. Disabling this is done by setting `fillCache` to `false`.
+
+If `valueEncoding` was not set as `'binary'` when creating the db and you need a `Buffer` back you can override this by setting `valueEncoding` to `'binary'`.
+
+```js
+db.get('foo', { valueEncoding: 'binary' }, function (err, value) {
+  if (!err) console.log('value is a Buffer', value)
+})
+```
 
 --------------------------------------------------------
 <a name="del"></a>
