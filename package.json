@@ -56,7 +56,7 @@
     "referee": "*",
     "rimraf": "*",
     "slow-stream": ">=0.0.4",
-    "tap": "*",
+    "tap": "2.x.x",
     "tar": "*"
   },
   "browser": {
