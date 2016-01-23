@@ -38,26 +38,26 @@
     "errno": "~0.1.1",
     "prr": "~0.0.0",
     "readable-stream": "~1.0.26",
-    "semver": "~2.3.1",
+    "semver": "~5.1.0",
     "xtend": "~3.0.0"
   },
   "devDependencies": {
-    "leveldown": "~0.10.0",
+    "async": "*",
+    "boganipsum": "*",
     "bustermove": "*",
-    "tap": "*",
+    "delayed": "*",
+    "du": "*",
+    "fstream": "*",
+    "leveldown": "~0.10.0",
+    "memdown": "^0.11.0",
+    "mkfiletree": "*",
+    "msgpack-js": "*",
+    "readfiletree": "*",
     "referee": "*",
     "rimraf": "*",
-    "async": "*",
-    "fstream": "*",
-    "tar": "*",
-    "mkfiletree": "*",
-    "readfiletree": "*",
     "slow-stream": ">=0.0.4",
-    "delayed": "*",
-    "boganipsum": "*",
-    "du": "*",
-    "memdown": "*",
-    "msgpack-js": "*"
+    "tap": "2.x.x",
+    "tar": "*"
   },
   "browser": {
     "leveldown": false,
@@ -65,7 +65,7 @@
     "semver": false
   },
   "scripts": {
-    "test": "tap test/*-test.js --stderr",
+    "test": "tap test/*-test.js",
     "functionaltests": "node ./test/functional/fstream-test.js && node ./test/functional/binary-data-test.js && node ./test/functional/compat-test.js",
     "alltests": "npm test && npm run-script functionaltests"
   },
