@@ -44,7 +44,7 @@
   "devDependencies": {
     "async": "*",
     "boganipsum": "*",
-    "bustermove": "*",
+    "bustermove": "~1.0.1",
     "delayed": "*",
     "du": "*",
     "fstream": "*",
@@ -57,6 +57,7 @@
     "rimraf": "*",
     "slow-stream": ">=0.0.4",
     "tap": "2.x.x",
+    "tape": "4.x.x",
     "tar": "*"
   },
   "browser": {
