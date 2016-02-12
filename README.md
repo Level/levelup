@@ -419,7 +419,7 @@ Additionally, you can supply an options object as the first parameter to `create
 
 * `'limit'` *(number, default: `-1`)*: limit the number of results collected by this stream. This number represents a *maximum* number of results and may not be reached if you get to the end of the data first. A value of `-1` means there is no limit. When `reverse=true` the highest keys will be returned instead of the lowest keys.
 
-* `'fillCache'` *(boolean, default: `false`)*: wheather LevelDB's LRU-cache should be filled with data read.
+* `'fillCache'` *(boolean, default: `false`)*: whether LevelDB's LRU-cache should be filled with data read.
 
 * `'keyEncoding'` / `'valueEncoding'` *(string)*: the encoding applied to each read piece of data.
 
@@ -429,7 +429,7 @@ Additionally, you can supply an options object as the first parameter to `create
 
 A **KeyStream** is a **ReadStream** where the `'data'` events are simply the keys from the database so it can be used like a traditional stream rather than an object stream.
 
-You can obtain a KeyStream either by calling the `createKeyStream()` method on a LevelUP object or by passing passing an options object to `createReadStream()` with `keys` set to `true` and `values` set to `false`.
+You can obtain a KeyStream either by calling the `createKeyStream()` method on a LevelUP object or by passing an options object to `createReadStream()` with `keys` set to `true` and `values` set to `false`.
 
 ```js
 db.createKeyStream()
@@ -450,7 +450,7 @@ db.createReadStream({ keys: true, values: false })
 
 A **ValueStream** is a **ReadStream** where the `'data'` events are simply the values from the database so it can be used like a traditional stream rather than an object stream.
 
-You can obtain a ValueStream either by calling the `createValueStream()` method on a LevelUP object or by passing passing an options object to `createReadStream()` with `values` set to `true` and `keys` set to `false`.
+You can obtain a ValueStream either by calling the `createValueStream()` method on a LevelUP object or by passing an options object to `createReadStream()` with `values` set to `true` and `keys` set to `false`.
 
 ```js
 db.createValueStream()
