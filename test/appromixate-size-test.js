@@ -20,7 +20,7 @@ buster.testCase('approximateSize()', {
         var error = console.error
         console.error = function(str){
           console.error = error
-          assert.equals(str, 'db.approximateSize() is deprecated. Use db.db.approximateSize() instead')
+          assert(/deprecated/.test(str));
           done()
         }
         db.approximateSize('a', 'z', function(){})
