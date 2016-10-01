@@ -575,7 +575,7 @@ You specify `'json'` encoding for both keys and/or values, you can then supply J
 Custom encodings
 ----------------
 
-A custom encoding may be provided by passing in an object as an value for `keyEncoding` or `valueEncoding` (wherever accepted), it must have the following properties:
+A custom encoding may be provided by passing in an object as a value for `keyEncoding` or `valueEncoding` (wherever accepted), it must have the following properties:
 
 ```js
 {
