@@ -397,7 +397,7 @@ db.createReadStream()
     console.log('Stream closed')
   })
   .on('end', function () {
-    console.log('Stream closed')
+    console.log('Stream ended')
   })
 ```
 
