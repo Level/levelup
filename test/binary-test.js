@@ -22,7 +22,7 @@ buster.testCase('Binary API', {
     }
 
   , 'tearDown': common.commonTearDown
-/*
+
   , 'sanity check on test data': function (done) {
       assert(Buffer.isBuffer(this.testData))
       common.checkBinaryTestData(this.testData, done)
@@ -40,7 +40,7 @@ buster.testCase('Binary API', {
         })
       }.bind(this))
     }
-*/
+
   , 'test put() and get() with binary value {valueEncoding:binary} on createDatabase()': function (done) {
       this.openTestDatabase({ createIfMissing: true, errorIfExists: true, valueEncoding: 'binary' }, function (db) {
         db.put('binarydata', this.testData, function (err) {
@@ -53,7 +53,7 @@ buster.testCase('Binary API', {
         })
       }.bind(this))
     }
-/*
+
   , 'test put() and get() with binary key {valueEncoding:binary}': function (done) {
       this.openTestDatabase(function (db) {
         db.put(this.testData, 'binarydata', { valueEncoding: 'binary' }, function (err) {
@@ -167,5 +167,4 @@ buster.testCase('Binary API', {
         )
       }.bind(this))
     }
-  */
 })

@@ -44,7 +44,6 @@ buster.testCase('Encoding', {
               refute(err)
               db.close(function (err) {
                 refute(err)
-                  console.log('db closed')
 
                 var dataSpy  = this.spy()
                   , errorSpy = this.spy()
@@ -78,7 +77,6 @@ buster.testCase('Encoding', {
         })
       })
     }
-    
   , 'test batch op encoding': function (done) {
       this.openTestDatabase({ valueEncoding: 'json' }, function (db) {
         db.batch([
@@ -113,5 +111,4 @@ buster.testCase('Encoding', {
         })
       })
     }
-    
 })
