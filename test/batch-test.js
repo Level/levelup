@@ -31,7 +31,7 @@ buster.testCase('batch()', {
                 , function (key, callback) {
                     db.get(key, function (err, value) {
                       refute(err)
-                      assert.equals(value.toString(), 'a' + key + 'value')
+                      assert.equals(value, 'a' + key + 'value')
                       callback()
                     })
                   }
@@ -57,7 +57,7 @@ buster.testCase('batch()', {
                 , function (key, callback) {
                     db.get(key, function (err, value) {
                       refute(err)
-                      assert.equals(value.toString(), 'a' + key + 'value')
+                      assert.equals(value, 'a' + key + 'value')
                       callback()
                     })
                   }

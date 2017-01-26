@@ -11,6 +11,7 @@ var levelup    = require('../lib/levelup.js')
   , rimraf     = require('rimraf')
   , async      = require('async')
   , msgpack    = require('msgpack-js')
+  , encDown    = require('encoding-down')
 
   , assert  = require('referee').assert
   , refute  = require('referee').refute
@@ -160,8 +161,8 @@ buster.testCase('ReadStream', {
                 assert.equals(call.args.length, 1, 'ReadStream "data" event #' + i + ' fired with 1 argument')
                 refute.isNull(call.args[0].key, 'ReadStream "data" event #' + i + ' argument has "key" property')
                 refute.isNull(call.args[0].value, 'ReadStream "data" event #' + i + ' argument has "value" property')
-                assert.equals(call.args[0].key.toString(), d.key, 'ReadStream "data" event #' + i + ' argument has correct "key"')
-                assert.equals(+call.args[0].value.toString(), +d.value, 'ReadStream "data" event #' + i + ' argument has correct "value"')
+                assert.equals(call.args[0].key, d.key, 'ReadStream "data" event #' + i + ' argument has correct "key"')
+                assert.equals(+call.args[0].value, +d.value, 'ReadStream "data" event #' + i + ' argument has correct "value"')
               }
             }.bind(this))
             done()
@@ -318,7 +319,6 @@ buster.testCase('ReadStream', {
         }.bind(this))
       }.bind(this))
     }
-
   , 'test readStream() with "end" being mid-way key (float) and "reverse=true"': function (done) {
       this.openTestDatabase(function (db) {
         db.batch(this.sourceData.slice(), function (err) {
@@ -340,7 +340,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.createReadStream({ start: '30', end: '70' })
+          var rs = db.createReadStream({ start: 30, end: 70 })
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -351,12 +351,13 @@ buster.testCase('ReadStream', {
       }.bind(this))
     }
 
+
   , 'test readStream() with both "start" and "end" and "reverse=true"': function (done) {
       this.openTestDatabase(function (db) {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.createReadStream({ start: '70', end: '30', reverse: true })
+          var rs = db.createReadStream({ start: 70, end: 30, reverse: true })
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -393,7 +394,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.createReadStream({ start: '0' })
+          var rs = db.createReadStream({ start: 0 })
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -409,7 +410,7 @@ buster.testCase('ReadStream', {
         db.batch(this.sourceData.slice(), function (err) {
           refute(err)
 
-          var rs = db.createReadStream({ end: '0' })
+          var rs = db.createReadStream({ end: 0 })
           rs.on('data' , this.dataSpy)
           rs.on('end'  , this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
@@ -452,7 +453,7 @@ buster.testCase('ReadStream', {
               .on('close', delayed.delayed(callback, 0.05))
           }
         , open       = function (reopen, location, callback) {
-            levelup(leveldown(location), callback)
+            levelup(encDown(leveldown(location)), callback)
           }
         , write      = function (db, callback) { db.batch(sourceData.slice(), callback) }
         , close      = function (db, callback) { db.close(callback) }
@@ -487,7 +488,7 @@ buster.testCase('ReadStream', {
     // the logic for this is inside the ReadStream constructor which waits for 'ready'
   , 'test ReadStream on pre-opened db': function (done) {
       var location = common.nextLocation()
-        , db = levelup(leveldown(location))
+        , db = levelup(encDown(leveldown(location)))
         , execute = function (db) {
             // is in limbo
             refute(db.isOpen())
@@ -503,7 +504,7 @@ buster.testCase('ReadStream', {
               refute(err)
               db.close(function (err) {
                 refute(err)
-                var db2 = levelup(leveldown(location))
+                var db2 = levelup(encDown(leveldown(location)))
                 execute(db2)
               })
             }.bind(this))

@@ -44,7 +44,7 @@
     "async": "~1.5.0",
     "bustermove": "~1.0.0",
     "delayed": "~1.0.1",
-    "encoding-down": "^2.0.0",
+    "encoding-down": "^2.0.8",
     "faucet": "~0.0.1",
     "leveldown": "^1.1.0",
     "memdown": "~1.1.0",

@@ -8,13 +8,14 @@ var levelup = require('../lib/levelup.js')
   , refute  = require('referee').refute
   , buster  = require('bustermove')
   , MemDOWN = require('memdown')
+  , encDown = require('encoding-down')
 
 require('./common')
 
 buster.testCase('LevelDOWN Substitution', {
     'test substitution of LevelDOWN with MemDOWN': function (done) {
       var md       = new MemDOWN('foo')
-        , db       = levelup(md)
+        , db       = levelup(encDown(md))
         , entries  = []
         , expected = [
               { key: 'a', value: 'A' }
@@ -40,9 +41,7 @@ buster.testCase('LevelDOWN Substitution', {
       ])
 
       db.createReadStream()
-        .on('data', function (data) {
-          entries.push({ key: data.key.toString(), value: data.value.toString() })
-        })
+        .on('data', function (data) { entries.push(data) })
         .on('error', function (err) { refute(err, 'readStream emitted an error') })
         .on('close', function () {
           assert.equals(entries, expected, 'correct entries')

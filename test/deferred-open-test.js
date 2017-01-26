@@ -11,6 +11,7 @@ var levelup   = require('../lib/levelup.js')
   , assert    = require('referee').assert
   , refute    = require('referee').refute
   , buster    = require('bustermove')
+  , encDown   = require('encoding-down')
 
 buster.testCase('Deferred open()', {
     'setUp': common.commonSetUp
@@ -19,7 +20,7 @@ buster.testCase('Deferred open()', {
   , 'put() and get() on pre-opened database': function (done) {
       var location = common.nextLocation()
       // 1) open database without callback, opens in worker thread
-        , db       = levelup(leveldown(location))
+        , db       = levelup(encDown(leveldown(location)))
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
@@ -38,7 +39,7 @@ buster.testCase('Deferred open()', {
           , function (k, cb) {
               db.get('k' + k, function (err, v) {
                 refute(err)
-                assert.equals(v.toString(), 'v' + k)
+                assert.equals(v, 'v' + k)
                 cb()
               })
             }
@@ -61,7 +62,7 @@ buster.testCase('Deferred open()', {
   , 'batch() on pre-opened database': function (done) {
       var location = common.nextLocation()
       // 1) open database without callback, opens in worker thread
-        , db       = levelup(leveldown(location))
+        , db       = levelup(encDown(leveldown(location)))
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
@@ -80,7 +81,7 @@ buster.testCase('Deferred open()', {
           , function (k, cb) {
               db.get('k' + k, function (err, v) {
                 refute(err)
-                assert.equals(v.toString(), 'v' + k)
+                assert.equals(v, 'v' + k)
                 cb()
               })
             }
@@ -103,7 +104,7 @@ buster.testCase('Deferred open()', {
   , 'chained batch() on pre-opened database': function (done) {
       var location = common.nextLocation()
       // 1) open database without callback, opens in worker thread
-        , db       = levelup(leveldown(location))
+        , db       = levelup(encDown(leveldown(location)))
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)
@@ -122,7 +123,7 @@ buster.testCase('Deferred open()', {
           , function (k, cb) {
               db.get('k' + k, function (err, v) {
                 refute(err)
-                assert.equals(v.toString(), 'v' + k)
+                assert.equals(v, 'v' + k)
                 cb()
               })
             }
@@ -148,14 +149,14 @@ buster.testCase('Deferred open()', {
 
       , 'simple ReadStream': function (done) {
           var location = common.nextLocation()
-            , db       = levelup(leveldown(location))
+            , db       = levelup(encDown(leveldown(location)))
           this.cleanupDirs.push(location)
 
           db.batch(this.sourceData.slice(), function (err) {
             refute(err)
             db.close(function (err) {
               refute(err, 'no error')
-              db = levelup(leveldown(location))
+              db = levelup(encDown(leveldown(location)))
               this.closeableDatabases.push(db)
               var rs = db.createReadStream()
               rs.on('data' , this.dataSpy)
@@ -169,7 +170,7 @@ buster.testCase('Deferred open()', {
   , 'maxListeners warning': function (done) {
       var location   = common.nextLocation()
       // 1) open database without callback, opens in worker thread
-        , db         = levelup(leveldown(location))
+        , db         = levelup(encDown(leveldown(location)))
         , stderrMock = this.mock(console)
 
       this.closeableDatabases.push(db)
