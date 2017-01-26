@@ -4,6 +4,7 @@
  */
 
 var levelup    = require('../lib/levelup.js')
+  , leveldown  = require('leveldown')
   , common     = require('./common')
   , rimraf     = require('rimraf')
   , async      = require('async')
@@ -65,7 +66,6 @@ buster.testCase('ReadStream', {
 
   , 'tearDown': common.commonTearDown
 
-  //TODO: test various encodings
   , 'readStream and then put in nextTick': function (done) {
       this.openTestDatabase(function (db) {
         makeTest(db, process.nextTick, done)

@@ -184,7 +184,6 @@ buster.testCase('batch()', {
     }
 
   , 'batch() with can manipulate data from put()': function (done) {
-      // checks encoding and whatnot
       this.openTestDatabase(function (db) {
         async.series(
             [

@@ -36,6 +36,7 @@ buster.testCase('Key and Value Streams', {
           assert.equals(this.dataSpy.callCount, data.length, 'Stream emitted correct number of "data" events')
           data.forEach(function (d, i) {
             var call = this.dataSpy.getCall(i)
+            //console.log('d', d, 'call', call.args)
             if (call) {
               //console.log('call', i, ':', call.args[0].key, '=', call.args[0].value, '(expected', d.key, '=', d.value, ')')
               assert.equals(call.args.length, 1, 'Stream "data" event #' + i + ' fired with 1 argument')

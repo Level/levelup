@@ -11,6 +11,7 @@ var levelup    = require('../lib/levelup.js')
   , rimraf     = require('rimraf')
   , async      = require('async')
   , msgpack    = require('msgpack-js')
+  , encDown    = require('encoding-down')
 
   , assert  = require('referee').assert
   , refute  = require('referee').refute
@@ -22,8 +23,6 @@ buster.testCase('ReadStream', {
     'setUp': common.readStreamSetUp
 
   , 'tearDown': common.commonTearDown
-
-  //TODO: test various encodings
 
   , 'test simple ReadStream': function (done) {
       this.openTestDatabase(function (db) {
@@ -370,83 +369,6 @@ buster.testCase('ReadStream', {
       }.bind(this))
     }
 
-  , 'test hex encoding': function (done) {
-      var options = { keyEncoding: 'utf8', valueEncoding: 'hex'}
-        , data = [
-              { type: 'put', key: 'ab', value: 'abcdef0123456789' }
-           ]
-
-      this.openTestDatabase({}, function (db) {
-        db.batch(data.slice(), options, function (err) {
-          refute(err);
-
-          var rs = db.createReadStream(options)
-          rs.on('data' , function(data) {
-            assert.equals(data.value, 'abcdef0123456789');
-          })
-          rs.on('end'  , this.endSpy)
-          rs.on('close', done)
-
-        }.bind(this))
-      }.bind(this));
-   }
-
-  , 'test json encoding': function (done) {
-      var options = { keyEncoding: 'utf8', valueEncoding: 'json' }
-        , data = [
-              { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } }
-            , { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
-            , { type: 'put', key: 'ac', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
-            , { type: 'put', key: 'ba', value: { a: 'complex', obj: 100 } }
-            , { type: 'put', key: 'bb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
-            , { type: 'put', key: 'bc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
-            , { type: 'put', key: 'ca', value: { a: 'complex', obj: 100 } }
-            , { type: 'put', key: 'cb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
-            , { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
-          ]
-
-      this.openTestDatabase(options, function (db) {
-        db.batch(data.slice(), function (err) {
-          refute(err)
-
-          var rs = db.createReadStream()
-          rs.on('data' , this.dataSpy)
-          rs.on('end'  , this.endSpy)
-          rs.on('close', this.verify.bind(this, rs, done, data))
-        }.bind(this))
-      }.bind(this))
-    }
-
-  , 'test injectable encoding': function (done) {
-      var options = { keyEncoding: 'utf8', valueEncoding: {
-          decode: msgpack.decode,
-          encode: msgpack.encode,
-          buffer: true
-        }}
-        , data = [
-              { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } }
-            , { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
-            , { type: 'put', key: 'ac', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
-            , { type: 'put', key: 'ba', value: { a: 'complex', obj: 100 } }
-            , { type: 'put', key: 'bb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
-            , { type: 'put', key: 'bc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
-            , { type: 'put', key: 'ca', value: { a: 'complex', obj: 100 } }
-            , { type: 'put', key: 'cb', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
-            , { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
-          ]
-
-      this.openTestDatabase(options, function (db) {
-        db.batch(data.slice(), function (err) {
-          refute(err)
-
-          var rs = db.createReadStream()
-          rs.on('data' , this.dataSpy)
-          rs.on('end'  , this.endSpy)
-          rs.on('close', this.verify.bind(this, rs, done, data))
-        }.bind(this))
-      }.bind(this))
-    }
-
   , 'test readStream() "reverse=true" not sticky (issue #6)': function (done) {
       this.openTestDatabase(function (db) {
         // execute
@@ -531,7 +453,7 @@ buster.testCase('ReadStream', {
               .on('close', delayed.delayed(callback, 0.05))
           }
         , open       = function (reopen, location, callback) {
-            levelup(leveldown(location), callback)
+            levelup(encDown(leveldown(location)), callback)
           }
         , write      = function (db, callback) { db.batch(sourceData.slice(), callback) }
         , close      = function (db, callback) { db.close(callback) }
@@ -566,7 +488,7 @@ buster.testCase('ReadStream', {
     // the logic for this is inside the ReadStream constructor which waits for 'ready'
   , 'test ReadStream on pre-opened db': function (done) {
       var location = common.nextLocation()
-        , db = levelup(leveldown(location))
+        , db = levelup(encDown(leveldown(location)))
         , execute = function (db) {
             // is in limbo
             refute(db.isOpen())
@@ -582,7 +504,7 @@ buster.testCase('ReadStream', {
               refute(err)
               db.close(function (err) {
                 refute(err)
-                var db2 = levelup(leveldown(location), { valueEncoding: 'utf8' })
+                var db2 = levelup(encDown(leveldown(location)))
                 execute(db2)
               })
             }.bind(this))

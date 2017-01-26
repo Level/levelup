@@ -17,8 +17,6 @@ LevelUP
   * <a href="#basic">Basic usage</a>
   * <a href="#api">API</a>
   * <a href="#events">Events</a>
-  * <a href="#json">JSON data</a>
-  * <a href="#custom_encodings">Custom encodings</a>
   * <a href="#extending">Extending LevelUP</a>
   * <a href="#multiproc">Multi-process access</a>
   * <a href="#support">Getting support</a>
@@ -31,7 +29,7 @@ Introduction
 
 **[LevelDB](https://github.com/google/leveldb)** is a simple key/value data store built by Google, inspired by BigTable. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, bi-directional iterators and simple compression using the very fast [Snappy](http://google.github.io/snappy/) algorithm.
 
-**LevelUP** aims to expose the features of LevelDB in a **Node.js-friendly way**. All standard `Buffer` encoding types are supported, as is a special JSON encoding. LevelDB's iterators are exposed as a Node.js-style **readable stream**.
+**LevelUP** aims to expose the features of LevelDB in a **Node.js-friendly way**. LevelDB's iterators are exposed as a Node.js-style **readable stream**.
 
 LevelDB stores entries **sorted lexicographically by keys**. This makes LevelUP's <a href="#createReadStream"><code>ReadStream</code></a> interface a very powerful query mechanism.
 
@@ -167,13 +165,6 @@ db.get('foo', function (err, value) {
 
 * `'cacheSize'` *(number, default: `8 * 1024 * 1024`)*: The size (in bytes) of the in-memory [LRU](http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used) cache with frequently used uncompressed block contents.
 
-* `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)).
-  <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and conversion will be performed.</p>
-  <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
-  <p><code>'json'</code> encoding is also supported, see below.</p>
-
-Additionally, each of the main interface methods accept an optional options object that can be used to override `'keyEncoding'` and `'valueEncoding'`.
-
 --------------------------------------------------------
 <a name="open"></a>
 ### db.open([callback])
@@ -196,8 +187,6 @@ You should always clean up your LevelUP instance by calling `close()` when you n
 The callback argument is optional but if you don't provide one and an error occurs then expect the error to be thrown.
 
 #### `options`
-
-Encoding of the `key` and `value` objects will adhere to `'keyEncoding'` and `'valueEncoding'` options provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `put()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
 
 If you provide a `'sync'` value of `true` in your `options` object, LevelDB will perform a synchronous write of the data; although the operation will be asynchronous as far as Node is concerned. Normally, LevelDB passes the data to the operating system for writing and returns immediately, however a synchronous write will use `fsync()` or equivalent so your callback won't be triggered until the data is actually on disk. Synchronous filesystem writes are **significantly** slower than asynchronous writes but if you want to be absolutely sure that the data is flushed then you can use `'sync': true`.
 
@@ -223,8 +212,6 @@ db.get('foo', function (err, value) {
 
 #### `options`
 
-Encoding of the `key` and `value` objects is the same as in <a href="#put"><code>put</code></a>. 
-
 LevelDB will by default fill the in-memory LRU Cache with data from a call to get. Disabling this is done by setting `fillCache` to `false`.
 
 --------------------------------------------------------
@@ -239,8 +226,6 @@ db.del('foo', function (err) {
 ```
 
 #### `options`
-
-Encoding of the `key` object will adhere to the `'keyEncoding'` option provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `del()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
 
 A `'sync'` option can also be passed, see <a href="#put"><code>put()</code></a> for details on how this works.
 
@@ -270,19 +255,7 @@ db.batch(ops, function (err) {
 
 #### `options`
 
-See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can overwrite default `'keyEncoding'` and `'valueEncoding'` and also specify the use of `sync` filesystem operations.
-
-In addition to encoding options for the whole batch you can also overwrite the encoding per operation, like:
-
-```js
-var ops = [{
-    type          : 'put'
-  , key           : new Buffer([1, 2, 3])
-  , value         : { some: 'json' }
-  , keyEncoding   : 'binary'
-  , valueEncoding : 'json'
-}]
-```
+See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can specify the use of `sync` filesystem operations.
 
 --------------------------------------------------------
 <a name="batch_chained"></a>
@@ -299,19 +272,15 @@ db.batch()
   .write(function () { console.log('Done!') })
 ```
 
-<b><code>batch.put(key, value[, options])</code></b>
+<b><code>batch.put(key, value)</code></b>
 
 Queue a *put* operation on the current batch, not committed until a `write()` is called on the batch.
 
-The optional `options` argument can be used to override the default `'keyEncoding'` and/or `'valueEncoding'`.
-
 This method may `throw` a `WriteError` if there is a problem with your put (such as the `value` being `null` or `undefined`).
 
-<b><code>batch.del(key[, options])</code></b>
+<b><code>batch.del(key)</code></b>
 
 Queue a *del* operation on the current batch, not committed until a `write()` is called on the batch.
-
-The optional `options` argument can be used to override the default `'keyEncoding'`.
 
 This method may `throw` a `WriteError` if there is a problem with your delete.
 
@@ -391,8 +360,6 @@ Additionally, you can supply an options object as the first parameter to `create
 * `'limit'` *(number, default: `-1`)*: limit the number of results collected by this stream. This number represents a *maximum* number of results and may not be reached if you get to the end of the data first. A value of `-1` means there is no limit. When `reverse=true` the highest keys will be returned instead of the lowest keys.
 
 * `'fillCache'` *(boolean, default: `false`)*: whether LevelDB's LRU-cache should be filled with data read.
-
-* `'keyEncoding'` / `'valueEncoding'` *(string)*: the encoding applied to each read piece of data.
 
 --------------------------------------------------------
 <a name="createKeyStream"></a>
@@ -535,27 +502,6 @@ LevelUP emits events when the callbacks to the corresponding methods are called.
 * `db.emit('closing')` emitted when the database is closing
 
 If you do not pass a callback to an async function, and there is an error, LevelUP will `emit('error', err)` instead.
-
-<a name="json"></a>
-JSON data
----------
-
-You specify `'json'` encoding for both keys and/or values, you can then supply JavaScript objects to LevelUP and receive them from all fetch operations, including ReadStreams. LevelUP will automatically *stringify* your objects and store them as *utf8* and parse the strings back into objects before passing them back to you.
-
-<a name="custom_encodings"></a>
-Custom encodings
-----------------
-
-A custom encoding may be provided by passing in an object as a value for `keyEncoding` or `valueEncoding` (wherever accepted), it must have the following properties:
-
-```js
-{
-    encode : function (val) { ... }
-  , decode : function (val) { ... }
-  , buffer : boolean // encode returns a buffer and decode accepts a buffer
-  , type   : String  // name of this encoding type.
-}
-```
 
 <a name="extending"></a>
 Extending LevelUP
