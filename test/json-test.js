@@ -3,13 +3,14 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
-  , async   = require('async')
-  , common  = require('./common')
+var levelup   = require('../lib/levelup.js')
+  , leveldown = require('leveldown')
+  , async     = require('async')
+  , common    = require('./common')
 
-  , assert  = require('referee').assert
-  , refute  = require('referee').refute
-  , buster  = require('bustermove')
+  , assert    = require('referee').assert
+  , refute    = require('referee').refute
+  , buster    = require('bustermove')
 
 buster.testCase('JSON API', {
     'setUp': function (done) {
@@ -17,7 +18,7 @@ buster.testCase('JSON API', {
         this.runTest = function (testData, assertType, done) {
           var location = common.nextLocation()
           this.cleanupDirs.push(location)
-          levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: {encode: JSON.stringify, decode: JSON.parse }}, function (err, db) {
+          levelup(leveldown(location), { valueEncoding: {encode: JSON.stringify, decode: JSON.parse } }, function (err, db) {
             refute(err)
             if (err) return
 

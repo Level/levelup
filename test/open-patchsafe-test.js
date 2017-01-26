@@ -3,23 +3,23 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
-  , common  = require('./common')
+var levelup   = require('../lib/levelup.js')
+  , leveldown = require('leveldown')
+  , common    = require('./common')
 
-  , assert  = require('referee').assert
-  , refute  = require('referee').refute
-  , buster  = require('bustermove')
+  , assert    = require('referee').assert
+  , refute    = require('referee').refute
+  , buster    = require('bustermove')
 
 function test(fun) {
   return function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-      , db       = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8'})
+      , db       = levelup(leveldown(location), { valueEncoding: 'utf8' })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
     assert.isObject(db)
-    assert.equals(db.location, location)
 
     fun(db, done)
     // we should still be in a state of limbo down here, not opened or closed, but 'new'

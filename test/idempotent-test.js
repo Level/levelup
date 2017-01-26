@@ -3,12 +3,13 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
-  , common  = require('./common')
+var levelup   = require('../lib/levelup.js')
+  , leveldown = require('leveldown')
+  , common    = require('./common')
 
-  , assert  = require('referee').assert
-  , refute  = require('referee').refute
-  , buster  = require('bustermove')
+  , assert    = require('referee').assert
+  , refute    = require('referee').refute
+  , buster    = require('bustermove')
 
 buster.testCase('Idempotent open & close', {
     'setUp': common.readStreamSetUp
@@ -37,8 +38,7 @@ buster.testCase('Idempotent open & close', {
       this.cleanupDirs.push(location)
 
       db = levelup(
-          location
-        , { createIfMissing: true }
+          leveldown(location)
         , function () {
             assert.equals(n++, 0, 'callback should fire only once')
             if (n && m)

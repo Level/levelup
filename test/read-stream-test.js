@@ -4,6 +4,7 @@
  */
 
 var levelup    = require('../lib/levelup.js')
+  , leveldown  = require('leveldown')
   , common     = require('./common')
   , SlowStream = require('slow-stream')
   , delayed    = require('delayed')
@@ -370,7 +371,7 @@ buster.testCase('ReadStream', {
     }
 
   , 'test hex encoding': function (done) {
-      var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'hex'}
+      var options = { keyEncoding: 'utf8', valueEncoding: 'hex'}
         , data = [
               { type: 'put', key: 'ab', value: 'abcdef0123456789' }
            ]
@@ -391,7 +392,7 @@ buster.testCase('ReadStream', {
    }
 
   , 'test json encoding': function (done) {
-      var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'json' }
+      var options = { keyEncoding: 'utf8', valueEncoding: 'json' }
         , data = [
               { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } }
             , { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } }
@@ -417,7 +418,7 @@ buster.testCase('ReadStream', {
     }
 
   , 'test injectable encoding': function (done) {
-      var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: {
+      var options = { keyEncoding: 'utf8', valueEncoding: {
           decode: msgpack.decode,
           encode: msgpack.encode,
           buffer: true
@@ -530,7 +531,7 @@ buster.testCase('ReadStream', {
               .on('close', delayed.delayed(callback, 0.05))
           }
         , open       = function (reopen, location, callback) {
-            levelup(location, { createIfMissing: !reopen, errorIfExists: !reopen }, callback)
+            levelup(leveldown(location), callback)
           }
         , write      = function (db, callback) { db.batch(sourceData.slice(), callback) }
         , close      = function (db, callback) { db.close(callback) }
@@ -564,7 +565,9 @@ buster.testCase('ReadStream', {
     // i.e. not waiting for 'open' to complete
     // the logic for this is inside the ReadStream constructor which waits for 'ready'
   , 'test ReadStream on pre-opened db': function (done) {
-      var execute = function (db) {
+      var location = common.nextLocation()
+        , db = levelup(leveldown(location))
+        , execute = function (db) {
             // is in limbo
             refute(db.isOpen())
             refute(db.isClosed())
@@ -574,18 +577,17 @@ buster.testCase('ReadStream', {
             rs.on('end'  , this.endSpy)
             rs.on('close', this.verify.bind(this, rs, done))
           }.bind(this)
-        , setup = function (db) {
+        , setup = function () {
             db.batch(this.sourceData.slice(), function (err) {
               refute(err)
               db.close(function (err) {
                 refute(err)
-                var db2 = levelup(db.location, { createIfMissing: false, errorIfExists: false, valueEncoding: 'utf8' })
+                var db2 = levelup(leveldown(location), { valueEncoding: 'utf8' })
                 execute(db2)
               })
             }.bind(this))
           }.bind(this)
-
-      this.openTestDatabase(setup)
+      setup()
     }
 
   , 'test readStream() with "limit"': function (done) {
