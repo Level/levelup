@@ -73,7 +73,7 @@ buster.testCase('ReadStream', {
     }
   , 'readStream and then put in nextTick, defered open': function (done) {
       var location = common.nextLocation()
-        , db       = levelup(leveldown(location))
+        , db       = levelup(location)
 
       this.closeableDatabases.push(db)
       this.cleanupDirs.push(location)

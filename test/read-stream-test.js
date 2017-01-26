@@ -319,6 +319,7 @@ buster.testCase('ReadStream', {
         }.bind(this))
       }.bind(this))
     }
+
   , 'test readStream() with "end" being mid-way key (float) and "reverse=true"': function (done) {
       this.openTestDatabase(function (db) {
         db.batch(this.sourceData.slice(), function (err) {
@@ -350,7 +351,6 @@ buster.testCase('ReadStream', {
         }.bind(this))
       }.bind(this))
     }
-
 
   , 'test readStream() with both "start" and "end" and "reverse=true"': function (done) {
       this.openTestDatabase(function (db) {
