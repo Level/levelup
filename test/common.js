@@ -16,6 +16,7 @@ var referee   = require('referee')
   , errors    = require('level-errors')
   , dbidx     = 0
   , leveldown = require('leveldown')
+  , encDown   = require('encoding-down')
 
 assert(levelup.errors === errors);
 
@@ -75,7 +76,7 @@ module.exports.openTestDatabase = function () {
   rimraf(location, function (err) {
     refute(err)
     this.cleanupDirs.push(location)
-    levelup(leveldown(location), options, function (err, db) {
+    levelup(encDown(leveldown(location)), options, function (err, db) {
       refute(err)
       if (!err) {
         this.closeableDatabases.push(db)

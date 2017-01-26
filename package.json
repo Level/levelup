@@ -43,8 +43,8 @@
   "devDependencies": {
     "async": "~1.5.0",
     "bustermove": "~1.0.0",
-    "tap": "~2.3.1",
     "delayed": "~1.0.1",
+    "encoding-down": "^2.0.0",
     "faucet": "~0.0.1",
     "leveldown": "^1.1.0",
     "memdown": "~1.1.0",
@@ -52,6 +52,7 @@
     "referee": "~1.2.0",
     "rimraf": "~2.4.3",
     "slow-stream": "0.0.4",
+    "tap": "~2.3.1",
     "tape": "~4.2.1"
   },
   "browser": {
