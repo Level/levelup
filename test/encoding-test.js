@@ -34,6 +34,7 @@ buster.testCase('Encoding', {
           }
       )
     }
+    
 
   , 'test safe decode in readStream()': function (done) {
       this.openTestDatabase(
@@ -43,6 +44,7 @@ buster.testCase('Encoding', {
               refute(err)
               db.close(function (err) {
                 refute(err)
+                  console.log('db closed')
 
                 var dataSpy  = this.spy()
                   , errorSpy = this.spy()
@@ -50,11 +52,9 @@ buster.testCase('Encoding', {
                 db = levelup(db.location, { createIfMissing: false, errorIfExists: false, valueEncoding: 'json' })
                 db.readStream()
                   .on('data', dataSpy)
-                  .on('error', errorSpy)
-                  .on('close', function () {
+                  .on('error', function (err) {
                     assert.equals(dataSpy.callCount, 0, 'no data')
-                    assert.equals(errorSpy.callCount, 1, 'error emitted')
-                    assert.equals('EncodingError', errorSpy.getCall(0).args[0].name)
+                    assert.equals('EncodingError', err.name)
                     db.close(done)
                   })
               }.bind(this))
@@ -78,6 +78,7 @@ buster.testCase('Encoding', {
         })
       })
     }
+    
   , 'test batch op encoding': function (done) {
       this.openTestDatabase({ valueEncoding: 'json' }, function (db) {
         db.batch([
@@ -112,4 +113,5 @@ buster.testCase('Encoding', {
         })
       })
     }
+    
 })
