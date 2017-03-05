@@ -571,6 +571,29 @@ JSON data
 
 You specify `'json'` encoding for both keys and/or values, you can then supply JavaScript objects to LevelUP and receive them from all fetch operations, including ReadStreams. LevelUP will automatically *stringify* your objects and store them as *utf8* and parse the strings back into objects before passing them back to you.
 
+If you are using Buffers in either your key or value, the default behavior of `JSON.stringify` will turn your buffers into a plain object like `{type: "Buffer", value: [/* bytes... */]}`.  Decoding of these does not 
+return the data to a Buffer instance.  If you would like a solution which automatically decodes the Buffers back to their original form, you can use [`json-buffer`](https://github.com/dominictarr/json-buffer) as a
+custom encoding.  This will encode the Buffers to `Base64` strings inside your json, and parsing will return them to their original Buffer form.  Here is an example:
+
+```javasctipt
+var jsonBuffer = require('json-buffer')
+var db = levelup(location, {
+  valueEncoding: {
+      encode : jsonBuffer.stringify
+    , decode : jsonBuffer.parse
+    , buffer : false
+    , type   : 'jsonBuffer'
+  }
+})
+db.put('foo', { buf: Buffer.from('bar') }, (err) => {
+  if (err) return console.error(err)
+  db.get('foo', (err, val) => {
+    if (err) return console.error(err)
+    console.log(val) // <Buffer 66 6f 6f>
+  })
+})
+```
+
 <a name="custom_encodings"></a>
 Custom encodings
 ----------------
