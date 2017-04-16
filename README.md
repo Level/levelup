@@ -49,7 +49,11 @@ LevelDOWN is now optional because LevelUP can be used with alternative backends,
 
 LevelUP will look for LevelDOWN and throw an error if it can't find it in its Node `require()` path. It will also tell you if the installed version of LevelDOWN is incompatible.
 
-**The [level](https://github.com/level/level) package is available as an alternative installation mechanism.** Install it instead to automatically get both LevelUP & LevelDOWN. It exposes LevelUP on its export (i.e. you can `var leveldb = require('level')`).
+**The recommended way is using the [level](https://github.com/level/level) package.** Install it to automatically get both LevelUP and LevelDOWN. It knows which versions of LevelUP and LevelDOWN that goes well together and exposes LevelUP on its export:
+
+```js
+var leveldb = require('level')
+```
 
 
 <a name="platforms"></a>
@@ -68,17 +72,13 @@ Basic usage
 First you need to install LevelUP!
 
 ```sh
-$ npm install levelup leveldown
+$ npm install level
 ```
-
 Or
 
 ```sh
-$ npm install level
+$ npm install levelup leveldown
 ```
-
-*(this second option requires you to use LevelUP by calling `var levelup = require('level')`)*
-
 
 All operations are asynchronous although they don't necessarily require a callback if you don't need to know when the operation was performed.
 
@@ -133,9 +133,9 @@ db.put('name', 'LevelUP', function (err) {
 
 --------------------------------------------------------
 <a name="ctor"></a>
-### levelup(location[, options[, callback]])
-### levelup(options[, callback ])
-### levelup(db[, callback ])
+### levelup(location[, options][, callback])
+### levelup(options[, callback])
+### levelup(db[, callback])
 <code>levelup()</code> is the main entry point for creating a new LevelUP instance and opening the underlying store with LevelDB.
 
 This function returns a new instance of LevelUP and will also initiate an <a href="#open"><code>open()</code></a> operation. Opening the database is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form: `function (err, db) {}` where the `db` is the LevelUP instance. If you don't provide a callback, any read & write operations are simply queued internally until the database is fully opened.
