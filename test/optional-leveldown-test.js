@@ -14,7 +14,7 @@ function clearCache () {
   delete require.cache[require.resolve('..')]
   delete require.cache[require.resolve('leveldown')]
   delete require.cache[require.resolve('leveldown/package')]
-  delete require.cache[require.resolve('../lib/util')]
+  delete require.cache[require.resolve('../lib/leveldown')]
 }
 
 buster.testCase('Optional LevelDOWN', {
@@ -22,8 +22,8 @@ buster.testCase('Optional LevelDOWN', {
   , 'tearDown': clearCache
 
   , 'test getLevelDOWN()': function () {
-      var util = require('../lib/util')
-      assert.same(util.getLevelDOWN(), require('leveldown'), 'correct leveldown provided')
+      var getLevelDOWN = require('../lib/leveldown')
+      assert.same(getLevelDOWN(), require('leveldown'), 'correct leveldown provided')
     }
 
   , 'test wrong version': function () {

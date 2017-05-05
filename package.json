@@ -57,6 +57,7 @@
     "tape": "~4.2.1"
   },
   "browser": {
+    "./lib/leveldown.js": false,
     "leveldown": false,
     "leveldown/package": false,
     "semver": false
