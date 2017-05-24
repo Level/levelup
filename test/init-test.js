@@ -187,7 +187,6 @@ buster.testCase('Init & open()', {
       var db = levelup({ db: MemDOWN })
       assert.isNull(db.location, 'location property is null')
       db.on('open', function () {
-        assert(db.db instanceof MemDOWN, 'using a memdown backend')
         assert.same(db.db.location, '', 'db location property is ""')
         db.put('foo', 'bar', function (err) {
           refute(err, 'no error')
@@ -203,7 +202,6 @@ buster.testCase('Init & open()', {
       var db = levelup(MemDOWN)
       assert.isNull(db.location, 'location property is null')
       db.on('open', function () {
-        assert(db.db instanceof MemDOWN, 'using a memdown backend')
         assert.same(db.db.location, '', 'db location property is ""')
         db.put('foo', 'bar', function (err) {
           refute(err, 'no error')
