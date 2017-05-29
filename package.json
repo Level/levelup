@@ -43,10 +43,11 @@
     "xtend": "~4.0.0"
   },
   "devDependencies": {
+    "after": "^0.8.2",
     "async": "~1.5.0",
+    "bl": "^1.2.1",
     "browserify": "^14.3.0",
     "bustermove": "~1.0.0",
-    "tap": "~2.3.1",
     "delayed": "~1.0.1",
     "faucet": "~0.0.1",
     "leveldown": "^1.1.0",
@@ -55,6 +56,7 @@
     "referee": "~1.2.0",
     "rimraf": "~2.4.3",
     "slow-stream": "0.0.4",
+    "tap": "~2.3.1",
     "tape": "~4.2.1"
   },
   "browser": {
