@@ -7,3 +7,5 @@ _benchdb_*
 *.sw*
 bulk2ssd_pop.config
 libpeerconnection.log
+yarn.lock
+package-lock.json
