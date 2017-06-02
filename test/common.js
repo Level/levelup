@@ -3,41 +3,41 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var referee = require('referee')
-  , assert  = referee.assert
-  , refute  = referee.refute
-  , crypto  = require('crypto')
-  , async   = require('async')
-  , rimraf  = require('rimraf')
-  , fs      = require('fs')
-  , path    = require('path')
-  , delayed = require('delayed').delayed
-  , levelup = require('../lib/levelup.js')
-  , errors  = require('level-errors')
-  , dbidx   = 0
+var referee = require('referee'),
+  assert = referee.assert,
+  refute = referee.refute,
+  crypto = require('crypto'),
+  async = require('async'),
+  rimraf = require('rimraf'),
+  fs = require('fs'),
+  path = require('path'),
+  delayed = require('delayed').delayed,
+  levelup = require('../lib/levelup.js'),
+  errors = require('level-errors'),
+  dbidx = 0
 
-assert(levelup.errors === errors);
+assert(levelup.errors === errors)
 
 referee.add('isInstanceOf', {
-    assert: function (actual, expected) {
-        return actual instanceof expected
-    }
-  , refute: function (actual, expected) {
-        return !(actual instanceof expected)
-    }
-  , assertMessage: '${0} expected to be instance of ${1}'
-  , refuteMessage: '${0} expected not to be instance of ${1}'
+  assert: function (actual, expected) {
+    return actual instanceof expected
+  },
+  refute: function (actual, expected) {
+    return !(actual instanceof expected)
+  },
+  assertMessage: '${0} expected to be instance of ${1}',
+  refuteMessage: '${0} expected not to be instance of ${1}'
 })
 
 referee.add('isUndefined', {
-    assert: function (actual) {
-        return actual === undefined
-    }
-  , refute: function (actual) {
-        return actual !== undefined
-    }
-  , assertMessage: '${0} expected to be undefined'
-  , refuteMessage: '${0} expected not to be undefined'
+  assert: function (actual) {
+    return actual === undefined
+  },
+  refute: function (actual) {
+    return actual !== undefined
+  },
+  assertMessage: '${0} expected to be undefined',
+  refuteMessage: '${0} expected not to be undefined'
 })
 
 module.exports.nextLocation = function () {
@@ -52,24 +52,22 @@ module.exports.cleanup = function (callback) {
       return (/^_levelup_test_db_/).test(f)
     })
 
-    if (!list.length)
-      return callback()
+    if (!list.length) { return callback() }
 
     var ret = 0
 
     list.forEach(function (f) {
       rimraf(path.join(__dirname, f), function () {
-        if (++ret == list.length)
-          callback()
+        if (++ret == list.length) { callback() }
       })
     })
   })
 }
 
 module.exports.openTestDatabase = function () {
-  var options = typeof arguments[0] == 'object' ? arguments[0] : { createIfMissing: true, errorIfExists: true }
-    , callback = typeof arguments[0] == 'function' ? arguments[0] : arguments[1]
-    , location = typeof arguments[0] == 'string' ? arguments[0] : module.exports.nextLocation()
+  var options = typeof arguments[0] === 'object' ? arguments[0] : { createIfMissing: true, errorIfExists: true },
+    callback = typeof arguments[0] === 'function' ? arguments[0] : arguments[1],
+    location = typeof arguments[0] === 'string' ? arguments[0] : module.exports.nextLocation()
 
   rimraf(location, function (err) {
     refute(err)
@@ -88,8 +86,8 @@ module.exports.commonTearDown = function (done) {
   async.forEach(
       this.closeableDatabases
     , function (db, callback) {
-        db.close(callback)
-      }
+      db.close(callback)
+    }
     , module.exports.cleanup.bind(null, done)
   )
 }
@@ -101,7 +99,7 @@ module.exports.loadBinaryTestData = function (callback) {
 module.exports.binaryTestDataMD5Sum = '920725ef1a3b32af40ccd0b78f4a62fd'
 
 module.exports.checkBinaryTestData = function (testData, callback) {
-  var md5sum = crypto.createHash('md5');
+  var md5sum = crypto.createHash('md5')
   md5sum.update(testData)
   assert.equals(md5sum.digest('hex'), module.exports.binaryTestDataMD5Sum)
   callback()
@@ -119,16 +117,16 @@ module.exports.readStreamSetUp = function (done) {
   module.exports.commonSetUp.call(this, function () {
     var i, k
 
-    this.dataSpy    = this.spy()
-    this.endSpy     = this.spy()
+    this.dataSpy = this.spy()
+    this.endSpy = this.spy()
     this.sourceData = []
 
     for (i = 0; i < 100; i++) {
       k = (i < 10 ? '0' : '') + i
       this.sourceData.push({
-          type  : 'put'
-        , key   : k
-        , value : Math.random()
+        type: 'put',
+        key: k,
+        value: Math.random()
       })
     }
 
@@ -154,6 +152,5 @@ module.exports.readStreamSetUp = function (done) {
     }, 0.05, this)
 
     done()
-
   }.bind(this))
 }

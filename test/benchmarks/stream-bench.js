@@ -1,10 +1,10 @@
-const levelup = require(process.argv[2] || '../../')
-    , crypto  = require('crypto')
-    , srcdb   = levelup('/tmp/source.db')
+const levelup = require(process.argv[2] || '../../'),
+  crypto = require('crypto'),
+  srcdb = levelup('/tmp/source.db'),
 
-    , batch   = 10000
-    , total   = 200000
- 
+  batch = 10000,
+  total = 200000
+
 function fillBatch (start, callback) {
   var b = []
   for (var i = start; i < start + batch; i++) {
@@ -14,8 +14,7 @@ function fillBatch (start, callback) {
 }
 
 function populate (start, callback) {
-  if (start > total)
-    return callback()
+  if (start > total) { return callback() }
   fillBatch(start, function (err) {
     if (err) throw err
     populate(start + batch, callback)
@@ -55,5 +54,5 @@ function stream (opts, cb) {
       console.log('Done! Took %sms with %j', copyTime, opts)
       if (cb) cb()
     })
-    .on('data', function(){})
+    .on('data', function () {})
 }
