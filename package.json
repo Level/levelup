@@ -68,8 +68,7 @@
     "semver": false
   },
   "scripts": {
-    "standard": "standard",
-    "test": "npm run standard && tape test/*-test.js | faucet"
+    "test": "standard && tape test/*-test.js | faucet"
   },
   "license": "MIT"
 }
