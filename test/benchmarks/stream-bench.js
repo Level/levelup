@@ -1,9 +1,9 @@
-const levelup = require(process.argv[2] || '../../'),
-  crypto = require('crypto'),
-  srcdb = levelup('/tmp/source.db'),
+const levelup = require(process.argv[2] || '../../')
+var crypto = require('crypto')
+var srcdb = levelup('/tmp/source.db')
 
-  batch = 10000,
-  total = 200000
+var batch = 10000
+var total = 200000
 
 function fillBatch (start, callback) {
   var b = []

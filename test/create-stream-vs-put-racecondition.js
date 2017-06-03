@@ -3,19 +3,22 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js'),
-  common = require('./common'),
-  rimraf = require('rimraf'),
-  async = require('async'),
-
-  assert = require('referee').assert,
-  refute = require('referee').refute,
-  buster = require('bustermove')
+var levelup = require('../lib/levelup.js')
+var common = require('./common')
+var rimraf = require('rimraf')
+var async = require('async')
+var assert = require('referee').assert
+var refute = require('referee').refute
+var buster = require('bustermove')
 
 function makeTest (db, delay, done) {
   // this should be an empty stream
-  var i = 0, j = 0, k = 0, m = 0
-  var streamEnd = false, putEnd = false
+  var i = 0
+  var j = 0
+  var k = 0
+  var m = 0
+  var streamEnd = false
+  var putEnd = false
 
   db.createReadStream()
     .on('data', function (data) {
@@ -70,8 +73,8 @@ buster.testCase('ReadStream', {
     })
   },
   'readStream and then put in nextTick, defered open': function (done) {
-    var location = common.nextLocation(),
-      db = levelup(location)
+    var location = common.nextLocation()
+    var db = levelup(location)
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -79,8 +82,8 @@ buster.testCase('ReadStream', {
     makeTest(db, process.nextTick, done)
   },
   'readStream and then put, defered open': function (done) {
-    var location = common.nextLocation(),
-      db = levelup(location)
+    var location = common.nextLocation()
+    var db = levelup(location)
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -92,5 +95,4 @@ buster.testCase('ReadStream', {
       makeTest(db, function (f) { f() }, done)
     })
   }
-
 })

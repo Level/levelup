@@ -3,12 +3,12 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup'),
-  assert = require('referee').assert,
-  refute = require('referee').refute,
-  format = require('util').format,
-  buster = require('bustermove'),
-  errors = levelup.errors
+var levelup = require('../lib/levelup')
+var assert = require('referee').assert
+var refute = require('referee').refute
+var format = require('util').format
+var buster = require('bustermove')
+var errors = levelup.errors
 
 function clearCache () {
   delete require.cache[require.resolve('..')]
@@ -46,8 +46,8 @@ buster.testCase('Optional LevelDOWN', {
 })
 
 function assertRequireThrows (module) {
-  var levelup = require('..'),
-    error = 'Wow, this is kind of evil isn\'t it?'
+  var levelup = require('..')
+  var error = 'Wow, this is kind of evil isn\'t it?'
   // simulate an exception from a require() that doesn't resolved a package
   Object.defineProperty(require.cache, require.resolve(module), {
     get: function () {

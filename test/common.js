@@ -3,18 +3,18 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var referee = require('referee'),
-  assert = referee.assert,
-  refute = referee.refute,
-  crypto = require('crypto'),
-  async = require('async'),
-  rimraf = require('rimraf'),
-  fs = require('fs'),
-  path = require('path'),
-  delayed = require('delayed').delayed,
-  levelup = require('../lib/levelup.js'),
-  errors = require('level-errors'),
-  dbidx = 0
+var referee = require('referee')
+var assert = referee.assert
+var refute = referee.refute
+var crypto = require('crypto')
+var async = require('async')
+var rimraf = require('rimraf')
+var fs = require('fs')
+var path = require('path')
+var delayed = require('delayed').delayed
+var levelup = require('../lib/levelup.js')
+var errors = require('level-errors')
+var dbidx = 0
 
 assert(levelup.errors === errors)
 
@@ -65,9 +65,9 @@ module.exports.cleanup = function (callback) {
 }
 
 module.exports.openTestDatabase = function () {
-  var options = typeof arguments[0] === 'object' ? arguments[0] : { createIfMissing: true, errorIfExists: true },
-    callback = typeof arguments[0] === 'function' ? arguments[0] : arguments[1],
-    location = typeof arguments[0] === 'string' ? arguments[0] : module.exports.nextLocation()
+  var options = typeof arguments[0] === 'object' ? arguments[0] : { createIfMissing: true, errorIfExists: true }
+  var callback = typeof arguments[0] === 'function' ? arguments[0] : arguments[1]
+  var location = typeof arguments[0] === 'string' ? arguments[0] : module.exports.nextLocation()
 
   rimraf(location, function (err) {
     refute(err)
@@ -83,13 +83,9 @@ module.exports.openTestDatabase = function () {
 }
 
 module.exports.commonTearDown = function (done) {
-  async.forEach(
-      this.closeableDatabases
-    , function (db, callback) {
-      db.close(callback)
-    }
-    , module.exports.cleanup.bind(null, done)
-  )
+  async.forEach(this.closeableDatabases, function (db, callback) {
+    db.close(callback)
+  }, module.exports.cleanup.bind(null, done))
 }
 
 module.exports.loadBinaryTestData = function (callback) {
@@ -115,7 +111,8 @@ module.exports.commonSetUp = function (done) {
 
 module.exports.readStreamSetUp = function (done) {
   module.exports.commonSetUp.call(this, function () {
-    var i, k
+    var i
+    var k
 
     this.dataSpy = this.spy()
     this.endSpy = this.spy()
@@ -141,11 +138,7 @@ module.exports.readStreamSetUp = function (done) {
           refute.isNull(call.args[0].key, 'ReadStream "data" event #' + i + ' argument has "key" property')
           refute.isNull(call.args[0].value, 'ReadStream "data" event #' + i + ' argument has "value" property')
           assert.equals(call.args[0].key, d.key, 'ReadStream "data" event #' + i + ' argument has correct "key"')
-          assert.equals(
-              +call.args[0].value
-            , +d.value
-            , 'ReadStream "data" event #' + i + ' argument has correct "value"'
-          )
+          assert.equals(+call.args[0].value, +d.value, 'ReadStream "data" event #' + i + ' argument has correct "value"')
         }
       }.bind(this))
       done()

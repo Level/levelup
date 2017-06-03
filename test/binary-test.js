@@ -3,12 +3,11 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var async = require('async'),
-  common = require('./common'),
-
-  assert = require('referee').assert,
-  refute = require('referee').refute,
-  buster = require('bustermove')
+var async = require('async')
+var common = require('./common')
+var assert = require('referee').assert
+var refute = require('referee').refute
+var buster = require('bustermove')
 
 buster.testCase('Binary API', {
   'setUp': function (done) {
@@ -137,33 +136,25 @@ buster.testCase('Binary API', {
 
   'batch() with multiple puts': function (done) {
     this.openTestDatabase(function (db) {
-      db.batch(
-        [
-                { type: 'put', key: 'foo', value: this.testData },
-               { type: 'put', key: 'bar', value: this.testData },
-               { type: 'put', key: 'baz', value: 'abazvalue' }
-        ]
-          , { keyEncoding: 'utf8', valueEncoding: 'binary' }
-          , function (err) {
+      db.batch([
+        { type: 'put', key: 'foo', value: this.testData },
+        { type: 'put', key: 'bar', value: this.testData },
+        { type: 'put', key: 'baz', value: 'abazvalue' }
+      ], { keyEncoding: 'utf8', valueEncoding: 'binary' }, function (err) {
+        refute(err)
+        async.forEach(['foo', 'bar', 'baz'], function (key, callback) {
+          db.get(key, { valueEncoding: 'binary' }, function (err, value) {
             refute(err)
-            async.forEach(
-                  ['foo', 'bar', 'baz']
-                , function (key, callback) {
-                  db.get(key, { valueEncoding: 'binary' }, function (err, value) {
-                    refute(err)
-                    if (key == 'baz') {
-                      assert(value instanceof Buffer, 'value is buffer')
-                      assert.equals(value.toString(), 'a' + key + 'value')
-                      callback()
-                    } else {
-                      common.checkBinaryTestData(value, callback)
-                    }
-                  })
-                }
-                , done
-              )
-          }
-        )
+            if (key == 'baz') {
+              assert(value instanceof Buffer, 'value is buffer')
+              assert.equals(value.toString(), 'a' + key + 'value')
+              callback()
+            } else {
+              common.checkBinaryTestData(value, callback)
+            }
+          })
+        }, done)
+      })
     }.bind(this))
   }
 })

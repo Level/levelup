@@ -3,13 +3,12 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js'),
-  errors = levelup.errors,
-  common = require('./common'),
-
-  assert = require('referee').assert,
-  refute = require('referee').refute,
-  buster = require('bustermove')
+var levelup = require('../lib/levelup.js')
+var errors = levelup.errors
+var common = require('./common')
+var assert = require('referee').assert
+var refute = require('referee').refute
+var buster = require('bustermove')
 
 buster.testCase('null & undefined keys & values', {
   'setUp': common.commonSetUp,
@@ -94,34 +93,30 @@ buster.testCase('null & undefined keys & values', {
       })
     },
     'batch() with undefined value works': function (done) {
-      this.db.batch([{key: 'foo', value: undefined, type: 'put'}]
-          , function (err) {
-            refute(err)
-            done()
-          })
+      this.db.batch([{ key: 'foo', value: undefined, type: 'put' }], function (err) {
+        refute(err)
+        done()
+      })
     },
     'batch() with null value works': function (done) {
-      this.db.batch([{key: 'foo', value: null, type: 'put'}]
-          , function (err) {
-            refute(err)
-            done()
-          })
+      this.db.batch([{ key: 'foo', value: null, type: 'put' }], function (err) {
+        refute(err)
+        done()
+      })
     },
     'batch() with undefined key causes error': function (done) {
-      this.db.batch([{key: undefined, value: 'bar', type: 'put'}]
-          , function (err) {
-            assert.isInstanceOf(err, Error)
-            assert.isInstanceOf(err, errors.LevelUPError)
-            done()
-          })
+      this.db.batch([{ key: undefined, value: 'bar', type: 'put' }], function (err) {
+        assert.isInstanceOf(err, Error)
+        assert.isInstanceOf(err, errors.LevelUPError)
+        done()
+      })
     },
     'batch() with null key causes error': function (done) {
-      this.db.batch([{key: null, value: 'bar', type: 'put'}]
-          , function (err) {
-            assert.isInstanceOf(err, Error)
-            assert.isInstanceOf(err, errors.LevelUPError)
-            done()
-          })
+      this.db.batch([{ key: null, value: 'bar', type: 'put' }], function (err) {
+        assert.isInstanceOf(err, Error)
+        assert.isInstanceOf(err, errors.LevelUPError)
+        done()
+      })
     }
   }
 })

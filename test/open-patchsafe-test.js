@@ -3,18 +3,17 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js'),
-  common = require('./common'),
-
-  assert = require('referee').assert,
-  refute = require('referee').refute,
-  buster = require('bustermove')
+var levelup = require('../lib/levelup.js')
+var common = require('./common')
+var assert = require('referee').assert
+var refute = require('referee').refute
+var buster = require('bustermove')
 
 function test (fun) {
   return function (done) {
-    var location = common.nextLocation(),
+    var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-      db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8'})
+    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8'})
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -33,8 +32,8 @@ buster.testCase('Deferred open() is patch-safe', {
   'tearDown': common.commonTearDown,
 
   'put() on pre-opened database': test(function (db, done) {
-    var put = db.put,
-      called = 0
+    var put = db.put
+    var called = 0
 
     db.put = function () {
       called++
@@ -47,8 +46,8 @@ buster.testCase('Deferred open() is patch-safe', {
     })
   }),
   'del() on pre-opened database': test(function (db, done) {
-    var del = db.del,
-      called = 0
+    var del = db.del
+    var called = 0
 
     db.del = function () {
       called++
@@ -61,8 +60,8 @@ buster.testCase('Deferred open() is patch-safe', {
     })
   }),
   'batch() on pre-opened database': test(function (db, done) {
-    var batch = db.batch,
-      called = 0
+    var batch = db.batch
+    var called = 0
 
     db.batch = function () {
       called++
@@ -70,8 +69,8 @@ buster.testCase('Deferred open() is patch-safe', {
     }
 
     db.batch([
-        {key: 'key', value: 'v', type: 'put'},
-       {key: 'key2', value: 'v2', type: 'put'}
+      { key: 'key', value: 'v', type: 'put' },
+      { key: 'key2', value: 'v2', type: 'put' }
     ], function () {
       assert.equals(called, 1)
       done()

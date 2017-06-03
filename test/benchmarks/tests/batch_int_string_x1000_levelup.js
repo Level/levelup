@@ -1,9 +1,9 @@
 var fn = function (puts, db, cb) {
   var after = function (err) {
-      if (err) throw err
-      cb()
-    },
-    data = []
+    if (err) throw err
+    cb()
+  }
+  var data = []
 
   if (this.cycle == null) this.cycle = 0
   else this.cycle++

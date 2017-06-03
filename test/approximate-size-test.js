@@ -3,13 +3,13 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js'),
-  async = require('async'),
-  common = require('./common'),
+var levelup = require('../lib/levelup.js')
+var async = require('async')
+var common = require('./common')
 
-  assert = require('referee').assert,
-  refute = require('referee').refute,
-  buster = require('bustermove')
+var assert = require('referee').assert
+var refute = require('referee').refute
+var buster = require('bustermove')
 
 buster.testCase('approximateSize()', {
   'setUp': common.commonSetUp,
@@ -38,8 +38,8 @@ buster.testCase('approximateSize()', {
   },
 
   'approximateSize() work on none-empty database': function (done) {
-    var location = common.nextLocation(),
-      db
+    var location = common.nextLocation()
+    var db
 
     async.series(
       [
@@ -53,22 +53,16 @@ buster.testCase('approximateSize()', {
                 )
         }.bind(this),
         function (callback) {
-          var batch = [],
-            i = 0
+          var batch = []
+          var i = 0
 
           for (; i < 10; ++i) {
-            batch.push({
-              type: 'put', key: String(i), value: 'afoovalue'
-            })
+            batch.push({ type: 'put', key: String(i), value: 'afoovalue' })
           }
-          db.batch(
-                    batch
-                  , { sync: true }
-                  , callback
-                )
+          db.batch(batch, { sync: true }, callback)
         },
         function (callback) {
-                // close db to make sure stuff gets written to disc
+          // close db to make sure stuff gets written to disc
           db.close(callback)
         },
         function (callback) {
@@ -85,8 +79,6 @@ buster.testCase('approximateSize()', {
             callback()
           })
         }
-      ]
-        , done
-      )
+      ], done)
   }
 })

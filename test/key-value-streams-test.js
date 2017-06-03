@@ -3,12 +3,11 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var common = require('./common'),
-
-  assert = require('referee').assert,
-  refute = require('referee').refute,
-  buster = require('bustermove'),
-  delayed = require('delayed').delayed
+var common = require('./common')
+var assert = require('referee').assert
+var refute = require('referee').refute
+var buster = require('bustermove')
+var delayed = require('delayed').delayed
 
 buster.testCase('Key and Value Streams', {
   'setUp': function (done) {
@@ -27,9 +26,9 @@ buster.testCase('Key and Value Streams', {
       }
 
       this.sourceKeys = Object.keys(this.sourceData)
-          .map(function (k) { return this.sourceData[k].key }.bind(this))
+        .map(function (k) { return this.sourceData[k].key }.bind(this))
       this.sourceValues = Object.keys(this.sourceData)
-          .map(function (k) { return this.sourceData[k].value }.bind(this))
+        .map(function (k) { return this.sourceData[k].value }.bind(this))
 
       this.verify = delayed(function (rs, data, done) {
         assert.equals(this.endSpy.callCount, 1, 'Stream emitted single "end" event')
@@ -37,7 +36,7 @@ buster.testCase('Key and Value Streams', {
         data.forEach(function (d, i) {
           var call = this.dataSpy.getCall(i)
           if (call) {
-              // console.log('call', i, ':', call.args[0].key, '=', call.args[0].value, '(expected', d.key, '=', d.value, ')')
+            // console.log('call', i, ':', call.args[0].key, '=', call.args[0].value, '(expected', d.key, '=', d.value, ')')
             assert.equals(call.args.length, 1, 'Stream "data" event #' + i + ' fired with 1 argument')
             assert.equals(+call.args[0].toString(), +d, 'Stream correct "data" event #' + i + ': ' + d)
           }
@@ -53,7 +52,7 @@ buster.testCase('Key and Value Streams', {
 
   'test .keyStream()': function (done) {
     this.openTestDatabase(function (db) {
-        // execute
+      // execute
       db.batch(this.sourceData.slice(), function (err) {
         refute(err)
 
@@ -67,7 +66,7 @@ buster.testCase('Key and Value Streams', {
 
   'test .readStream({keys:true,values:false})': function (done) {
     this.openTestDatabase(function (db) {
-        // execute
+      // execute
       db.batch(this.sourceData.slice(), function (err) {
         refute(err)
 
@@ -81,7 +80,7 @@ buster.testCase('Key and Value Streams', {
 
   'test .valueStream()': function (done) {
     this.openTestDatabase(function (db) {
-        // execute
+      // execute
       db.batch(this.sourceData.slice(), function (err) {
         refute(err)
 
@@ -95,7 +94,7 @@ buster.testCase('Key and Value Streams', {
 
   'test .readStream({keys:false,values:true})': function (done) {
     this.openTestDatabase(function (db) {
-        // execute
+      // execute
       db.batch(this.sourceData.slice(), function (err) {
         refute(err)
 

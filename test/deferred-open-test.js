@@ -3,22 +3,21 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js'),
-  async = require('async'),
-  common = require('./common'),
-
-  assert = require('referee').assert,
-  refute = require('referee').refute,
-  buster = require('bustermove')
+var levelup = require('../lib/levelup.js')
+var async = require('async')
+var common = require('./common')
+var assert = require('referee').assert
+var refute = require('referee').refute
+var buster = require('bustermove')
 
 buster.testCase('Deferred open()', {
   'setUp': common.commonSetUp,
   'tearDown': common.commonTearDown,
 
   'put() and get() on pre-opened database': function (done) {
-    var location = common.nextLocation(),
-      // 1) open database without callback, opens in worker thread
-      db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+    var location = common.nextLocation()
+    // 1) open database without callback, opens in worker thread
+    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -33,85 +32,75 @@ buster.testCase('Deferred open()', {
     ], function () {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
-      async.forEach(
-            [1, 2, 3]
-          , function (k, cb) {
-            db.get('k' + k, function (err, v) {
-              refute(err)
-              assert.equals(v, 'v' + k)
-              cb()
-            })
-          }
-            // sanity, this shouldn't exist
-          , function () {
-            db.get('k4', function (err) {
-              assert(err)
-                // DONE
-              done()
-            })
-          }
-        )
+      async.forEach([1, 2, 3], function (k, cb) {
+        db.get('k' + k, function (err, v) {
+          refute(err)
+          assert.equals(v, 'v' + k)
+          cb()
+        })
+      }, function () {
+        db.get('k4', function (err) {
+          assert(err)
+          // DONE
+          done()
+        })
+      })
     })
 
-      // we should still be in a state of limbo down here, not opened or closed, but 'new'
+    // we should still be in a state of limbo down here, not opened or closed, but 'new'
     refute(db.isOpen())
     refute(db.isClosed())
   },
 
   'batch() on pre-opened database': function (done) {
-    var location = common.nextLocation(),
-      // 1) open database without callback, opens in worker thread
-      db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+    var location = common.nextLocation()
+    // 1) open database without callback, opens in worker thread
+    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
     assert.isObject(db)
     assert.equals(db.location, location)
 
-      // 2) insert 3 values with batch(), these should be deferred until the database is actually open
+    // 2) insert 3 values with batch(), these should be deferred until the database is actually open
     db.batch([
-          { type: 'put', key: 'k1', value: 'v1' },
-         { type: 'put', key: 'k2', value: 'v2' },
-         { type: 'put', key: 'k3', value: 'v3' }
+      { type: 'put', key: 'k1', value: 'v1' },
+      { type: 'put', key: 'k2', value: 'v2' },
+      { type: 'put', key: 'k3', value: 'v3' }
     ], function () {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
-      async.forEach(
-            [1, 2, 3]
-          , function (k, cb) {
-            db.get('k' + k, function (err, v) {
-              refute(err)
-              assert.equals(v, 'v' + k)
-              cb()
-            })
-          }
-            // sanity, this shouldn't exist
-          , function () {
-            db.get('k4', function (err) {
-              assert(err)
-                // DONE
-              done()
-            })
-          }
-        )
+      async.forEach([1, 2, 3], function (k, cb) {
+        db.get('k' + k, function (err, v) {
+          refute(err)
+          assert.equals(v, 'v' + k)
+          cb()
+        })
+      }, function () {
+        db.get('k4', function (err) {
+          assert(err)
+          // DONE
+          done()
+        })
+      })
     })
 
-      // we should still be in a state of limbo down here, not opened or closed, but 'new'
+    // we should still be in a state of limbo down here, not opened or closed, but 'new'
     refute(db.isOpen())
     refute(db.isClosed())
   },
 
   'chained batch() on pre-opened database': function (done) {
-    var location = common.nextLocation(),
-      // 1) open database without callback, opens in worker thread
-      db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+    var location = common.nextLocation()
+    // 1) open database without callback, opens in worker thread
+    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
     assert.isObject(db)
     assert.equals(db.location, location)
 
-      // 2) insert 3 values with batch(), these should be deferred until the database is actually open
+    // 2) insert 3 values with batch(), these should be deferred until the database is actually open
     db.batch()
       .put('k1', 'v1')
       .put('k2', 'v2')
@@ -119,27 +108,22 @@ buster.testCase('Deferred open()', {
       .write(function () {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
-        async.forEach(
-            [1, 2, 3]
-          , function (k, cb) {
-            db.get('k' + k, function (err, v) {
-              refute(err)
-              assert.equals(v, 'v' + k)
-              cb()
-            })
-          }
-            // sanity, this shouldn't exist
-          , function () {
-            db.get('k4', function (err) {
-              assert(err)
-                // DONE
-              done()
-            })
-          }
-        )
+        async.forEach([1, 2, 3], function (k, cb) {
+          db.get('k' + k, function (err, v) {
+            refute(err)
+            assert.equals(v, 'v' + k)
+            cb()
+          })
+        }, function () {
+          db.get('k4', function (err) {
+            assert(err)
+            // DONE
+            done()
+          })
+        })
       })
 
-      // we should still be in a state of limbo down here, not opened or closed, but 'new'
+    // we should still be in a state of limbo down here, not opened or closed, but 'new'
     refute(db.isOpen())
     refute(db.isClosed())
   },
@@ -166,22 +150,21 @@ buster.testCase('Deferred open()', {
   },
 
   'maxListeners warning': function (done) {
-    var location = common.nextLocation(),
-      // 1) open database without callback, opens in worker thread
-      db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' }),
-      stderrMock = this.mock(console)
+    var location = common.nextLocation()
+    // 1) open database without callback, opens in worker thread
+    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+    var stderrMock = this.mock(console)
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
     stderrMock.expects('error').never()
 
-      // 2) provoke an EventEmitter maxListeners warning
+    // 2) provoke an EventEmitter maxListeners warning
     var toPut = 11
 
     for (var i = 0; i < toPut; i++) {
       db.put('some', 'string', function (err) {
         refute(err)
-
         if (!--toPut) {
           done()
         }

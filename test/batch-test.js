@@ -3,14 +3,13 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup'),
-  errors = levelup.errors,
-  async = require('async'),
-  common = require('./common'),
-
-  assert = require('referee').assert,
-  refute = require('referee').refute,
-  buster = require('bustermove')
+var levelup = require('../lib/levelup')
+var errors = levelup.errors
+var async = require('async')
+var common = require('./common')
+var assert = require('referee').assert
+var refute = require('referee').refute
+var buster = require('bustermove')
 
 buster.testCase('batch()', {
   'setUp': common.commonSetUp,
@@ -18,114 +17,83 @@ buster.testCase('batch()', {
 
   'batch() with multiple puts': function (done) {
     this.openTestDatabase(function (db) {
-      db.batch(
-        [
-                { type: 'put', key: 'foo', value: 'afoovalue' },
-               { type: 'put', key: 'bar', value: 'abarvalue' },
-               { type: 'put', key: 'baz', value: 'abazvalue' }
-        ]
-          , function (err) {
+      db.batch([
+        { type: 'put', key: 'foo', value: 'afoovalue' },
+        { type: 'put', key: 'bar', value: 'abarvalue' },
+        { type: 'put', key: 'baz', value: 'abazvalue' }
+      ], function (err) {
         refute(err)
-        async.forEach(
-                  ['foo', 'bar', 'baz']
-                , function (key, callback) {
-                  db.get(key, function (err, value) {
-                    refute(err)
-                    assert.equals(value, 'a' + key + 'value')
-                    callback()
-                  })
-                }
-                , done
-              )
-      }
-        )
+        async.forEach(['foo', 'bar', 'baz'] , function (key, callback) {
+          db.get(key, function (err, value) {
+            refute(err)
+            assert.equals(value, 'a' + key + 'value')
+            callback()
+          })
+        }, done)
+      })
     })
   },
 
   'batch() no type set defaults to put': function (done) {
     this.openTestDatabase(function (db) {
-      db.batch(
-        [
-                { key: 'foo', value: 'afoovalue' },
-               { key: 'bar', value: 'abarvalue' },
-               { key: 'baz', value: 'abazvalue' }
-        ]
-          , function (err) {
+      db.batch([
+        { key: 'foo', value: 'afoovalue' },
+        { key: 'bar', value: 'abarvalue' },
+        { key: 'baz', value: 'abazvalue' }
+      ], function (err) {
         refute(err)
-        async.forEach(
-                  ['foo', 'bar', 'baz']
-                , function (key, callback) {
-                  db.get(key, function (err, value) {
-                    refute(err)
-                    assert.equals(value, 'a' + key + 'value')
-                    callback()
-                  })
-                }
-                , done
-              )
-      }
-        )
+        async.forEach(['foo', 'bar', 'baz'], function (key, callback) {
+          db.get(key, function (err, value) {
+            refute(err)
+            assert.equals(value, 'a' + key + 'value')
+            callback()
+          })
+        }, done)
+      })
     })
   },
 
   'batch() with multiple puts and deletes': function (done) {
     this.openTestDatabase(function (db) {
-      async.series(
-        [
-          function (callback) {
-            db.batch(
-              [
-                          { type: 'put', key: '1', value: 'one' },
-                         { type: 'put', key: '2', value: 'two' },
-                         { type: 'put', key: '3', value: 'three' }
-              ]
-                    , callback
-                  )
-          },
-          function (callback) {
-            db.batch(
-              [
-                          { type: 'put', key: 'foo', value: 'afoovalue' },
-                         { type: 'del', key: '1' },
-                         { type: 'put', key: 'bar', value: 'abarvalue' },
-                         { type: 'del', key: 'foo' },
-                         { type: 'put', key: 'baz', value: 'abazvalue' }
-              ]
-                    , callback
-                  )
-          },
-          function (callback) {
-                  // these should exist
-            async.forEach(
-                      ['2', '3', 'bar', 'baz']
-                    , function (key, callback) {
-                      db.get(key, function (err, value) {
-                        refute(err)
-                        refute.isNull(value)
-                        callback()
-                      })
-                    }
-                    , callback
-                  )
-          },
-          function (callback) {
-                  // these shouldn't exist
-            async.forEach(
-                      ['1', 'foo']
-                    , function (key, callback) {
-                      db.get(key, function (err, value) {
-                        assert(err)
-                        assert.isInstanceOf(err, errors.NotFoundError)
-                        refute(value)
-                        callback()
-                      })
-                    }
-                    , callback
-                  )
-          }
-        ]
-          , done
-        )
+      async.series([
+        function (callback) {
+          db.batch([
+            { type: 'put', key: '1', value: 'one' },
+            { type: 'put', key: '2', value: 'two' },
+            { type: 'put', key: '3', value: 'three' }
+          ], callback)
+        },
+        function (callback) {
+          db.batch([
+            { type: 'put', key: 'foo', value: 'afoovalue' },
+            { type: 'del', key: '1' },
+            { type: 'put', key: 'bar', value: 'abarvalue' },
+            { type: 'del', key: 'foo' },
+            { type: 'put', key: 'baz', value: 'abazvalue' }
+          ], callback)
+        },
+        function (callback) {
+          // these should exist
+          async.forEach(['2', '3', 'bar', 'baz'], function (key, callback) {
+            db.get(key, function (err, value) {
+              refute(err)
+              refute.isNull(value)
+              callback()
+            })
+          }, callback)
+        },
+        function (callback) {
+          // these shouldn't exist
+          async.forEach(['1', 'foo'], function (key, callback) {
+            db.get(key, function (err, value) {
+              assert(err)
+              assert.isInstanceOf(err, errors.NotFoundError)
+              refute(value)
+              callback()
+            })
+          }, callback)
+        }
+      ], done)
     })
   },
 
@@ -135,28 +103,24 @@ buster.testCase('batch()', {
         refute(err)
 
         db.batch()
-            .put('one', '1')
-            .del('two')
-            .put('three', '3')
-            .clear()
-            .del('1')
-            .put('2', 'two')
-            .put('3', 'three')
-            .del('3')
-            .write(function (err) {
-              refute(err)
+          .put('one', '1')
+          .del('two')
+          .put('three', '3')
+          .clear()
+          .del('1')
+          .put('2', 'two')
+          .put('3', 'three')
+          .del('3')
+          .write(function (err) {
+            refute(err)
 
-              async.forEach(
-                  [ 'one', 'three', '1', '2', '3']
-                , function (key, callback) {
-                  db.get(key, function (err) {
-                    if ([ 'one', 'three', '1', '3' ].indexOf(key) > -1) { assert(err) } else { refute(err) }
-                    callback()
-                  })
-                }
-                , done
-              )
-            })
+            async.forEach([ 'one', 'three', '1', '2', '3'], function (key, callback) {
+              db.get(key, function (err) {
+                if ([ 'one', 'three', '1', '3' ].indexOf(key) > -1) { assert(err) } else { refute(err) }
+                callback()
+              })
+            }, done)
+          })
       })
     })
   },
@@ -164,24 +128,24 @@ buster.testCase('batch()', {
   'batch() exposes ops queue length': function (done) {
     this.openTestDatabase(function (db) {
       var batch = db.batch()
-          .put('one', '1')
-          .del('two')
-          .put('three', '3')
+        .put('one', '1')
+        .del('two')
+        .put('three', '3')
       assert.equals(batch.length, 3)
       batch.clear()
       assert.equals(batch.length, 0)
       batch
-          .del('1')
-          .put('2', 'two')
-          .put('3', 'three')
-          .del('3')
+        .del('1')
+        .put('2', 'two')
+        .put('3', 'three')
+        .del('3')
       assert.equals(batch.length, 4)
       done()
     })
   },
 
   'batch() with can manipulate data from put()': function (done) {
-      // checks encoding and whatnot
+    // checks encoding and whatnot
     this.openTestDatabase(function (db) {
       async.series(
         [
@@ -189,93 +153,70 @@ buster.testCase('batch()', {
           db.put.bind(db, '2', 'two'),
           db.put.bind(db, '3', 'three'),
           function (callback) {
-            db.batch(
-              [
-                          { type: 'put', key: 'foo', value: 'afoovalue' },
-                         { type: 'del', key: '1' },
-                         { type: 'put', key: 'bar', value: 'abarvalue' },
-                         { type: 'del', key: 'foo' },
-                         { type: 'put', key: 'baz', value: 'abazvalue' }
-              ]
-                    , callback
-                  )
+            db.batch([
+              { type: 'put', key: 'foo', value: 'afoovalue' },
+              { type: 'del', key: '1' },
+              { type: 'put', key: 'bar', value: 'abarvalue' },
+              { type: 'del', key: 'foo' },
+              { type: 'put', key: 'baz', value: 'abazvalue' }
+            ], callback)
           },
           function (callback) {
-                  // these should exist
-            async.forEach(
-                      ['2', '3', 'bar', 'baz']
-                    , function (key, callback) {
-                      db.get(key, function (err, value) {
-                        refute(err)
-                        refute.isNull(value)
-                        callback()
-                      })
-                    }
-                    , callback
-                  )
+            // these should exist
+            async.forEach(['2', '3', 'bar', 'baz'], function (key, callback) {
+              db.get(key, function (err, value) {
+                refute(err)
+                refute.isNull(value)
+                callback()
+              })
+            }, callback)
           },
           function (callback) {
-                  // these shouldn't exist
-            async.forEach(
-                      ['1', 'foo']
-                    , function (key, callback) {
-                      db.get(key, function (err, value) {
-                        assert(err)
-                        assert.isInstanceOf(err, errors.NotFoundError)
-                        refute(value)
-                        callback()
-                      })
-                    }
-                    , callback
-                  )
+            // these shouldn't exist
+            async.forEach(['1', 'foo'], function (key, callback) {
+              db.get(key, function (err, value) {
+                assert(err)
+                assert.isInstanceOf(err, errors.NotFoundError)
+                refute(value)
+                callback()
+              })
+            }, callback)
           }
-        ]
-          , done
-        )
+        ], done)
     })
   },
 
   'batch() data can be read with get() and del()': function (done) {
     this.openTestDatabase(function (db) {
-      async.series(
-        [
-          function (callback) {
-            db.batch(
-              [
-                          { type: 'put', key: '1', value: 'one' },
-                         { type: 'put', key: '2', value: 'two' },
-                         { type: 'put', key: '3', value: 'three' }
-              ]
-                    , callback
-                  )
-          },
-          db.del.bind(db, '1', 'one'),
-          function (callback) {
-                  // these should exist
-            async.forEach(
-                      ['2', '3']
-                    , function (key, callback) {
-                      db.get(key, function (err, value) {
-                        refute(err)
-                        refute.isNull(value)
-                        callback()
-                      })
-                    }
-                    , callback
-                  )
-          },
-          function (callback) {
-                  // this shouldn't exist
-            db.get('1', function (err, value) {
-              assert(err)
-              assert.isInstanceOf(err, errors.NotFoundError)
-              refute(value)
+      async.series([
+        function (callback) {
+          db.batch([
+            { type: 'put', key: '1', value: 'one' },
+            { type: 'put', key: '2', value: 'two' },
+            { type: 'put', key: '3', value: 'three' }
+          ], callback)
+        },
+        db.del.bind(db, '1', 'one'),
+        function (callback) {
+          // these should exist
+          async.forEach(['2', '3'], function (key, callback) {
+            db.get(key, function (err, value) {
+              refute(err)
+              refute.isNull(value)
               callback()
             })
-          }
-        ]
-          , done
-        )
+          }, callback)
+        },
+        function (callback) {
+          // this shouldn't exist
+          db.get('1', function (err, value) {
+            assert(err)
+            assert.isInstanceOf(err, errors.NotFoundError)
+            refute(value)
+            callback()
+          })
+        }
+      ], done)
     })
   },
 
@@ -289,21 +230,21 @@ buster.testCase('batch()', {
     },
 
     'test batch#put() with missing `value`': function () {
-          // value = undefined
+      // value = undefined
       this.batch.put('foo1')
 
       this.batch.put('foo1', null)
     },
 
     'test batch#put() with missing `key`': function () {
-          // key = undefined
+      // key = undefined
       assert.exception(this.batch.put.bind(this.batch, undefined, 'foo1'), function (err) {
         if (err.name != 'WriteError') { return false }
         if (err.message != 'key cannot be `null` or `undefined`') { return false }
         return true
       })
 
-          // key = null
+      // key = null
       assert.exception(this.batch.put.bind(this.batch, null, 'foo1'), function (err) {
         if (err.name != 'WriteError') { return false }
         if (err.message != 'key cannot be `null` or `undefined`') { return false }
@@ -312,14 +253,14 @@ buster.testCase('batch()', {
     },
 
     'test batch#put() with missing `key` and `value`': function () {
-          // undefined
+      // undefined
       assert.exception(this.batch.put.bind(this.batch), function (err) {
         if (err.name != 'WriteError') { return false }
         if (err.message != 'key cannot be `null` or `undefined`') { return false }
         return true
       })
 
-          // null
+      // null
       assert.exception(this.batch.put.bind(this.batch, null, null), function (err) {
         if (err.name != 'WriteError') { return false }
         if (err.message != 'key cannot be `null` or `undefined`') { return false }
@@ -328,14 +269,14 @@ buster.testCase('batch()', {
     },
 
     'test batch#del() with missing `key`': function () {
-          // key = undefined
+      // key = undefined
       assert.exception(this.batch.del.bind(this.batch, undefined, 'foo1'), function (err) {
         if (err.name != 'WriteError') { return false }
         if (err.message != 'key cannot be `null` or `undefined`') { return false }
         return true
       })
 
-          // key = null
+      // key = null
       assert.exception(this.batch.del.bind(this.batch, null, 'foo1'), function (err) {
         if (err.name != 'WriteError') { return false }
         if (err.message != 'key cannot be `null` or `undefined`') { return false }

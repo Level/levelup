@@ -3,16 +3,15 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var common = require('./common'),
-  assert = require('referee').assert,
-  refute = require('referee').refute,
-  buster = require('bustermove'),
-  browserify = require('browserify'),
-  path = require('path'),
-  after = require('after'),
-  bl = require('bl'),
-  spawn = require('child_process').spawn
-
+var common = require('./common')
+var assert = require('referee').assert
+var refute = require('referee').refute
+var buster = require('bustermove')
+var browserify = require('browserify')
+var path = require('path')
+var after = require('after')
+var bl = require('bl')
+var spawn = require('child_process').spawn
 var PACKAGE_JSON = path.join(__dirname, '..', 'package.json')
 
 buster.testCase('Browserify Bundle', {
