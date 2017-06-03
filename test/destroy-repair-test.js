@@ -6,7 +6,6 @@
 var levelup = require('../lib/levelup.js')
 var leveldown = require('leveldown')
 var assert = require('referee').assert
-var refute = require('referee').refute
 var buster = require('bustermove')
 
 buster.testCase('Destroy & Repair', {
@@ -29,10 +28,10 @@ buster.testCase('Destroy & Repair', {
   'destroy() passes on arguments': function () {
     var ldmock = this.mock(leveldown)
     var args = [ 'location', function () { } ]
-    var expect = ldmock
-          .expects('destroy')
-          .once()
-          .withExactArgs(args[0], args[1])
+    ldmock
+      .expects('destroy')
+      .once()
+      .withExactArgs(args[0], args[1])
 
     levelup.destroy.apply(null, args)
     ldmock.verify()
@@ -41,10 +40,10 @@ buster.testCase('Destroy & Repair', {
   'repair() passes on arguments': function () {
     var ldmock = this.mock(leveldown)
     var args = [ 'location', function () { } ]
-    var expect = ldmock
-          .expects('repair')
-          .once()
-          .withExactArgs(args[0], args[1])
+    ldmock
+      .expects('repair')
+      .once()
+      .withExactArgs(args[0], args[1])
 
     levelup.repair.apply(null, args)
     ldmock.verify()

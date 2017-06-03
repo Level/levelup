@@ -6,7 +6,6 @@
 var levelup = require('../lib/levelup.js')
 var common = require('./common')
 var assert = require('referee').assert
-var refute = require('referee').refute
 var buster = require('bustermove')
 
 buster.testCase('Idempotent open & close', {

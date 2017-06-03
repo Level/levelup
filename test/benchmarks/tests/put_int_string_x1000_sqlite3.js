@@ -2,7 +2,7 @@ var fn = function (puts, db, cb) {
   var received = 0
   var after = function (err) {
     if (err) throw err
-    if (++received == puts) cb()
+    if (++received === puts) cb()
   }
 
   if (this.cycle == null) this.cycle = 0

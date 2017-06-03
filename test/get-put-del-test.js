@@ -68,7 +68,7 @@ buster.testCase('get() / put() / del()', {
             async.forEach(['foo', 'bar', 'baz'], function (key, callback) {
               db.get(key, function (err, value) {
                 // we should get foo & baz but not bar
-                if (key == 'bar') {
+                if (key === 'bar') {
                   assert(err)
                   refute(value)
                 } else {

@@ -79,7 +79,7 @@ var runTest = function (testName, callback) {
   )
 }
 
-var focusKey = Object.keys(tests).filter(function (k) { return (/\=>/).test(k) })
+var focusKey = Object.keys(tests).filter(function (k) { return (/=>/).test(k) })
 
 if (focusKey.length) {
   var focusTest = tests[focusKey[0]]

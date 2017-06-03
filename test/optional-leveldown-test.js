@@ -3,12 +3,9 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup')
 var assert = require('referee').assert
-var refute = require('referee').refute
 var format = require('util').format
 var buster = require('bustermove')
-var errors = levelup.errors
 
 function clearCache () {
   delete require.cache[require.resolve('..')]
@@ -30,7 +27,7 @@ buster.testCase('Optional LevelDOWN', {
     var levelup = require('..')
     require('leveldown/package').version = '0.0.0'
     assert.exception(levelup.bind(null, '/foo/bar'), function (err) {
-      if (err.name != 'LevelUPError') { return false }
+      if (err.name !== 'LevelUPError') { return false }
       if (!/Installed version of LevelDOWN \(0\.0\.0\) does not match required version \(\^\d+\.\d+\.\d+\)/.test(err.message)) { return false }
       return true
     })
@@ -55,9 +52,9 @@ function assertRequireThrows (module) {
     }
   })
   assert.exception(levelup.bind(null, '/foo/bar'), function (err) {
-    if (err.name != 'LevelUPError') { return false }
+    if (err.name !== 'LevelUPError') { return false }
     var template = 'Failed to require LevelDOWN (%s). Try `npm install leveldown` if it\'s missing'
-    if (format(template, error) != err.message) { return false }
+    if (format(template, error) !== err.message) { return false }
     return true
   })
 }

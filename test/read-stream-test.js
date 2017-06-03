@@ -45,7 +45,7 @@ buster.testCase('ReadStream', {
       pauseVerify.called = true
     }
     var onData = function () {
-      if (++calls == 5) {
+      if (++calls === 5) {
         rs.pause()
         setTimeout(pauseVerify, 50)
       }
@@ -110,6 +110,7 @@ buster.testCase('ReadStream', {
       db.batch(this.sourceData.slice(), function (err) {
         refute(err)
         db.close(function (err) {
+          refute(err)
           var rs = db.createReadStream()
           rs.destroy()
           done()
@@ -142,7 +143,7 @@ buster.testCase('ReadStream', {
         var endSpy = this.spy()
         var calls = 0
         this.dataSpy = this.spy(function () {
-          if (++calls == 5) { rs.destroy() }
+          if (++calls === 5) { rs.destroy() }
         })
         rs.on('data', this.dataSpy)
         rs.on('end', endSpy)
@@ -365,7 +366,7 @@ buster.testCase('ReadStream', {
   },
 
   'test hex encoding': function (done) {
-    var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'hex'}
+    var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'hex' }
     var data = [
       { type: 'put', key: 'ab', value: 'abcdef0123456789' }
     ]

@@ -187,6 +187,7 @@ buster.testCase('Init & open()', {
       db.put('foo', 'bar', function (err) {
         refute(err, 'no error')
         db.get('foo', function (err, value) {
+          refute(err, 'no error')
           assert.equals(value, 'bar', 'correct value')
           done()
         })
@@ -203,6 +204,7 @@ buster.testCase('Init & open()', {
       db.put('foo', 'bar', function (err) {
         refute(err, 'no error')
         db.get('foo', function (err, value) {
+          refute(err, 'no error')
           assert.equals(value, 'bar', 'correct value')
           done()
         })

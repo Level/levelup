@@ -5,10 +5,7 @@
 
 var levelup = require('../lib/levelup.js')
 var common = require('./common')
-var rimraf = require('rimraf')
-var async = require('async')
 var assert = require('referee').assert
-var refute = require('referee').refute
 var buster = require('bustermove')
 
 function makeTest (db, delay, done) {

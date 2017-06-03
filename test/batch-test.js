@@ -23,7 +23,7 @@ buster.testCase('batch()', {
         { type: 'put', key: 'baz', value: 'abazvalue' }
       ], function (err) {
         refute(err)
-        async.forEach(['foo', 'bar', 'baz'] , function (key, callback) {
+        async.forEach(['foo', 'bar', 'baz'], function (key, callback) {
           db.get(key, function (err, value) {
             refute(err)
             assert.equals(value, 'a' + key + 'value')
@@ -114,7 +114,7 @@ buster.testCase('batch()', {
           .write(function (err) {
             refute(err)
 
-            async.forEach([ 'one', 'three', '1', '2', '3'], function (key, callback) {
+            async.forEach([ 'one', 'three', '1', '2', '3' ], function (key, callback) {
               db.get(key, function (err) {
                 if ([ 'one', 'three', '1', '3' ].indexOf(key) > -1) { assert(err) } else { refute(err) }
                 callback()
@@ -239,15 +239,15 @@ buster.testCase('batch()', {
     'test batch#put() with missing `key`': function () {
       // key = undefined
       assert.exception(this.batch.put.bind(this.batch, undefined, 'foo1'), function (err) {
-        if (err.name != 'WriteError') { return false }
-        if (err.message != 'key cannot be `null` or `undefined`') { return false }
+        if (err.name !== 'WriteError') { return false }
+        if (err.message !== 'key cannot be `null` or `undefined`') { return false }
         return true
       })
 
       // key = null
       assert.exception(this.batch.put.bind(this.batch, null, 'foo1'), function (err) {
-        if (err.name != 'WriteError') { return false }
-        if (err.message != 'key cannot be `null` or `undefined`') { return false }
+        if (err.name !== 'WriteError') { return false }
+        if (err.message !== 'key cannot be `null` or `undefined`') { return false }
         return true
       })
     },
@@ -255,15 +255,15 @@ buster.testCase('batch()', {
     'test batch#put() with missing `key` and `value`': function () {
       // undefined
       assert.exception(this.batch.put.bind(this.batch), function (err) {
-        if (err.name != 'WriteError') { return false }
-        if (err.message != 'key cannot be `null` or `undefined`') { return false }
+        if (err.name !== 'WriteError') { return false }
+        if (err.message !== 'key cannot be `null` or `undefined`') { return false }
         return true
       })
 
       // null
       assert.exception(this.batch.put.bind(this.batch, null, null), function (err) {
-        if (err.name != 'WriteError') { return false }
-        if (err.message != 'key cannot be `null` or `undefined`') { return false }
+        if (err.name !== 'WriteError') { return false }
+        if (err.message !== 'key cannot be `null` or `undefined`') { return false }
         return true
       })
     },
@@ -271,15 +271,15 @@ buster.testCase('batch()', {
     'test batch#del() with missing `key`': function () {
       // key = undefined
       assert.exception(this.batch.del.bind(this.batch, undefined, 'foo1'), function (err) {
-        if (err.name != 'WriteError') { return false }
-        if (err.message != 'key cannot be `null` or `undefined`') { return false }
+        if (err.name !== 'WriteError') { return false }
+        if (err.message !== 'key cannot be `null` or `undefined`') { return false }
         return true
       })
 
       // key = null
       assert.exception(this.batch.del.bind(this.batch, null, 'foo1'), function (err) {
-        if (err.name != 'WriteError') { return false }
-        if (err.message != 'key cannot be `null` or `undefined`') { return false }
+        if (err.name !== 'WriteError') { return false }
+        if (err.message !== 'key cannot be `null` or `undefined`') { return false }
         return true
       })
     },
@@ -293,8 +293,8 @@ buster.testCase('batch()', {
         this.batch.put('foo', 'bar').put('boom', 'bang').del('foo').write(done)
         this.verify = function (cb) {
           assert.exception(cb, function (err) {
-            if (err.name != 'WriteError') { return false }
-            if (err.message != 'write() already called on this batch') { return false }
+            if (err.name !== 'WriteError') { return false }
+            if (err.message !== 'write() already called on this batch') { return false }
             return true
           })
         }

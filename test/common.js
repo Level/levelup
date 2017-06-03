@@ -25,8 +25,8 @@ referee.add('isInstanceOf', {
   refute: function (actual, expected) {
     return !(actual instanceof expected)
   },
-  assertMessage: '${0} expected to be instance of ${1}',
-  refuteMessage: '${0} expected not to be instance of ${1}'
+  assertMessage: '${0} expected to be instance of ${1}', // eslint-disable-line
+  refuteMessage: '${0} expected not to be instance of ${1}' // eslint-disable-line
 })
 
 referee.add('isUndefined', {
@@ -36,8 +36,8 @@ referee.add('isUndefined', {
   refute: function (actual) {
     return actual !== undefined
   },
-  assertMessage: '${0} expected to be undefined',
-  refuteMessage: '${0} expected not to be undefined'
+  assertMessage: '${0} expected to be undefined', // eslint-disable-line
+  refuteMessage: '${0} expected not to be undefined' // eslint-disable-line
 })
 
 module.exports.nextLocation = function () {
@@ -58,7 +58,7 @@ module.exports.cleanup = function (callback) {
 
     list.forEach(function (f) {
       rimraf(path.join(__dirname, f), function () {
-        if (++ret == list.length) { callback() }
+        if (++ret === list.length) { callback() }
       })
     })
   })

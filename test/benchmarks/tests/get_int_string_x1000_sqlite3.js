@@ -17,7 +17,7 @@ var fn = function (count, db, cb) {
   var received = 0
   var after = function (err) {
     if (err) throw err
-    if (++received == count) cb()
+    if (++received === count) cb()
   }
   for (var i = 0; i < count; i++) { db.get('SELECT value FROM bench WHERE key = "' + i + '"', after) }
 }

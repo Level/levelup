@@ -6,7 +6,6 @@
 var delayed = require('delayed')
 var common = require('./common')
 var SlowStream = require('slow-stream')
-var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
 

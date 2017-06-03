@@ -145,7 +145,7 @@ buster.testCase('Binary API', {
         async.forEach(['foo', 'bar', 'baz'], function (key, callback) {
           db.get(key, { valueEncoding: 'binary' }, function (err, value) {
             refute(err)
-            if (key == 'baz') {
+            if (key === 'baz') {
               assert(value instanceof Buffer, 'value is buffer')
               assert.equals(value.toString(), 'a' + key + 'value')
               callback()

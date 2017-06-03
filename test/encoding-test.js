@@ -8,6 +8,7 @@ var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
+var Buffer = require('safe-buffer').Buffer
 
 buster.testCase('Encoding', {
   'setUp': common.readStreamSetUp,

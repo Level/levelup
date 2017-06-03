@@ -3,7 +3,6 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
@@ -32,6 +31,7 @@ buster.testCase('Browserify Bundle', {
     var node = spawn('node')
     var fin = after(2, done)
     node.stderr.pipe(bl(function (err, buf) {
+      refute(err)
       assert.match(buf.toString(), /LevelUPError: missing db factory, you need to set options\.db/)
       fin()
     }))
