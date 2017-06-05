@@ -284,11 +284,11 @@ If `key` and `value` are defined but `type` is not, it will default to `'put'`.
 
 ```js
 var ops = [
-    { type: 'del', key: 'father' }
-  , { type: 'put', key: 'name', value: 'Yuri Irsenovich Kim' }
-  , { type: 'put', key: 'dob', value: '16 February 1941' }
-  , { type: 'put', key: 'spouse', value: 'Kim Young-sook' }
-  , { type: 'put', key: 'occupation', value: 'Clown' }
+  { type: 'del', key: 'father' },
+  { type: 'put', key: 'name', value: 'Yuri Irsenovich Kim' },
+  { type: 'put', key: 'dob', value: '16 February 1941' },
+  { type: 'put', key: 'spouse', value: 'Kim Young-sook' },
+  { type: 'put', key: 'occupation', value: 'Clown' }
 ]
 
 db.batch(ops, function (err) {
@@ -305,11 +305,11 @@ In addition to encoding options for the whole batch you can also overwrite the e
 
 ```js
 var ops = [{
-    type          : 'put'
-  , key           : new Buffer([1, 2, 3])
-  , value         : { some: 'json' }
-  , keyEncoding   : 'binary'
-  , valueEncoding : 'json'
+  type: 'put',
+  key: new Buffer([1, 2, 3]),
+  value: { some: 'json' },
+  keyEncoding: 'binary',
+  valueEncoding: 'json'
 }]
 ```
 
@@ -579,10 +579,10 @@ A custom encoding may be provided by passing in an object as a value for `keyEnc
 
 ```js
 {
-    encode : function (val) { ... }
-  , decode : function (val) { ... }
-  , buffer : boolean // encode returns a buffer and decode accepts a buffer
-  , type   : String  // name of this encoding type.
+  encode: function (val) { ... },
+  decode: function (val) { ... },
+  buffer: boolean, // encode returns a buffer and decode accepts a buffer
+  type: String  // name of this encoding type.
 }
 ```
 
@@ -635,5 +635,4 @@ Copyright &copy; 2012-2016 **LevelUP** [contributors](https://github.com/level/c
 
 **LevelUP** is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included `LICENSE.md` file for more details.
 
-=======
 *LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).*
