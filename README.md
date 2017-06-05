@@ -186,7 +186,7 @@ var db = levelup(memdown)
 
 `levelup()` takes an optional options object as its second argument; the following properties are accepted:
 
-* `'createIfMissing'` *(boolean, default: `true`)*: If `true`, will initialise an empty database at the specified location if one doesn't already exist. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open.
+* `'createIfMissing'` *(boolean, default: `true`)*: If `true`, will initialize an empty database at the specified location if one doesn't already exist. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open.
 
 * `'errorIfExists'` *(boolean, default: `false`)*: If `true`, you will receive an error in your `open()` callback if the database exists at the specified location.
 
