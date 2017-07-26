@@ -16,6 +16,7 @@ before_install:
   - export JOBS=max
 
 node_js:
+  - '8'
   - '7'
   - '6'
   - '4'
