@@ -120,13 +120,6 @@ db.put('name', 'LevelUP', function (err) {
   * <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
   * <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
 
-### Special operations exposed by LevelDOWN
-
-  * <a href="#approximateSize"><code>db.db.<b>approximateSize()</b></code></a>
-  * <a href="#getProperty"><code>db.db.<b>getProperty()</b></code></a>
-  * <a href="#destroy"><code><b>leveldown.destroy()</b></code></a>
-  * <a href="#repair"><code><b>leveldown.repair()</b></code></a>
-
 ### Special Notes
   * <a href="#writeStreams">What happened to <code><b>db.createWriteStream()</b></code></a>
 
@@ -474,78 +467,6 @@ db.createReadStream({ keys: false, values: true })
 The main driver for this was performance. While `db.createReadStream()` performs well under most use cases, `db.createWriteStream()` was highly dependent on the application keys and values. Thus we can't provide a standard implementation and encourage more `write-stream` implementations to be created to solve the broad spectrum of use cases.
 
 Check out the implementations that the community has already produced [here](https://github.com/level/levelup/wiki/Modules#write-streams).
-
---------------------------------------------------------
-<a name='approximateSize'></a>
-### db.db.approximateSize(start, end, callback)
-<code>approximateSize()</code> can used to get the approximate number of bytes of file system space used by the range `[start..end)`. The result may not include recently written data.
-
-```js
-var db = require('level')('./huge.db')
-
-db.db.approximateSize('a', 'c', function (err, size) {
-  if (err) return console.error('Ooops!', err)
-  console.log('Approximate size of range is %d', size)
-})
-```
-
-**Note:** `approximateSize()` is available via [LevelDOWN](https://github.com/level/leveldown/), which by default is accessible as the `db` property of your LevelUP instance. This is a specific LevelDB operation and is not likely to be available where you replace LevelDOWN with an alternative back-end via the `'db'` option.
-
-
---------------------------------------------------------
-<a name='getProperty'></a>
-### db.db.getProperty(property)
-<code>getProperty</code> can be used to get internal details from LevelDB. When issued with a valid property string, a readable string will be returned (this method is synchronous).
-
-Currently, the only valid properties are:
-
-* <b><code>'leveldb.num-files-at-levelN'</code></b>: returns the number of files at level *N*, where N is an integer representing a valid level (e.g. "0").
-
-* <b><code>'leveldb.stats'</code></b>: returns a multi-line string describing statistics about LevelDB's internal operation.
-
-* <b><code>'leveldb.sstables'</code></b>: returns a multi-line string describing all of the *sstables* that make up contents of the current database.
-
-
-```js
-var db = require('level')('./huge.db')
-console.log(db.db.getProperty('leveldb.num-files-at-level3'))
-// → '243'
-```
-
-**Note:** `getProperty()` is available via [LevelDOWN](https://github.com/level/leveldown/), which by default is accessible as the `db` property of your LevelUP instance. This is a specific LevelDB operation and is not likely to be available where you replace LevelDOWN with an alternative back-end via the `'db'` option.
-
-
---------------------------------------------------------
-<a name="destroy"></a>
-### leveldown.destroy(location, callback)
-<code>destroy()</code> is used to completely remove an existing LevelDB database directory. You can use this function in place of a full directory *rm* if you want to be sure to only remove LevelDB-related files. If the directory only contains LevelDB files, the directory itself will be removed as well. If there are additional, non-LevelDB files in the directory, those files, and the directory, will be left alone.
-
-The callback will be called when the destroy operation is complete, with a possible `error` argument.
-
-**Note:** `destroy()` is available via [LevelDOWN](https://github.com/level/leveldown/) which you will have to install seperately, e.g.:
-
-```js
-require('leveldown').destroy('./huge.db', function (err) { console.log('done!') })
-```
-
---------------------------------------------------------
-<a name="repair"></a>
-### leveldown.repair(location, callback)
-<code>repair()</code> can be used to attempt a restoration of a damaged LevelDB store. From the LevelDB documentation:
-
-> If a DB cannot be opened, you may attempt to call this method to resurrect as much of the contents of the database as possible. Some data may be lost, so be careful when calling this function on a database that contains important information.
-
-You will find information on the *repair* operation in the *LOG* file inside the store directory.
-
-A `repair()` can also be used to perform a compaction of the LevelDB log into table files.
-
-The callback will be called when the repair operation is complete, with a possible `error` argument.
-
-**Note:** `repair()` is available via [LevelDOWN](https://github.com/level/leveldown/) which you will have to install seperately, e.g.:
-
-```js
-require('leveldown').repair('./huge.db', function (err) { console.log('done!') })
-```
 
 --------------------------------------------------------
 
