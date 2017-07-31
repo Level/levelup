@@ -4,6 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
 var async = require('async')
 var common = require('./common')
 var assert = require('referee').assert
@@ -16,7 +17,13 @@ buster.testCase('JSON API', {
       this.runTest = function (testData, assertType, done) {
         var location = common.nextLocation()
         this.cleanupDirs.push(location)
-        levelup(location, { valueEncoding: { encode: JSON.stringify, decode: JSON.parse } }, function (err, db) {
+        levelup(location, {
+          valueEncoding: {
+            encode: JSON.stringify,
+            decode: JSON.parse
+          },
+          db: leveldown
+        }, function (err, db) {
           refute(err)
           if (err) return
 

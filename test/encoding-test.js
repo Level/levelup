@@ -4,6 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
@@ -21,7 +22,7 @@ buster.testCase('Encoding', {
         refute(err)
         db.close(function (err) {
           refute(err)
-          db = levelup(db.location, { valueEncoding: 'json' })
+          db = levelup(db.location, { valueEncoding: 'json', db: leveldown })
           db.get('foo', function (err, value) {
             assert(err)
             assert.equals('EncodingError', err.name)
@@ -43,7 +44,7 @@ buster.testCase('Encoding', {
           var dataSpy = this.spy()
           var errorSpy = this.spy()
 
-          db = levelup(db.location, { valueEncoding: 'json' })
+          db = levelup(db.location, { valueEncoding: 'json', db: leveldown })
           db.readStream()
             .on('data', dataSpy)
             .on('error', errorSpy)

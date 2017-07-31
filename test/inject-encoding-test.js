@@ -4,6 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
 var async = require('async')
 var common = require('./common')
 var msgpack = require('msgpack-js')
@@ -23,7 +24,8 @@ buster.testCase('JSON API', {
             decode: msgpack.decode,
             buffer: true,
             type: 'msgpack'
-          }
+          },
+          db: leveldown
         }, function (err, db) {
           refute(err)
           if (err) return

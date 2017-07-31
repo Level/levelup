@@ -4,6 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
 var common = require('./common')
 var SlowStream = require('slow-stream')
 var delayed = require('delayed')
@@ -527,7 +528,7 @@ buster.testCase('ReadStream', {
         .on('close', delayed.delayed(callback, 0.05))
     }
     var open = function (reopen, location, callback) {
-      levelup(location, callback)
+      levelup(location, { db: leveldown }, callback)
     }
     var write = function (db, callback) { db.batch(sourceData.slice(), callback) }
     var close = function (db, callback) { db.close(callback) }
@@ -575,7 +576,10 @@ buster.testCase('ReadStream', {
         refute(err)
         db.close(function (err) {
           refute(err)
-          var db2 = levelup(db.location, { valueEncoding: 'utf8' })
+          var db2 = levelup(db.location, {
+            valueEncoding: 'utf8',
+            db: leveldown
+          })
           execute(db2)
         })
       })

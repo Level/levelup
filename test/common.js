@@ -15,6 +15,7 @@ var delayed = require('delayed').delayed
 var levelup = require('../lib/levelup.js')
 var errors = require('level-errors')
 var dbidx = 0
+var leveldown = require('leveldown')
 
 assert(levelup.errors === errors)
 
@@ -68,6 +69,8 @@ module.exports.openTestDatabase = function () {
   var options = typeof arguments[0] === 'object' ? arguments[0] : {}
   var callback = typeof arguments[0] === 'function' ? arguments[0] : arguments[1]
   var location = typeof arguments[0] === 'string' ? arguments[0] : module.exports.nextLocation()
+
+  options.db = leveldown
 
   rimraf(location, function (err) {
     refute(err)

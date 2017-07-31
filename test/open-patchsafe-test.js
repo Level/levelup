@@ -4,6 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
@@ -13,7 +14,7 @@ function test (fun) {
   return function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { valueEncoding: 'utf8' })
+    var db = levelup(location, { valueEncoding: 'utf8', db: leveldown })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)

@@ -4,6 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
@@ -22,7 +23,7 @@ buster.testCase('Init & open()', {
 
   'default options': function (done) {
     var location = common.nextLocation()
-    levelup(location, function (err, db) {
+    levelup(location, { db: leveldown }, function (err, db) {
       refute(err, 'no error')
       assert.isTrue(db.isOpen())
       this.closeableDatabases.push(db)
@@ -32,13 +33,14 @@ buster.testCase('Init & open()', {
 
         assert.isFalse(db.isOpen())
 
-        levelup(location, function (err, db) { // no options object
+        levelup(location, { db: leveldown }, function (err, db) {
           refute(err)
           assert.isObject(db)
           assert.equals(db.options.keyEncoding, 'utf8')
           assert.equals(db.options.valueEncoding, 'utf8')
           assert.equals(db.location, location)
 
+          // TODO remove
           // read-only properties
           db.location = 'foo'
           assert.equals(db.location, location)
@@ -51,7 +53,7 @@ buster.testCase('Init & open()', {
 
   'basic options': function (done) {
     var location = common.nextLocation()
-    levelup(location, { valueEncoding: 'binary' }, function (err, db) {
+    levelup(location, { valueEncoding: 'binary', db: leveldown }, function (err, db) {
       refute(err)
 
       this.closeableDatabases.push(db)
@@ -71,7 +73,7 @@ buster.testCase('Init & open()', {
 
   'options with encoding': function (done) {
     var location = common.nextLocation()
-    levelup(location, { keyEncoding: 'ascii', valueEncoding: 'json' }, function (err, db) {
+    levelup(location, { keyEncoding: 'ascii', valueEncoding: 'json', db: leveldown }, function (err, db) {
       refute(err)
 
       this.closeableDatabases.push(db)
@@ -91,7 +93,7 @@ buster.testCase('Init & open()', {
 
   'without callback': function (done) {
     var location = common.nextLocation()
-    var db = levelup(location)
+    var db = levelup(location, { db: leveldown })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -104,6 +106,7 @@ buster.testCase('Init & open()', {
     })
   },
 
+  // TODO remove once first parameter is a DOWN
   'constructor with options argument uses factory': function (done) {
     var db = levelup({ db: MemDOWN })
     assert.isNull(db.location, 'location property is null')
@@ -121,6 +124,7 @@ buster.testCase('Init & open()', {
     })
   },
 
+  // TODO remove once first parameter is a DOWN
   'constructor with only function argument uses factory': function (done) {
     var db = levelup(MemDOWN)
     assert.isNull(db.location, 'location property is null')

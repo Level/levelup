@@ -4,6 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
 var async = require('async')
 var common = require('./common')
 var assert = require('referee').assert
@@ -17,7 +18,7 @@ buster.testCase('Deferred open()', {
   'put() and get() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { valueEncoding: 'utf8' })
+    var db = levelup(location, { valueEncoding: 'utf8', db: leveldown })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -55,7 +56,7 @@ buster.testCase('Deferred open()', {
   'batch() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { valueEncoding: 'utf8' })
+    var db = levelup(location, { valueEncoding: 'utf8', db: leveldown })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -93,7 +94,7 @@ buster.testCase('Deferred open()', {
   'chained batch() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { valueEncoding: 'utf8' })
+    var db = levelup(location, { valueEncoding: 'utf8', db: leveldown })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -138,7 +139,7 @@ buster.testCase('Deferred open()', {
           refute(err)
           db.close(function (err) {
             refute(err, 'no error')
-            db = levelup(location)
+            db = levelup(location, { db: leveldown })
             var rs = db.createReadStream()
             rs.on('data', this.dataSpy)
             rs.on('end', this.endSpy)
@@ -152,7 +153,7 @@ buster.testCase('Deferred open()', {
   'maxListeners warning': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { valueEncoding: 'utf8' })
+    var db = levelup(location, { valueEncoding: 'utf8', db: leveldown })
     var stderrMock = this.mock(console)
 
     this.closeableDatabases.push(db)
