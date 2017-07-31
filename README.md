@@ -179,14 +179,6 @@ var db = levelup(memdown)
 
 `levelup()` takes an optional options object as its second argument; the following properties are accepted:
 
-* `'createIfMissing'` *(boolean, default: `true`)*: If `true`, will initialise an empty database at the specified location if one doesn't already exist. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open.
-
-* `'errorIfExists'` *(boolean, default: `false`)*: If `true`, you will receive an error in your `open()` callback if the database exists at the specified location.
-
-* `'compression'` *(boolean, default: `true`)*: If `true`, all *compressible* data will be run through the Snappy compression algorithm before being stored. Snappy is very fast and shouldn't gain much speed by disabling so leave this on unless you have good reason to turn it off.
-
-* `'cacheSize'` *(number, default: `8 * 1024 * 1024`)*: The size (in bytes) of the in-memory [LRU](http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used) cache with frequently used uncompressed block contents.
-
 * `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)).
   <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and conversion will be performed.</p>
   <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
@@ -221,8 +213,6 @@ The callback argument is optional but if you don't provide one and an error occu
 
 Encoding of the `key` and `value` objects will adhere to `'keyEncoding'` and `'valueEncoding'` options provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `put()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
 
-If you provide a `'sync'` value of `true` in your `options` object, LevelDB will perform a synchronous write of the data; although the operation will be asynchronous as far as Node is concerned. Normally, LevelDB passes the data to the operating system for writing and returns immediately, however a synchronous write will use `fsync()` or equivalent so your callback won't be triggered until the data is actually on disk. Synchronous filesystem writes are **significantly** slower than asynchronous writes but if you want to be absolutely sure that the data is flushed then you can use `'sync': true`.
-
 --------------------------------------------------------
 <a name="get"></a>
 ### db.get(key[, options][, callback])
@@ -245,9 +235,7 @@ db.get('foo', function (err, value) {
 
 #### `options`
 
-Encoding of the `key` and `value` objects is the same as in <a href="#put"><code>put</code></a>. 
-
-LevelDB will by default fill the in-memory LRU Cache with data from a call to get. Disabling this is done by setting `fillCache` to `false`.
+Encoding of the `key` and `value` objects is the same as in <a href="#put"><code>put</code></a>.
 
 --------------------------------------------------------
 <a name="del"></a>
@@ -263,8 +251,6 @@ db.del('foo', function (err) {
 #### `options`
 
 Encoding of the `key` object will adhere to the `'keyEncoding'` option provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `del()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
-
-A `'sync'` option can also be passed, see <a href="#put"><code>put()</code></a> for details on how this works.
 
 --------------------------------------------------------
 <a name="batch"></a>
@@ -292,7 +278,7 @@ db.batch(ops, function (err) {
 
 #### `options`
 
-See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can overwrite default `'keyEncoding'` and `'valueEncoding'` and also specify the use of `sync` filesystem operations.
+See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can overwrite default `'keyEncoding'` and `'valueEncoding'`.
 
 In addition to encoding options for the whole batch you can also overwrite the encoding per operation, like:
 
@@ -411,8 +397,6 @@ Additionally, you can supply an options object as the first parameter to `create
 * `'values'` *(boolean, default: `true`)*: whether the `'data'` event should contain values. If set to `true` and `'keys'` set to `false` then `'data'` events will simply be values, rather than objects with a `'value'` property. Used internally by the `createValueStream()` method.
 
 * `'limit'` *(number, default: `-1`)*: limit the number of results collected by this stream. This number represents a *maximum* number of results and may not be reached if you get to the end of the data first. A value of `-1` means there is no limit. When `reverse=true` the highest keys will be returned instead of the lowest keys.
-
-* `'fillCache'` *(boolean, default: `false`)*: whether LevelDB's LRU-cache should be filled with data read.
 
 * `'keyEncoding'` / `'valueEncoding'` *(string)*: the encoding applied to each read piece of data.
 

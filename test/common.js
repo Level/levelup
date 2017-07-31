@@ -65,7 +65,7 @@ module.exports.cleanup = function (callback) {
 }
 
 module.exports.openTestDatabase = function () {
-  var options = typeof arguments[0] === 'object' ? arguments[0] : { createIfMissing: true, errorIfExists: true }
+  var options = typeof arguments[0] === 'object' ? arguments[0] : {}
   var callback = typeof arguments[0] === 'function' ? arguments[0] : arguments[1]
   var location = typeof arguments[0] === 'string' ? arguments[0] : module.exports.nextLocation()
 

@@ -17,10 +17,7 @@ buster.testCase('JSON API', {
       this.runTest = function (testData, assertType, done) {
         var location = common.nextLocation()
         this.cleanupDirs.push(location)
-        console.log(location)
         levelup(location, {
-          createIfMissing: true,
-          errorIfExists: true,
           valueEncoding: {
             encode: msgpack.encode,
             decode: msgpack.decode,
