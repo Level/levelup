@@ -235,9 +235,7 @@ db.get('foo', function (err, value) {
 
 #### `options`
 
-Encoding of the `key` and `value` objects is the same as in <a href="#put"><code>put</code></a>. 
-
-LevelDB will by default fill the in-memory LRU Cache with data from a call to get. Disabling this is done by setting `fillCache` to `false`.
+Encoding of the `key` and `value` objects is the same as in <a href="#put"><code>put</code></a>.
 
 --------------------------------------------------------
 <a name="del"></a>
@@ -399,8 +397,6 @@ Additionally, you can supply an options object as the first parameter to `create
 * `'values'` *(boolean, default: `true`)*: whether the `'data'` event should contain values. If set to `true` and `'keys'` set to `false` then `'data'` events will simply be values, rather than objects with a `'value'` property. Used internally by the `createValueStream()` method.
 
 * `'limit'` *(number, default: `-1`)*: limit the number of results collected by this stream. This number represents a *maximum* number of results and may not be reached if you get to the end of the data first. A value of `-1` means there is no limit. When `reverse=true` the highest keys will be returned instead of the lowest keys.
-
-* `'fillCache'` *(boolean, default: `false`)*: whether LevelDB's LRU-cache should be filled with data read.
 
 * `'keyEncoding'` / `'valueEncoding'` *(string)*: the encoding applied to each read piece of data.
 
