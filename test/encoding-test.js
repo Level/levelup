@@ -16,12 +16,12 @@ buster.testCase('Encoding', {
   'tearDown': common.commonTearDown,
 
   'test safe decode in get()': function (done) {
-    this.openTestDatabase({ createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' }, function (db) {
+    this.openTestDatabase({ createIfMissing: true, valueEncoding: 'utf8' }, function (db) {
       db.put('foo', 'this {} is [] not : json', function (err) {
         refute(err)
         db.close(function (err) {
           refute(err)
-          db = levelup(db.location, { createIfMissing: false, errorIfExists: false, valueEncoding: 'json' })
+          db = levelup(db.location, { createIfMissing: false, valueEncoding: 'json' })
           db.get('foo', function (err, value) {
             assert(err)
             assert.equals('EncodingError', err.name)
@@ -34,7 +34,7 @@ buster.testCase('Encoding', {
   },
 
   'test safe decode in readStream()': function (done) {
-    this.openTestDatabase({ createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' }, function (db) {
+    this.openTestDatabase({ createIfMissing: true, valueEncoding: 'utf8' }, function (db) {
       db.put('foo', 'this {} is [] not : json', function (err) {
         refute(err)
         db.close(function (err) {
@@ -43,7 +43,7 @@ buster.testCase('Encoding', {
           var dataSpy = this.spy()
           var errorSpy = this.spy()
 
-          db = levelup(db.location, { createIfMissing: false, errorIfExists: false, valueEncoding: 'json' })
+          db = levelup(db.location, { createIfMissing: false, valueEncoding: 'json' })
           db.readStream()
             .on('data', dataSpy)
             .on('error', errorSpy)

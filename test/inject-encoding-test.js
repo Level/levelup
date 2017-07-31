@@ -20,7 +20,6 @@ buster.testCase('JSON API', {
         console.log(location)
         levelup(location, {
           createIfMissing: true,
-          errorIfExists: true,
           valueEncoding: {
             encode: msgpack.encode,
             decode: msgpack.decode,

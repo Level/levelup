@@ -6,7 +6,7 @@
 var levelup = require('levelup')
 
 var createDb = function (location, callback) {
-  levelup(location, { createIfMissing: true, errorIfExists: true }, function (err, db) {
+  levelup(location, { createIfMissing: true }, function (err, db) {
     setTimeout(callback.bind(null, err, db), 50)
   })
 }

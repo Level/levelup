@@ -17,7 +17,7 @@ buster.testCase('Deferred open()', {
   'put() and get() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+    var db = levelup(location, { createIfMissing: true, valueEncoding: 'utf8' })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -55,7 +55,7 @@ buster.testCase('Deferred open()', {
   'batch() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+    var db = levelup(location, { createIfMissing: true, valueEncoding: 'utf8' })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -93,7 +93,7 @@ buster.testCase('Deferred open()', {
   'chained batch() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+    var db = levelup(location, { createIfMissing: true, valueEncoding: 'utf8' })
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -138,7 +138,7 @@ buster.testCase('Deferred open()', {
           refute(err)
           db.close(function (err) {
             refute(err, 'no error')
-            db = levelup(location, { createIfMissing: false, errorIfExists: false })
+            db = levelup(location, { createIfMissing: false })
             var rs = db.createReadStream()
             rs.on('data', this.dataSpy)
             rs.on('end', this.endSpy)
@@ -152,7 +152,7 @@ buster.testCase('Deferred open()', {
   'maxListeners warning': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+    var db = levelup(location, { createIfMissing: true, valueEncoding: 'utf8' })
     var stderrMock = this.mock(console)
 
     this.closeableDatabases.push(db)
