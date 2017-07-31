@@ -34,14 +34,10 @@ buster.testCase('Idempotent open & close', {
 
     this.cleanupDirs.push(location)
 
-    db = levelup(
-      location,
-      { createIfMissing: true },
-      function () {
-        assert.equals(n++, 0, 'callback should fire only once')
-        if (n && m) { close() }
-      }
-    )
+    db = levelup(location, function () {
+      assert.equals(n++, 0, 'callback should fire only once')
+      if (n && m) { close() }
+    })
 
     db.on('open', function () {
       assert.equals(m++, 0, 'callback should fire only once')

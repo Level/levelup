@@ -366,7 +366,7 @@ buster.testCase('ReadStream', {
   },
 
   'test hex encoding': function (done) {
-    var options = { createIfMissing: true, keyEncoding: 'utf8', valueEncoding: 'hex' }
+    var options = { keyEncoding: 'utf8', valueEncoding: 'hex' }
     var data = [
       { type: 'put', key: 'ab', value: 'abcdef0123456789' }
     ]
@@ -386,7 +386,7 @@ buster.testCase('ReadStream', {
   },
 
   'test json encoding': function (done) {
-    var options = { createIfMissing: true, keyEncoding: 'utf8', valueEncoding: 'json' }
+    var options = { keyEncoding: 'utf8', valueEncoding: 'json' }
     var data = [
       { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } },
       { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } },
@@ -413,7 +413,6 @@ buster.testCase('ReadStream', {
 
   'test injectable encoding': function (done) {
     var options = {
-      createIfMissing: true,
       keyEncoding: 'utf8',
       valueEncoding: {
         decode: msgpack.decode,
@@ -528,7 +527,7 @@ buster.testCase('ReadStream', {
         .on('close', delayed.delayed(callback, 0.05))
     }
     var open = function (reopen, location, callback) {
-      levelup(location, { createIfMissing: !reopen }, callback)
+      levelup(location, callback)
     }
     var write = function (db, callback) { db.batch(sourceData.slice(), callback) }
     var close = function (db, callback) { db.close(callback) }
@@ -576,7 +575,7 @@ buster.testCase('ReadStream', {
         refute(err)
         db.close(function (err) {
           refute(err)
-          var db2 = levelup(db.location, { createIfMissing: false, valueEncoding: 'utf8' })
+          var db2 = levelup(db.location, { valueEncoding: 'utf8' })
           execute(db2)
         })
       })
