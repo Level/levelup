@@ -17,7 +17,7 @@ buster.testCase('Init & open()', {
   'levelup()': function () {
     assert.isFunction(levelup)
     assert.equals(levelup.length, 3) // db, options & callback arguments
-    assert.exception(levelup, 'InitializationError') // no location
+    assert.exception(levelup, 'InitializationError') // no db
   },
 
   'default options': function (done) {
@@ -79,5 +79,20 @@ buster.testCase('Init & open()', {
       assert.isTrue(db.isOpen())
       done()
     })
+  },
+
+  'validate abstract-leveldown': function (done) {
+    var down = leveldown(common.nextLocation())
+    Object.defineProperty(down, 'status', {
+      get: function () { return null },
+      set: function () {}
+    })
+    try {
+      levelup(down)
+    } catch (err) {
+      assert.equals(err.message, '.status required, old abstract-leveldown')
+      return done()
+    }
+    throw new Error('did not throw')
   }
 })
