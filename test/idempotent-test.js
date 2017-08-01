@@ -4,6 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
 var common = require('./common')
 var assert = require('referee').assert
 var buster = require('bustermove')
@@ -34,7 +35,7 @@ buster.testCase('Idempotent open & close', {
 
     this.cleanupDirs.push(location)
 
-    db = levelup(location, function () {
+    db = levelup(leveldown(location), function () {
       assert.equals(n++, 0, 'callback should fire only once')
       if (n && m) { close() }
     })

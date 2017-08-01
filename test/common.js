@@ -15,6 +15,7 @@ var delayed = require('delayed').delayed
 var levelup = require('../lib/levelup.js')
 var errors = require('level-errors')
 var dbidx = 0
+var leveldown = require('leveldown')
 
 assert(levelup.errors === errors)
 
@@ -72,7 +73,7 @@ module.exports.openTestDatabase = function () {
   rimraf(location, function (err) {
     refute(err)
     this.cleanupDirs.push(location)
-    levelup(location, options, function (err, db) {
+    levelup(leveldown(location), options, function (err, db) {
       refute(err)
       if (!err) {
         this.closeableDatabases.push(db)

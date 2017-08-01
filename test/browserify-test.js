@@ -32,7 +32,7 @@ buster.testCase('Browserify Bundle', {
     var fin = after(2, done)
     node.stderr.pipe(bl(function (err, buf) {
       refute(err)
-      assert.match(buf.toString(), /LevelUPError: missing db factory, you need to set options\.db/)
+      assert.match(buf.toString(), /InitializationError: Must provide db/)
       fin()
     }))
     node.on('exit', function (code) {

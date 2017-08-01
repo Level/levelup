@@ -14,7 +14,7 @@ require('./common')
 buster.testCase('LevelDOWN Substitution', {
   'test substitution of LevelDOWN with MemDOWN': function (done) {
     var md = new MemDOWN('foo')
-    var db = levelup('/somewhere/not/writable/booya!', { db: function () { return md } })
+    var db = levelup(md)
     var entries = []
     var expected = [
       { key: 'a', value: 'A' },
