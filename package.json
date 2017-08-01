@@ -58,10 +58,6 @@
     "standard": "^10.0.2",
     "tape": "^4.7.0"
   },
-  "browser": {
-    "leveldown": false,
-    "leveldown/package": false
-  },
   "scripts": {
     "test": "standard && tape test/*-test.js | faucet"
   },
