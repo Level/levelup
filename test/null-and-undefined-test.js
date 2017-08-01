@@ -17,7 +17,7 @@ buster.testCase('null & undefined keys & values', {
 
   'null and undefined': {
     'setUp': function (done) {
-      levelup(this.cleanupDirs[0] = common.nextLocation(), { db: leveldown }, function (err, db) {
+      levelup(leveldown(this.cleanupDirs[0] = common.nextLocation()), function (err, db) {
         refute(err) // sanity
         this.closeableDatabases.push(db)
         assert.isTrue(db.isOpen())

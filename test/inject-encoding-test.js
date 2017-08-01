@@ -18,39 +18,31 @@ buster.testCase('JSON API', {
       this.runTest = function (testData, assertType, done) {
         var location = common.nextLocation()
         this.cleanupDirs.push(location)
-        levelup(location, {
+        levelup(leveldown(location), {
           valueEncoding: {
             encode: msgpack.encode,
             decode: msgpack.decode,
             buffer: true,
             type: 'msgpack'
-          },
-          db: leveldown
+          }
         }, function (err, db) {
           refute(err)
           if (err) return
 
           this.closeableDatabases.push(db)
 
-          async.parallel(
-                testData.map(function (d) { return db.put.bind(db, d.key, d.value) })
-              , function (err) {
+          var PUT = testData.map(function (d) { return db.put.bind(db, d.key, d.value) })
+          async.parallel(PUT, function (err) {
+            refute(err)
+            async.forEach(testData, function (d, callback) {
+              db.get(d.key, function (err, value) {
+                if (err) console.error(err.stack)
                 refute(err)
-
-                async.forEach(
-                      testData
-                    , function (d, callback) {
-                      db.get(d.key, function (err, value) {
-                        if (err) console.error(err.stack)
-                        refute(err)
-                        assert[assertType](d.value, value)
-                        callback()
-                      })
-                    }
-                    , done
-                  )
-              }
-            )
+                assert[assertType](d.value, value)
+                callback()
+              })
+            }, done)
+          })
         }.bind(this))
       }
       done()

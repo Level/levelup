@@ -4,9 +4,10 @@
  */
 
 var levelup = require('../../../')
+var leveldown = require('leveldown')
 
 var createDb = function (location, callback) {
-  levelup(location, function (err, db) {
+  levelup(leveldown(location), function (err, db) {
     setTimeout(callback.bind(null, err, db), 50)
   })
 }

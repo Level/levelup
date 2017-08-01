@@ -528,7 +528,7 @@ buster.testCase('ReadStream', {
         .on('close', delayed.delayed(callback, 0.05))
     }
     var open = function (reopen, location, callback) {
-      levelup(location, { db: leveldown }, callback)
+      levelup(leveldown(location), callback)
     }
     var write = function (db, callback) { db.batch(sourceData.slice(), callback) }
     var close = function (db, callback) { db.close(callback) }
@@ -557,10 +557,12 @@ buster.testCase('ReadStream', {
     setup(delayed.delayed(reopen, 0.05))
   },
 
-  // this is just a fancy way of testing levelup('/path').createReadStream()
+  // this is just a fancy way of testing levelup(db).createReadStream()
   // i.e. not waiting for 'open' to complete
   // the logic for this is inside the ReadStream constructor which waits for 'ready'
   'test ReadStream on pre-opened db': function (done) {
+    var location = common.nextLocation()
+    var db = levelup(leveldown(location))
     var execute = function (db) {
       // is in limbo
       refute(db.isOpen())
@@ -571,21 +573,17 @@ buster.testCase('ReadStream', {
       rs.on('end', this.endSpy)
       rs.on('close', this.verify.bind(this, rs, done))
     }.bind(this)
-    var setup = function (db) {
+    var setup = function () {
       db.batch(this.sourceData.slice(), function (err) {
         refute(err)
         db.close(function (err) {
           refute(err)
-          var db2 = levelup(db.location, {
-            valueEncoding: 'utf8',
-            db: leveldown
-          })
-          execute(db2)
+          execute(levelup(leveldown(location), { valueEncoding: 'utf8' }))
         })
       })
     }.bind(this)
 
-    this.openTestDatabase(setup)
+    setup()
   },
 
   'test readStream() with "limit"': function (done) {

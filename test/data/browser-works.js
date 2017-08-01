@@ -3,4 +3,4 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-require('../..')('some/path', { db: require('memdown') })
+require('../..')(require('memdown')('some/path'))
