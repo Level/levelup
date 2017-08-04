@@ -510,7 +510,7 @@ A large portion of the Windows support comes from code by [Krzysztof Kowalczyk](
 License &amp; copyright
 -------------------
 
-Copyright &copy; 2012-2016 **LevelUP** [contributors](https://github.com/level/community#contributors).
+Copyright &copy; 2012-2017 **LevelUP** [contributors](https://github.com/level/community#contributors).
 
 **LevelUP** is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included `LICENSE.md` file for more details.
 
