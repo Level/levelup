@@ -1,7 +1,7 @@
 The MIT License (MIT)
 =====================
 
-Copyright (c) 2012-2016 LevelUP contributors
+Copyright (c) 2012-2017 LevelUP contributors
 ---------------------------------------
 
 *LevelUP contributors listed at <https://github.com/level/levelup#contributors>*
