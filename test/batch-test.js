@@ -316,12 +316,6 @@ buster.testCase('batch()', {
         this.verify(function () {
           this.batch.clear()
         }.bind(this))
-      },
-
-      'test write()': function () {
-        this.verify(function () {
-          this.batch.write()
-        }.bind(this))
       }
     }
   }

@@ -15,22 +15,9 @@ buster.testCase('Argument checking', {
     this.openTestDatabase(function (db) {
       assert.exception(
         db.get.bind(db),
-        { name: 'ReadError', message: 'get() requires key and callback arguments' },
+        { name: 'ReadError', message: 'get() requires a key argument' },
         'no-arg get() throws'
       )
-
-      assert.exception(
-        db.get.bind(db, 'foo'),
-        { name: 'ReadError', message: 'get() requires key and callback arguments' },
-        'callback-less, 1-arg get() throws'
-      )
-
-      assert.exception(
-        db.get.bind(db, 'foo', {}),
-        { name: 'ReadError', message: 'get() requires key and callback arguments' },
-        'callback-less, 2-arg get() throws'
-      )
-
       done()
     })
   },
