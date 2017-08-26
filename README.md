@@ -463,6 +463,7 @@ var db = levelup(leveldown('./my-db'))
 db.put('foo', 'bar')
   .then(function () { return db.get('foo') })
   .then(function (value) { console.log(value) })
+  .catch(function (err) { console.error(err) })
 ```
 
 Or using `async/await`:
