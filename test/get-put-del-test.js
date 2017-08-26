@@ -44,12 +44,34 @@ buster.testCase('get() / put() / del()', {
       })
     },
 
+    'put() and get() promise interface': function (done) {
+      this.openTestDatabase(function (db) {
+        db.put('some key', 'some value stored in the database')
+          .then(function () {
+            return db.get('some key')
+          })
+          .then(function (value) {
+            assert.equals(value, 'some value stored in the database')
+            done()
+          })
+          .catch(done)
+      })
+    },
+
     'del() on empty database doesn\'t cause error': function (done) {
       this.openTestDatabase(function (db) {
         db.del('undefkey', function (err) {
           refute(err)
           done()
         })
+      })
+    },
+
+    'del() promise interface': function (done) {
+      this.openTestDatabase(function (db) {
+        db.del('undefkey')
+          .then(done)
+          .catch(done)
       })
     },
 
