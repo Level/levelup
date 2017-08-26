@@ -443,6 +443,8 @@ Check out the implementations that the community has already produced [here](htt
 Promise Support
 ---------------
 
+LevelUp ships with native `Promise` support out of the box.
+
 Each function taking a callback also can be used as a promise, if the callback is omitted. This applies for:
 
 - `db.get(key[, options])`
