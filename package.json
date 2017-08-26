@@ -51,6 +51,7 @@
     "leveldown": "^1.7.2",
     "memdown": "^1.2.4",
     "msgpack-js": "~0.3.0",
+    "prettier-standard": "^6.0.0",
     "referee": "~1.2.0",
     "rimraf": "^2.6.1",
     "safe-buffer": "^5.1.0",
@@ -59,7 +60,7 @@
     "tape": "^4.7.0"
   },
   "scripts": {
-    "test": "standard && tape test/*-test.js | faucet"
+    "test": "prettier-standard '**/*.js' && standard && tape test/*-test.js | faucet"
   },
   "license": "MIT"
 }
