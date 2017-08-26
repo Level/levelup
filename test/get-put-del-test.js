@@ -31,6 +31,20 @@ buster.testCase('get() / put() / del()', {
       })
     },
 
+    'get() on empty database raises promise error': function (done) {
+      this.openTestDatabase(function (db) {
+        db.get('undefkey').catch(function (err) {
+          assert.isInstanceOf(err, Error)
+          assert.isInstanceOf(err, errors.LevelUPError)
+          assert.isInstanceOf(err, errors.NotFoundError)
+          assert(err.notFound === true, 'err.notFound is `true`')
+          assert.equals(err.status, 404, 'err.status is 404')
+          assert.match(err, '[undefkey]')
+          done()
+        })
+      })
+    },
+
     'put() and get() simple string key/value pairs': function (done) {
       this.openTestDatabase(function (db) {
         db.put('some key', 'some value stored in the database', function (err) {
