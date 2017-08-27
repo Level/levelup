@@ -34,6 +34,26 @@ buster.testCase('batch()', {
     })
   },
 
+  'batch() with promise interface': function (done) {
+    this.openTestDatabase(function (db) {
+      db.batch([
+        { type: 'put', key: 'foo', value: 'afoovalue' },
+        { type: 'put', key: 'bar', value: 'abarvalue' },
+        { type: 'put', key: 'baz', value: 'abazvalue' }
+      ])
+        .then(function () {
+          async.forEach(['foo', 'bar', 'baz'], function (key, callback) {
+            db.get(key, function (err, value) {
+              refute(err)
+              assert.equals(value, 'a' + key + 'value')
+              callback()
+            })
+          }, done)
+        })
+        .catch(done)
+    })
+  },
+
   'batch() no type set defaults to put': function (done) {
     this.openTestDatabase(function (db) {
       db.batch([
@@ -121,6 +141,34 @@ buster.testCase('batch()', {
               })
             }, done)
           })
+      })
+    })
+  },
+
+  'batch() with chained promise interface': function (done) {
+    this.openTestDatabase(function (db) {
+      db.put('1', 'one', function (err) {
+        refute(err)
+
+        db.batch()
+          .put('one', '1')
+          .del('two')
+          .put('three', '3')
+          .clear()
+          .del('1')
+          .put('2', 'two')
+          .put('3', 'three')
+          .del('3')
+          .write()
+          .then(function () {
+            async.forEach([ 'one', 'three', '1', '2', '3' ], function (key, callback) {
+              db.get(key, function (err) {
+                if ([ 'one', 'three', '1', '3' ].indexOf(key) > -1) { assert(err) } else { refute(err) }
+                callback()
+              })
+            }, done)
+          })
+          .catch(done)
       })
     })
   },
@@ -315,12 +363,6 @@ buster.testCase('batch()', {
       'test clear()': function () {
         this.verify(function () {
           this.batch.clear()
-        }.bind(this))
-      },
-
-      'test write()': function () {
-        this.verify(function () {
-          this.batch.write()
         }.bind(this))
       }
     }

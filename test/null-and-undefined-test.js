@@ -27,57 +27,51 @@ buster.testCase('null & undefined keys & values', {
     },
 
     'get() with null key causes error': function (done) {
-      this.db.get(null, function (err, value) {
-        refute(value)
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
-      })
+      assert.exception(
+        this.db.get.bind(this.db, null),
+        { name: 'ReadError', message: 'get() requires a key argument' }
+      )
+      done()
     },
 
     'get() with undefined key causes error': function (done) {
-      this.db.get(undefined, function (err, value) {
-        refute(value)
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
-      })
+      assert.exception(
+        this.db.get.bind(this.db, undefined),
+        { name: 'ReadError', message: 'get() requires a key argument' }
+      )
+      done()
     },
 
     'del() with null key causes error': function (done) {
-      this.db.del(null, function (err, value) {
-        refute(value)
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
-      })
+      assert.exception(
+        this.db.del.bind(this.db, null),
+        { name: 'WriteError', message: 'del() requires a key argument' }
+      )
+      done()
     },
 
     'del() with undefined key causes error': function (done) {
-      this.db.del(undefined, function (err, value) {
-        refute(value)
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
-      })
+      assert.exception(
+        this.db.del.bind(this.db, undefined),
+        { name: 'WriteError', message: 'del() requires a key argument' }
+      )
+      done()
     },
 
     'put() with null key causes error': function (done) {
-      this.db.put(null, 'foo', function (err, value) {
-        refute(value)
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
-      })
+      assert.exception(
+        this.db.put.bind(this.db, null, 'foo'),
+        { name: 'WriteError', message: 'put() requires a key argument' }
+      )
+      done()
     },
 
     'put() with undefined key causes error': function (done) {
-      this.db.put(undefined, 'foo', function (err, value) {
-        refute(value)
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
-      })
+      assert.exception(
+        this.db.put.bind(this.db, undefined, 'foo'),
+        { name: 'WriteError', message: 'put() requires a key argument' }
+      )
+      done()
     },
 
     'put() with null value works': function (done) {

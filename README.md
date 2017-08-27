@@ -15,6 +15,7 @@ LevelUP
   * <a href="#platforms">Tested &amp; supported platforms</a>
   * <a href="#basic">Basic usage</a>
   * <a href="#api">API</a>
+  * <a href="#promises">Promise Support</a>
   * <a href="#events">Events</a>
   * <a href="#json">JSON data</a>
   * <a href="#custom_encodings">Custom encodings</a>
@@ -168,6 +169,8 @@ Additionally, each of the main interface methods accept an optional options obje
 
 However, it is possible to *reopen* a database after it has been closed with <a href="#close"><code>close()</code></a>, although this is not generally advised.
 
+If no callback is passed, a promise is returned.
+
 --------------------------------------------------------
 <a name="close"></a>
 ### db.close([callback])
@@ -175,12 +178,14 @@ However, it is possible to *reopen* a database after it has been closed with <a 
 
 You should always clean up your LevelUP instance by calling `close()` when you no longer need it to free up resources. A LevelDB store cannot be opened by multiple instances of LevelDB/LevelUP simultaneously.
 
+If no callback is passed, a promise is returned.
+
 --------------------------------------------------------
 <a name="put"></a>
 ### db.put(key, value[, options][, callback])
 <code>put()</code> is the primary method for inserting data into the store. Both the `key` and `value` can be arbitrary data objects.
 
-The callback argument is optional but if you don't provide one and an error occurs then expect the error to be thrown.
+If no callback is passed, a promise is returned.
 
 #### `options`
 
@@ -189,7 +194,7 @@ Encoding of the `key` and `value` objects will adhere to `'keyEncoding'` and `'v
 --------------------------------------------------------
 <a name="get"></a>
 ### db.get(key[, options][, callback])
-<code>get()</code> is the primary method for fetching data from the store. The `key` can be an arbitrary data object. If it doesn't exist in the store then the callback will receive an error as its first argument. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
+<code>get()</code> is the primary method for fetching data from the store. The `key` can be an arbitrary data object. If it doesn't exist in the store then the callback or promise will receive an error. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
 
 ```js
 db.get('foo', function (err, value) {
@@ -206,6 +211,8 @@ db.get('foo', function (err, value) {
 })
 ```
 
+If no callback is passed, a promise is returned.
+
 #### `options`
 
 Encoding of the `key` and `value` objects is the same as in <a href="#put"><code>put</code></a>.
@@ -220,6 +227,8 @@ db.del('foo', function (err) {
     // handle I/O or other error
 });
 ```
+
+If no callback is passed, a promise is returned.
 
 #### `options`
 
@@ -248,6 +257,8 @@ db.batch(ops, function (err) {
   console.log('Great success dear leader!')
 })
 ```
+
+If no callback is passed, a promise is returned.
 
 #### `options`
 
@@ -306,8 +317,9 @@ The number of queued operations on the current batch.
 
 <b><code>batch.write([callback])</code></b>
 
-Commit the queued operations for this batch. All operations not *cleared* will be written to the database atomically, that is, they will either all succeed or fail with no partial commits. The optional `callback` will be called when the operation has completed with an *error* argument if an error has occurred; if no `callback` is supplied and an error occurs then this method will `throw` a `WriteError`.
+Commit the queued operations for this batch. All operations not *cleared* will be written to the database atomically, that is, they will either all succeed or fail with no partial commits.
 
+If no callback is passed, a promise is returned.
 
 --------------------------------------------------------
 <a name="isOpen"></a>
@@ -424,6 +436,46 @@ db.createReadStream({ keys: false, values: true })
 The main driver for this was performance. While `db.createReadStream()` performs well under most use cases, `db.createWriteStream()` was highly dependent on the application keys and values. Thus we can't provide a standard implementation and encourage more `write-stream` implementations to be created to solve the broad spectrum of use cases.
 
 Check out the implementations that the community has already produced [here](https://github.com/level/levelup/wiki/Modules#write-streams).
+
+--------------------------------------------------------
+
+<a name="promises"></a>
+Promise Support
+---------------
+
+LevelUp ships with native `Promise` support out of the box.
+
+Each function taking a callback also can be used as a promise, if the callback is omitted. This applies for:
+
+- `db.get(key[, options])`
+- `db.put(key, value[, options])`
+- `db.del(key[, options])`
+- `db.batch(ops[, options])`
+- `db.batch().write()`
+
+The only exception is the `levelup` constructor itself, which if no callback is passed will lazily open the database backend in the background.
+
+Example:
+
+```js
+var db = levelup(leveldown('./my-db'))
+
+db.put('foo', 'bar')
+  .then(function () { return db.get('foo') })
+  .then(function (value) { console.log(value) })
+  .catch(function (err) { console.error(err) })
+```
+
+Or using `async/await`:
+
+```js
+const main = async () {
+  const db = levelup(leveldown('./my-db'))
+
+  await db.put('foo', 'bar')
+  console.log(await db.get('foo'))
+}
+```
 
 --------------------------------------------------------
 
