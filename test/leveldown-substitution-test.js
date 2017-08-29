@@ -8,13 +8,14 @@ var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
 var MemDOWN = require('memdown')
+var encDown = require('encoding-down')
 
 require('./common')
 
 buster.testCase('LevelDOWN Substitution', {
   'test substitution of LevelDOWN with MemDOWN': function (done) {
     var md = new MemDOWN('foo')
-    var db = levelup(md)
+    var db = levelup(encDown(md))
     var entries = []
     var expected = [
       { key: 'a', value: 'A' },
