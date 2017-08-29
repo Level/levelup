@@ -5,6 +5,7 @@
 
 var levelup = require('../lib/levelup.js')
 var leveldown = require('leveldown')
+var encDown = require('encoding-down')
 var async = require('async')
 var common = require('./common')
 var assert = require('referee').assert
@@ -18,7 +19,7 @@ buster.testCase('Deferred open()', {
   'put() and get() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(leveldown(location), { valueEncoding: 'utf8' })
+    var db = levelup(encDown(leveldown(location)))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -55,7 +56,7 @@ buster.testCase('Deferred open()', {
   'batch() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(leveldown(location), { valueEncoding: 'utf8' })
+    var db = levelup(encDown(leveldown(location)))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -92,7 +93,7 @@ buster.testCase('Deferred open()', {
   'chained batch() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(leveldown(location), { valueEncoding: 'utf8' })
+    var db = levelup(encDown(leveldown(location)))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -131,12 +132,12 @@ buster.testCase('Deferred open()', {
 
     'simple ReadStream': function (done) {
       var location = common.nextLocation()
-      var db = levelup(leveldown(location))
+      var db = levelup(encDown(leveldown(location)))
       db.batch(this.sourceData.slice(), function (err) {
         refute(err)
         db.close(function (err) {
           refute(err, 'no error')
-          var db = levelup(leveldown(location))
+          var db = levelup(encDown(leveldown(location)))
           this.closeableDatabases.push(db)
           var rs = db.createReadStream()
           rs.on('data', this.dataSpy)
@@ -150,7 +151,7 @@ buster.testCase('Deferred open()', {
   'maxListeners warning': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(leveldown(location), { valueEncoding: 'utf8' })
+    var db = levelup(encDown(leveldown(location)))
     var stderrMock = this.mock(console)
 
     this.closeableDatabases.push(db)

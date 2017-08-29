@@ -20,7 +20,7 @@ buster.testCase('Init & open()', {
     assert.exception(levelup, 'InitializationError') // no db
   },
 
-  'default options': function (done) {
+  'open and close statuses': function (done) {
     var location = common.nextLocation()
     levelup(leveldown(location), function (err, db) {
       refute(err, 'no error')
@@ -31,41 +31,14 @@ buster.testCase('Init & open()', {
         refute(err)
 
         assert.isFalse(db.isOpen())
+        assert.isTrue(db.isClosed())
 
         levelup(leveldown(location), function (err, db) {
           refute(err)
           assert.isObject(db)
-          assert.equals(db.options.keyEncoding, 'utf8')
-          assert.equals(db.options.valueEncoding, 'utf8')
           done()
         })
       })
-    }.bind(this))
-  },
-
-  'basic options': function (done) {
-    var location = common.nextLocation()
-    levelup(leveldown(location), { valueEncoding: 'binary' }, function (err, db) {
-      refute(err)
-      this.closeableDatabases.push(db)
-      this.cleanupDirs.push(location)
-      assert.isObject(db)
-      assert.equals(db.options.keyEncoding, 'utf8')
-      assert.equals(db.options.valueEncoding, 'binary')
-      done()
-    }.bind(this))
-  },
-
-  'options with encoding': function (done) {
-    var location = common.nextLocation()
-    levelup(leveldown(location), { keyEncoding: 'ascii', valueEncoding: 'json' }, function (err, db) {
-      refute(err)
-      this.closeableDatabases.push(db)
-      this.cleanupDirs.push(location)
-      assert.isObject(db)
-      assert.equals(db.options.keyEncoding, 'ascii')
-      assert.equals(db.options.valueEncoding, 'json')
-      done()
     }.bind(this))
   },
 

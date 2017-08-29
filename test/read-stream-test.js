@@ -5,6 +5,7 @@
 
 var levelup = require('../lib/levelup.js')
 var leveldown = require('leveldown')
+var encDown = require('encoding-down')
 var common = require('./common')
 var SlowStream = require('slow-stream')
 var delayed = require('delayed')
@@ -528,7 +529,7 @@ buster.testCase('ReadStream', {
         .on('close', delayed.delayed(callback, 0.05))
     }
     var open = function (reopen, location, callback) {
-      levelup(leveldown(location), callback)
+      levelup(encDown(leveldown(location)), callback)
     }
     var write = function (db, callback) { db.batch(sourceData.slice(), callback) }
     var close = function (db, callback) { db.close(callback) }
@@ -562,7 +563,7 @@ buster.testCase('ReadStream', {
   // the logic for this is inside the ReadStream constructor which waits for 'ready'
   'test ReadStream on pre-opened db': function (done) {
     var location = common.nextLocation()
-    var db = levelup(leveldown(location))
+    var db = levelup(encDown(leveldown(location)))
     var execute = function (db) {
       // is in limbo
       refute(db.isOpen())
@@ -578,7 +579,7 @@ buster.testCase('ReadStream', {
         refute(err)
         db.close(function (err) {
           refute(err)
-          execute(levelup(leveldown(location), { valueEncoding: 'utf8' }))
+          execute(levelup(encDown(leveldown(location))))
         })
       })
     }.bind(this)
