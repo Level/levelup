@@ -8,7 +8,7 @@ var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
 
-buster.testCase('maybeError called sync', {
+buster.testCase('maybeError() should be called async', {
   'setUp': common.commonSetUp,
   'tearDown': common.commonTearDown,
 
