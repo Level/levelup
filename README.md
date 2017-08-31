@@ -3,7 +3,7 @@ LevelUP
 
 <img alt="LevelDB Logo" height="100" src="http://leveldb.org/img/logo.svg">
 
-**Fast & simple storage - a Node.js-style LevelDB wrapper**
+> Fast and simple storage. A node.js wrapper for `abstract-leveldown` compliant backends.
 
 [![Build Status](https://secure.travis-ci.org/Level/levelup.svg?branch=master)](http://travis-ci.org/Level/levelup)
 [![dependencies](https://david-dm.org/Level/levelup.svg)](https://david-dm.org/level/levelup)
@@ -25,6 +25,8 @@ LevelUP
   * <a href="#support">Getting support</a>
   * <a href="#contributing">Contributing</a>
   * <a href="#license">Licence &amp; copyright</a>
+
+**If you are upgrading:** please see `CHANGELOG.md`.
 
 <a name="intro"></a>
 Introduction
