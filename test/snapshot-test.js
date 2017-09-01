@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2016 LevelUP contributors
+/* Copyright (c) 2012-2017 LevelUP contributors
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
@@ -48,8 +48,7 @@ buster.testCase('Snapshots', {
               value: Math.random()
             })
           }
-          // using sync:true here to ensure it's written fully to disk
-          db.batch(newData.slice(), { sync: true }, function (err) {
+          db.batch(newData.slice(), function (err) {
             refute(err)
             // we'll return here faster than it takes the readStream to complete
           })

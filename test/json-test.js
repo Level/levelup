@@ -1,9 +1,11 @@
-/* Copyright (c) 2012-2016 LevelUP contributors
+/* Copyright (c) 2012-2017 LevelUP contributors
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
+var encDown = require('encoding-down')
 var async = require('async')
 var common = require('./common')
 var assert = require('referee').assert
@@ -16,26 +18,29 @@ buster.testCase('JSON API', {
       this.runTest = function (testData, assertType, done) {
         var location = common.nextLocation()
         this.cleanupDirs.push(location)
-        levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: { encode: JSON.stringify, decode: JSON.parse } }, function (err, db) {
+        levelup(encDown(leveldown(location), {
+          valueEncoding: {
+            encode: JSON.stringify,
+            decode: JSON.parse
+          }
+        }), function (err, db) {
           refute(err)
           if (err) return
 
           this.closeableDatabases.push(db)
 
-          async.parallel(
-            testData.map(function (d) { return db.put.bind(db, d.key, d.value) }), function (err) {
-              refute(err)
-
-              async.forEach(testData, function (d, callback) {
-                db.get(d.key, function (err, value) {
-                  if (err) console.error(err.stack)
-                  refute(err)
-                  assert[assertType](d.value, value)
-                  callback()
-                })
-              }, done)
-            }
-          )
+          var PUT = testData.map(function (d) { return db.put.bind(db, d.key, d.value) })
+          async.parallel(PUT, function (err) {
+            refute(err)
+            async.forEach(testData, function (d, callback) {
+              db.get(d.key, function (err, value) {
+                if (err) console.error(err.stack)
+                refute(err)
+                assert[assertType](d.value, value)
+                callback()
+              })
+            }, done)
+          })
         }.bind(this))
       }
       done()

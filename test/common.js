@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2016 LevelUP contributors
+/* Copyright (c) 2012-2017 LevelUP contributors
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
@@ -15,6 +15,8 @@ var delayed = require('delayed').delayed
 var levelup = require('../lib/levelup.js')
 var errors = require('level-errors')
 var dbidx = 0
+var leveldown = require('leveldown')
+var encDown = require('encoding-down')
 
 assert(levelup.errors === errors)
 
@@ -65,14 +67,14 @@ module.exports.cleanup = function (callback) {
 }
 
 module.exports.openTestDatabase = function () {
-  var options = typeof arguments[0] === 'object' ? arguments[0] : { createIfMissing: true, errorIfExists: true }
+  var options = typeof arguments[0] === 'object' ? arguments[0] : {}
   var callback = typeof arguments[0] === 'function' ? arguments[0] : arguments[1]
   var location = typeof arguments[0] === 'string' ? arguments[0] : module.exports.nextLocation()
 
   rimraf(location, function (err) {
     refute(err)
     this.cleanupDirs.push(location)
-    levelup(location, options, function (err, db) {
+    levelup(encDown(leveldown(location), options), function (err, db) {
       refute(err)
       if (!err) {
         this.closeableDatabases.push(db)

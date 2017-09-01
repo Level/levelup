@@ -34,12 +34,9 @@
   ],
   "main": "lib/levelup.js",
   "dependencies": {
-    "deferred-leveldown": "~1.2.1",
-    "level-codec": "~7.0.0",
+    "deferred-leveldown": "~2.0.0",
     "level-errors": "~1.0.3",
-    "level-iterator-stream": "~1.3.0",
-    "prr": "~1.0.1",
-    "semver": "~5.4.1",
+    "level-iterator-stream": "~2.0.0",
     "xtend": "~4.0.0"
   },
   "devDependencies": {
@@ -49,8 +46,9 @@
     "browserify": "^14.3.0",
     "bustermove": "~1.0.0",
     "delayed": "~1.0.1",
+    "encoding-down": "^2.1.5",
     "faucet": "~0.0.1",
-    "leveldown": "^1.1.0",
+    "leveldown": "^1.7.2",
     "memdown": "^1.2.4",
     "msgpack-js": "~0.3.0",
     "referee": "~1.2.0",
@@ -59,12 +57,6 @@
     "slow-stream": "0.0.4",
     "standard": "^10.0.2",
     "tape": "^4.7.0"
-  },
-  "browser": {
-    "./lib/leveldown.js": false,
-    "leveldown": false,
-    "leveldown/package": false,
-    "semver": false
   },
   "scripts": {
     "test": "standard && tape test/*-test.js | faucet"

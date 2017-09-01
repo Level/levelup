@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2016 LevelUP contributors
+/* Copyright (c) 2012-2017 LevelUP contributors
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
@@ -32,7 +32,7 @@ buster.testCase('Browserify Bundle', {
     var fin = after(2, done)
     node.stderr.pipe(bl(function (err, buf) {
       refute(err)
-      assert.match(buf.toString(), /LevelUPError: missing db factory, you need to set options\.db/)
+      assert.match(buf.toString(), /InitializationError: Must provide db/)
       fin()
     }))
     node.on('exit', function (code) {

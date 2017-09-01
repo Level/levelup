@@ -1,9 +1,10 @@
-/* Copyright (c) 2012-2016 LevelUP contributors
+/* Copyright (c) 2012-2017 LevelUP contributors
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
 var common = require('./common')
 var assert = require('referee').assert
 var buster = require('bustermove')
@@ -34,14 +35,10 @@ buster.testCase('Idempotent open & close', {
 
     this.cleanupDirs.push(location)
 
-    db = levelup(
-      location,
-      { createIfMissing: true },
-      function () {
-        assert.equals(n++, 0, 'callback should fire only once')
-        if (n && m) { close() }
-      }
-    )
+    db = levelup(leveldown(location), function () {
+      assert.equals(n++, 0, 'callback should fire only once')
+      if (n && m) { close() }
+    })
 
     db.on('open', function () {
       assert.equals(m++, 0, 'callback should fire only once')

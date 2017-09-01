@@ -1,9 +1,10 @@
-/* Copyright (c) 2012-2016 LevelUP contributors
+/* Copyright (c) 2012-2017 LevelUP contributors
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
 var errors = levelup.errors
 var common = require('./common')
 var assert = require('referee').assert
@@ -16,7 +17,7 @@ buster.testCase('null & undefined keys & values', {
 
   'null and undefined': {
     'setUp': function (done) {
-      levelup(this.cleanupDirs[0] = common.nextLocation(), { createIfMissing: true }, function (err, db) {
+      levelup(leveldown(this.cleanupDirs[0] = common.nextLocation()), function (err, db) {
         refute(err) // sanity
         this.closeableDatabases.push(db)
         assert.isTrue(db.isOpen())
@@ -26,57 +27,51 @@ buster.testCase('null & undefined keys & values', {
     },
 
     'get() with null key causes error': function (done) {
-      this.db.get(null, function (err, value) {
-        refute(value)
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
-      })
+      assert.exception(
+        this.db.get.bind(this.db, null),
+        { name: 'ReadError', message: 'get() requires a key argument' }
+      )
+      done()
     },
 
     'get() with undefined key causes error': function (done) {
-      this.db.get(undefined, function (err, value) {
-        refute(value)
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
-      })
+      assert.exception(
+        this.db.get.bind(this.db, undefined),
+        { name: 'ReadError', message: 'get() requires a key argument' }
+      )
+      done()
     },
 
     'del() with null key causes error': function (done) {
-      this.db.del(null, function (err, value) {
-        refute(value)
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
-      })
+      assert.exception(
+        this.db.del.bind(this.db, null),
+        { name: 'WriteError', message: 'del() requires a key argument' }
+      )
+      done()
     },
 
     'del() with undefined key causes error': function (done) {
-      this.db.del(undefined, function (err, value) {
-        refute(value)
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
-      })
+      assert.exception(
+        this.db.del.bind(this.db, undefined),
+        { name: 'WriteError', message: 'del() requires a key argument' }
+      )
+      done()
     },
 
     'put() with null key causes error': function (done) {
-      this.db.put(null, 'foo', function (err, value) {
-        refute(value)
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
-      })
+      assert.exception(
+        this.db.put.bind(this.db, null, 'foo'),
+        { name: 'WriteError', message: 'put() requires a key argument' }
+      )
+      done()
     },
 
     'put() with undefined key causes error': function (done) {
-      this.db.put(undefined, 'foo', function (err, value) {
-        refute(value)
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
-      })
+      assert.exception(
+        this.db.put.bind(this.db, undefined, 'foo'),
+        { name: 'WriteError', message: 'put() requires a key argument' }
+      )
+      done()
     },
 
     'put() with null value works': function (done) {

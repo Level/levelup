@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2016 LevelUP contributors
+/* Copyright (c) 2012-2017 LevelUP contributors
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
@@ -15,22 +15,9 @@ buster.testCase('Argument checking', {
     this.openTestDatabase(function (db) {
       assert.exception(
         db.get.bind(db),
-        { name: 'ReadError', message: 'get() requires key and callback arguments' },
+        { name: 'ReadError', message: 'get() requires a key argument' },
         'no-arg get() throws'
       )
-
-      assert.exception(
-        db.get.bind(db, 'foo'),
-        { name: 'ReadError', message: 'get() requires key and callback arguments' },
-        'callback-less, 1-arg get() throws'
-      )
-
-      assert.exception(
-        db.get.bind(db, 'foo', {}),
-        { name: 'ReadError', message: 'get() requires key and callback arguments' },
-        'callback-less, 2-arg get() throws'
-      )
-
       done()
     })
   },

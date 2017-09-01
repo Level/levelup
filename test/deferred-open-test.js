@@ -1,9 +1,11 @@
-/* Copyright (c) 2012-2016 LevelUP contributors
+/* Copyright (c) 2012-2017 LevelUP contributors
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
+var encDown = require('encoding-down')
 var async = require('async')
 var common = require('./common')
 var assert = require('referee').assert
@@ -17,12 +19,11 @@ buster.testCase('Deferred open()', {
   'put() and get() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+    var db = levelup(encDown(leveldown(location)))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
     assert.isObject(db)
-    assert.equals(db.location, location)
 
     async.parallel([
       // 2) insert 3 values with put(), these should be deferred until the database is actually open
@@ -55,12 +56,11 @@ buster.testCase('Deferred open()', {
   'batch() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+    var db = levelup(encDown(leveldown(location)))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
     assert.isObject(db)
-    assert.equals(db.location, location)
 
     // 2) insert 3 values with batch(), these should be deferred until the database is actually open
     db.batch([
@@ -93,12 +93,11 @@ buster.testCase('Deferred open()', {
   'chained batch() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+    var db = levelup(encDown(leveldown(location)))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
     assert.isObject(db)
-    assert.equals(db.location, location)
 
     // 2) insert 3 values with batch(), these should be deferred until the database is actually open
     db.batch()
@@ -132,18 +131,18 @@ buster.testCase('Deferred open()', {
     'setUp': common.readStreamSetUp,
 
     'simple ReadStream': function (done) {
-      this.openTestDatabase(function (db) {
-        var location = db.location
-        db.batch(this.sourceData.slice(), function (err) {
-          refute(err)
-          db.close(function (err) {
-            refute(err, 'no error')
-            db = levelup(location, { createIfMissing: false, errorIfExists: false })
-            var rs = db.createReadStream()
-            rs.on('data', this.dataSpy)
-            rs.on('end', this.endSpy)
-            rs.on('close', this.verify.bind(this, rs, done))
-          }.bind(this))
+      var location = common.nextLocation()
+      var db = levelup(encDown(leveldown(location)))
+      db.batch(this.sourceData.slice(), function (err) {
+        refute(err)
+        db.close(function (err) {
+          refute(err, 'no error')
+          var db = levelup(encDown(leveldown(location)))
+          this.closeableDatabases.push(db)
+          var rs = db.createReadStream()
+          rs.on('data', this.dataSpy)
+          rs.on('end', this.endSpy)
+          rs.on('close', this.verify.bind(this, rs, done))
         }.bind(this))
       }.bind(this))
     }
@@ -152,7 +151,7 @@ buster.testCase('Deferred open()', {
   'maxListeners warning': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(location, { createIfMissing: true, errorIfExists: true, valueEncoding: 'utf8' })
+    var db = levelup(encDown(leveldown(location)))
     var stderrMock = this.mock(console)
 
     this.closeableDatabases.push(db)

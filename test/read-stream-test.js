@@ -1,9 +1,11 @@
-/* Copyright (c) 2012-2016 LevelUP contributors
+/* Copyright (c) 2012-2017 LevelUP contributors
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
 var levelup = require('../lib/levelup.js')
+var leveldown = require('leveldown')
+var encDown = require('encoding-down')
 var common = require('./common')
 var SlowStream = require('slow-stream')
 var delayed = require('delayed')
@@ -366,7 +368,7 @@ buster.testCase('ReadStream', {
   },
 
   'test hex encoding': function (done) {
-    var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'hex' }
+    var options = { keyEncoding: 'utf8', valueEncoding: 'hex' }
     var data = [
       { type: 'put', key: 'ab', value: 'abcdef0123456789' }
     ]
@@ -386,7 +388,7 @@ buster.testCase('ReadStream', {
   },
 
   'test json encoding': function (done) {
-    var options = { createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'json' }
+    var options = { keyEncoding: 'utf8', valueEncoding: 'json' }
     var data = [
       { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } },
       { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } },
@@ -413,8 +415,6 @@ buster.testCase('ReadStream', {
 
   'test injectable encoding': function (done) {
     var options = {
-      createIfMissing: true,
-      errorIfExists: true,
       keyEncoding: 'utf8',
       valueEncoding: {
         decode: msgpack.decode,
@@ -529,7 +529,7 @@ buster.testCase('ReadStream', {
         .on('close', delayed.delayed(callback, 0.05))
     }
     var open = function (reopen, location, callback) {
-      levelup(location, { createIfMissing: !reopen, errorIfExists: !reopen }, callback)
+      levelup(encDown(leveldown(location)), callback)
     }
     var write = function (db, callback) { db.batch(sourceData.slice(), callback) }
     var close = function (db, callback) { db.close(callback) }
@@ -558,10 +558,12 @@ buster.testCase('ReadStream', {
     setup(delayed.delayed(reopen, 0.05))
   },
 
-  // this is just a fancy way of testing levelup('/path').createReadStream()
+  // this is just a fancy way of testing levelup(db).createReadStream()
   // i.e. not waiting for 'open' to complete
   // the logic for this is inside the ReadStream constructor which waits for 'ready'
   'test ReadStream on pre-opened db': function (done) {
+    var location = common.nextLocation()
+    var db = levelup(encDown(leveldown(location)))
     var execute = function (db) {
       // is in limbo
       refute(db.isOpen())
@@ -572,18 +574,17 @@ buster.testCase('ReadStream', {
       rs.on('end', this.endSpy)
       rs.on('close', this.verify.bind(this, rs, done))
     }.bind(this)
-    var setup = function (db) {
+    var setup = function () {
       db.batch(this.sourceData.slice(), function (err) {
         refute(err)
         db.close(function (err) {
           refute(err)
-          var db2 = levelup(db.location, { createIfMissing: false, errorIfExists: false, valueEncoding: 'utf8' })
-          execute(db2)
+          execute(levelup(encDown(leveldown(location))))
         })
       })
     }.bind(this)
 
-    this.openTestDatabase(setup)
+    setup()
   },
 
   'test readStream() with "limit"': function (done) {

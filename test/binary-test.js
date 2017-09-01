@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2016 LevelUP contributors
+/* Copyright (c) 2012-2017 LevelUP contributors
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
@@ -41,7 +41,7 @@ buster.testCase('Binary API', {
   },
 
   'test put() and get() with binary value {valueEncoding:binary} on createDatabase()': function (done) {
-    this.openTestDatabase({ createIfMissing: true, errorIfExists: true, valueEncoding: 'binary' }, function (db) {
+    this.openTestDatabase({ valueEncoding: 'binary' }, function (db) {
       db.put('binarydata', this.testData, function (err) {
         refute(err)
         db.get('binarydata', function (err, value) {
@@ -81,7 +81,7 @@ buster.testCase('Binary API', {
   },
 
   'test put() and get() with binary value {keyEncoding:utf8,valueEncoding:binary} on createDatabase()': function (done) {
-    this.openTestDatabase({ createIfMissing: true, errorIfExists: true, keyEncoding: 'utf8', valueEncoding: 'binary' }, function (db) {
+    this.openTestDatabase({ keyEncoding: 'utf8', valueEncoding: 'binary' }, function (db) {
       db.put('binarydata', this.testData, function (err) {
         refute(err)
         db.get('binarydata', function (err, value) {

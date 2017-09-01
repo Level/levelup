@@ -1,12 +1,13 @@
-/* Copyright (c) 2012-2016 LevelUP contributors
+/* Copyright (c) 2012-2017 LevelUP contributors
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
 var levelup = require('../../../')
+var leveldown = require('leveldown')
 
 var createDb = function (location, callback) {
-  levelup(location, { createIfMissing: true, errorIfExists: true }, function (err, db) {
+  levelup(leveldown(location), function (err, db) {
     setTimeout(callback.bind(null, err, db), 50)
   })
 }

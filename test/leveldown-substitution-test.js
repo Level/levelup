@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2016 LevelUP contributors
+/* Copyright (c) 2012-2017 LevelUP contributors
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
@@ -8,13 +8,14 @@ var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
 var MemDOWN = require('memdown')
+var encDown = require('encoding-down')
 
 require('./common')
 
 buster.testCase('LevelDOWN Substitution', {
   'test substitution of LevelDOWN with MemDOWN': function (done) {
     var md = new MemDOWN('foo')
-    var db = levelup('/somewhere/not/writable/booya!', { db: function () { return md } })
+    var db = levelup(encDown(md))
     var entries = []
     var expected = [
       { key: 'a', value: 'A' },

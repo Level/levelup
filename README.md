@@ -3,12 +3,14 @@ LevelUP
 
 <img alt="LevelDB Logo" height="100" src="http://leveldb.org/img/logo.svg">
 
-**Fast & simple storage - a Node.js-style LevelDB wrapper**
+> Fast and simple storage. A node.js wrapper for `abstract-leveldown` compliant backends.
 
 [![Build Status](https://secure.travis-ci.org/Level/levelup.svg?branch=master)](http://travis-ci.org/Level/levelup)
 [![dependencies](https://david-dm.org/Level/levelup.svg)](https://david-dm.org/level/levelup)
+[![Greenkeeper badge](https://badges.greenkeeper.io/Level/levelup.svg)](https://greenkeeper.io/)
 
-[![NPM](https://nodei.co/npm/levelup.png?stars&downloads&downloadRank)](https://nodei.co/npm/levelup/) [![NPM](https://nodei.co/npm-dl/levelup.png?months=6&height=3)](https://nodei.co/npm/levelup/)
+[![NPM](https://nodei.co/npm/levelup.png?stars&downloads&downloadRank)](https://nodei.co/npm/levelup/)
+[![NPM](https://nodei.co/npm-dl/levelup.png?months=6&height=3)](https://nodei.co/npm/levelup/)
 
 
   * <a href="#intro">Introduction</a>
@@ -16,14 +18,15 @@ LevelUP
   * <a href="#platforms">Tested &amp; supported platforms</a>
   * <a href="#basic">Basic usage</a>
   * <a href="#api">API</a>
+  * <a href="#promises">Promise Support</a>
   * <a href="#events">Events</a>
-  * <a href="#json">JSON data</a>
-  * <a href="#custom_encodings">Custom encodings</a>
   * <a href="#extending">Extending LevelUP</a>
   * <a href="#multiproc">Multi-process access</a>
   * <a href="#support">Getting support</a>
   * <a href="#contributing">Contributing</a>
   * <a href="#license">Licence &amp; copyright</a>
+
+**If you are upgrading:** please see `CHANGELOG.md`.
 
 <a name="intro"></a>
 Introduction
@@ -31,7 +34,7 @@ Introduction
 
 **[LevelDB](https://github.com/google/leveldb)** is a simple key/value data store built by Google, inspired by BigTable. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, bi-directional iterators and simple compression using the very fast [Snappy](http://google.github.io/snappy/) algorithm.
 
-**LevelUP** aims to expose the features of LevelDB in a **Node.js-friendly way**. All standard `Buffer` encoding types are supported, as is a special JSON encoding. LevelDB's iterators are exposed as a Node.js-style **readable stream**.
+**LevelUP** aims to expose the features of LevelDB in a **Node.js-friendly way**. LevelDB's iterators are exposed as a Node.js-style **readable stream**.
 
 LevelDB stores entries **sorted lexicographically by keys**. This makes LevelUP's <a href="#createReadStream"><code>ReadStream</code></a> interface a very powerful query mechanism.
 
@@ -84,10 +87,10 @@ All operations are asynchronous although they don't necessarily require a callba
 
 ```js
 var levelup = require('levelup')
+var leveldown = require('leveldown')
 
-// 1) Create our database, supply location and options.
-//    This will create or open the underlying LevelDB store.
-var db = levelup('./mydb')
+// 1) Create our database
+var db = levelup(leveldown('./mydb'))
 
 // 2) put a key & value
 db.put('name', 'LevelUP', function (err) {
@@ -126,17 +129,17 @@ db.put('name', 'LevelUP', function (err) {
 
 --------------------------------------------------------
 <a name="ctor"></a>
-### levelup(location[, options[, callback]])
-### levelup(options[, callback ])
-### levelup(db[, callback ])
+### levelup(db[, options[, callback]])
 <code>levelup()</code> is the main entry point for creating a new LevelUP instance and opening the underlying store with LevelDB.
+
+`db` is an [`abstract-leveldown`](https://github.com/level/abstract-leveldown) compliant object.
 
 This function returns a new instance of LevelUP and will also initiate an <a href="#open"><code>open()</code></a> operation. Opening the database is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form: `function (err, db) {}` where the `db` is the LevelUP instance. If you don't provide a callback, any read & write operations are simply queued internally until the database is fully opened.
 
 This leads to two alternative ways of managing a new LevelUP instance:
 
 ```js
-levelup(location, options, function (err, db) {
+levelup(leveldown(location), options, function (err, db) {
   if (err) throw err
   db.get('foo', function (err, value) {
     if (err) return console.log('foo does not exist')
@@ -146,55 +149,14 @@ levelup(location, options, function (err, db) {
 
 // vs the equivalent:
 
-var db = levelup(location, options) // will throw if an error occurs
+var db = levelup(leveldown(location), options) // will throw if an error occurs
 db.get('foo', function (err, value) {
   if (err) return console.log('foo does not exist')
   console.log('got foo =', value)
 })
 ```
 
-The `location` argument is available as a read-only property on the returned LevelUP instance.
-
-The `levelup(options, callback)` form (with optional `callback`) is only available where you provide a valid `'db'` property on the options object (see below). Only for back-ends that don't require a `location` argument, such as [MemDOWN](https://github.com/level/memdown).
-
-For example:
-
-```js
-var levelup = require('levelup')
-var memdown = require('memdown')
-var db = levelup({ db: memdown })
-```
-
-The `levelup(db, callback)` form (with optional `callback`) is only available where `db` is a factory function, as would be provided as a `'db'` property on an `options` object (see below). Only for back-ends that don't require a `location` argument, such as [MemDOWN](https://github.com/level/memdown).
-
-For example:
-
-```js
-var levelup = require('levelup')
-var memdown = require('memdown')
-var db = levelup(memdown)
-```
-
-#### `options`
-
-`levelup()` takes an optional options object as its second argument; the following properties are accepted:
-
-* `'createIfMissing'` *(boolean, default: `true`)*: If `true`, will initialise an empty database at the specified location if one doesn't already exist. If `false` and a database doesn't exist you will receive an error in your `open()` callback and your database won't open.
-
-* `'errorIfExists'` *(boolean, default: `false`)*: If `true`, you will receive an error in your `open()` callback if the database exists at the specified location.
-
-* `'compression'` *(boolean, default: `true`)*: If `true`, all *compressible* data will be run through the Snappy compression algorithm before being stored. Snappy is very fast and shouldn't gain much speed by disabling so leave this on unless you have good reason to turn it off.
-
-* `'cacheSize'` *(number, default: `8 * 1024 * 1024`)*: The size (in bytes) of the in-memory [LRU](http://en.wikipedia.org/wiki/Cache_algorithms#Least_Recently_Used) cache with frequently used uncompressed block contents.
-
-* `'keyEncoding'` and `'valueEncoding'` *(string, default: `'utf8'`)*: The encoding of the keys and values passed through Node.js' `Buffer` implementation (see [Buffer#toString()](http://nodejs.org/docs/latest/api/buffer.html#buffer_buf_tostring_encoding_start_end)).
-  <p><code>'utf8'</code> is the default encoding for both keys and values so you can simply pass in strings and expect strings from your <code>get()</code> operations. You can also pass <code>Buffer</code> objects as keys and/or values and conversion will be performed.</p>
-  <p>Supported encodings are: hex, utf8, ascii, binary, base64, ucs2, utf16le.</p>
-  <p><code>'json'</code> encoding is also supported, see below.</p>
-
-* `'db'` *(object, default: LevelDOWN)*: LevelUP is backed by [LevelDOWN](https://github.com/level/leveldown/) to provide an interface to LevelDB. You can completely replace the use of LevelDOWN by providing a "factory" function that will return a LevelDOWN API compatible object given a `location` argument. For further information, see [MemDOWN](https://github.com/level/memdown), a fully LevelDOWN API compatible replacement that uses a memory store rather than LevelDB. Also see [Abstract LevelDOWN](http://github.com/level/abstract-leveldown), a partial implementation of the LevelDOWN API that can be used as a base prototype for a LevelDOWN substitute.
-
-Additionally, each of the main interface methods accept an optional options object that can be used to override `'keyEncoding'` and `'valueEncoding'`.
+`options` is passed on to the underlying store when it's opened.
 
 --------------------------------------------------------
 <a name="open"></a>
@@ -203,6 +165,8 @@ Additionally, each of the main interface methods accept an optional options obje
 
 However, it is possible to *reopen* a database after it has been closed with <a href="#close"><code>close()</code></a>, although this is not generally advised.
 
+If no callback is passed, a promise is returned.
+
 --------------------------------------------------------
 <a name="close"></a>
 ### db.close([callback])
@@ -210,23 +174,21 @@ However, it is possible to *reopen* a database after it has been closed with <a 
 
 You should always clean up your LevelUP instance by calling `close()` when you no longer need it to free up resources. A LevelDB store cannot be opened by multiple instances of LevelDB/LevelUP simultaneously.
 
+If no callback is passed, a promise is returned.
+
 --------------------------------------------------------
 <a name="put"></a>
 ### db.put(key, value[, options][, callback])
 <code>put()</code> is the primary method for inserting data into the store. Both the `key` and `value` can be arbitrary data objects.
 
-The callback argument is optional but if you don't provide one and an error occurs then expect the error to be thrown.
+`options` is passed on to the underlying store.
 
-#### `options`
-
-Encoding of the `key` and `value` objects will adhere to `'keyEncoding'` and `'valueEncoding'` options provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `put()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
-
-If you provide a `'sync'` value of `true` in your `options` object, LevelDB will perform a synchronous write of the data; although the operation will be asynchronous as far as Node is concerned. Normally, LevelDB passes the data to the operating system for writing and returns immediately, however a synchronous write will use `fsync()` or equivalent so your callback won't be triggered until the data is actually on disk. Synchronous filesystem writes are **significantly** slower than asynchronous writes but if you want to be absolutely sure that the data is flushed then you can use `'sync': true`.
+If no callback is passed, a promise is returned.
 
 --------------------------------------------------------
 <a name="get"></a>
 ### db.get(key[, options][, callback])
-<code>get()</code> is the primary method for fetching data from the store. The `key` can be an arbitrary data object. If it doesn't exist in the store then the callback will receive an error as its first argument. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
+<code>get()</code> is the primary method for fetching data from the store. The `key` can be an arbitrary data object. If it doesn't exist in the store then the callback or promise will receive an error. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
 
 ```js
 db.get('foo', function (err, value) {
@@ -243,11 +205,9 @@ db.get('foo', function (err, value) {
 })
 ```
 
-#### `options`
+`options` is passed on to the underlying store.
 
-Encoding of the `key` and `value` objects is the same as in <a href="#put"><code>put</code></a>. 
-
-LevelDB will by default fill the in-memory LRU Cache with data from a call to get. Disabling this is done by setting `fillCache` to `false`.
+If no callback is passed, a promise is returned.
 
 --------------------------------------------------------
 <a name="del"></a>
@@ -260,11 +220,9 @@ db.del('foo', function (err) {
 });
 ```
 
-#### `options`
+`options` is passed on to the underlying store.
 
-Encoding of the `key` object will adhere to the `'keyEncoding'` option provided to <a href="#ctor"><code>levelup()</code></a>, although you can provide alternative encoding settings in the options for `del()` (it's recommended that you stay consistent in your encoding of keys and values in a single store).
-
-A `'sync'` option can also be passed, see <a href="#put"><code>put()</code></a> for details on how this works.
+If no callback is passed, a promise is returned.
 
 --------------------------------------------------------
 <a name="batch"></a>
@@ -290,21 +248,9 @@ db.batch(ops, function (err) {
 })
 ```
 
-#### `options`
+`options` is passed on to the underlying store.
 
-See <a href="#put"><code>put()</code></a> for a discussion on the `options` object. You can overwrite default `'keyEncoding'` and `'valueEncoding'` and also specify the use of `sync` filesystem operations.
-
-In addition to encoding options for the whole batch you can also overwrite the encoding per operation, like:
-
-```js
-var ops = [{
-  type: 'put',
-  key: new Buffer([1, 2, 3]),
-  value: { some: 'json' },
-  keyEncoding: 'binary',
-  valueEncoding: 'json'
-}]
-```
+If no callback is passed, a promise is returned.
 
 --------------------------------------------------------
 <a name="batch_chained"></a>
@@ -321,19 +267,15 @@ db.batch()
   .write(function () { console.log('Done!') })
 ```
 
-<b><code>batch.put(key, value[, options])</code></b>
+<b><code>batch.put(key, value)</code></b>
 
 Queue a *put* operation on the current batch, not committed until a `write()` is called on the batch.
 
-The optional `options` argument can be used to override the default `'keyEncoding'` and/or `'valueEncoding'`.
-
 This method may `throw` a `WriteError` if there is a problem with your put (such as the `value` being `null` or `undefined`).
 
-<b><code>batch.del(key[, options])</code></b>
+<b><code>batch.del(key)</code></b>
 
 Queue a *del* operation on the current batch, not committed until a `write()` is called on the batch.
-
-The optional `options` argument can be used to override the default `'keyEncoding'`.
 
 This method may `throw` a `WriteError` if there is a problem with your delete.
 
@@ -347,8 +289,9 @@ The number of queued operations on the current batch.
 
 <b><code>batch.write([callback])</code></b>
 
-Commit the queued operations for this batch. All operations not *cleared* will be written to the database atomically, that is, they will either all succeed or fail with no partial commits. The optional `callback` will be called when the operation has completed with an *error* argument if an error has occurred; if no `callback` is supplied and an error occurs then this method will `throw` a `WriteError`.
+Commit the queued operations for this batch. All operations not *cleared* will be written to the database atomically, that is, they will either all succeed or fail with no partial commits.
 
+If no callback is passed, a promise is returned.
 
 --------------------------------------------------------
 <a name="isOpen"></a>
@@ -412,10 +355,6 @@ Additionally, you can supply an options object as the first parameter to `create
 
 * `'limit'` *(number, default: `-1`)*: limit the number of results collected by this stream. This number represents a *maximum* number of results and may not be reached if you get to the end of the data first. A value of `-1` means there is no limit. When `reverse=true` the highest keys will be returned instead of the lowest keys.
 
-* `'fillCache'` *(boolean, default: `false`)*: whether LevelDB's LRU-cache should be filled with data read.
-
-* `'keyEncoding'` / `'valueEncoding'` *(string)*: the encoding applied to each read piece of data.
-
 --------------------------------------------------------
 <a name="createKeyStream"></a>
 ### db.createKeyStream([options])
@@ -470,6 +409,46 @@ Check out the implementations that the community has already produced [here](htt
 
 --------------------------------------------------------
 
+<a name="promises"></a>
+Promise Support
+---------------
+
+LevelUp ships with native `Promise` support out of the box.
+
+Each function taking a callback also can be used as a promise, if the callback is omitted. This applies for:
+
+- `db.get(key[, options])`
+- `db.put(key, value[, options])`
+- `db.del(key[, options])`
+- `db.batch(ops[, options])`
+- `db.batch().write()`
+
+The only exception is the `levelup` constructor itself, which if no callback is passed will lazily open the database backend in the background.
+
+Example:
+
+```js
+var db = levelup(leveldown('./my-db'))
+
+db.put('foo', 'bar')
+  .then(function () { return db.get('foo') })
+  .then(function (value) { console.log(value) })
+  .catch(function (err) { console.error(err) })
+```
+
+Or using `async/await`:
+
+```js
+const main = async () {
+  const db = levelup(leveldown('./my-db'))
+
+  await db.put('foo', 'bar')
+  console.log(await db.get('foo'))
+}
+```
+
+--------------------------------------------------------
+
 <a name="events"></a>
 Events
 ------
@@ -485,27 +464,6 @@ LevelUP emits events when the callbacks to the corresponding methods are called.
 * `db.emit('closing')` emitted when the database is closing
 
 If you do not pass a callback to an async function, and there is an error, LevelUP will `emit('error', err)` instead.
-
-<a name="json"></a>
-JSON data
----------
-
-You specify `'json'` encoding for both keys and/or values, you can then supply JavaScript objects to LevelUP and receive them from all fetch operations, including ReadStreams. LevelUP will automatically *stringify* your objects and store them as *utf8* and parse the strings back into objects before passing them back to you.
-
-<a name="custom_encodings"></a>
-Custom encodings
-----------------
-
-A custom encoding may be provided by passing in an object as a value for `keyEncoding` or `valueEncoding` (wherever accepted), it must have the following properties:
-
-```js
-{
-  encode: function (val) { ... },
-  decode: function (val) { ... },
-  buffer: boolean, // encode returns a buffer and decode accepts a buffer
-  type: String  // name of this encoding type.
-}
-```
 
 <a name="extending"></a>
 Extending LevelUP
@@ -552,7 +510,7 @@ A large portion of the Windows support comes from code by [Krzysztof Kowalczyk](
 License &amp; copyright
 -------------------
 
-Copyright &copy; 2012-2016 **LevelUP** [contributors](https://github.com/level/community#contributors).
+Copyright &copy; 2012-2017 **LevelUP** [contributors](https://github.com/level/community#contributors).
 
 **LevelUP** is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included `LICENSE.md` file for more details.
 
