@@ -1,4 +1,113 @@
-### 1.0.0 @ May 14 2015
+## 2.0.0 @ Sep 2017
+
+### Summary
+
+There has been quite some work done for this new major version:
+
+1. Make `levelup` more generic by reducing focus on [`leveldown`](https://github.com/Level/leveldown) and [`LevelDB`](https://github.com/google/leveldb).
+2. Make `levelup` more generic by removing code related to encodings, which would allow *down implementations to manage encodings themselves.
+3. Use [`standard`](https://github.com/standard/standard) as linter to avoid bikeshedding.
+4. Add a native `Promise` API for promise using geeks. Many have been asking for this. Also `async/await` is awesome.
+
+Point `1` and `2` also helps out with reducing complexity.
+
+### Upgrade Guide
+
+Since `levelup` no longer tries to load `leveldown` as a default backend you have to provide a backend instance yourself.
+
+So if you previously did:
+
+```
+$ npm i levelup leveldown --save
+```
+
+And in your code you did something like:
+
+```js
+const levelup = require('levelup')
+const db = levelup('/path/to/db')
+```
+
+You should now do (for identical functionality):
+
+```js
+const levelup = require('levelup')
+const encode = require('encoding-down')
+const leveldown = require('leveldown')
+const db = levelup(encode(leveldown('/path/to/db')))
+```
+
+Note that we have moved out encodings into [`encoding-down`](https://github.com/level/encoding-down), which in itself is a *down that wraps a *down (meta ftw). It basically just sits in between `levelup` and the _actual_ backend to operate on encodings for keys and values. Default encoding is `'utf8'` like before.
+
+This obviously means everyone has to do a lot of code rewrite which is bad. So we aim to fix this by putting that code into [`level@2.0.0`](https://github.com/level/level), which already is used as a convenience package.
+
+Switching from `levelup` and `leveldown` combo to only using `level` you would do:
+
+```js
+const level = require('level')
+const db = level('/path/to/db')
+```
+
+Also, we aim to simplify using `memdown` in the same way by updating `level-mem`.
+
+For more advanced usage with custom versions of `abstract-leveldown`, the first parameter to `levelup()` should be an `abstract-leveldown` instead of passing a factory function via `options.db`.
+
+So if you previously did:
+
+```js
+const db = levelup('/path/to/db', {
+  db: function (location) {
+    return new CustomLevelDOWN(location)
+  }
+})
+```
+
+You should now do (for identical functionality):
+
+```js
+const encode = require('encoding-down')
+const db = levelup(encode(new CustomLevelDOWN('/path/to/db')))
+```
+
+### Commits
+
+* [[`1dda39eb17`](https://github.com/level/levelup/commit/1dda39eb17)] - rename test for maybeError() for clarity (Lars-Magnus Skog)
+* [[`77f027de38`](https://github.com/level/levelup/commit/77f027de38)] - ignore temporary dbs in test folder (Lars-Magnus Skog)
+* [[`e98fc7f14b`](https://github.com/level/levelup/commit/e98fc7f14b)] - fix failing tests (Lars-Magnus Skog)
+* [[`1f8d697eef`](https://github.com/level/levelup/commit/1f8d697eef)] - :white_check_mark: add failing tests for maybeError() and closed db (Lars-Magnus Skog)
+* [[`37b36ee45b`](https://github.com/level/levelup/commit/37b36ee45b)] - :truck: move lib/util.js to lib/promisify.js (Lars-Magnus Skog)
+* [[`bb3df7b587`](https://github.com/level/levelup/commit/bb3df7b587)] - :boom: remove dispatchError(), callback is always a function (Lars-Magnus Skog)
+* [[`1fac4fb11c`](https://github.com/level/levelup/commit/1fac4fb11c)] - :sparkles: callback is always a function (Lars-Magnus Skog)
+* [[`8a58d6a081`](https://github.com/level/levelup/commit/8a58d6a081)] - :memo: update docs (Lars-Magnus Skog)
+* [[`f2bf3d2cfa`](https://github.com/level/levelup/commit/f2bf3d2cfa)] - :boom: remove encodings (Lars-Magnus Skog)
+* [[`5379fc69fe`](https://github.com/level/levelup/commit/5379fc69fe)] - :boom: remove isDefined, not used (Lars-Magnus Skog)
+* [[`8b1693e1bb`](https://github.com/level/levelup/commit/8b1693e1bb)] - add promise error handling test (Julian Gruber)
+* [[`41bd624c74`](https://github.com/level/levelup/commit/41bd624c74)] - **docs**: add Promise#catch (Julian Gruber)
+* [[`651bb588c9`](https://github.com/level/levelup/commit/651bb588c9)] - clarify wording (Julian Gruber)
+* [[`08757ae2a2`](https://github.com/level/levelup/commit/08757ae2a2)] - **docs**: we use native promises (Julian Gruber)
+* [[`3993dbef00`](https://github.com/level/levelup/commit/3993dbef00)] - add promise docs (Julian Gruber)
+* [[`5ddbef9bca`](https://github.com/level/levelup/commit/5ddbef9bca)] - add promise tests (Julian Gruber)
+* [[`2d72c7bc6b`](https://github.com/level/levelup/commit/2d72c7bc6b)] - **travis**: drop node 0.12 & 4 (Julian Gruber)
+* [[`c74e608127`](https://github.com/level/levelup/commit/c74e608127)] - simplify util.promisify. thanks @vweever! (Julian Gruber)
+* [[`fed3a2d397`](https://github.com/level/levelup/commit/fed3a2d397)] - fix early returns (Julian Gruber)
+* [[`7488a6695a`](https://github.com/level/levelup/commit/7488a6695a)] - style (Julian Gruber)
+* [[`7790d928bb`](https://github.com/level/levelup/commit/7790d928bb)] - **promisify**: tests pass (Julian Gruber)
+* [[`96353b0dd7`](https://github.com/level/levelup/commit/96353b0dd7)] - add greenkeeper badge (Lars-Magnus Skog)
+* [[`6a9c97833d`](https://github.com/level/levelup/commit/6a9c97833d)] - :sparkles: 2016 -\> 2017 (Lars-Magnus Skog)
+* [[`f749ed706f`](https://github.com/level/levelup/commit/f749ed706f)] - remove browser field from package.json (Lars-Magnus Skog)
+* [[`45ec2e18de`](https://github.com/level/levelup/commit/45ec2e18de)] - :sparkles: options parameter in maybeError() not used (Lars-Magnus Skog)
+* [[`c7b95a0b4c`](https://github.com/level/levelup/commit/c7b95a0b4c)] - :sparkles: use AbstractLevelDOWN#status :white_check_mark: add test to validate old backends (Lars-Magnus Skog)
+* [[`34fe873e2c`](https://github.com/level/levelup/commit/34fe873e2c)] - db as first parameter :fire: remove location :arrow_up: update deferred-leveldown :memo: (Lars-Magnus Skog)
+* [[`cf9033cc86`](https://github.com/level/levelup/commit/cf9033cc86)] - remove optional leveldown (pass in as options.db) (Lars-Magnus Skog)
+* [[`feaeaea82b`](https://github.com/level/levelup/commit/feaeaea82b)] - :fire: remove .fillCache (Lars-Magnus Skog)
+* [[`aa4f905f99`](https://github.com/level/levelup/commit/aa4f905f99)] - :fire: remove .sync (Lars-Magnus Skog)
+* [[`e897ceae33`](https://github.com/level/levelup/commit/e897ceae33)] - :fire: remove .cacheSize (Lars-Magnus Skog)
+* [[`9c7ea3189e`](https://github.com/level/levelup/commit/9c7ea3189e)] - :fire: remove .compression (Lars-Magnus Skog)
+* [[`26e2e05b86`](https://github.com/level/levelup/commit/26e2e05b86)] - :fire: remove .createIfMissing (Lars-Magnus Skog)
+* [[`7c16fe9799`](https://github.com/level/levelup/commit/7c16fe9799)] - :fire: remove .errorIfExists (Lars-Magnus Skog)
+* [[`0b3792acdf`](https://github.com/level/levelup/commit/0b3792acdf)] - :fire: remove approximateSize(), destroy(), repair() and getProperty() (Lars-Magnus Skog)
+
+## 1.0.0 @ May 14 2015
 
  * [[`6ae45d83b6`](https://github.com/level/levelup/commit/6ae45d83b6)] - dispatchError() and readError() are voids (Lars-Magnus Skog)
  * [[`c8e22e70bd`](https://github.com/level/levelup/commit/c8e22e70bd)] - util.deprecate static functions (Julian Gruber)
@@ -49,7 +158,7 @@
  * [[`b9117a001b`](https://github.com/level/levelup/commit/b9117a001b)] - fixes the leveldb link (Manuel Ernst)
  * [[`3d541dbfc9`](https://github.com/level/levelup/commit/3d541dbfc9)] - remove 0.8 from travis (Rod Vagg)
 
-### 0.19.0 @ Aug 26 2014
+## 0.19.0 @ Aug 26 2014
 
  * [[`7f14058440`](https://github.com/level/levelup/commit/7f14058440)] - minor whitespace changes (Rod Vagg)
  * [[`9e6d335df2`](https://github.com/level/levelup/commit/9e6d335df2)] - fix license (Rod Vagg)
@@ -64,62 +173,62 @@
  * [[`45df8e668e`](https://github.com/level/levelup/commit/45df8e668e)] - clarify ltgt (Dominic Tarr)
  * [[`54eba03305`](https://github.com/level/levelup/commit/54eba03305)] - binary encoding in the browser (Calvin Metcalf)
 
-### 0.18.6 @ Jul 26 2014
+## 0.18.6 @ Jul 26 2014
 
  * (lots of stuff since 0.18.1 not recorded in changelog, ooops)
  * Extracted encoding / codec to separate modules (@dominictarr)
 
-### 0.18.1 @ Nov 20 2013
+## 0.18.1 @ Nov 20 2013
 
  * Make chained-batch obey global LevelUP object options (@mcavage)
 
-### 0.18.0 @ Nov 18 2013
+## 0.18.0 @ Nov 18 2013
 
  * Upgrade to LevelDOWN@0.10.0 (and bops@0.1.0 and readable-stream@1.1.9) (@rvagg)
 
-### 0.17.0 @ Oct 01 2013
+## 0.17.0 @ Oct 01 2013
 
  * Undo factory pattern, use plain prototypal object and expose full prototype (@rvagg)
  * Move Batch object to batch.js and expose (@rvagg)
  * Use new package, DeferredLevelDOWN to handle all deferred open logic (@rvagg)
  * Code cleanup, update deps (xtend) (@rvagg, @juliangruber)
 
-### 0.16.0 @ Sep 10 2013
+## 0.16.0 @ Sep 10 2013
 
  * Added `notFound` boolean property and `status=404` property to NotFoundError (@rvagg)
  * Upgrade to errno@0.1.0 which aliases .type and .name properties (@rvagg)
  * ReadStream gracefully handles multiple destroy() calls (@mcollina)
 
-### 0.15.0 @ Aug 25 2013
+## 0.15.0 @ Aug 25 2013
 
  * New ReadStream: upgrade to streams2, remove all state-management cruft, remove fstream support (@substack)
  * Update LevelDOWN dependency to ~0.8.0 with Iterator lt/lte/gt/gte support and NAN as a dependency
  * Added @substack as contributor
 
-### 0.14.0 @ Aug 19 2013
+## 0.14.0 @ Aug 19 2013
 
  * Encodings overhaul, allow custom encoders/decoders for `keyEncoding` or `valueEncoding` (@dominictarr)
 
-### 0.13.0 @ Aug 11 2013
+## 0.13.0 @ Aug 11 2013
 
  * Update LevelDOWN dependency version ~0.7.0 for Node 0.8->0.11 compatibility
 
-### 0.12.0 @ Jul 25 2013
+## 0.12.0 @ Jul 25 2013
 
   * Update LevelDOWN dependency version ~0.6.2
 
-### 0.11.0 @ Jul 17 2013
+## 0.11.0 @ Jul 17 2013
 
   * Remove all Function#bind calls for better browser compatibility (@juliangruber)
   * Switch from direct Buffer access to bops for better browser compatibility (@juliangruber)
   * WriteStream#end accepts `data` argument (@pgte)
   * Added @pgte as contributor
 
-### 0.10.0 @ Jun 14 2013
+## 0.10.0 @ Jun 14 2013
 
   * Upgrade to LevelDOWN@0.6.0 which upgrades to LevelDB@1.11.0, some important bugfixes: https://groups.google.com/forum/#!topic/leveldb/vS1JvmGlp4E
 
-### 0.9.0 @ 21 May 2013
+## 0.9.0 @ 21 May 2013
 
   * Use LevelDOWN@0.5.0, see https://github.com/level/leveldown/blob/master/CHANGELOG.md for details
   * Race-condition(ish) fixed in ReadStream--createReadStream() does not start immediately and therefore allowed put()s to happen before the stream starts (@dominictarr)
@@ -134,14 +243,14 @@
   * Better Browserify support (@rvagg, @juliangruber, @maxogden, etc.)
   * Deprecate secondary LevelDB-specific operations on LevelUP, prefer direct LevelDOWN access (approximateSize(), repair(), destroy(), getProperty()--new in LevelDOWN@0.5.0) (@rvagg)
 
-### 0.8.0 @ 17 Apr 2013
+## 0.8.0 @ 17 Apr 2013
 
   * More comprehensive argument checking, will now report back directly or throw if there is a problem rather than on nextTick (@rvagg)
   * Expose `.options` property on LevelUP instances. (@rvagg)
   * Further clarify 'encoding' -> 'valueEncoding' shift. db.options.valueEncoding is now authoritative even if user used 'encoding' on initialisation. (@rvagg)
   * 'level' package now published to npm that bundles LevelUP & LevelDOWN and exposes LevelUP directly; for planned shift to detaching LevelDOWN as a direct-dependency of LevelUP. (@rvagg)
 
-### 0.7.0 @ 8 Apr 2013
+## 0.7.0 @ 8 Apr 2013
 
   * Windows support in LevelDOWN @0.2.0 (@rvagg)
   * added 'db' option on constructor to replace LevelDOWN (@rvagg)
@@ -151,25 +260,25 @@
   * ReadStream empty start & end keys ignored rather than segfault (@kesla)
   * 'encoding' option now an alias for 'valueEncoding' only, 'keyEncoding' defaults to 'utf8' and must be changed explicitly (@rvagg)
 
-### 0.6.2 @ 4 Mar 2013
+## 0.6.2 @ 4 Mar 2013
 
   * use `xtend` package instead of internal util._extend @ralphtheninja
   * internal cleanup of `callback` argument detection @ralphtheninja
   * move deferred-open-operations into an internal `this._db` wrapper rather than make them call public .get()/.put() etc. for a second time @dominictarr
 
-### 0.6.1 @ 1 Mar 2013
+## 0.6.1 @ 1 Mar 2013
 
   * internal code cleanup & refactoring @ralphtheninja
   * fix multiple iterator.end() calls in ReadStreams throwing errors (destroy() called while read/next is in progress) #82 #83 #84 @rvagg
 
-### 0.6.0 @ Feb 25 2013
+## 0.6.0 @ Feb 25 2013
 
   * complete transition to LevelDOWN for the LevelDB binding. No native code left in LevelUP @rvagg
     - LevelDOWN now keeps its own ChangeLog at: https://github.com/level/leveldown/blob/master/CHANGELOG.md
     - LevelDB@1.9.0 and Snappy@1.1.0 are included in LevelDOWN@0.1.2
   * simplify callback signature (remove extra, undocumented properties from some callbacks) @rvagg / @dominictarr
 
-### 0.5.4 @ Feb 16 2013
+## 0.5.4 @ Feb 16 2013
 
   * explicit namespaces in C++ @rvagg
   * memory leak, Persistent<Function> callback not Dispose()d for `readStream()` @rvagg
@@ -180,22 +289,22 @@
   * remove `useBatch` in `copy()` @rvagg
   * move encodingOpts levelup.js -> util.js @ralphtheninja
 
-### 0.5.3-1 @ Feb 5 2013
+## 0.5.3-1 @ Feb 5 2013
 
   * non-shrinkwrapped release @rvagg
 
-### 0.5.3 @ Jan 28 2013
+## 0.5.3 @ Jan 28 2013
 
   * `location` exposed as read-only property on db object @rvagg
   * swap bufferstream dependency for simple-bufferstream, remove unnecessary compile @rvagg
   * comment out all sqlite3 benchmarks @ralphtheninja
   * put LevelUP() into closure @ralphtheninja
 
-### 0.5.2 @ Jan 24 2013
+## 0.5.2 @ Jan 24 2013
 
   * fix: incorrect scope in approximateSize function @sandfox
 
-### 0.5.1 @ Jan 10 2013
+## 0.5.1 @ Jan 10 2013
 
   * change `createIfMissing` option default to `true` @rvagg
   * use util._extend instead of local variant @rvagg
@@ -205,25 +314,25 @@
   * feature: Support setting size of LRU-cache @kesla
   * use util.inherits() from node core @ralphtheninja
 
-### 0.4.4 @ Jan 1 2013
+## 0.4.4 @ Jan 1 2013
 
   * set maxListeners to Infinity to prevent warnings when using deferred open @juliangruber
 
-### 0.4.3 @ Dec 31 2012
+## 0.4.3 @ Dec 31 2012
 
   * added @kesla to contributors list @rvagg
   * feature: added approximateSize() @kesla
 
-### 0.4.2 @ Dec 30 2012
+## 0.4.2 @ Dec 30 2012
 
   * process.nextTick->setImmediate with polyfill Node 0.9.5 compat @rvagg
   * added @ralphtheninja to contributors list @rvagg
 
-### 0.4.1 @ Dec 20 2013
+## 0.4.1 @ Dec 20 2013
 
   * remove `useBatch` option on `writeStream()` @rvagg
 
-### 0.4.0 @ Dec 18 2013
+## 0.4.0 @ Dec 18 2013
 
   * remove old, unused util functions @rvagg
   * speed up batch() & allow non-Strings to C++ @rvagg
@@ -241,6 +350,6 @@
   * LevelDB 1.7 @rvagg
   * added `compress` boolean on open() @rvagg
 
-### 0.3.x and prior
+## 0.3.x and prior
 
   * stuff
