@@ -13,26 +13,28 @@ Point `1` and `2` also helps out with reducing complexity.
 
 ### Upgrade Guide
 
-Since `levelup` no longer tries to load `leveldown` as a default backend you have to provide a backend instance yourself. So if you previously did
+Since `levelup` no longer tries to load `leveldown` as a default backend you have to provide a backend instance yourself.
+
+So if you previously did:
 
 ```
 $ npm i levelup leveldown --save
 ```
 
-and in your code you did something like:
+And in your code you did something like:
 
 ```js
 const levelup = require('levelup')
 const db = levelup('/path/to/db')
 ```
 
-you would now have to do (for identical functionality):
+You should now do (for identical functionality):
 
 ```js
 const levelup = require('levelup')
 const encode = require('encoding-down')
 const leveldown = require('leveldown')
-const db = levelup(encode(leveldown('/path/to/db'))
+const db = levelup(encode(leveldown('/path/to/db')))
 ```
 
 Note that we have moved out encodings into [`encoding-down`](https://github.com/level/encoding-down), which in itself is a *down that wraps a *down (meta ftw). It basically just sits in between `levelup` and the _actual_ backend to operate on encodings for keys and values. Default encoding is `'utf8'` like before.
@@ -47,6 +49,25 @@ const db = level('/path/to/db')
 ```
 
 Also, we aim to simplify using `memdown` in the same way by updating `level-mem`.
+
+For more advanced usage with custom versions of `abstract-leveldown`, the first parameter to `levelup()` should be an `abstract-leveldown` instead of passing a factory function via `options.db`.
+
+So if you previously did:
+
+```js
+const db = levelup('/path/to/db', {
+  db: function (location) {
+    return new CustomLevelDOWN(location)
+  }
+})
+```
+
+You should now do (for identical functionality):
+
+```js
+const encode = require('encoding-down')
+const db = levelup(encode(new CustomLevelDOWN('/path/to/db')))
+```
 
 ### Commits
 
