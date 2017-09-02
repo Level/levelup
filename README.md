@@ -5,6 +5,7 @@ LevelUP
 
 > Fast and simple storage. A node.js wrapper for `abstract-leveldown` compliant backends.
 
+![Node version](https://img.shields.io/badge/Node.js-%3E%3D6.0.0-orange.svg?style=flat-square)
 [![Build Status](https://secure.travis-ci.org/Level/levelup.svg?branch=master)](http://travis-ci.org/Level/levelup)
 [![dependencies](https://david-dm.org/Level/levelup.svg)](https://david-dm.org/level/levelup)
 [![Greenkeeper badge](https://badges.greenkeeper.io/Level/levelup.svg)](https://greenkeeper.io/)

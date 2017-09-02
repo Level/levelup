@@ -61,5 +61,8 @@
   "scripts": {
     "test": "standard && tape test/*-test.js | faucet"
   },
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "license": "MIT"
 }
