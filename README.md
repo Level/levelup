@@ -32,11 +32,11 @@ LevelUP
 Introduction
 ------------
 
-**[LevelDB](https://github.com/google/leveldb)** is a simple key/value data store built by Google, inspired by BigTable. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, bi-directional iterators and simple compression using the very fast [Snappy](http://google.github.io/snappy/) algorithm.
+**[LevelDB](https://github.com/google/leveldb)** is a simple key-value store built by Google, inspired by BigTable. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, bi-directional iterators and simple compression using the very fast [Snappy](http://google.github.io/snappy/) algorithm.
 
-**LevelUP** aims to expose the features of LevelDB in a **Node.js-friendly way**. LevelDB's iterators are exposed as a Node.js-style **readable stream**.
+**LevelUP** aims to expose the features of LevelDB in a **Node.js-friendly way**. LevelDB's iterators are exposed as [Readable Streams](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams).
 
-LevelDB stores entries **sorted lexicographically by keys**. This makes LevelUP's <a href="#createReadStream"><code>ReadStream</code></a> interface a very powerful query mechanism.
+LevelDB stores entries **sorted lexicographically by keys**. This makes LevelUP's [streaming interface](#createReadStream) a very powerful query mechanism.
 
 **LevelUP** is an **OPEN Open Source Project**, see the <a href="#contributing">Contributing</a> section to find out what this means.
 
@@ -161,7 +161,7 @@ db.get('foo', function (err, value) {
 --------------------------------------------------------
 <a name="open"></a>
 ### db.open([callback])
-<code>open()</code> opens the underlying LevelDB store. In general **you should never need to call this method directly** as it's automatically called by <a href="#ctor"><code>levelup()</code></a>.
+<code>open()</code> opens the underlying store. In general **you should never need to call this method directly** as it's automatically called by <a href="#ctor"><code>levelup()</code></a>.
 
 However, it is possible to *reopen* a database after it has been closed with <a href="#close"><code>close()</code></a>, although this is not generally advised.
 
@@ -170,7 +170,7 @@ If no callback is passed, a promise is returned.
 --------------------------------------------------------
 <a name="close"></a>
 ### db.close([callback])
-<code>close()</code> closes the underlying LevelDB store. The callback will receive any error encountered during closing as the first argument.
+<code>close()</code> closes the underlying store. The callback will receive any error encountered during closing as the first argument.
 
 You should always clean up your LevelUP instance by calling `close()` when you no longer need it to free up resources. A LevelDB store cannot be opened by multiple instances of LevelDB/LevelUP simultaneously.
 
@@ -319,7 +319,7 @@ A LevelUP object can be in one of the following states:
 <a name="createReadStream"></a>
 ### db.createReadStream([options])
 
-You can obtain a **ReadStream** of the full database by calling the `createReadStream()` method. The resulting stream is a complete Node.js-style [Readable Stream](http://nodejs.org/docs/latest/api/stream.html#stream_readable_stream) where `'data'` events emit objects with `'key'` and `'value'` pairs. You can also use the `gt`, `lt` and `limit` options to control the range of keys that are streamed.
+Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of key-value pairs. A pair is an object with `'key'` and `'value'` properties. By default it will stream all entries in the database from start to end. Use the options described below to control the range, direction and results.
 
 ```js
 db.createReadStream()
@@ -337,31 +337,33 @@ db.createReadStream()
   })
 ```
 
-The standard `pause()`, `resume()` and `destroy()` methods are implemented on the ReadStream, as is `pipe()` (see below). `'data'`, '`error'`, `'end'` and `'close'` events are emitted.
+You can supply an options object as the first parameter to `createReadStream()` with the following properties:
 
-Additionally, you can supply an options object as the first parameter to `createReadStream()` with the following options:
+* `'gt'` (greater than), `'gte'` (greater than or equal) define the lower bound of the range to be streamed. Only entries where the key is greater than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries streamed will be the same.
 
-* `'gt'` (greater than), `'gte'` (greater than or equal) define the lower bound of the range to be streamed. Only records where the key is greater than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the records streamed will be the same.
+* `'lt'` (less than), `'lte'` (less than or equal) define the higher bound of the range to be streamed. Only entries where the key is less than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries streamed will be the same.
 
-* `'lt'` (less than), `'lte'` (less than or equal) define the higher bound of the range to be streamed. Only key/value pairs where the key is less than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the records streamed will be the same.
+* `'reverse'` *(boolean, default: `false`)*: stream entries in reverse order. Beware that due to the way LevelDB works, a reverse seek will be slower than a forward seek.
 
-* `'start', 'end'` legacy ranges - instead use `'gte', 'lte'`
+* `'limit'` *(number, default: `-1`)*: limit the number of entries collected by this stream. This number represents a *maximum* number of entries and may not be reached if you get to the end of the range first. A value of `-1` means there is no limit. When `reverse=true` the entries with the highest keys will be returned instead of the lowest keys.
 
-* `'reverse'` *(boolean, default: `false`)*: a boolean, set true and the stream output will be reversed. Beware that due to the way LevelDB works, a reverse seek will be slower than a forward seek.
+* `'keys'` *(boolean, default: `true`)*: whether the results should contain keys. If set to `true` and `'values'` set to `false` then results will simply be keys, rather than objects with a `'key'` property. Used internally by the `createKeyStream()` method.
 
-* `'keys'` *(boolean, default: `true`)*: whether the `'data'` event should contain keys. If set to `true` and `'values'` set to `false` then `'data'` events will simply be keys, rather than objects with a `'key'` property. Used internally by the `createKeyStream()` method.
+* `'values'` *(boolean, default: `true`)*: whether the results should contain values. If set to `true` and `'keys'` set to `false` then results will simply be values, rather than objects with a `'value'` property. Used internally by the `createValueStream()` method.
 
-* `'values'` *(boolean, default: `true`)*: whether the `'data'` event should contain values. If set to `true` and `'keys'` set to `false` then `'data'` events will simply be values, rather than objects with a `'value'` property. Used internally by the `createValueStream()` method.
+Legacy options:
 
-* `'limit'` *(number, default: `-1`)*: limit the number of results collected by this stream. This number represents a *maximum* number of results and may not be reached if you get to the end of the data first. A value of `-1` means there is no limit. When `reverse=true` the highest keys will be returned instead of the lowest keys.
+* `'start'`: instead use `'gte'`
+
+* `'end'`: instead use `'lte'`
 
 --------------------------------------------------------
 <a name="createKeyStream"></a>
 ### db.createKeyStream([options])
 
-A **KeyStream** is a **ReadStream** where the `'data'` events are simply the keys from the database so it can be used like a traditional stream rather than an object stream.
+Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of keys rather than key-value pairs. Use the same options as described for [`createReadStream`](#createReadStream) to control the range and direction.
 
-You can obtain a KeyStream either by calling the `createKeyStream()` method on a LevelUP object or by passing an options object to `createReadStream()` with `keys` set to `true` and `values` set to `false`.
+You can also obtain this stream by passing an options object to `createReadStream()` with `keys` set to `true` and `values` set to `false`. The result is equivalent; both streams operate in [object mode](https://nodejs.org/docs/latest/api/stream.html#stream_object_mode).
 
 ```js
 db.createKeyStream()
@@ -380,9 +382,9 @@ db.createReadStream({ keys: true, values: false })
 <a name="createValueStream"></a>
 ### db.createValueStream([options])
 
-A **ValueStream** is a **ReadStream** where the `'data'` events are simply the values from the database so it can be used like a traditional stream rather than an object stream.
+Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of values rather than key-value pairs. Use the same options as described for [`createReadStream`](#createReadStream) to control the range and direction.
 
-You can obtain a ValueStream either by calling the `createValueStream()` method on a LevelUP object or by passing an options object to `createReadStream()` with `values` set to `true` and `keys` set to `false`.
+You can also obtain this stream by passing an options object to `createReadStream()` with `values` set to `true` and `keys` set to `false`. The result is equivalent; both streams operate in [object mode](https://nodejs.org/docs/latest/api/stream.html#stream_object_mode).
 
 ```js
 db.createValueStream()
@@ -479,7 +481,7 @@ Multi-process access
 
 LevelDB is thread-safe but is **not** suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process. Node.js clusters are made up of multiple processes so a LevelUP instance cannot be shared between them either.
 
-See the <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for some LevelUP extensions, including [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single data store to be shared across processes.
+See the <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for some LevelUP extensions, including [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
 
 <a name="support"></a>
 Getting support
