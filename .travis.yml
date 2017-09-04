@@ -17,5 +17,4 @@ before_install:
 
 node_js:
   - '8'
-  - '7'
   - '6'
