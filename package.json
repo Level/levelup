@@ -64,7 +64,8 @@
     "typescript": "^2.5.2"
   },
   "scripts": {
-    "test": "standard && tape test/*-test.js | faucet"
+    "test": "standard && tape test/*-test.js | faucet && npm run ts-test",
+    "ts-test": "node test/typescript"
   },
   "engines": {
     "node": ">=6.0.0"
