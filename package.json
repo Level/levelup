@@ -16,7 +16,8 @@
     "Matteo Collina <matteo.collina@gmail.com> (https://github.com/mcollina)",
     "Pedro Teixeira <pedro.teixeira@gmail.com> (https://github.com/pgte)",
     "James Halliday <mail@substack.net> (https://github.com/substack)",
-    "Jarrett Cruger <jcrugzz@gmail.com> (https://github.com/jcrugzz)"
+    "Jarrett Cruger <jcrugzz@gmail.com> (https://github.com/jcrugzz)",
+    "Meirion Hughes <crakinshot@yahoo.com> (https://github.com/meirionhughes)"
   ],
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "json"
   ],
   "main": "lib/levelup.js",
+  "typings": "lib/levelup.d.ts",
   "dependencies": {
     "deferred-leveldown": "~2.0.0",
     "level-errors": "~1.1.0",
@@ -40,6 +42,7 @@
     "xtend": "~4.0.0"
   },
   "devDependencies": {
+    "@types/node": "^8.0.26",
     "after": "^0.8.2",
     "async": "^2.5.0",
     "bl": "^1.2.1",
@@ -56,10 +59,13 @@
     "safe-buffer": "^5.1.0",
     "slow-stream": "0.0.4",
     "standard": "^10.0.2",
-    "tape": "^4.7.0"
+    "tape": "^4.7.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.2"
   },
   "scripts": {
-    "test": "standard && tape test/*-test.js | faucet"
+    "test": "standard && tape test/*-test.js | faucet && npm run ts-test",
+    "ts-test": "node test/typescript"
   },
   "engines": {
     "node": ">=6.0.0"

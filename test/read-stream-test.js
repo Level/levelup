@@ -44,7 +44,7 @@ buster.testCase('ReadStream', {
     var pauseVerify = function () {
       assert.equals(calls, 5, 'stream should still be paused')
       rs.resume()
-      pauseVerify.called = true
+      pauseVerify['called'] = true
     }
     var onData = function () {
       if (++calls === 5) {
@@ -54,7 +54,7 @@ buster.testCase('ReadStream', {
     }
     var verify = function () {
       assert.equals(calls, this.sourceData.length, 'onData was used in test')
-      assert(pauseVerify.called, 'pauseVerify was used in test')
+      assert(pauseVerify['called'], 'pauseVerify was used in test')
       this.verify(rs, done)
     }.bind(this)
 
