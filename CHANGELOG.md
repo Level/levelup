@@ -8,6 +8,7 @@ There has been quite some work done for this new major version:
 2. Make `levelup` more generic by removing code related to encodings, which would allow *down implementations to manage encodings themselves.
 3. Use [`standard`](https://github.com/standard/standard) as linter to avoid bikeshedding.
 4. Add a native `Promise` API for promise using geeks. Many have been asking for this. Also `async/await` is awesome.
+5. Add `typescript` definitions and run the tests through `ts-node`.
 
 Point `1` and `2` also helps out with reducing complexity.
 
@@ -71,6 +72,17 @@ const db = levelup(encode(new CustomLevelDOWN('/path/to/db')))
 
 ### Commits
 
+* [[`1a835c4b28`](https://github.com/level/levelup/commit/1a835c4b28)] - now ts-test works with faucet (Lars-Magnus Skog)
+* [[`4232e3f522`](https://github.com/level/levelup/commit/4232e3f522)] - optimize typescript tests (Vincent Weevers)
+* [[`1f6522aa59`](https://github.com/level/levelup/commit/1f6522aa59)] - use path.join (Lars-Magnus Skog)
+* [[`5fab29b531`](https://github.com/level/levelup/commit/5fab29b531)] - leave out buster code from ts-test, rename to typescript.js, remove faucet :truck: (Lars-Magnus Skog)
+* [[`826e9fbd26`](https://github.com/level/levelup/commit/826e9fbd26)] - **feat**: add typescript definitions and testing (Meirion Hughes)
+* [[`67bdcb7314`](https://github.com/level/levelup/commit/67bdcb7314)] - fix(package): update level-errors to version 1.1.0 (greenkeeper[bot])
+* [[`78a9ac7615`](https://github.com/level/levelup/commit/78a9ac7615)] - remove node 7 from travis, no longer active (Lars-Magnus Skog)
+* [[`72e98027ce`](https://github.com/level/levelup/commit/72e98027ce)] - **readme**: tweak node badge (Lars-Magnus Skog)
+* [[`a021143652`](https://github.com/level/levelup/commit/a021143652)] - **readme**: add node version badge (Lars-Magnus Skog)
+* [[`4ec5572f94`](https://github.com/level/levelup/commit/4ec5572f94)] - **readme**: homogenize (first pass) (Vincent Weevers)
+* [[`e152d83ce6`](https://github.com/level/levelup/commit/e152d83ce6)] - 2.0.0-rc1 (Lars-Magnus Skog)
 * [[`1dda39eb17`](https://github.com/level/levelup/commit/1dda39eb17)] - rename test for maybeError() for clarity (Lars-Magnus Skog)
 * [[`77f027de38`](https://github.com/level/levelup/commit/77f027de38)] - ignore temporary dbs in test folder (Lars-Magnus Skog)
 * [[`e98fc7f14b`](https://github.com/level/levelup/commit/e98fc7f14b)] - fix failing tests (Lars-Magnus Skog)
