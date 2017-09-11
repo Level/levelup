@@ -14,7 +14,7 @@ function test (fun) {
   return function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(leveldown(location), { valueEncoding: 'utf8' })
+    var db = levelup(leveldown(location))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
