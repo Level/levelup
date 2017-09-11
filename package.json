@@ -65,7 +65,7 @@
   },
   "scripts": {
     "test": "standard && node test | faucet && npm run ts-test",
-    "ts-test": "ts-node --no-cache test"
+    "ts-test": "ts-node --no-cache test | faucet"
   },
   "engines": {
     "node": ">=6.0.0"
