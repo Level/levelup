@@ -19,10 +19,7 @@ buster.testCase('JSON API', {
         var location = common.nextLocation()
         this.cleanupDirs.push(location)
         levelup(encDown(leveldown(location), {
-          valueEncoding: {
-            encode: JSON.stringify,
-            decode: JSON.parse
-          }
+          valueEncoding: 'json'
         }), function (err, db) {
           refute(err)
           if (err) return
