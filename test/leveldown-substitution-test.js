@@ -7,14 +7,14 @@ var levelup = require('../lib/levelup.js')
 var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
-var MemDOWN = require('memdown')
+var memdown = require('memdown')
 var encDown = require('encoding-down')
 
 require('./common')
 
 buster.testCase('LevelDOWN Substitution', {
   'test substitution of LevelDOWN with MemDOWN': function (done) {
-    var md = new MemDOWN('foo')
+    var md = memdown('foo')
     var db = levelup(encDown(md))
     var entries = []
     var expected = [
