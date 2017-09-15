@@ -23,6 +23,7 @@ LevelUP
   * <a href="#events">Events</a>
   * <a href="#extending">Extending LevelUP</a>
   * <a href="#multiproc">Multi-process access</a>
+  * <a href="#typings">Typescript </a>
   * <a href="#support">Getting support</a>
   * <a href="#contributing">Contributing</a>
   * <a href="#license">Licence &amp; copyright</a>
@@ -484,6 +485,14 @@ LevelDB is thread-safe but is **not** suitable for accessing with multiple proce
 
 See the <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for some LevelUP extensions, including [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
 
+<a name="typings"></a>
+Typescript 
+----------
+
+LevelUP comes with typescript definitions that can automatically infer options based on a typed `abstract-leveldown` implementation. 
+
+See the <a href="https://github.com/Level/levelup/wiki/Typings"><b>wiki</b></a> for  more information. 
+
 <a name="support"></a>
 Getting support
 ---------------
@@ -507,7 +516,6 @@ See the [contribution guide](https://github.com/Level/community/blob/master/CONT
 ### Windows
 
 A large portion of the Windows support comes from code by [Krzysztof Kowalczyk](http://blog.kowalczyk.info/) [@kjk](https://twitter.com/kjk), see his Windows LevelDB port [here](http://code.google.com/r/kkowalczyk-leveldb/). If you're using LevelUP on Windows, you should give him your thanks!
-
 
 <a name="license"></a>
 License &amp; copyright
