@@ -33,8 +33,7 @@
     "storage",
     "json"
   ],
-  "main": "lib/levelup.js",
-  "typings": "lib/levelup.d.ts",
+  "main": "lib/levelup.js",  
   "dependencies": {
     "deferred-leveldown": "~2.0.0",
     "level-errors": "~1.1.0",
@@ -42,7 +41,6 @@
     "xtend": "~4.0.0"
   },
   "devDependencies": {
-    "@types/node": "^8.0.26",
     "abstract-leveldown": "^2.7.0",
     "after": "^0.8.2",
     "async": "^2.5.0",
@@ -60,13 +58,10 @@
     "safe-buffer": "^5.1.0",
     "slow-stream": "0.0.4",
     "standard": "^10.0.2",
-    "tape": "^4.7.0",
-    "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "tape": "^4.7.0"
   },
   "scripts": {
-    "test": "standard && node test | faucet && npm run ts-test",
-    "ts-test": "ts-node --no-cache test | faucet"
+    "test": "standard && node test | faucet" 
   },
   "engines": {
     "node": ">=6.0.0"
