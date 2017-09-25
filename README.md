@@ -19,6 +19,7 @@
   * <a href="#events">Events</a>
   * <a href="#extending">Extending LevelUP</a>
   * <a href="#multiproc">Multi-process access</a>
+  * <a href="#typings">TypeScript </a>
   * <a href="#support">Getting support</a>
   * <a href="#contributing">Contributing</a>
   * <a href="#license">Licence &amp; copyright</a>
@@ -474,6 +475,15 @@ Multi-process access
 Stores like LevelDB are thread-safe but they are **not** suitable for accessing with multiple processes. You should only ever have a store open from a single Node.js process. Node.js clusters are made up of multiple processes so a LevelUP instance cannot be shared between them either.
 
 See the <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for some LevelUP extensions, including [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
+
+<a name="typings"></a>
+TypeScript 
+----------
+
+LevelUP comes with TypeScript definitions that can automatically infer options from a typed `abstract-leveldown` implementation. 
+
+See the <a href="https://github.com/Level/levelup/wiki/Typings"><b>wiki</b></a> for  more information. 
+
 
 <a name="support"></a>
 Getting support

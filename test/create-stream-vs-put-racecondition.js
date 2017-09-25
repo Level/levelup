@@ -3,7 +3,7 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
+var levelup = require('../lib/levelup.js').default
 var common = require('./common')
 var assert = require('referee').assert
 var buster = require('bustermove')

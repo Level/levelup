@@ -3,9 +3,9 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
-var leveldown = require('leveldown')
-var encDown = require('encoding-down')
+var levelup = require('../lib/levelup.js').default
+var leveldown = require('leveldown').default
+var encDown = require('encoding-down').default
 var async = require('async')
 var common = require('./common')
 var assert = require('referee').assert

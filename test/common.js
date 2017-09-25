@@ -12,11 +12,12 @@ var rimraf = require('rimraf')
 var fs = require('fs')
 var path = require('path')
 var delayed = require('delayed').delayed
-var levelup = require('../lib/levelup.js')
+
+var levelup = require('../lib/levelup.js').default
 var errors = require('level-errors')
 var dbidx = 0
-var leveldown = require('leveldown')
-var encDown = require('encoding-down')
+var leveldown = require('leveldown').default
+var encDown = require('encoding-down').default
 
 assert(levelup.errors === errors)
 
