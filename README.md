@@ -454,32 +454,22 @@ const main = async () {
 --------------------------------------------------------
 
 <a name="import"></a>
-ES6 Import and Typing(for TypeScript)
--------------------------------------
+ES6 Import
+----------
 
 We have two ways to import(require) the levelup module in the code.
 
-### 1. The old fashioned `require`
+### 1. By using `require`
 
 ```js
 var levelup = require('levelup')
 ```
 
-### 2. The new ES6 `import`
+### 2. By using ES6 `import`
 
 ```js
 import levelup from 'levelup'
 ```
-
-## TypeScript
-
-LevelUp ships with TypeScript `type definitions` support out-of-box. So we can use `import` with Type Defination by default.
-
-The benefits will be:
-1. [Static Type Checking](http://2ality.com/2014/10/typed-javascript.html)
-1. [IDE IntelliSense](https://code.visualstudio.com/docs/editor/intellisense)
-
-Recommended IDE: [Visual Studio Code](https://code.visualstudio.com/)
 
 --------------------------------------------------------
 
