@@ -20,6 +20,7 @@ LevelUP
   * <a href="#basic">Basic usage</a>
   * <a href="#api">API</a>
   * <a href="#promises">Promise Support</a>
+  * <a href="#import">Import with Type Definitions</a>
   * <a href="#events">Events</a>
   * <a href="#extending">Extending LevelUP</a>
   * <a href="#multiproc">Multi-process access</a>
@@ -448,6 +449,26 @@ const main = async () {
   await db.put('foo', 'bar')
   console.log(await db.get('foo'))
 }
+```
+
+--------------------------------------------------------
+
+<a name="import"></a>
+ES6 Import
+----------
+
+We have two ways to import(require) the levelup module in the code.
+
+### 1. By using `require`
+
+```js
+var levelup = require('levelup')
+```
+
+### 2. By using ES6 `import`
+
+```js
+import levelup from 'levelup'
 ```
 
 --------------------------------------------------------
