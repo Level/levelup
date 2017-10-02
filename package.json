@@ -50,7 +50,7 @@
     "delayed": "~1.0.1",
     "encoding-down": "^2.2.0",
     "faucet": "~0.0.1",
-    "leveldown": "^1.8.0",
+    "leveldown": "^2.0.0",
     "memdown": "^1.2.4",
     "msgpack-js": "~0.3.0",
     "referee": "~1.2.0",
