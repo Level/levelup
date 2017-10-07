@@ -177,7 +177,7 @@ If no callback is passed, a promise is returned.
 --------------------------------------------------------
 <a name="put"></a>
 ### db.put(key, value[, options][, callback])
-<code>put()</code> is the primary method for inserting data into the store. Both the `key` and `value` can be arbitrary data objects.
+<code>put()</code> is the primary method for inserting data into the store. Both `key` and `value` can be of any type as far as `levelup` is concerned.
 
 `options` is passed on to the underlying store.
 
@@ -186,7 +186,7 @@ If no callback is passed, a promise is returned.
 --------------------------------------------------------
 <a name="get"></a>
 ### db.get(key[, options][, callback])
-<code>get()</code> is the primary method for fetching data from the store. The `key` can be an arbitrary data object. If it doesn't exist in the store then the callback or promise will receive an error. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
+<code>get()</code> is the primary method for fetching data from the store. The `key` can be of any type. If it doesn't exist in the store then the callback or promise will receive an error. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
 
 ```js
 db.get('foo', function (err, value) {
