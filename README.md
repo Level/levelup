@@ -81,7 +81,7 @@ $ npm install level
 *(this second option requires you to use LevelUP by calling `var levelup = require('level')`)*
 
 
-All operations are asynchronous although they don't necessarily require a callback if you don't need to know when the operation was performed.
+All operations are asynchronous. If you do not provide a callback, [a Promise is returned](#promise-support).
 
 ```js
 var levelup = require('levelup')
