@@ -1,18 +1,14 @@
-LevelUP
-=======
-
-<img alt="LevelDB Logo" height="100" src="http://leveldb.org/img/logo.svg">
+# levelup
 
 > Fast and simple storage. A node.js wrapper for `abstract-leveldown` compliant backends.
 
+[![level badge][level-badge]](https://github.com/level/awesome)
+[![npm](https://img.shields.io/npm/v/levelup.svg)](https://www.npmjs.com/package/levelup)
 ![Node version](https://img.shields.io/node/v/levelup.svg)
 [![Build Status](https://secure.travis-ci.org/Level/levelup.svg?branch=master)](http://travis-ci.org/Level/levelup)
-[![dependencies](https://david-dm.org/Level/levelup.svg)](https://david-dm.org/level/levelup)
-[![Greenkeeper badge](https://badges.greenkeeper.io/Level/levelup.svg)](https://greenkeeper.io/)
-
-[![NPM](https://nodei.co/npm/levelup.png?stars&downloads&downloadRank)](https://nodei.co/npm/levelup/)
-[![NPM](https://nodei.co/npm-dl/levelup.png?months=6&height=3)](https://nodei.co/npm/levelup/)
-
+[![david](https://david-dm.org/Level/levelup.svg)](https://david-dm.org/level/levelup)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![npm](https://img.shields.io/npm/dm/levelup.svg)](https://www.npmjs.com/package/levelup)
 
   * <a href="#intro">Introduction</a>
   * <a href="#leveldown">Relationship to LevelDOWN</a>
@@ -538,3 +534,5 @@ Copyright &copy; 2012-2017 **LevelUP** [contributors](https://github.com/level/c
 **LevelUP** is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included `LICENSE.md` file for more details.
 
 *LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).*
+
+[level-badge]: http://leveldb.org/img/badge.svg
