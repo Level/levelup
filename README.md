@@ -1,6 +1,6 @@
 # levelup
 
-> Fast and simple storage. A node.js wrapper for `abstract-leveldown` compliant backends.
+> Fast and simple storage. A node.js wrapper for `abstract-leveldown` compliant stores.
 
 [![level badge][level-badge]](https://github.com/level/awesome)
 [![npm](https://img.shields.io/npm/v/levelup.svg)](https://www.npmjs.com/package/levelup)
@@ -46,11 +46,11 @@ LevelUP is designed to be backed by **[LevelDOWN](https://github.com/level/level
 
 **As of version 0.9, LevelUP no longer requires LevelDOWN as a dependency so you must `npm install leveldown` when you install LevelUP.**
 
-LevelDOWN is now optional because LevelUP can be used with alternative backends, such as **[level.js](https://github.com/maxogden/level.js)** in the browser or [MemDOWN](https://github.com/level/memdown) for a pure in-memory store.
+LevelDOWN is now optional because LevelUP can be used with alternative stores, such as **[level.js](https://github.com/maxogden/level.js)** in the browser or [MemDOWN](https://github.com/level/memdown) for a pure in-memory store.
 
 LevelUP will look for LevelDOWN and throw an error if it can't find it in its Node `require()` path. It will also tell you if the installed version of LevelDOWN is incompatible.
 
-**The [level](https://github.com/level/level) package is available as an alternative installation mechanism.** Install it instead to automatically get both LevelUP & LevelDOWN. It exposes LevelUP on its export (i.e. you can `var leveldb = require('level')`).
+**The [level](https://github.com/level/level) package is available as an alternative installation mechanism.** Install it instead to automatically get both LevelUP & LevelDOWN. It exposes LevelUP on its export (i.e. you can `var db = require('level')`).
 
 
 <a name="platforms"></a>
@@ -87,7 +87,7 @@ All operations are asynchronous although they don't necessarily require a callba
 var levelup = require('levelup')
 var leveldown = require('leveldown')
 
-// 1) Create our database
+// 1) Create our store
 var db = levelup(leveldown('./mydb'))
 
 // 2) put a key & value
@@ -128,11 +128,11 @@ db.put('name', 'LevelUP', function (err) {
 --------------------------------------------------------
 <a name="ctor"></a>
 ### levelup(db[, options[, callback]])
-<code>levelup()</code> is the main entry point for creating a new LevelUP instance and opening the underlying store with LevelDB.
+<code>levelup()</code> is the main entry point for creating a new LevelUP instance and opening the underlying store.
 
 `db` is an [`abstract-leveldown`](https://github.com/level/abstract-leveldown) compliant object.
 
-This function returns a new instance of LevelUP and will also initiate an <a href="#open"><code>open()</code></a> operation. Opening the database is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form: `function (err, db) {}` where the `db` is the LevelUP instance. If you don't provide a callback, any read & write operations are simply queued internally until the database is fully opened.
+This function returns a new instance of LevelUP and will also initiate an <a href="#open"><code>open()</code></a> operation. Opening the underlying store is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form: `function (err, db) {}` where the `db` is the LevelUP instance. If you don't provide a callback, any read & write operations are simply queued internally until the store is fully opened.
 
 This leads to two alternative ways of managing a new LevelUP instance:
 
@@ -161,7 +161,7 @@ db.get('foo', function (err, value) {
 ### db.open([callback])
 <code>open()</code> opens the underlying store. In general **you should never need to call this method directly** as it's automatically called by <a href="#ctor"><code>levelup()</code></a>.
 
-However, it is possible to *reopen* a database after it has been closed with <a href="#close"><code>close()</code></a>, although this is not generally advised.
+However, it is possible to *reopen* the store after it has been closed with <a href="#close"><code>close()</code></a>, although this is not generally advised.
 
 If no callback is passed, a promise is returned.
 
@@ -170,7 +170,7 @@ If no callback is passed, a promise is returned.
 ### db.close([callback])
 <code>close()</code> closes the underlying store. The callback will receive any error encountered during closing as the first argument.
 
-You should always clean up your LevelUP instance by calling `close()` when you no longer need it to free up resources. A LevelDB store cannot be opened by multiple instances of LevelDB/LevelUP simultaneously.
+You should always clean up your LevelUP instance by calling `close()` when you no longer need it to free up resources. A store cannot be opened by multiple instances of LevelUP simultaneously.
 
 If no callback is passed, a promise is returned.
 
@@ -225,7 +225,7 @@ If no callback is passed, a promise is returned.
 --------------------------------------------------------
 <a name="batch"></a>
 ### db.batch(array[, options][, callback]) *(array form)*
-<code>batch()</code> can be used for very fast bulk-write operations (both *put* and *delete*). The `array` argument should contain a list of operations to be executed sequentially, although as a whole they are performed as an atomic operation inside LevelDB.
+<code>batch()</code> can be used for very fast bulk-write operations (both *put* and *delete*). The `array` argument should contain a list of operations to be executed sequentially, although as a whole they are performed as an atomic operation inside the underlying store.
 
 Each operation is contained in an object having the following properties: `type`, `key`, `value`, where the *type* is either `'put'` or `'del'`. In the case of `'del'` the `'value'` property is ignored. Any entries with a `'key'` of `null` or `undefined` will cause an error to be returned on the `callback` and any `'type': 'put'` entry with a `'value'` of `null` or `undefined` will return an error.
 
@@ -253,7 +253,7 @@ If no callback is passed, a promise is returned.
 --------------------------------------------------------
 <a name="batch_chained"></a>
 ### db.batch() *(chained form)*
-<code>batch()</code>, when called with no arguments will return a `Batch` object which can be used to build, and eventually commit, an atomic LevelDB batch operation. Depending on how it's used, it is possible to obtain greater performance when using the chained form of `batch()` over the array form.
+<code>batch()</code>, when called with no arguments will return a `Batch` object which can be used to build, and eventually commit, an atomic batch operation. Depending on how it's used, it is possible to obtain greater performance when using the chained form of `batch()` over the array form.
 
 ```js
 db.batch()
@@ -287,7 +287,7 @@ The number of queued operations on the current batch.
 
 <b><code>batch.write([callback])</code></b>
 
-Commit the queued operations for this batch. All operations not *cleared* will be written to the database atomically, that is, they will either all succeed or fail with no partial commits.
+Commit the queued operations for this batch. All operations not *cleared* will be written to the underlying store atomically, that is, they will either all succeed or fail with no partial commits.
 
 If no callback is passed, a promise is returned.
 
@@ -298,10 +298,10 @@ If no callback is passed, a promise is returned.
 A LevelUP object can be in one of the following states:
 
   * *"new"*     - newly created, not opened or closed
-  * *"opening"* - waiting for the database to be opened
-  * *"open"*    - successfully opened the database, available for use
-  * *"closing"* - waiting for the database to be closed
-  * *"closed"*  - database has been successfully closed, should not be used
+  * *"opening"* - waiting for the underlying store to be opened
+  * *"open"*    - successfully opened the store, available for use
+  * *"closing"* - waiting for the store to be closed
+  * *"closed"*  - store has been successfully closed, should not be used
 
 `isOpen()` will return `true` only when the state is "open".
 
@@ -317,7 +317,7 @@ A LevelUP object can be in one of the following states:
 <a name="createReadStream"></a>
 ### db.createReadStream([options])
 
-Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of key-value pairs. A pair is an object with `'key'` and `'value'` properties. By default it will stream all entries in the database from start to end. Use the options described below to control the range, direction and results.
+Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of key-value pairs. A pair is an object with `'key'` and `'value'` properties. By default it will stream all entries in the underlying store from start to end. Use the options described below to control the range, direction and results.
 
 ```js
 db.createReadStream()
@@ -341,7 +341,7 @@ You can supply an options object as the first parameter to `createReadStream()` 
 
 * `'lt'` (less than), `'lte'` (less than or equal) define the higher bound of the range to be streamed. Only entries where the key is less than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries streamed will be the same.
 
-* `'reverse'` *(boolean, default: `false`)*: stream entries in reverse order. Beware that due to the way LevelDB works, a reverse seek will be slower than a forward seek.
+* `'reverse'` *(boolean, default: `false`)*: stream entries in reverse order. Beware that due to the way that stores like LevelDB work, a reverse seek can be slower than a forward seek.
 
 * `'limit'` *(number, default: `-1`)*: limit the number of entries collected by this stream. This number represents a *maximum* number of entries and may not be reached if you get to the end of the range first. A value of `-1` means there is no limit. When `reverse=true` the entries with the highest keys will be returned instead of the lowest keys.
 
@@ -423,7 +423,7 @@ Each function taking a callback also can be used as a promise, if the callback i
 - `db.batch(ops[, options])`
 - `db.batch().write()`
 
-The only exception is the `levelup` constructor itself, which if no callback is passed will lazily open the database backend in the background.
+The only exception is the `levelup` constructor itself, which if no callback is passed will lazily open the underlying store in the background.
 
 Example:
 
@@ -478,10 +478,10 @@ LevelUP emits events when the callbacks to the corresponding methods are called.
 * `db.emit('put', key, value)` emitted when a new value is `'put'`
 * `db.emit('del', key)` emitted when a value is deleted
 * `db.emit('batch', ary)` emitted when a batch operation has executed
-* `db.emit('ready')` emitted when the database has opened (`'open'` is synonym)
-* `db.emit('closed')` emitted when the database has closed
-* `db.emit('opening')` emitted when the database is opening
-* `db.emit('closing')` emitted when the database is closing
+* `db.emit('ready')` emitted when the underlying store has opened (`'open'` is synonym)
+* `db.emit('closed')` emitted when the store has closed
+* `db.emit('opening')` emitted when the store is opening
+* `db.emit('closing')` emitted when the store is closing
 
 If you do not pass a callback to an async function, and there is an error, LevelUP will `emit('error', err)` instead.
 
@@ -489,15 +489,15 @@ If you do not pass a callback to an async function, and there is an error, Level
 Extending LevelUP
 -----------------
 
-A list of <a href="https://github.com/level/levelup/wiki/Modules"><b>Node.js LevelDB modules and projects</b></a> can be found in the wiki.
+A list of <a href="https://github.com/level/levelup/wiki/Modules"><b>Level modules and projects</b></a> can be found in the wiki.
 
-When attempting to extend the functionality of LevelUP, it is recommended that you consider using [level-hooks](https://github.com/dominictarr/level-hooks) and/or [level-sublevel](https://github.com/dominictarr/level-sublevel). **level-sublevel** is particularly helpful for keeping additional, extension-specific, data in a LevelDB store. It allows you to partition a LevelUP instance into multiple sub-instances that each correspond to discrete namespaced key ranges.
+When attempting to extend the functionality of LevelUP, it is recommended that you consider using [level-hooks](https://github.com/dominictarr/level-hooks) and/or [level-sublevel](https://github.com/dominictarr/level-sublevel). **level-sublevel** is particularly helpful for keeping additional, extension-specific data. It allows you to partition a LevelUP instance into multiple sub-instances that each correspond to discrete namespaced key ranges.
 
 <a name="multiproc"></a>
 Multi-process access
 --------------------
 
-LevelDB is thread-safe but is **not** suitable for accessing with multiple processes. You should only ever have a LevelDB database open from a single Node.js process. Node.js clusters are made up of multiple processes so a LevelUP instance cannot be shared between them either.
+Stores like LevelDB are thread-safe but they are **not** suitable for accessing with multiple processes. You should only ever have a store open from a single Node.js process. Node.js clusters are made up of multiple processes so a LevelUP instance cannot be shared between them either.
 
 See the <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for some LevelUP extensions, including [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
 
@@ -505,7 +505,7 @@ See the <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> 
 Getting support
 ---------------
 
-There are multiple ways you can find help in using LevelDB in Node.js:
+There are multiple ways you can find help in using Level in Node.js:
 
  * **IRC:** you'll find an active group of LevelUP users in the **##leveldb** channel on Freenode, including most of the contributors to this project.
  * **Mailing list:** there is an active [Node.js LevelDB](https://groups.google.com/forum/#!forum/node-levelup) Google Group.
