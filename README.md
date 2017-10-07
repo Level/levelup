@@ -57,10 +57,7 @@ LevelUP will look for LevelDOWN and throw an error if it can't find it in its No
 Tested & supported platforms
 ----------------------------
 
-  * **Linux**: including ARM platforms such as Raspberry Pi *and Kindle!*
-  * **Mac OS**
-  * **Solaris**: including Joyent's SmartOS & Nodejitsu
-  * **Windows**: Node 0.10 and above only. See installation instructions for *node-gyp's* dependencies [here](https://github.com/TooTallNate/node-gyp#installation), you'll need these (free) components from Microsoft to compile and run any native Node add-on in Windows.
+We aim to support Active LTS and Current Node.js releases as well as browsers. For support of the underlying store, please see the respective documentation.
 
 <a name="basic"></a>
 Basic usage
