@@ -1,6 +1,6 @@
 # levelup
 
-> Fast and simple storage. A node.js wrapper for `abstract-leveldown` compliant stores.
+> Fast and simple storage. A Node.js wrapper for `abstract-leveldown` compliant stores.
 
 [![level badge][level-badge]](https://github.com/level/awesome)
 [![npm](https://img.shields.io/npm/v/levelup.svg)](https://www.npmjs.com/package/levelup)
@@ -11,7 +11,6 @@
 [![npm](https://img.shields.io/npm/dm/levelup.svg)](https://www.npmjs.com/package/levelup)
 
   * <a href="#intro">Introduction</a>
-  * <a href="#leveldown">Relationship to LevelDOWN</a>
   * <a href="#platforms">Tested &amp; supported platforms</a>
   * <a href="#basic">Basic usage</a>
   * <a href="#api">API</a>
@@ -30,28 +29,15 @@
 Introduction
 ------------
 
-**[LevelDB](https://github.com/google/leveldb)** is a simple key-value store built by Google, inspired by BigTable. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, bi-directional iterators and simple compression using the very fast [Snappy](http://google.github.io/snappy/) algorithm.
+**A wrapper for `abstract-leveldown` compliant stores, which follow the characteristics of [LevelDB](https://github.com/google/leveldb).**
 
-**LevelUP** aims to expose the features of LevelDB in a **Node.js-friendly way**. LevelDB's iterators are exposed as [Readable Streams](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams).
+LevelDB is a simple key-value store built by Google. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, bi-directional iterators and simple compression using the very fast [Snappy](http://google.github.io/snappy/) algorithm.
 
-LevelDB stores entries **sorted lexicographically by keys**. This makes LevelUP's [streaming interface](#createReadStream) a very powerful query mechanism.
+LevelDB stores entries sorted lexicographically by keys. This makes the [streaming interface](#createReadStream) of `levelup` - which exposes LevelDB iterators as [Readable Streams](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) - a very powerful query mechanism.
 
-**LevelUP** is an **OPEN Open Source Project**, see the <a href="#contributing">Contributing</a> section to find out what this means.
+The most common store is [`leveldown`](https://github.com/level/leveldown/) which provides a pure C++ binding to LevelDB. [Many alternative stores are available](https://github.com/Level/awesome/#stores) such as [`level.js`](https://github.com/level/level.js) in the browser or [`memdown`](https://github.com/level/memdown) for an in-memory store. They typically support strings and Buffers for both keys and values. For a richer set of data types you can wrap the store with [`encoding-down`](https://github.com/level/encoding-down).
 
-<a name="leveldown"></a>
-Relationship to LevelDOWN
--------------------------
-
-LevelUP is designed to be backed by **[LevelDOWN](https://github.com/level/leveldown/)** which provides a pure C++ binding to LevelDB and can be used as a stand-alone package if required.
-
-**As of version 0.9, LevelUP no longer requires LevelDOWN as a dependency so you must `npm install leveldown` when you install LevelUP.**
-
-LevelDOWN is now optional because LevelUP can be used with alternative stores, such as **[level.js](https://github.com/maxogden/level.js)** in the browser or [MemDOWN](https://github.com/level/memdown) for a pure in-memory store.
-
-LevelUP will look for LevelDOWN and throw an error if it can't find it in its Node `require()` path. It will also tell you if the installed version of LevelDOWN is incompatible.
-
-**The [level](https://github.com/level/level) package is available as an alternative installation mechanism.** Install it instead to automatically get both LevelUP & LevelDOWN. It exposes LevelUP on its export (i.e. you can `var db = require('level')`).
-
+**The [`level`](https://github.com/level/level) package is the recommended way to get started.** It conveniently bundles `levelup`, [`leveldown`](https://github.com/level/leveldown/) and [`encoding-down`](https://github.com/level/encoding-down). Its main export is `levelup` - i.e. you can do `var db = require('level')`.
 
 <a name="platforms"></a>
 Tested & supported platforms
@@ -63,20 +49,11 @@ We aim to support Active LTS and Current Node.js releases as well as browsers. F
 Basic usage
 -----------
 
-First you need to install LevelUP!
+First you need to install `levelup`! No stores are included so you must also install `leveldown` (for example).
 
 ```sh
 $ npm install levelup leveldown
 ```
-
-Or
-
-```sh
-$ npm install level
-```
-
-*(this second option requires you to use LevelUP by calling `var levelup = require('level')`)*
-
 
 All operations are asynchronous. If you do not provide a callback, [a Promise is returned](#promise-support).
 
@@ -87,15 +64,15 @@ var leveldown = require('leveldown')
 // 1) Create our store
 var db = levelup(leveldown('./mydb'))
 
-// 2) put a key & value
+// 2) Put a key & value
 db.put('name', 'LevelUP', function (err) {
   if (err) return console.log('Ooops!', err) // some kind of I/O error
 
-  // 3) fetch by key
+  // 3) Fetch by key
   db.get('name', function (err, value) {
     if (err) return console.log('Ooops!', err) // likely the key was not found
 
-    // ta da!
+    // Ta da!
     console.log('name=' + value)
   })
 })
