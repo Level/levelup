@@ -57,10 +57,7 @@ LevelUP will look for LevelDOWN and throw an error if it can't find it in its No
 Tested & supported platforms
 ----------------------------
 
-  * **Linux**: including ARM platforms such as Raspberry Pi *and Kindle!*
-  * **Mac OS**
-  * **Solaris**: including Joyent's SmartOS & Nodejitsu
-  * **Windows**: Node 0.10 and above only. See installation instructions for *node-gyp's* dependencies [here](https://github.com/TooTallNate/node-gyp#installation), you'll need these (free) components from Microsoft to compile and run any native Node add-on in Windows.
+We aim to support Active LTS and Current Node.js releases as well as browsers. For support of the underlying store, please see the respective documentation.
 
 <a name="basic"></a>
 Basic usage
@@ -81,7 +78,7 @@ $ npm install level
 *(this second option requires you to use LevelUP by calling `var levelup = require('level')`)*
 
 
-All operations are asynchronous although they don't necessarily require a callback if you don't need to know when the operation was performed.
+All operations are asynchronous. If you do not provide a callback, [a Promise is returned](#promise-support).
 
 ```js
 var levelup = require('levelup')
@@ -177,7 +174,7 @@ If no callback is passed, a promise is returned.
 --------------------------------------------------------
 <a name="put"></a>
 ### db.put(key, value[, options][, callback])
-<code>put()</code> is the primary method for inserting data into the store. Both the `key` and `value` can be arbitrary data objects.
+<code>put()</code> is the primary method for inserting data into the store. Both `key` and `value` can be of any type as far as `levelup` is concerned.
 
 `options` is passed on to the underlying store.
 
@@ -186,7 +183,7 @@ If no callback is passed, a promise is returned.
 --------------------------------------------------------
 <a name="get"></a>
 ### db.get(key[, options][, callback])
-<code>get()</code> is the primary method for fetching data from the store. The `key` can be an arbitrary data object. If it doesn't exist in the store then the callback or promise will receive an error. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
+<code>get()</code> is the primary method for fetching data from the store. The `key` can be of any type. If it doesn't exist in the store then the callback or promise will receive an error. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
 
 ```js
 db.get('foo', function (err, value) {
@@ -227,7 +224,7 @@ If no callback is passed, a promise is returned.
 ### db.batch(array[, options][, callback]) *(array form)*
 <code>batch()</code> can be used for very fast bulk-write operations (both *put* and *delete*). The `array` argument should contain a list of operations to be executed sequentially, although as a whole they are performed as an atomic operation inside the underlying store.
 
-Each operation is contained in an object having the following properties: `type`, `key`, `value`, where the *type* is either `'put'` or `'del'`. In the case of `'del'` the `'value'` property is ignored. Any entries with a `'key'` of `null` or `undefined` will cause an error to be returned on the `callback` and any `'type': 'put'` entry with a `'value'` of `null` or `undefined` will return an error.
+Each operation is contained in an object having the following properties: `type`, `key`, `value`, where the *type* is either `'put'` or `'del'`. In the case of `'del'` the `value` property is ignored. Any entries with a `key` of `null` or `undefined` will cause an error to be returned on the `callback` and any `type: 'put'` entry with a `value` of `null` or `undefined` will return an error.
 
 If `key` and `value` are defined but `type` is not, it will default to `'put'`.
 
@@ -317,7 +314,7 @@ A LevelUP object can be in one of the following states:
 <a name="createReadStream"></a>
 ### db.createReadStream([options])
 
-Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of key-value pairs. A pair is an object with `'key'` and `'value'` properties. By default it will stream all entries in the underlying store from start to end. Use the options described below to control the range, direction and results.
+Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of key-value pairs. A pair is an object with `key` and `value` properties. By default it will stream all entries in the underlying store from start to end. Use the options described below to control the range, direction and results.
 
 ```js
 db.createReadStream()
@@ -337,23 +334,23 @@ db.createReadStream()
 
 You can supply an options object as the first parameter to `createReadStream()` with the following properties:
 
-* `'gt'` (greater than), `'gte'` (greater than or equal) define the lower bound of the range to be streamed. Only entries where the key is greater than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries streamed will be the same.
+* `gt` (greater than), `gte` (greater than or equal) define the lower bound of the range to be streamed. Only entries where the key is greater than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries streamed will be the same.
 
-* `'lt'` (less than), `'lte'` (less than or equal) define the higher bound of the range to be streamed. Only entries where the key is less than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries streamed will be the same.
+* `lt` (less than), `lte` (less than or equal) define the higher bound of the range to be streamed. Only entries where the key is less than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries streamed will be the same.
 
-* `'reverse'` *(boolean, default: `false`)*: stream entries in reverse order. Beware that due to the way that stores like LevelDB work, a reverse seek can be slower than a forward seek.
+* `reverse` *(boolean, default: `false`)*: stream entries in reverse order. Beware that due to the way that stores like LevelDB work, a reverse seek can be slower than a forward seek.
 
-* `'limit'` *(number, default: `-1`)*: limit the number of entries collected by this stream. This number represents a *maximum* number of entries and may not be reached if you get to the end of the range first. A value of `-1` means there is no limit. When `reverse=true` the entries with the highest keys will be returned instead of the lowest keys.
+* `limit` *(number, default: `-1`)*: limit the number of entries collected by this stream. This number represents a *maximum* number of entries and may not be reached if you get to the end of the range first. A value of `-1` means there is no limit. When `reverse=true` the entries with the highest keys will be returned instead of the lowest keys.
 
-* `'keys'` *(boolean, default: `true`)*: whether the results should contain keys. If set to `true` and `'values'` set to `false` then results will simply be keys, rather than objects with a `'key'` property. Used internally by the `createKeyStream()` method.
+* `keys` *(boolean, default: `true`)*: whether the results should contain keys. If set to `true` and `values` set to `false` then results will simply be keys, rather than objects with a `key` property. Used internally by the `createKeyStream()` method.
 
-* `'values'` *(boolean, default: `true`)*: whether the results should contain values. If set to `true` and `'keys'` set to `false` then results will simply be values, rather than objects with a `'value'` property. Used internally by the `createValueStream()` method.
+* `values` *(boolean, default: `true`)*: whether the results should contain values. If set to `true` and `keys` set to `false` then results will simply be values, rather than objects with a `value` property. Used internally by the `createValueStream()` method.
 
 Legacy options:
 
-* `'start'`: instead use `'gte'`
+* `start`: instead use `gte`
 
-* `'end'`: instead use `'lte'`
+* `end`: instead use `lte`
 
 --------------------------------------------------------
 <a name="createKeyStream"></a>
