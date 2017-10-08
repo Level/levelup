@@ -7,6 +7,7 @@ var levelup = require('../lib/levelup.js')
 var leveldown = require('leveldown')
 var encDown = require('encoding-down')
 var async = require('async')
+var concat = require('concat-stream')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
@@ -169,5 +170,42 @@ buster.testCase('Deferred open()', {
         }
       })
     }
+  },
+
+  'value of queued operation is not serialized': function (done) {
+    var location = common.nextLocation()
+    var db = levelup(encDown(leveldown(location), { valueEncoding: 'json' }))
+
+    this.closeableDatabases.push(db)
+    this.cleanupDirs.push(location)
+
+    // deferred-leveldown < 2.0.2 would serialize the object to a string.
+    db.put('key', { thing: 2 }, function (err) {
+      refute(err)
+
+      db.get('key', function (err, value) {
+        refute(err)
+        assert.equals(value, { thing: 2 })
+        done()
+      })
+    })
+  },
+
+  'key of queued operation is not serialized': function (done) {
+    var location = common.nextLocation()
+    var db = levelup(encDown(leveldown(location), { keyEncoding: 'json' }))
+
+    this.closeableDatabases.push(db)
+    this.cleanupDirs.push(location)
+
+    // deferred-leveldown < 2.0.2 would serialize the key to a string.
+    db.put({ thing: 2 }, 'value', function (err) {
+      refute(err)
+
+      db.createKeyStream().pipe(concat(function (result) {
+        assert.equals(result, [{ thing: 2 }])
+        done()
+      }))
+    })
   }
 })
