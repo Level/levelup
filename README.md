@@ -1,7 +1,5 @@
 # levelup
 
-> Fast and simple storage. A Node.js wrapper for `abstract-leveldown` compliant stores.
-
 [![level badge][level-badge]](https://github.com/level/awesome)
 [![npm](https://img.shields.io/npm/v/levelup.svg)](https://www.npmjs.com/package/levelup)
 ![Node version](https://img.shields.io/node/v/levelup.svg)
@@ -17,7 +15,7 @@
   * <a href="#promises">Promise Support</a>
   * <a href="#import">Import with Type Definitions</a>
   * <a href="#events">Events</a>
-  * <a href="#extending">Extending LevelUP</a>
+  * <a href="#extending">Extending levelup</a>
   * <a href="#multiproc">Multi-process access</a>
   * <a href="#support">Getting support</a>
   * <a href="#contributing">Contributing</a>
@@ -29,7 +27,7 @@
 Introduction
 ------------
 
-**A wrapper for `abstract-leveldown` compliant stores, which follow the characteristics of [LevelDB](https://github.com/google/leveldb).**
+**Fast and simple storage. A Node.js wrapper for `abstract-leveldown` compliant stores, which follow the characteristics of [LevelDB](https://github.com/google/leveldb).**
 
 LevelDB is a simple key-value store built by Google. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular *get*, *put* and *delete* operations, *batched put and delete*, bi-directional iterators and simple compression using the very fast [Snappy](http://google.github.io/snappy/) algorithm.
 
@@ -65,7 +63,7 @@ var leveldown = require('leveldown')
 var db = levelup(leveldown('./mydb'))
 
 // 2) Put a key & value
-db.put('name', 'LevelUP', function (err) {
+db.put('name', 'levelup', function (err) {
   if (err) return console.log('Ooops!', err) // some kind of I/O error
 
   // 3) Fetch by key
@@ -102,38 +100,42 @@ db.put('name', 'LevelUP', function (err) {
 --------------------------------------------------------
 <a name="ctor"></a>
 ### levelup(db[, options[, callback]])
-<code>levelup()</code> is the main entry point for creating a new LevelUP instance and opening the underlying store.
+The main entry point for creating a new `levelup` instance.
 
-`db` is an [`abstract-leveldown`](https://github.com/level/abstract-leveldown) compliant object.
+- `db` must be an [`abstract-leveldown`](https://github.com/level/abstract-leveldown) compliant store.
+- `options` is passed on to the underlying store.
 
-This function returns a new instance of LevelUP and will also initiate an <a href="#open"><code>open()</code></a> operation. Opening the underlying store is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form: `function (err, db) {}` where the `db` is the LevelUP instance. If you don't provide a callback, any read & write operations are simply queued internally until the store is fully opened.
+Calling `levelup(db)` will also open the underlying store. This is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form `function (err, db) {}` where `db` is the `levelup` instance. If you don't provide a callback, any read & write operations are simply queued internally until the store is fully opened.
 
-This leads to two alternative ways of managing a new LevelUP instance:
+This leads to two alternative ways of managing a `levelup` instance:
 
 ```js
 levelup(leveldown(location), options, function (err, db) {
   if (err) throw err
+
   db.get('foo', function (err, value) {
     if (err) return console.log('foo does not exist')
     console.log('got foo =', value)
   })
 })
+```
 
-// vs the equivalent:
+Versus the equivalent:
 
-var db = levelup(leveldown(location), options) // will throw if an error occurs
+```js
+// Will throw if an error occurs
+var db = levelup(leveldown(location), options)
+
 db.get('foo', function (err, value) {
   if (err) return console.log('foo does not exist')
   console.log('got foo =', value)
 })
 ```
 
-`options` is passed on to the underlying store when it's opened.
-
 --------------------------------------------------------
 <a name="open"></a>
 ### db.open([callback])
-<code>open()</code> opens the underlying store. In general **you should never need to call this method directly** as it's automatically called by <a href="#ctor"><code>levelup()</code></a>.
+Opens the underlying store. In general you should never need to call this method directly as it's automatically called by <a href="#ctor"><code>levelup()</code></a>.
 
 However, it is possible to *reopen* the store after it has been closed with <a href="#close"><code>close()</code></a>, although this is not generally advised.
 
@@ -144,7 +146,7 @@ If no callback is passed, a promise is returned.
 ### db.close([callback])
 <code>close()</code> closes the underlying store. The callback will receive any error encountered during closing as the first argument.
 
-You should always clean up your LevelUP instance by calling `close()` when you no longer need it to free up resources. A store cannot be opened by multiple instances of LevelUP simultaneously.
+You should always clean up your `levelup` instance by calling `close()` when you no longer need it to free up resources. A store cannot be opened by multiple instances of `levelup` simultaneously.
 
 If no callback is passed, a promise is returned.
 
@@ -269,7 +271,7 @@ If no callback is passed, a promise is returned.
 <a name="isOpen"></a>
 ### db.isOpen()
 
-A LevelUP object can be in one of the following states:
+A `levelup` instance can be in one of the following states:
 
   * *"new"*     - newly created, not opened or closed
   * *"opening"* - waiting for the underlying store to be opened
@@ -447,33 +449,40 @@ import levelup from 'levelup'
 Events
 ------
 
-LevelUP emits events when the callbacks to the corresponding methods are called.
+`levelup` is an [`EventEmitter`](https://nodejs.org/api/events.html) and emits the following events.
 
-* `db.emit('put', key, value)` emitted when a new value is `'put'`
-* `db.emit('del', key)` emitted when a value is deleted
-* `db.emit('batch', ary)` emitted when a batch operation has executed
-* `db.emit('ready')` emitted when the underlying store has opened (`'open'` is synonym)
-* `db.emit('closed')` emitted when the store has closed
-* `db.emit('opening')` emitted when the store is opening
-* `db.emit('closing')` emitted when the store is closing
+| Event     | Description                 | Arguments            |
+|:----------|:----------------------------|:---------------------|
+| `put`     | Key has been updated        | `key, value` (any)   |
+| `del`     | Key has been deleted        | `key` (any)          |
+| `batch`   | Batch has executed          | `operations` (array) |
+| `opening` | Underlying store is opening | -                    |
+| `open`    | Store has opened            | -                    |
+| `ready`   | Alias of `open`             | -                    |
+| `closing` | Store is closing            | -                    |
+| `closed`  | Store has closed.           | -                    |
 
-If you do not pass a callback to an async function, and there is an error, LevelUP will `emit('error', err)` instead.
+For example you can do:
+
+```js
+db.on('put', function (key, value) {
+  console.log('inserted', { key, value })
+})
+```
 
 <a name="extending"></a>
-Extending LevelUP
+Extending `levelup`
 -----------------
 
-A list of <a href="https://github.com/level/levelup/wiki/Modules"><b>Level modules and projects</b></a> can be found in the wiki.
-
-When attempting to extend the functionality of LevelUP, it is recommended that you consider using [level-hooks](https://github.com/dominictarr/level-hooks) and/or [level-sublevel](https://github.com/dominictarr/level-sublevel). **level-sublevel** is particularly helpful for keeping additional, extension-specific data. It allows you to partition a LevelUP instance into multiple sub-instances that each correspond to discrete namespaced key ranges.
+A list of <a href="https://github.com/level/levelup/wiki/Modules"><b>Level modules and projects</b></a> can be found in the wiki. We are in the process of moving all this to [`awesome`](https://github.com/Level/awesome/).
 
 <a name="multiproc"></a>
 Multi-process access
 --------------------
 
-Stores like LevelDB are thread-safe but they are **not** suitable for accessing with multiple processes. You should only ever have a store open from a single Node.js process. Node.js clusters are made up of multiple processes so a LevelUP instance cannot be shared between them either.
+Stores like LevelDB are thread-safe but they are **not** suitable for accessing with multiple processes. You should only ever have a store open from a single Node.js process. Node.js clusters are made up of multiple processes so a `levelup` instance cannot be shared between them either.
 
-See the <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for some LevelUP extensions, including [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
+See the aformentioned <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for modules like [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
 
 <a name="support"></a>
 Getting support
@@ -481,7 +490,7 @@ Getting support
 
 There are multiple ways you can find help in using Level in Node.js:
 
- * **IRC:** you'll find an active group of LevelUP users in the **##leveldb** channel on Freenode, including most of the contributors to this project.
+ * **IRC:** you'll find an active group of `levelup` users in the **##leveldb** channel on Freenode, including most of the contributors to this project.
  * **Mailing list:** there is an active [Node.js LevelDB](https://groups.google.com/forum/#!forum/node-levelup) Google Group.
  * **GitHub:** you're welcome to open an issue here on this GitHub repository if you have a question.
 
@@ -489,24 +498,20 @@ There are multiple ways you can find help in using Level in Node.js:
 Contributing
 ------------
 
-LevelUP is an **OPEN Open Source Project**. This means that:
+`levelup` is an **OPEN Open Source Project**. This means that:
 
 > Individuals making significant and valuable contributions are given commit-access to the project to contribute as they see fit. This project is more like an open wiki than a standard guarded open source project.
 
 See the [contribution guide](https://github.com/Level/community/blob/master/CONTRIBUTING.md) for more details.
 
-### Windows
-
-A large portion of the Windows support comes from code by [Krzysztof Kowalczyk](http://blog.kowalczyk.info/) [@kjk](https://twitter.com/kjk), see his Windows LevelDB port [here](http://code.google.com/r/kkowalczyk-leveldb/). If you're using LevelUP on Windows, you should give him your thanks!
-
 <a name="license"></a>
 License &amp; copyright
 -------------------
 
-Copyright &copy; 2012-2017 **LevelUP** [contributors](https://github.com/level/community#contributors).
+Copyright &copy; 2012-2017 `levelup` [contributors](https://github.com/level/community#contributors).
 
-**LevelUP** is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included `LICENSE.md` file for more details.
+`levelup` is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included `LICENSE.md` file for more details.
 
-*LevelUP builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).*
+*`levelup` builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).*
 
 [level-badge]: http://leveldb.org/img/badge.svg
