@@ -470,8 +470,6 @@ db.on('put', function (key, value) {
 })
 ```
 
-If you do not pass a callback to an async function, and there is an error, `levelup` will `emit('error', err)` instead.
-
 <a name="extending"></a>
 Extending `levelup`
 -----------------

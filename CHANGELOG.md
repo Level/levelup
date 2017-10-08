@@ -7,7 +7,7 @@ There has been quite some work done for this new major version:
 1. Make `levelup` more generic by reducing focus on [`leveldown`](https://github.com/Level/leveldown) and [`LevelDB`](https://github.com/google/leveldb).
 2. Make `levelup` more generic by removing code related to encodings, which would allow \*down implementations to manage encodings themselves.
 3. Use [`standard`](https://github.com/standard/standard) as linter to avoid bikeshedding.
-4. Add a native `Promise` API for promise using geeks. Many have been asking for this. Also `async/await` is awesome.
+4. Add a native `Promise` API for promise using geeks. Many have been asking for this. Also `async/await` is awesome. Breaking change: previously, if you did not pass a callback to an async function and there was an error, `levelup` would emit an `error` event instead. This is no longer true.
 
 Point `1` and `2` also helps out with reducing complexity.
 
