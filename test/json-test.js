@@ -7,18 +7,20 @@ var levelup = require('../lib/levelup.js')
 var leveldown = require('leveldown')
 var encDown = require('encoding-down')
 var async = require('async')
+var concat = require('concat-stream')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
 
-buster.testCase('JSON API', {
+buster.testCase('JSON encoding', {
   'setUp': function (done) {
     common.commonSetUp.call(this, function () {
       this.runTest = function (testData, assertType, done) {
         var location = common.nextLocation()
         this.cleanupDirs.push(location)
         levelup(encDown(leveldown(location), {
+          keyEncoding: 'json',
           valueEncoding: 'json'
         }), function (err, db) {
           refute(err)
@@ -29,6 +31,10 @@ buster.testCase('JSON API', {
           var PUT = testData.map(function (d) { return db.put.bind(db, d.key, d.value) })
           async.parallel(PUT, function (err) {
             refute(err)
+            async.parallel([testGet, testStream], done)
+          })
+
+          function testGet (next) {
             async.forEach(testData, function (d, callback) {
               db.get(d.key, function (err, value) {
                 if (err) console.error(err.stack)
@@ -36,8 +42,15 @@ buster.testCase('JSON API', {
                 assert[assertType](d.value, value)
                 callback()
               })
-            }, done)
-          })
+            }, next)
+          }
+
+          function testStream (next) {
+            db.createReadStream().pipe(concat(function (result) {
+              assert.equals(result, testData)
+              next()
+            }))
+          }
         }.bind(this))
       }
       done()
@@ -50,19 +63,19 @@ buster.testCase('JSON API', {
     this.runTest([
       { key: '0', value: 0 },
       { key: '1', value: 1 },
-      { key: 'string', value: 'a string' },
-      { key: 'true', value: true },
-      { key: 'false', value: false }
+      { key: '2', value: 'a string' },
+      { key: '3', value: true },
+      { key: '4', value: false }
     ], 'same', done)
   },
 
   'simple-object keys in "json" encoding': function (done) {
     this.runTest([
+      { value: 'string', key: 'a string' },
       { value: '0', key: 0 },
       { value: '1', key: 1 },
-      { value: 'string', key: 'a string' },
-      { value: 'true', key: true },
-      { value: 'false', key: false }
+      { value: 'false', key: false },
+      { value: 'true', key: true }
     ], 'same', done)
   },
 
