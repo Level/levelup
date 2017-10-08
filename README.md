@@ -415,7 +415,7 @@ db.put('foo', 'bar')
 Or using `async/await`:
 
 ```js
-const main = async () {
+const main = async () => {
   const db = levelup(leveldown('./my-db'))
 
   await db.put('foo', 'bar')
