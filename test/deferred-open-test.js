@@ -169,5 +169,24 @@ buster.testCase('Deferred open()', {
         }
       })
     }
+  },
+
+  'queued operation is not serialized': function (done) {
+    var location = common.nextLocation()
+    var db = levelup(encDown(leveldown(location), { valueEncoding: 'json' }))
+
+    this.closeableDatabases.push(db)
+    this.cleanupDirs.push(location)
+
+    // deferred-leveldown < 2.0.2 would serialize the object to a string.
+    db.put('key', { thing: 2 }, function (err) {
+      refute(err)
+
+      db.get('key', function (err, value) {
+        refute(err)
+        assert.equals(value, { thing: 2 })
+        done()
+      })
+    })
   }
 })
