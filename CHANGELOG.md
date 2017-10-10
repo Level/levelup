@@ -1,4 +1,4 @@
-## 2.0.0 @ Sep 2017
+## 2.0.0 @ October 2017
 
 ### Summary
 
@@ -68,44 +68,6 @@ You should now do (for identical functionality):
 const encode = require('encoding-down')
 const db = levelup(encode(new CustomLevelDOWN('/path/to/db')))
 ```
-
-### Commits
-
-* [[`1dda39eb17`](https://github.com/level/levelup/commit/1dda39eb17)] - rename test for maybeError() for clarity (Lars-Magnus Skog)
-* [[`77f027de38`](https://github.com/level/levelup/commit/77f027de38)] - ignore temporary dbs in test folder (Lars-Magnus Skog)
-* [[`e98fc7f14b`](https://github.com/level/levelup/commit/e98fc7f14b)] - fix failing tests (Lars-Magnus Skog)
-* [[`1f8d697eef`](https://github.com/level/levelup/commit/1f8d697eef)] - :white_check_mark: add failing tests for maybeError() and closed db (Lars-Magnus Skog)
-* [[`37b36ee45b`](https://github.com/level/levelup/commit/37b36ee45b)] - :truck: move lib/util.js to lib/promisify.js (Lars-Magnus Skog)
-* [[`bb3df7b587`](https://github.com/level/levelup/commit/bb3df7b587)] - :boom: remove dispatchError(), callback is always a function (Lars-Magnus Skog)
-* [[`1fac4fb11c`](https://github.com/level/levelup/commit/1fac4fb11c)] - :sparkles: callback is always a function (Lars-Magnus Skog)
-* [[`8a58d6a081`](https://github.com/level/levelup/commit/8a58d6a081)] - :memo: update docs (Lars-Magnus Skog)
-* [[`f2bf3d2cfa`](https://github.com/level/levelup/commit/f2bf3d2cfa)] - :boom: remove encodings (Lars-Magnus Skog)
-* [[`5379fc69fe`](https://github.com/level/levelup/commit/5379fc69fe)] - :boom: remove isDefined, not used (Lars-Magnus Skog)
-* [[`8b1693e1bb`](https://github.com/level/levelup/commit/8b1693e1bb)] - add promise error handling test (Julian Gruber)
-* [[`41bd624c74`](https://github.com/level/levelup/commit/41bd624c74)] - **docs**: add Promise#catch (Julian Gruber)
-* [[`651bb588c9`](https://github.com/level/levelup/commit/651bb588c9)] - clarify wording (Julian Gruber)
-* [[`08757ae2a2`](https://github.com/level/levelup/commit/08757ae2a2)] - **docs**: we use native promises (Julian Gruber)
-* [[`3993dbef00`](https://github.com/level/levelup/commit/3993dbef00)] - add promise docs (Julian Gruber)
-* [[`5ddbef9bca`](https://github.com/level/levelup/commit/5ddbef9bca)] - add promise tests (Julian Gruber)
-* [[`2d72c7bc6b`](https://github.com/level/levelup/commit/2d72c7bc6b)] - **travis**: drop node 0.12 & 4 (Julian Gruber)
-* [[`c74e608127`](https://github.com/level/levelup/commit/c74e608127)] - simplify util.promisify. thanks @vweever! (Julian Gruber)
-* [[`fed3a2d397`](https://github.com/level/levelup/commit/fed3a2d397)] - fix early returns (Julian Gruber)
-* [[`7488a6695a`](https://github.com/level/levelup/commit/7488a6695a)] - style (Julian Gruber)
-* [[`7790d928bb`](https://github.com/level/levelup/commit/7790d928bb)] - **promisify**: tests pass (Julian Gruber)
-* [[`96353b0dd7`](https://github.com/level/levelup/commit/96353b0dd7)] - add greenkeeper badge (Lars-Magnus Skog)
-* [[`6a9c97833d`](https://github.com/level/levelup/commit/6a9c97833d)] - :sparkles: 2016 -\> 2017 (Lars-Magnus Skog)
-* [[`f749ed706f`](https://github.com/level/levelup/commit/f749ed706f)] - remove browser field from package.json (Lars-Magnus Skog)
-* [[`45ec2e18de`](https://github.com/level/levelup/commit/45ec2e18de)] - :sparkles: options parameter in maybeError() not used (Lars-Magnus Skog)
-* [[`c7b95a0b4c`](https://github.com/level/levelup/commit/c7b95a0b4c)] - :sparkles: use AbstractLevelDOWN#status :white_check_mark: add test to validate old backends (Lars-Magnus Skog)
-* [[`34fe873e2c`](https://github.com/level/levelup/commit/34fe873e2c)] - db as first parameter :fire: remove location :arrow_up: update deferred-leveldown :memo: (Lars-Magnus Skog)
-* [[`cf9033cc86`](https://github.com/level/levelup/commit/cf9033cc86)] - remove optional leveldown (pass in as options.db) (Lars-Magnus Skog)
-* [[`feaeaea82b`](https://github.com/level/levelup/commit/feaeaea82b)] - :fire: remove .fillCache (Lars-Magnus Skog)
-* [[`aa4f905f99`](https://github.com/level/levelup/commit/aa4f905f99)] - :fire: remove .sync (Lars-Magnus Skog)
-* [[`e897ceae33`](https://github.com/level/levelup/commit/e897ceae33)] - :fire: remove .cacheSize (Lars-Magnus Skog)
-* [[`9c7ea3189e`](https://github.com/level/levelup/commit/9c7ea3189e)] - :fire: remove .compression (Lars-Magnus Skog)
-* [[`26e2e05b86`](https://github.com/level/levelup/commit/26e2e05b86)] - :fire: remove .createIfMissing (Lars-Magnus Skog)
-* [[`7c16fe9799`](https://github.com/level/levelup/commit/7c16fe9799)] - :fire: remove .errorIfExists (Lars-Magnus Skog)
-* [[`0b3792acdf`](https://github.com/level/levelup/commit/0b3792acdf)] - :fire: remove approximateSize(), destroy(), repair() and getProperty() (Lars-Magnus Skog)
 
 ## 1.0.0 @ May 14 2015
 
