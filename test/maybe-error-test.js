@@ -2,6 +2,7 @@
  * See list at <https://github.com/level/levelup#contributing>
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
+'use strict'
 
 var common = require('./common')
 var assert = require('referee').assert
