@@ -49,7 +49,7 @@
     "bustermove": "~1.0.0",
     "concat-stream": "~1.6.0",
     "delayed": "~1.0.1",
-    "encoding-down": "^2.2.0",
+    "encoding-down": "^3.0.0",
     "faucet": "~0.0.1",
     "leveldown": "^2.0.0",
     "memdown": "^1.2.4",
