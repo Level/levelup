@@ -54,25 +54,6 @@ buster.testCase('batch()', {
     })
   },
 
-  'batch() no type set defaults to put': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch([
-        { key: 'foo', value: 'afoovalue' },
-        { key: 'bar', value: 'abarvalue' },
-        { key: 'baz', value: 'abazvalue' }
-      ], function (err) {
-        refute(err)
-        async.forEach(['foo', 'bar', 'baz'], function (key, callback) {
-          db.get(key, function (err, value) {
-            refute(err)
-            assert.equals(value, 'a' + key + 'value')
-            callback()
-          })
-        }, done)
-      })
-    })
-  },
-
   'batch() with multiple puts and deletes': function (done) {
     this.openTestDatabase(function (db) {
       async.series([
