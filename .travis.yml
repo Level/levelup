@@ -14,8 +14,9 @@ addons:
 
 before_install:
   - export JOBS=max
-  
+
 node_js:
+  - '9'
   - '8'
   - '6'
   - '4'
