@@ -15,11 +15,11 @@
   * <a href="#promises">Promise Support</a>
   * <a href="#import">ES6 Import</a>
   * <a href="#events">Events</a>
-  * <a href="#extending">Extending `levelup`</a>
+  * <a href="#extending">Extending</a>
   * <a href="#multiproc">Multi-process Access</a>
-  * <a href="#support">Getting Support</a>
+  * <a href="#support">Support</a>
   * <a href="#contributing">Contributing</a>
-  * <a href="#license">Licence and Copyright</a>
+  * <a href="#license">License</a>
 
 **If you are upgrading:** please see `CHANGELOG.md`.
 
@@ -444,7 +444,7 @@ db.on('put', function (key, value) {
 ```
 
 <a name="extending"></a>
-## Extending `levelup`
+## Extending
 
 A list of <a href="https://github.com/level/levelup/wiki/Modules"><b>Level modules and projects</b></a> can be found in the wiki. We are in the process of moving all this to [`awesome`](https://github.com/Level/awesome/).
 
@@ -456,7 +456,7 @@ Stores like LevelDB are thread-safe but they are **not** suitable for accessing 
 See the aformentioned <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for modules like [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
 
 <a name="support"></a>
-## Getting Support
+## Support
 
 There are multiple ways you can find help in using Level in Node.js:
 
@@ -474,12 +474,12 @@ There are multiple ways you can find help in using Level in Node.js:
 See the [contribution guide](https://github.com/Level/community/blob/master/CONTRIBUTING.md) for more details.
 
 <a name="license"></a>
-## License and Copyright
+## License
 
 Copyright &copy; 2012-2017 `levelup` [contributors](https://github.com/level/community#contributors).
 
 `levelup` is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included `LICENSE.md` file for more details.
 
-*`levelup` builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD Licence](http://opensource.org/licenses/BSD-3-Clause).*
+*`levelup` builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD License](http://opensource.org/licenses/BSD-3-Clause).*
 
 [level-badge]: http://leveldb.org/img/badge.svg
