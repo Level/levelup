@@ -367,9 +367,9 @@ Check out the implementations that the community has already produced [here](htt
 <a name="promises"></a>
 ## Promise Support
 
-LevelUp ships with native `Promise` support out of the box.
+`levelup` ships with native `Promise` support out of the box.
 
-Each function taking a callback also can be used as a promise, if the callback is omitted. This applies for:
+Each function accepting a callback returns a promise if the callback is omitted. This applies for:
 
 - `db.get(key[, options])`
 - `db.put(key, value[, options])`
