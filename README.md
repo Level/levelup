@@ -9,23 +9,22 @@
 [![npm](https://img.shields.io/npm/dm/levelup.svg)](https://www.npmjs.com/package/levelup)
 
   * <a href="#intro">Introduction</a>
-  * <a href="#platforms">Tested &amp; supported platforms</a>
-  * <a href="#basic">Basic usage</a>
+  * <a href="#platforms">Supported Platforms</a>
+  * <a href="#usage">Usage</a>
   * <a href="#api">API</a>
   * <a href="#promises">Promise Support</a>
-  * <a href="#import">Import with Type Definitions</a>
+  * <a href="#import">ES6 Import</a>
   * <a href="#events">Events</a>
-  * <a href="#extending">Extending levelup</a>
-  * <a href="#multiproc">Multi-process access</a>
-  * <a href="#support">Getting support</a>
+  * <a href="#extending">Extending `levelup`</a>
+  * <a href="#multiproc">Multi-process Access</a>
+  * <a href="#support">Getting Support</a>
   * <a href="#contributing">Contributing</a>
-  * <a href="#license">Licence &amp; copyright</a>
+  * <a href="#license">Licence and Copyright</a>
 
 **If you are upgrading:** please see `CHANGELOG.md`.
 
 <a name="intro"></a>
-Introduction
-------------
+## Introduction
 
 **Fast and simple storage. A Node.js wrapper for `abstract-leveldown` compliant stores, which follow the characteristics of [LevelDB](https://github.com/google/leveldb).**
 
@@ -38,14 +37,12 @@ The most common store is [`leveldown`](https://github.com/level/leveldown/) whic
 **The [`level`](https://github.com/level/level) package is the recommended way to get started.** It conveniently bundles `levelup`, [`leveldown`](https://github.com/level/leveldown/) and [`encoding-down`](https://github.com/level/encoding-down). Its main export is `levelup` - i.e. you can do `var db = require('level')`.
 
 <a name="platforms"></a>
-Tested & supported platforms
-----------------------------
+## Supported Platforms
 
 We aim to support Active LTS and Current Node.js releases as well as browsers. For support of the underlying store, please see the respective documentation.
 
-<a name="basic"></a>
-Basic usage
------------
+<a name="usage"></a>
+## Usage
 
 First you need to install `levelup`! No stores are included so you must also install `leveldown` (for example).
 
@@ -96,8 +93,6 @@ db.put('name', 'levelup', function (err) {
 ### Special Notes
   * <a href="#writeStreams">What happened to <code><b>db.createWriteStream()</b></code></a>
 
-
---------------------------------------------------------
 <a name="ctor"></a>
 ### levelup(db[, options[, callback]])
 The main entry point for creating a new `levelup` instance.
@@ -132,7 +127,6 @@ db.get('foo', function (err, value) {
 })
 ```
 
---------------------------------------------------------
 <a name="open"></a>
 ### db.open([callback])
 Opens the underlying store. In general you should never need to call this method directly as it's automatically called by <a href="#ctor"><code>levelup()</code></a>.
@@ -141,7 +135,6 @@ However, it is possible to *reopen* the store after it has been closed with <a h
 
 If no callback is passed, a promise is returned.
 
---------------------------------------------------------
 <a name="close"></a>
 ### db.close([callback])
 <code>close()</code> closes the underlying store. The callback will receive any error encountered during closing as the first argument.
@@ -150,7 +143,6 @@ You should always clean up your `levelup` instance by calling `close()` when you
 
 If no callback is passed, a promise is returned.
 
---------------------------------------------------------
 <a name="put"></a>
 ### db.put(key, value[, options][, callback])
 <code>put()</code> is the primary method for inserting data into the store. Both `key` and `value` can be of any type as far as `levelup` is concerned.
@@ -159,7 +151,6 @@ If no callback is passed, a promise is returned.
 
 If no callback is passed, a promise is returned.
 
---------------------------------------------------------
 <a name="get"></a>
 ### db.get(key[, options][, callback])
 <code>get()</code> is the primary method for fetching data from the store. The `key` can be of any type. If it doesn't exist in the store then the callback or promise will receive an error. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
@@ -183,7 +174,6 @@ db.get('foo', function (err, value) {
 
 If no callback is passed, a promise is returned.
 
---------------------------------------------------------
 <a name="del"></a>
 ### db.del(key[, options][, callback])
 <code>del()</code> is the primary method for removing data from the store.
@@ -198,7 +188,6 @@ db.del('foo', function (err) {
 
 If no callback is passed, a promise is returned.
 
---------------------------------------------------------
 <a name="batch"></a>
 ### db.batch(array[, options][, callback]) *(array form)*
 <code>batch()</code> can be used for very fast bulk-write operations (both *put* and *delete*). The `array` argument should contain a list of operations to be executed sequentially, although as a whole they are performed as an atomic operation inside the underlying store.
@@ -226,7 +215,6 @@ db.batch(ops, function (err) {
 
 If no callback is passed, a promise is returned.
 
---------------------------------------------------------
 <a name="batch_chained"></a>
 ### db.batch() *(chained form)*
 <code>batch()</code>, when called with no arguments will return a `Batch` object which can be used to build, and eventually commit, an atomic batch operation. Depending on how it's used, it is possible to obtain greater performance when using the chained form of `batch()` over the array form.
@@ -267,7 +255,6 @@ Commit the queued operations for this batch. All operations not *cleared* will b
 
 If no callback is passed, a promise is returned.
 
---------------------------------------------------------
 <a name="isOpen"></a>
 ### db.isOpen()
 
@@ -281,7 +268,6 @@ A `levelup` instance can be in one of the following states:
 
 `isOpen()` will return `true` only when the state is "open".
 
---------------------------------------------------------
 <a name="isClosed"></a>
 ### db.isClosed()
 
@@ -289,7 +275,6 @@ A `levelup` instance can be in one of the following states:
 
 `isClosed()` will return `true` only when the state is "closing" *or* "closed", it can be useful for determining if read and write operations are permissible.
 
---------------------------------------------------------
 <a name="createReadStream"></a>
 ### db.createReadStream([options])
 
@@ -331,7 +316,6 @@ Legacy options:
 
 * `end`: instead use `lte`
 
---------------------------------------------------------
 <a name="createKeyStream"></a>
 ### db.createKeyStream([options])
 
@@ -352,7 +336,6 @@ db.createReadStream({ keys: true, values: false })
   })
 ```
 
---------------------------------------------------------
 <a name="createValueStream"></a>
 ### db.createValueStream([options])
 
@@ -373,7 +356,6 @@ db.createReadStream({ keys: false, values: true })
   })
 ```
 
---------------------------------------------------------
 <a name="writeStreams"></a>
 #### What happened to `db.createWriteStream`?
 
@@ -383,11 +365,8 @@ The main driver for this was performance. While `db.createReadStream()` performs
 
 Check out the implementations that the community has already produced [here](https://github.com/level/levelup/wiki/Modules#write-streams).
 
---------------------------------------------------------
-
 <a name="promises"></a>
-Promise Support
----------------
+## Promise Support
 
 LevelUp ships with native `Promise` support out of the box.
 
@@ -423,11 +402,8 @@ const main = async () => {
 }
 ```
 
---------------------------------------------------------
-
 <a name="import"></a>
-ES6 Import
-----------
+## ES6 Import
 
 We have two ways to import(require) the levelup module in the code.
 
@@ -443,11 +419,8 @@ var levelup = require('levelup')
 import levelup from 'levelup'
 ```
 
---------------------------------------------------------
-
 <a name="events"></a>
-Events
-------
+## Events
 
 `levelup` is an [`EventEmitter`](https://nodejs.org/api/events.html) and emits the following events.
 
@@ -471,22 +444,19 @@ db.on('put', function (key, value) {
 ```
 
 <a name="extending"></a>
-Extending `levelup`
------------------
+## Extending `levelup`
 
 A list of <a href="https://github.com/level/levelup/wiki/Modules"><b>Level modules and projects</b></a> can be found in the wiki. We are in the process of moving all this to [`awesome`](https://github.com/Level/awesome/).
 
 <a name="multiproc"></a>
-Multi-process access
---------------------
+## Multi-process Access
 
 Stores like LevelDB are thread-safe but they are **not** suitable for accessing with multiple processes. You should only ever have a store open from a single Node.js process. Node.js clusters are made up of multiple processes so a `levelup` instance cannot be shared between them either.
 
 See the aformentioned <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for modules like [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
 
 <a name="support"></a>
-Getting support
----------------
+## Getting Support
 
 There are multiple ways you can find help in using Level in Node.js:
 
@@ -495,8 +465,7 @@ There are multiple ways you can find help in using Level in Node.js:
  * **GitHub:** you're welcome to open an issue here on this GitHub repository if you have a question.
 
 <a name="contributing"></a>
-Contributing
-------------
+## Contributing
 
 `levelup` is an **OPEN Open Source Project**. This means that:
 
@@ -505,8 +474,7 @@ Contributing
 See the [contribution guide](https://github.com/Level/community/blob/master/CONTRIBUTING.md) for more details.
 
 <a name="license"></a>
-License &amp; copyright
--------------------
+## License and Copyright
 
 Copyright &copy; 2012-2017 `levelup` [contributors](https://github.com/level/community#contributors).
 
