@@ -9,13 +9,13 @@
 [![npm](https://img.shields.io/npm/dm/levelup.svg)](https://www.npmjs.com/package/levelup)
 
   * [Introduction](#introduction)
-  * [Platforms](#platforms)
+  * [Supported Platforms](#supported-platforms)
   * [Usage](#usage)
   * [API](#api)
-  * [Promises](#promises)
+  * [Promise Support](#promise-support)
   * [Events](#events)
   * [Extending](#extending)
-  * [Multi-process](#multi-process)
+  * [Multi-process Access](#multi-process-access)
   * [Support](#support)
   * [Contributing](#contributing)
   * [License](#license)
@@ -34,7 +34,7 @@ The most common store is [`leveldown`](https://github.com/level/leveldown/) whic
 
 **The [`level`](https://github.com/level/level) package is the recommended way to get started.** It conveniently bundles `levelup`, [`leveldown`](https://github.com/level/leveldown/) and [`encoding-down`](https://github.com/level/encoding-down). Its main export is `levelup` - i.e. you can do `var db = require('level')`.
 
-## Platforms
+## Supported Platforms
 
 We aim to support Active LTS and Current Node.js releases as well as browsers. For support of the underlying store, please see the respective documentation.
 
@@ -360,7 +360,7 @@ The main driver for this was performance. While `db.createReadStream()` performs
 
 Check out the implementations that the community has already produced [here](https://github.com/level/levelup/wiki/Modules#write-streams).
 
-## Promises
+## Promise Support
 
 `levelup` ships with native `Promise` support out of the box.
 
@@ -423,7 +423,7 @@ db.on('put', function (key, value) {
 
 A list of <a href="https://github.com/level/levelup/wiki/Modules"><b>Level modules and projects</b></a> can be found in the wiki. We are in the process of moving all this to [`awesome`](https://github.com/Level/awesome/).
 
-## Multi-process
+## Multi-process Access
 
 Stores like LevelDB are thread-safe but they are **not** suitable for accessing with multiple processes. You should only ever have a store open from a single Node.js process. Node.js clusters are made up of multiple processes so a `levelup` instance cannot be shared between them either.
 
