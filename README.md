@@ -8,21 +8,20 @@
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![npm](https://img.shields.io/npm/dm/levelup.svg)](https://www.npmjs.com/package/levelup)
 
-  * <a href="#intro">Introduction</a>
-  * <a href="#platforms">Supported Platforms</a>
-  * <a href="#usage">Usage</a>
-  * <a href="#api">API</a>
-  * <a href="#promises">Promise Support</a>
-  * <a href="#events">Events</a>
-  * <a href="#extending">Extending</a>
-  * <a href="#multiproc">Multi-process Access</a>
-  * <a href="#support">Support</a>
-  * <a href="#contributing">Contributing</a>
-  * <a href="#license">License</a>
+  * [Introduction](#introduction)
+  * [Supported Platforms](#supported-platforms)
+  * [Usage](#usage)
+  * [API](#api)
+  * [Promise Support](#promise-support)
+  * [Events](#events)
+  * [Extending](#extending)
+  * [Multi-process Access](#multi-process-access)
+  * [Support](#support)
+  * [Contributing](#contributing)
+  * [License](#license)
 
 **If you are upgrading:** please see `CHANGELOG.md`.
 
-<a name="intro"></a>
 ## Introduction
 
 **Fast and simple storage. A Node.js wrapper for `abstract-leveldown` compliant stores, which follow the characteristics of [LevelDB](https://github.com/google/leveldb).**
@@ -35,12 +34,10 @@ The most common store is [`leveldown`](https://github.com/level/leveldown/) whic
 
 **The [`level`](https://github.com/level/level) package is the recommended way to get started.** It conveniently bundles `levelup`, [`leveldown`](https://github.com/level/leveldown/) and [`encoding-down`](https://github.com/level/encoding-down). Its main export is `levelup` - i.e. you can do `var db = require('level')`.
 
-<a name="platforms"></a>
 ## Supported Platforms
 
 We aim to support Active LTS and Current Node.js releases as well as browsers. For support of the underlying store, please see the respective documentation.
 
-<a name="usage"></a>
 ## Usage
 
 First you need to install `levelup`! No stores are included so you must also install `leveldown` (for example).
@@ -72,22 +69,21 @@ db.put('name', 'levelup', function (err) {
 })
 ```
 
-<a name="api"></a>
 ## API
 
-  * <a href="#ctor"><code><b>levelup()</b></code></a>
-  * <a href="#open"><code>db.<b>open()</b></code></a>
-  * <a href="#close"><code>db.<b>close()</b></code></a>
-  * <a href="#put"><code>db.<b>put()</b></code></a>
-  * <a href="#get"><code>db.<b>get()</b></code></a>
-  * <a href="#del"><code>db.<b>del()</b></code></a>
-  * <a href="#batch"><code>db.<b>batch()</b></code> *(array form)*</a>
-  * <a href="#batch_chained"><code>db.<b>batch()</b></code> *(chained form)*</a>
-  * <a href="#isOpen"><code>db.<b>isOpen()</b></code></a>
-  * <a href="#isClosed"><code>db.<b>isClosed()</b></code></a>
-  * <a href="#createReadStream"><code>db.<b>createReadStream()</b></code></a>
-  * <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
-  * <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
+  * [<code><b>levelup()</b></code>](#ctor)
+  * [<code>db.<b>open()</b></code>](#open)
+  * [<code>db.<b>close()</b></code>](#close)
+  * [<code>db.<b>put()</b></code>](#put)
+  * [<code>db.<b>get()</b></code>](#get)
+  * [<code>db.<b>del()</b></code>](#del)
+  * [<code>db.<b>batch()</b></code> *(array form)*](#batch)
+  * [<code>db.<b>batch()</b></code> *(chained form)*](#batch_chained)
+  * [<code>db.<b>isOpen()</b></code>](#isOpen)
+  * [<code>db.<b>isClosed()</b></code>](#isClosed)
+  * [<code>db.<b>createReadStream()</b></code>](#createReadStream)
+  * [<code>db.<b>createKeyStream()</b></code>](#createKeyStream)
+  * [<code>db.<b>createValueStream()</b></code>](#createValueStream)
 
 ### Special Notes
   * <a href="#writeStreams">What happened to <code><b>db.createWriteStream()</b></code></a>
@@ -364,7 +360,6 @@ The main driver for this was performance. While `db.createReadStream()` performs
 
 Check out the implementations that the community has already produced [here](https://github.com/level/levelup/wiki/Modules#write-streams).
 
-<a name="promises"></a>
 ## Promise Support
 
 `levelup` ships with native `Promise` support out of the box.
@@ -401,7 +396,6 @@ const main = async () => {
 }
 ```
 
-<a name="events"></a>
 ## Events
 
 `levelup` is an [`EventEmitter`](https://nodejs.org/api/events.html) and emits the following events.
@@ -425,19 +419,16 @@ db.on('put', function (key, value) {
 })
 ```
 
-<a name="extending"></a>
 ## Extending
 
 A list of <a href="https://github.com/level/levelup/wiki/Modules"><b>Level modules and projects</b></a> can be found in the wiki. We are in the process of moving all this to [`awesome`](https://github.com/Level/awesome/).
 
-<a name="multiproc"></a>
 ## Multi-process Access
 
 Stores like LevelDB are thread-safe but they are **not** suitable for accessing with multiple processes. You should only ever have a store open from a single Node.js process. Node.js clusters are made up of multiple processes so a `levelup` instance cannot be shared between them either.
 
 See the aformentioned <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for modules like [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
 
-<a name="support"></a>
 ## Support
 
 There are multiple ways you can find help in using Level in Node.js:
@@ -446,7 +437,6 @@ There are multiple ways you can find help in using Level in Node.js:
  * **Mailing list:** there is an active [Node.js LevelDB](https://groups.google.com/forum/#!forum/node-levelup) Google Group.
  * **GitHub:** you're welcome to open an issue here on this GitHub repository if you have a question.
 
-<a name="contributing"></a>
 ## Contributing
 
 `levelup` is an **OPEN Open Source Project**. This means that:
@@ -455,7 +445,6 @@ There are multiple ways you can find help in using Level in Node.js:
 
 See the [contribution guide](https://github.com/Level/community/blob/master/CONTRIBUTING.md) for more details.
 
-<a name="license"></a>
 ## License
 
 Copyright &copy; 2012-2017 `levelup` [contributors](https://github.com/level/community#contributors).
