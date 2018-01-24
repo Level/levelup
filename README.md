@@ -71,19 +71,19 @@ db.put('name', 'levelup', function (err) {
 
 ## API
 
-  * <a href="#ctor"><code><b>levelup()</b></code></a>
-  * <a href="#open"><code>db.<b>open()</b></code></a>
-  * <a href="#close"><code>db.<b>close()</b></code></a>
-  * <a href="#put"><code>db.<b>put()</b></code></a>
-  * <a href="#get"><code>db.<b>get()</b></code></a>
-  * <a href="#del"><code>db.<b>del()</b></code></a>
-  * <a href="#batch"><code>db.<b>batch()</b></code> *(array form)*</a>
-  * <a href="#batch_chained"><code>db.<b>batch()</b></code> *(chained form)*</a>
-  * <a href="#isOpen"><code>db.<b>isOpen()</b></code></a>
-  * <a href="#isClosed"><code>db.<b>isClosed()</b></code></a>
-  * <a href="#createReadStream"><code>db.<b>createReadStream()</b></code></a>
-  * <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
-  * <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
+  * [<code><b>levelup()</b></code>](#ctor)
+  * [<code>db.<b>open()</b></code>](#open)
+  * [<code>db.<b>close()</b></code>](#close)
+  * [<code>db.<b>put()</b></code>](#put)
+  * [<code>db.<b>get()</b></code>](#get)
+  * [<code>db.<b>del()</b></code>](#del)
+  * [<code>db.<b>batch()</b></code> *(array form)*](#batch)
+  * [<code>db.<b>batch()</b></code> *(chained form)*](#batch_chained)
+  * [<code>db.<b>isOpen()</b></code>](#isOpen)
+  * [<code>db.<b>isClosed()</b></code>](#isClosed)
+  * [<code>db.<b>createReadStream()</b></code>](#createReadStream)
+  * [<code>db.<b>createKeyStream()</b></code>](#createKeyStream)
+  * [<code>db.<b>createValueStream()</b></code>](#createValueStream)
 
 ### Special Notes
   * <a href="#writeStreams">What happened to <code><b>db.createWriteStream()</b></code></a>
