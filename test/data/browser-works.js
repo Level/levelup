@@ -3,4 +3,5 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-require('../..')(require('memdown')('some/path'))
+const LevelUp = require('../../lib/levelup.js')
+new LevelUp(require('memdown')('some/path')) // eslint-disable-line no-new

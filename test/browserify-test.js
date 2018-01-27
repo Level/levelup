@@ -3,25 +3,24 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
-var browserify = require('browserify')
-var path = require('path')
-var after = require('after')
-var bl = require('bl')
-var spawn = require('child_process').spawn
-var PACKAGE_JSON = path.join(__dirname, '..', 'package.json')
+const { assert, refute } = require('referee')
+const buster = require('bustermove')
+const browserify = require('browserify')
+const path = require('path')
+const after = require('after')
+const bl = require('bl')
+const { spawn } = require('child_process')
+const PACKAGE_JSON = path.join(__dirname, '..', 'package.json')
 
 buster.testCase('Browserify Bundle', {
   'does not contain package.json': function (done) {
     var b = browserify(path.join(__dirname, '..'), { browserField: true })
-      .once('error', function (error) {
+      .once('error', error => {
         assert.fail(error)
         done()
       })
     b.pipeline
-      .on('file', function (file, id, parent) {
+      .on('file', (file, id, parent) => {
         refute.equals(file, PACKAGE_JSON)
       })
     b.bundle(done)
@@ -30,12 +29,12 @@ buster.testCase('Browserify Bundle', {
     var b = browserify(path.join(__dirname, 'data/browser-throws.js'), { browserField: true })
     var node = spawn('node')
     var fin = after(2, done)
-    node.stderr.pipe(bl(function (err, buf) {
+    node.stderr.pipe(bl((err, buf) => {
       refute(err)
       assert.match(buf.toString(), /InitializationError: Must provide db/)
       fin()
     }))
-    node.on('exit', function (code) {
+    node.on('exit', code => {
       assert.equals(code, 1)
       fin()
     })
@@ -44,7 +43,7 @@ buster.testCase('Browserify Bundle', {
   'works with valid db factory (memdown)': function (done) {
     var b = browserify(path.join(__dirname, 'data/browser-works.js'), { browserField: true })
     var node = spawn('node')
-    node.on('exit', function (code) {
+    node.on('exit', code => {
       assert.equals(code, 0)
       done()
     })

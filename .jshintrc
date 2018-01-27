@@ -9,7 +9,7 @@
   , "latedef": false
   , "noarg": true
   , "noempty": true
-  , "nonew": true
+  , "nonew": false
   , "plusplus": false
   , "quotmark": true
   , "regexp": false

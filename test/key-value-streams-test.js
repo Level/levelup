@@ -79,30 +79,30 @@ buster.testCase('Key and Value Streams', {
   },
 
   'test .valueStream()': function (done) {
-    this.openTestDatabase(function (db) {
+    this.openTestDatabase(db => {
       // execute
-      db.batch(this.sourceData.slice(), function (err) {
+      db.batch(this.sourceData.slice(), (err) => {
         refute(err)
 
         var rs = db.valueStream()
         rs.on('data', this.dataSpy)
         rs.on('end', this.endSpy)
         rs.on('close', this.verify.bind(this, rs, this.sourceValues, done))
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test .readStream({keys:false,values:true})': function (done) {
-    this.openTestDatabase(function (db) {
+    this.openTestDatabase(db => {
       // execute
-      db.batch(this.sourceData.slice(), function (err) {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.readStream({ keys: false, values: true })
         rs.on('data', this.dataSpy)
         rs.on('end', this.endSpy)
         rs.on('close', this.verify.bind(this, rs, this.sourceValues, done))
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   }
 })

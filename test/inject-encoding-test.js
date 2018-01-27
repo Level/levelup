@@ -3,7 +3,7 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
+var LevelUp = require('../lib/levelup.js')
 var leveldown = require('leveldown')
 var encDown = require('encoding-down')
 var async = require('async')
@@ -15,18 +15,18 @@ var buster = require('bustermove')
 
 buster.testCase('JSON API', {
   'setUp': function (done) {
-    common.commonSetUp.call(this, function () {
+    common.commonSetUp.call(this, () => {
       this.runTest = function (testData, assertType, done) {
         var location = common.nextLocation()
         this.cleanupDirs.push(location)
-        levelup(encDown(leveldown(location), {
+        new LevelUp(encDown(leveldown(location), { // eslint-disable-line no-new
           valueEncoding: {
             encode: msgpack.encode,
             decode: msgpack.decode,
             buffer: true,
             type: 'msgpack'
           }
-        }), function (err, db) {
+        }), (err, db) => {
           refute(err)
           if (err) return
 
@@ -44,10 +44,10 @@ buster.testCase('JSON API', {
               })
             }, done)
           })
-        }.bind(this))
+        })
       }
       done()
-    }.bind(this))
+    })
   },
 
   'tearDown': common.commonTearDown,

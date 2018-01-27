@@ -3,7 +3,7 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
+var LevelUp = require('../lib/levelup.js')
 var leveldown = require('leveldown')
 var common = require('./common')
 var assert = require('referee').assert
@@ -14,15 +14,14 @@ buster.testCase('Init & open()', {
   'setUp': common.commonSetUp,
   'tearDown': common.commonTearDown,
 
-  'levelup()': function () {
-    assert.isFunction(levelup)
-    assert.equals(levelup.length, 3) // db, options & callback arguments
-    assert.exception(levelup, 'InitializationError') // no db
+  'new LevelUp()': function () {
+    assert.equals(LevelUp.length, 3) // db, options & callback arguments
+    assert.exception(LevelUp, 'InitializationError') // no db
   },
 
   'open and close statuses': function (done) {
     var location = common.nextLocation()
-    levelup(leveldown(location), function (err, db) {
+    new LevelUp(leveldown(location), (err, db) => { // eslint-disable-line no-new
       refute(err, 'no error')
       assert.isTrue(db.isOpen())
       this.closeableDatabases.push(db)
@@ -33,18 +32,18 @@ buster.testCase('Init & open()', {
         assert.isFalse(db.isOpen())
         assert.isTrue(db.isClosed())
 
-        levelup(leveldown(location), function (err, db) {
+        new LevelUp(leveldown(location), function (err, db) { // eslint-disable-line no-new
           refute(err)
           assert.isObject(db)
           done()
         })
       })
-    }.bind(this))
+    })
   },
 
   'without callback': function (done) {
     var location = common.nextLocation()
-    var db = levelup(leveldown(location))
+    var db = new LevelUp(leveldown(location)) // eslint-disable-line no-new
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
     assert.isObject(db)
@@ -61,7 +60,7 @@ buster.testCase('Init & open()', {
       set: function () {}
     })
     try {
-      levelup(down)
+      new LevelUp(down) // eslint-disable-line no-new
     } catch (err) {
       assert.equals(err.message, '.status required, old abstract-leveldown')
       return done()

@@ -3,28 +3,27 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var referee = require('referee')
-var assert = referee.assert
-var refute = referee.refute
-var crypto = require('crypto')
-var async = require('async')
-var rimraf = require('rimraf')
-var fs = require('fs')
-var path = require('path')
-var delayed = require('delayed').delayed
-var levelup = require('../lib/levelup.js')
-var errors = require('level-errors')
-var dbidx = 0
-var leveldown = require('leveldown')
-var encDown = require('encoding-down')
+const referee = require('referee')
+const { assert, refute } = referee
+const crypto = require('crypto')
+const async = require('async')
+const rimraf = require('rimraf')
+const fs = require('fs')
+const path = require('path')
+const { delayed } = require('delayed')
+const LevelUp = require('../lib/levelup.js')
+const errors = require('level-errors')
+let dbidx = 0
+const leveldown = require('leveldown')
+const encDown = require('encoding-down')
 
-assert(levelup.errors === errors)
+assert(LevelUp.errors === errors)
 
 referee.add('isInstanceOf', {
-  assert: function (actual, expected) {
+  assert: (actual, expected) => {
     return actual instanceof expected
   },
-  refute: function (actual, expected) {
+  refute: (actual, expected) => {
     return !(actual instanceof expected)
   },
   assertMessage: '${0} expected to be instance of ${1}', // eslint-disable-line
@@ -32,21 +31,20 @@ referee.add('isInstanceOf', {
 })
 
 referee.add('isUndefined', {
-  assert: function (actual) {
+  assert: actual => {
     return actual === undefined
   },
-  refute: function (actual) {
+  refute: actual => {
     return actual !== undefined
   },
   assertMessage: '${0} expected to be undefined', // eslint-disable-line
   refuteMessage: '${0} expected not to be undefined' // eslint-disable-line
 })
 
-module.exports.nextLocation = function () {
-  return path.join(__dirname, '_levelup_test_db_' + dbidx++)
-}
+module.exports.nextLocation = () =>
+  path.join(__dirname, '_levelup_test_db_' + dbidx++)
 
-module.exports.cleanup = function (callback) {
+module.exports.cleanup = callback =>
   fs.readdir(__dirname, function (err, list) {
     if (err) return callback(err)
 
@@ -64,39 +62,38 @@ module.exports.cleanup = function (callback) {
       })
     })
   })
-}
 
 module.exports.openTestDatabase = function () {
   var options = typeof arguments[0] === 'object' ? arguments[0] : {}
   var callback = typeof arguments[0] === 'function' ? arguments[0] : arguments[1]
   var location = typeof arguments[0] === 'string' ? arguments[0] : module.exports.nextLocation()
 
-  rimraf(location, function (err) {
+  rimraf(location, err => {
     refute(err)
     this.cleanupDirs.push(location)
-    levelup(encDown(leveldown(location), options), function (err, db) {
+    new LevelUp(encDown(leveldown(location), options), (err, db) => { // eslint-disable-line no-new
       refute(err)
       if (!err) {
         this.closeableDatabases.push(db)
         callback(db)
       }
-    }.bind(this))
-  }.bind(this))
+    })
+  })
 }
 
-module.exports.commonTearDown = function (done) {
-  async.forEach(this.closeableDatabases, function (db, callback) {
+module.exports.commonTearDown = done => {
+  async.forEach(this.closeableDatabases, (db, callback) => {
     db.close(callback)
   }, module.exports.cleanup.bind(null, done))
 }
 
-module.exports.loadBinaryTestData = function (callback) {
+module.exports.loadBinaryTestData = callback => {
   fs.readFile(path.join(__dirname, 'data/testdata.bin'), callback)
 }
 
 module.exports.binaryTestDataMD5Sum = '920725ef1a3b32af40ccd0b78f4a62fd'
 
-module.exports.checkBinaryTestData = function (testData, callback) {
+module.exports.checkBinaryTestData = (testData, callback) => {
   var md5sum = crypto.createHash('md5')
   md5sum.update(testData)
   assert.equals(md5sum.digest('hex'), module.exports.binaryTestDataMD5Sum)
@@ -112,7 +109,7 @@ module.exports.commonSetUp = function (done) {
 }
 
 module.exports.readStreamSetUp = function (done) {
-  module.exports.commonSetUp.call(this, function () {
+  module.exports.commonSetUp.call(this, () => {
     var i
     var k
 
@@ -129,11 +126,11 @@ module.exports.readStreamSetUp = function (done) {
       })
     }
 
-    this.verify = delayed(function (rs, done, data) {
+    this.verify = delayed((rs, done, data) => {
       if (!data) data = this.sourceData // can pass alternative data array for verification
       assert.equals(this.endSpy.callCount, 1, 'ReadStream emitted single "end" event')
       assert.equals(this.dataSpy.callCount, data.length, 'ReadStream emitted correct number of "data" events')
-      data.forEach(function (d, i) {
+      data.forEach((d, i) => {
         var call = this.dataSpy.getCall(i)
         if (call) {
           assert.equals(call.args.length, 1, 'ReadStream "data" event #' + i + ' fired with 1 argument')
@@ -142,10 +139,10 @@ module.exports.readStreamSetUp = function (done) {
           assert.equals(call.args[0].key, d.key, 'ReadStream "data" event #' + i + ' argument has correct "key"')
           assert.equals(+call.args[0].value, +d.value, 'ReadStream "data" event #' + i + ' argument has correct "value"')
         }
-      }.bind(this))
+      })
       done()
     }, 0.05, this)
 
     done()
-  }.bind(this))
+  })
 }

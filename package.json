@@ -62,7 +62,7 @@
     "tape": "^4.7.0"
   },
   "scripts": {
-    "test": "standard && node test | faucet"
+    "test": "node test | faucet"
   },
   "engines": {
     "node": ">=4.0.0"

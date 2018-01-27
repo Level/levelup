@@ -15,9 +15,9 @@ buster.testCase('Snapshots', {
   'tearDown': common.commonTearDown,
 
   'test ReadStream implicit snapshot': function (done) {
-    this.openTestDatabase(function (db) {
+    this.openTestDatabase(db => {
       // 1) Store 100 random numbers stored in the database
-      db.batch(this.sourceData.slice(), function (err) {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         // 2) Create an iterator on the current data, pipe it through a SlowStream
@@ -31,7 +31,7 @@ buster.testCase('Snapshots', {
 
         rs.once('close', delayed.delayed(this.verify.bind(this, rs, done), 0.05))
 
-        process.nextTick(function () {
+        process.nextTick(() => {
           // 3) Concoct and write new random data over the top of existing items.
           //    If we're not using a snapshot then then we'd expect the test
           //    to fail because it'll pick up these new values rather than the
@@ -48,12 +48,12 @@ buster.testCase('Snapshots', {
               value: Math.random()
             })
           }
-          db.batch(newData.slice(), function (err) {
+          db.batch(newData.slice(), err => {
             refute(err)
             // we'll return here faster than it takes the readStream to complete
           })
         })
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   }
 })

@@ -3,9 +3,9 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
+var LevelUp = require('../lib/levelup.js')
 var leveldown = require('leveldown')
-var errors = levelup.errors
+var errors = LevelUp.errors
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
@@ -17,13 +17,13 @@ buster.testCase('null & undefined keys & values', {
 
   'null and undefined': {
     'setUp': function (done) {
-      levelup(leveldown(this.cleanupDirs[0] = common.nextLocation()), function (err, db) {
+      new LevelUp(leveldown(this.cleanupDirs[0] = common.nextLocation()), (err, db) => { // eslint-disable-line no-new
         refute(err) // sanity
         this.closeableDatabases.push(db)
         assert.isTrue(db.isOpen())
         this.db = db
         done()
-      }.bind(this))
+      })
     },
 
     'get() with null key causes error': function (done) {
