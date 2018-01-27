@@ -3,15 +3,14 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
-var leveldown = require('leveldown')
-var encDown = require('encoding-down')
-var async = require('async')
-var concat = require('concat-stream')
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
+const LevelUp = require('../lib/levelup.js')
+const leveldown = require('leveldown')
+const encDown = require('encoding-down')
+const async = require('async')
+const concat = require('concat-stream')
+const common = require('./common')
+const { assert, refute } = require('referee')
+const buster = require('bustermove')
 
 buster.testCase('Deferred open()', {
   'setUp': common.commonSetUp,
@@ -20,7 +19,7 @@ buster.testCase('Deferred open()', {
   'put() and get() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(encDown(leveldown(location)))
+    var db = new LevelUp(encDown(leveldown(location)))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -31,17 +30,17 @@ buster.testCase('Deferred open()', {
       db.put.bind(db, 'k1', 'v1'),
       db.put.bind(db, 'k2', 'v2'),
       db.put.bind(db, 'k3', 'v3')
-    ], function () {
+    ], () => {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
-      async.forEach([1, 2, 3], function (k, cb) {
-        db.get('k' + k, function (err, v) {
+      async.forEach([1, 2, 3], (k, cb) => {
+        db.get('k' + k, (err, v) => {
           refute(err)
           assert.equals(v, 'v' + k)
           cb()
         })
-      }, function () {
-        db.get('k4', function (err) {
+      }, () => {
+        db.get('k4', (err) => {
           assert(err)
           // DONE
           done()
@@ -57,7 +56,7 @@ buster.testCase('Deferred open()', {
   'batch() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(encDown(leveldown(location)))
+    var db = new LevelUp(encDown(leveldown(location)))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -68,17 +67,17 @@ buster.testCase('Deferred open()', {
       { type: 'put', key: 'k1', value: 'v1' },
       { type: 'put', key: 'k2', value: 'v2' },
       { type: 'put', key: 'k3', value: 'v3' }
-    ], function () {
+    ], () => {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
-      async.forEach([1, 2, 3], function (k, cb) {
-        db.get('k' + k, function (err, v) {
+      async.forEach([1, 2, 3], (k, cb) => {
+        db.get('k' + k, (err, v) => {
           refute(err)
           assert.equals(v, 'v' + k)
           cb()
         })
-      }, function () {
-        db.get('k4', function (err) {
+      }, () => {
+        db.get('k4', err => {
           assert(err)
           // DONE
           done()
@@ -94,7 +93,7 @@ buster.testCase('Deferred open()', {
   'chained batch() on pre-opened database': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(encDown(leveldown(location)))
+    var db = new LevelUp(encDown(leveldown(location)))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -133,26 +132,26 @@ buster.testCase('Deferred open()', {
 
     'simple ReadStream': function (done) {
       var location = common.nextLocation()
-      var db = levelup(encDown(leveldown(location)))
-      db.batch(this.sourceData.slice(), function (err) {
+      var db = new LevelUp(encDown(leveldown(location)))
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
-        db.close(function (err) {
+        db.close(err => {
           refute(err, 'no error')
-          var db = levelup(encDown(leveldown(location)))
+          var db = new LevelUp(encDown(leveldown(location)))
           this.closeableDatabases.push(db)
           var rs = db.createReadStream()
           rs.on('data', this.dataSpy)
           rs.on('end', this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
-        }.bind(this))
-      }.bind(this))
+        })
+      })
     }
   },
 
   'maxListeners warning': function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(encDown(leveldown(location)))
+    var db = new LevelUp(encDown(leveldown(location)))
     var stderrMock = this.mock(console)
 
     this.closeableDatabases.push(db)
@@ -174,7 +173,7 @@ buster.testCase('Deferred open()', {
 
   'value of queued operation is not serialized': function (done) {
     var location = common.nextLocation()
-    var db = levelup(encDown(leveldown(location), { valueEncoding: 'json' }))
+    var db = new LevelUp(encDown(leveldown(location), { valueEncoding: 'json' }))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -193,7 +192,7 @@ buster.testCase('Deferred open()', {
 
   'key of queued operation is not serialized': function (done) {
     var location = common.nextLocation()
-    var db = levelup(encDown(leveldown(location), { keyEncoding: 'json' }))
+    var db = new LevelUp(encDown(leveldown(location), { keyEncoding: 'json' }))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)

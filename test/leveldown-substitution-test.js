@@ -3,7 +3,7 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
+var LevelUp = require('../lib/levelup.js')
 var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
@@ -15,7 +15,7 @@ require('./common')
 buster.testCase('LevelDOWN Substitution', {
   'test substitution of LevelDOWN with MemDOWN': function (done) {
     var md = memdown('foo')
-    var db = levelup(encDown(md))
+    var db = new LevelUp(encDown(md))
     var entries = []
     var expected = [
       { key: 'a', value: 'A' },

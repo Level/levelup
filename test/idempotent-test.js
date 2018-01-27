@@ -3,7 +3,7 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
+var LevelUp = require('../lib/levelup.js')
 var leveldown = require('leveldown')
 var common = require('./common')
 var assert = require('referee').assert
@@ -19,10 +19,10 @@ buster.testCase('Idempotent open & close', {
     var n = 0
     var m = 0
     var db
-    var close = function () {
+    var close = () => {
       var closing = this.spy()
       db.on('closing', closing)
-      db.on('closed', function () {
+      db.on('closed', () => {
         assert.equals(closing.callCount, 1)
         assert.equals(closing.getCall(0).args, [])
         done()
@@ -31,11 +31,11 @@ buster.testCase('Idempotent open & close', {
       // close needs to be idempotent too.
       db.close()
       process.nextTick(db.close.bind(db))
-    }.bind(this)
+    }
 
     this.cleanupDirs.push(location)
 
-    db = levelup(leveldown(location), function () {
+    db = new LevelUp(leveldown(location), function () {
       assert.equals(n++, 0, 'callback should fire only once')
       if (n && m) { close() }
     })

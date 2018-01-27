@@ -3,7 +3,7 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
+var LevelUp = require('../lib/levelup.js')
 var leveldown = require('leveldown')
 var encDown = require('encoding-down')
 var common = require('./common')
@@ -25,17 +25,17 @@ buster.testCase('ReadStream', {
   // TODO: test various encodings
 
   'test simple ReadStream': function (done) {
-    this.openTestDatabase(function (db) {
+    this.openTestDatabase(db => {
       // execute
-      db.batch(this.sourceData.slice(), function (err) {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream()
         rs.on('data', this.dataSpy)
         rs.on('end', this.endSpy)
         rs.on('close', this.verify.bind(this, rs, done))
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test pausing': function (done) {
@@ -60,99 +60,99 @@ buster.testCase('ReadStream', {
 
     this.dataSpy = this.spy(onData) // so we can still verify
 
-    this.openTestDatabase(function (db) {
+    this.openTestDatabase(db => {
         // execute
-      db.batch(this.sourceData.slice(), function (err) {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         rs = db.createReadStream()
         rs.on('data', this.dataSpy)
         rs.on('end', this.endSpy)
         rs.on('end', verify.bind(this))
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test destroy() immediately': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream()
         rs.on('data', this.dataSpy)
         rs.on('end', this.endSpy)
-        rs.on('close', function () {
+        rs.on('close', () => {
           assert.equals(this.dataSpy.callCount, 0, '"data" event was not fired')
           assert.equals(this.endSpy.callCount, 0, '"end" event was not fired')
           done()
-        }.bind(this))
+        })
         rs.destroy()
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test destroy() after close': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream()
         rs.on('data', this.dataSpy)
         rs.on('end', this.endSpy)
-        rs.on('close', function () {
+        rs.on('close', () => {
           rs.destroy()
           done()
         })
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test destroy() after closing db': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
-        db.close(function (err) {
+        db.close(err => {
           refute(err)
           var rs = db.createReadStream()
           rs.destroy()
           done()
         })
       })
-    }.bind(this))
+    })
   },
 
   'test destroy() twice': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream()
-        rs.on('data', function () {
+        rs.on('data', () => {
           rs.destroy()
           rs.destroy()
           done()
         })
       })
-    }.bind(this))
+    })
   },
 
   'test destroy() half way through': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream()
         var endSpy = this.spy()
         var calls = 0
-        this.dataSpy = this.spy(function () {
+        this.dataSpy = this.spy(() => {
           if (++calls === 5) { rs.destroy() }
         })
         rs.on('data', this.dataSpy)
         rs.on('end', endSpy)
-        rs.on('close', function () {
+        rs.on('close', () => {
           // should do "data" 5 times ONLY
           assert.equals(this.dataSpy.callCount, 5, 'ReadStream emitted correct number of "data" events (5)')
-          this.sourceData.slice(0, 5).forEach(function (d, i) {
+          this.sourceData.slice(0, 5).forEach((d, i) => {
             var call = this.dataSpy.getCall(i)
             assert(call)
             if (call) {
@@ -162,17 +162,17 @@ buster.testCase('ReadStream', {
               assert.equals(call.args[0].key, d.key, 'ReadStream "data" event #' + i + ' argument has correct "key"')
               assert.equals(+call.args[0].value, +d.value, 'ReadStream "data" event #' + i + ' argument has correct "value"')
             }
-          }.bind(this))
+          })
           done()
-        }.bind(this))
-      }.bind(this))
-    }.bind(this))
+        })
+      })
+    })
   },
 
   'test readStream() with "reverse=true"': function (done) {
-    this.openTestDatabase(function (db) {
+    this.openTestDatabase(db => {
       // execute
-      db.batch(this.sourceData.slice(), function (err) {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ reverse: true })
@@ -181,13 +181,13 @@ buster.testCase('ReadStream', {
         rs.on('close', this.verify.bind(this, rs, done))
 
         this.sourceData.reverse() // for verify
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with "start"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ start: '50' })
@@ -197,13 +197,13 @@ buster.testCase('ReadStream', {
 
         // slice off the first 50 so verify() expects only the last 50 even though all 100 are in the db
         this.sourceData = this.sourceData.slice(50)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with "start" and "reverse=true"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ start: '50', reverse: true })
@@ -214,13 +214,13 @@ buster.testCase('ReadStream', {
         // reverse and slice off the first 50 so verify() expects only the first 50 even though all 100 are in the db
         this.sourceData.reverse()
         this.sourceData = this.sourceData.slice(49)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with "start" being mid-way key (float)': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         // '49.5' doesn't actually exist but we expect it to start at '50' because '49' < '49.5' < '50' (in string terms as well as numeric)
@@ -231,13 +231,13 @@ buster.testCase('ReadStream', {
 
         // slice off the first 50 so verify() expects only the last 50 even though all 100 are in the db
         this.sourceData = this.sourceData.slice(50)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with "start" being mid-way key (float) and "reverse=true"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ start: '49.5', reverse: true })
@@ -248,13 +248,13 @@ buster.testCase('ReadStream', {
         // reverse & slice off the first 50 so verify() expects only the first 50 even though all 100 are in the db
         this.sourceData.reverse()
         this.sourceData = this.sourceData.slice(50)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with "start" being mid-way key (string)': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         // '499999' doesn't actually exist but we expect it to start at '50' because '49' < '499999' < '50' (in string terms)
@@ -266,13 +266,13 @@ buster.testCase('ReadStream', {
 
         // slice off the first 50 so verify() expects only the last 50 even though all 100 are in the db
         this.sourceData = this.sourceData.slice(50)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with "end"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ end: '50' })
@@ -282,13 +282,13 @@ buster.testCase('ReadStream', {
 
         // slice off the last 49 so verify() expects only 0 -> 50 inclusive, even though all 100 are in the db
         this.sourceData = this.sourceData.slice(0, 51)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with "end" being mid-way key (float)': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ end: '50.5' })
@@ -298,13 +298,13 @@ buster.testCase('ReadStream', {
 
         // slice off the last 49 so verify() expects only 0 -> 50 inclusive, even though all 100 are in the db
         this.sourceData = this.sourceData.slice(0, 51)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with "end" being mid-way key (string)': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ end: '50555555' })
@@ -314,13 +314,13 @@ buster.testCase('ReadStream', {
 
         // slice off the last 49 so verify() expects only 0 -> 50 inclusive, even though all 100 are in the db
         this.sourceData = this.sourceData.slice(0, 51)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with "end" being mid-way key (float) and "reverse=true"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ end: '50.5', reverse: true })
@@ -330,13 +330,13 @@ buster.testCase('ReadStream', {
 
         this.sourceData.reverse()
         this.sourceData = this.sourceData.slice(0, 49)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with both "start" and "end"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ start: 30, end: 70 })
@@ -346,13 +346,13 @@ buster.testCase('ReadStream', {
 
         // should include 30 to 70, inclusive
         this.sourceData = this.sourceData.slice(30, 71)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with both "start" and "end" and "reverse=true"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ start: 70, end: 30, reverse: true })
@@ -363,8 +363,8 @@ buster.testCase('ReadStream', {
         // expect 70 -> 30 inclusive
         this.sourceData.reverse()
         this.sourceData = this.sourceData.slice(29, 70)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test hex encoding': function (done) {
@@ -373,18 +373,18 @@ buster.testCase('ReadStream', {
       { type: 'put', key: 'ab', value: 'abcdef0123456789' }
     ]
 
-    this.openTestDatabase({}, function (db) {
-      db.batch(data.slice(), options, function (err) {
+    this.openTestDatabase({}, db => {
+      db.batch(data.slice(), options, err => {
         refute(err)
 
         var rs = db.createReadStream(options)
-        rs.on('data', function (data) {
+        rs.on('data', data => {
           assert.equals(data.value, 'abcdef0123456789')
         })
         rs.on('end', this.endSpy)
         rs.on('close', done)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test json encoding': function (done) {
@@ -401,16 +401,16 @@ buster.testCase('ReadStream', {
       { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
     ]
 
-    this.openTestDatabase(options, function (db) {
-      db.batch(data.slice(), function (err) {
+    this.openTestDatabase(options, db => {
+      db.batch(data.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream()
         rs.on('data', this.dataSpy)
         rs.on('end', this.endSpy)
         rs.on('close', this.verify.bind(this, rs, done, data))
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test injectable encoding': function (done) {
@@ -433,57 +433,57 @@ buster.testCase('ReadStream', {
       { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
     ]
 
-    this.openTestDatabase(options, function (db) {
-      db.batch(data.slice(), function (err) {
+    this.openTestDatabase(options, db => {
+      db.batch(data.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream()
         rs.on('data', this.dataSpy)
         rs.on('end', this.endSpy)
         rs.on('close', this.verify.bind(this, rs, done, data))
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() "reverse=true" not sticky (issue #6)': function (done) {
-    this.openTestDatabase(function (db) {
+    this.openTestDatabase(db => {
       // execute
-      db.batch(this.sourceData.slice(), function (err) {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
         // read in reverse, assume all's good
         var rs = db.createReadStream({ reverse: true })
-        rs.on('close', function () {
+        rs.on('close', () => {
           // now try reading the other way
           var rs = db.createReadStream()
           rs.on('data', this.dataSpy)
           rs.on('end', this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
-        }.bind(this))
+        })
         rs.resume()
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test ReadStream, start=0': function (done) {
-    this.openTestDatabase(function (db) {
+    this.openTestDatabase(db => {
       // execute
-      db.batch(this.sourceData.slice(), function (err) {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ start: 0 })
         rs.on('data', this.dataSpy)
         rs.on('end', this.endSpy)
         rs.on('close', this.verify.bind(this, rs, done))
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   // we don't expect any data to come out of here because the keys start at '00' not 0
   // we just want to ensure that we don't kill the process
   'test ReadStream, end=0': function (done) {
-    this.openTestDatabase(function (db) {
+    this.openTestDatabase(db => {
       // execute
-      db.batch(this.sourceData.slice(), function (err) {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ end: 0 })
@@ -492,8 +492,8 @@ buster.testCase('ReadStream', {
         rs.on('close', this.verify.bind(this, rs, done))
 
         this.sourceData = []
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   // ok, so here's the deal, this is kind of obscure: when you have 2 databases open and
@@ -529,12 +529,12 @@ buster.testCase('ReadStream', {
         .on('close', delayed.delayed(callback, 0.05))
     }
     var open = function (reopen, location, callback) {
-      levelup(encDown(leveldown(location)), callback)
+      new LevelUp(encDown(leveldown(location)), callback) // eslint-disable-line no-new
     }
     var write = function (db, callback) { db.batch(sourceData.slice(), callback) }
     var close = function (db, callback) { db.close(callback) }
     var setup = function (callback) {
-      async.map([ location1, location2 ], open.bind(null, false), function (err, dbs) {
+      async.map([ location1, location2 ], open.bind(null, false), (err, dbs) => {
         refute(err)
         if (err) return
         async.map(dbs, write, function (err) {
@@ -545,7 +545,7 @@ buster.testCase('ReadStream', {
       })
     }
     var reopen = function () {
-      async.map([ location1, location2 ], open.bind(null, true), function (err, dbs) {
+      async.map([ location1, location2 ], open.bind(null, true), (err, dbs) => {
         refute(err)
         if (err) return
         async.forEach([
@@ -563,8 +563,8 @@ buster.testCase('ReadStream', {
   // the logic for this is inside the ReadStream constructor which waits for 'ready'
   'test ReadStream on pre-opened db': function (done) {
     var location = common.nextLocation()
-    var db = levelup(encDown(leveldown(location)))
-    var execute = function (db) {
+    var db = new LevelUp(encDown(leveldown(location)))
+    var execute = db => {
       // is in limbo
       refute(db.isOpen())
       refute(db.isClosed())
@@ -573,23 +573,23 @@ buster.testCase('ReadStream', {
       rs.on('data', this.dataSpy)
       rs.on('end', this.endSpy)
       rs.on('close', this.verify.bind(this, rs, done))
-    }.bind(this)
-    var setup = function () {
+    }
+    var setup = () => {
       db.batch(this.sourceData.slice(), function (err) {
         refute(err)
         db.close(function (err) {
           refute(err)
-          execute(levelup(encDown(leveldown(location))))
+          execute(new LevelUp(encDown(leveldown(location))))
         })
       })
-    }.bind(this)
+    }
 
     setup()
   },
 
   'test readStream() with "limit"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ limit: 20 })
@@ -598,13 +598,13 @@ buster.testCase('ReadStream', {
         rs.on('close', this.verify.bind(this, rs, done))
 
         this.sourceData = this.sourceData.slice(0, 20)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with "start" and "limit"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ start: '20', limit: 20 })
@@ -613,13 +613,13 @@ buster.testCase('ReadStream', {
         rs.on('close', this.verify.bind(this, rs, done))
 
         this.sourceData = this.sourceData.slice(20, 40)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with "end" after "limit"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ end: '50', limit: 20 })
@@ -628,13 +628,13 @@ buster.testCase('ReadStream', {
         rs.on('close', this.verify.bind(this, rs, done))
 
         this.sourceData = this.sourceData.slice(0, 20)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   'test readStream() with "end" before "limit"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream({ end: '30', limit: 50 })
@@ -643,8 +643,8 @@ buster.testCase('ReadStream', {
         rs.on('close', this.verify.bind(this, rs, done))
 
         this.sourceData = this.sourceData.slice(0, 31)
-      }.bind(this))
-    }.bind(this))
+      })
+    })
   },
 
   // can, fairly reliably, trigger a core dump if next/end isn't
@@ -661,8 +661,8 @@ buster.testCase('ReadStream', {
       data.push({ type: 'put', key: v, value: v })
     }
 
-    this.openTestDatabase(function (db) {
-      db.batch(data, function (err) {
+    this.openTestDatabase(db => {
+      db.batch(data, err => {
         refute(!!err)
         var rs = db.createReadStream().on('close', done)
         rs.once('data', rs.destroy.bind(rs))
@@ -671,17 +671,17 @@ buster.testCase('ReadStream', {
   },
 
   'test can only end once': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
+    this.openTestDatabase(db => {
+      db.batch(this.sourceData.slice(), err => {
         refute(err)
 
         var rs = db.createReadStream()
           .on('close', done)
 
-        process.nextTick(function () {
+        process.nextTick(() => {
           rs.destroy()
         })
       })
-    }.bind(this))
+    })
   }
 })

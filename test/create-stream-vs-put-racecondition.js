@@ -3,12 +3,12 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
-var common = require('./common')
-var assert = require('referee').assert
-var buster = require('bustermove')
+const levelup = require('../lib/levelup.js')
+const common = require('./common')
+const { assert } = require('referee')
+const buster = require('bustermove')
 
-function makeTest (db, delay, done) {
+const makeTest = (db, delay, done) => {
   // this should be an empty stream
   var i = 0
   var j = 0
@@ -18,10 +18,10 @@ function makeTest (db, delay, done) {
   var putEnd = false
 
   db.createReadStream()
-    .on('data', function (data) {
+    .on('data', data => {
       i++
     })
-    .on('end', function () {
+    .on('end', () => {
       // since the readStream is created before inserting anything
       // it should be empty? right?
       assert.equals(i, 0, 'stream read the future')
@@ -30,25 +30,25 @@ function makeTest (db, delay, done) {
       streamEnd = true
     })
 
-  db.on('put', function (key, value) {
+  db.on('put', (key, value) => {
     j++
   })
 
   // insert 10 things,
   // then check the right number of events where emitted.
-  function insert () {
+  const insert = () => {
     m++
     db.put('hello' + k++ / 10, k, next)
   }
 
-  delay(function () {
+  delay(() => {
     insert(); insert(); insert(); insert(); insert()
     insert(); insert(); insert(); insert(); insert()
   })
 
-  function next () {
+  const next = () => {
     if (--m) return
-    process.nextTick(function () {
+    process.nextTick(() => {
       assert.equals(j, 10)
       assert.equals(i, 0)
 
@@ -65,7 +65,7 @@ buster.testCase('ReadStream', {
 
   // TODO: test various encodings
   'readStream and then put in nextTick': function (done) {
-    this.openTestDatabase(function (db) {
+    this.openTestDatabase(db => {
       makeTest(db, process.nextTick, done)
     })
   },
@@ -88,8 +88,8 @@ buster.testCase('ReadStream', {
     makeTest(db, function (f) { f() }, done)
   },
   'readStream and then put': function (done) {
-    this.openTestDatabase(function (db) {
-      makeTest(db, function (f) { f() }, done)
+    this.openTestDatabase(db => {
+      makeTest(db, f => { f() }, done)
     })
   }
 })

@@ -3,7 +3,7 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
+var LevelUp = require('../lib/levelup.js')
 var leveldown = require('leveldown')
 var common = require('./common')
 var assert = require('referee').assert
@@ -22,7 +22,7 @@ buster.testCase('without encoding-down', {
       return key.toUpperCase()
     }
 
-    var db = levelup(down)
+    var db = new LevelUp(down)
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
@@ -46,7 +46,7 @@ buster.testCase('without encoding-down', {
       return value.toUpperCase()
     }
 
-    var db = levelup(down)
+    var db = new LevelUp(down)
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)

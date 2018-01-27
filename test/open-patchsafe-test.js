@@ -3,7 +3,7 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-var levelup = require('../lib/levelup.js')
+var LevelUp = require('../lib/levelup.js')
 var leveldown = require('leveldown')
 var common = require('./common')
 var assert = require('referee').assert
@@ -14,7 +14,7 @@ function test (fun) {
   return function (done) {
     var location = common.nextLocation()
     // 1) open database without callback, opens in worker thread
-    var db = levelup(leveldown(location))
+    var db = new LevelUp(leveldown(location))
 
     this.closeableDatabases.push(db)
     this.cleanupDirs.push(location)
