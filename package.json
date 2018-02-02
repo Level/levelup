@@ -41,7 +41,6 @@
     "xtend": "~4.0.0"
   },
   "devDependencies": {
-    "abstract-leveldown": "^3.0.0",
     "after": "^0.8.2",
     "async": "^2.5.0",
     "bl": "^1.2.1",
