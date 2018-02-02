@@ -32,7 +32,7 @@ buster.testCase('Browserify Bundle', {
     var fin = after(2, done)
     node.stderr.pipe(bl(function (err, buf) {
       refute(err)
-      assert.match(buf.toString(), /InitializationError: Must provide db/)
+      assert.match(buf.toString(), /InitializationError: The first `db` argument must be an abstract-leveldown compliant store/)
       fin()
     }))
     node.on('exit', function (code) {
