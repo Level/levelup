@@ -447,7 +447,7 @@ See the [contribution guide](https://github.com/Level/community/blob/master/CONT
 
 ## License
 
-Copyright &copy; 2012-2017 `levelup` [contributors](https://github.com/level/community#contributors).
+Copyright &copy; 2012-2018 `levelup` [contributors](https://github.com/level/community#contributors).
 
 `levelup` is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included `LICENSE.md` file for more details.
 
