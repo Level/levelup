@@ -1,248 +1,853 @@
-## 2.0.0 @ October 2017
+# Changelog
 
-## 1.0.0 @ May 14 2015
+## [Unreleased]
 
- * [[`6ae45d83b6`](https://github.com/level/levelup/commit/6ae45d83b6)] - dispatchError() and readError() are voids (Lars-Magnus Skog)
- * [[`c8e22e70bd`](https://github.com/level/levelup/commit/c8e22e70bd)] - util.deprecate static functions (Julian Gruber)
- * [[`ef0ba86c99`](https://github.com/level/levelup/commit/ef0ba86c99)] - target multiple iojs versions, remove notifications (Lars-Magnus Skog)
- * [[`e19ec96ed7`](https://github.com/level/levelup/commit/e19ec96ed7)] - deprecate .approximateSize() (Julian Gruber)
- * [[`9c32ca9fcd`](https://github.com/level/levelup/commit/9c32ca9fcd)] - refactor read streams using level-iterator-stream and level-codec (Julian Gruber)
- * [[`8015e088cb`](https://github.com/level/levelup/commit/8015e088cb)] - tap -> tape + faucet (Lars-Magnus Skog)
- * [[`af125b580c`](https://github.com/level/levelup/commit/af125b580c)] - fix readStream *AsBuffer options (Julian Gruber)
- * [[`61b44463da`](https://github.com/level/levelup/commit/61b44463da)] - update dependencies (Lars-Magnus Skog)
- * [[`90352e999c`](https://github.com/level/levelup/commit/90352e999c)] - update changelog from 0.18.6 to 0.19.0 (Lars-Magnus Skog)
- * [[`b17e9e775b`](https://github.com/level/levelup/commit/b17e9e775b)] - Fixed valueEncoding bug by passing options without array. (Braydon Fuller)
- * [[`9576842794`](https://github.com/level/levelup/commit/9576842794)] - Added test for valueEncoding "hex" for createReadStream (Braydon Fuller)
- * [[`b9ce2ba2c5`](https://github.com/level/levelup/commit/b9ce2ba2c5)] - s/rvagg\/node-/level\// (Lars-Magnus Skog)
- * [[`7460209eb6`](https://github.com/level/levelup/commit/7460209eb6)] - fix stream-bench.js (Julian Gruber)
- * [[`2a2780c65c`](https://github.com/level/levelup/commit/2a2780c65c)] - refactor ltgt encoding (Julian Gruber)
- * [[`f53e349ec7`](https://github.com/level/levelup/commit/f53e349ec7)] - refactor iterators using new deferred-leveldown (Julian Gruber)
- * [[`e811f7e598`](https://github.com/level/levelup/commit/e811f7e598)] - remove leveled tests (Julian Gruber)
- * [[`b37cf16445`](https://github.com/level/levelup/commit/b37cf16445)] - fix benchmarks by installing leveldown@^0.10.4 (Julian Gruber)
- * [[`187711c96c`](https://github.com/level/levelup/commit/187711c96c)] - use level-codec (Julian Gruber)
- * [[`a1fda6bf2f`](https://github.com/level/levelup/commit/a1fda6bf2f)] - extract error codes into level-errors module (Lars-Magnus Skog)
- * [[`f4e5a44530`](https://github.com/level/levelup/commit/f4e5a44530)] - remove reference to write-stream and iterators (Lars-Magnus Skog)
- * [[`7372fceb4a`](https://github.com/level/levelup/commit/7372fceb4a)] - Changed options for get to same as put (Richard Littauer)
- * [[`7686899b6c`](https://github.com/level/levelup/commit/7686899b6c)] - add node 0.12 and iojs on travis (Lars-Magnus Skog)
- * [[`4aa6e8b7a5`](https://github.com/level/levelup/commit/4aa6e8b7a5)] - remove encoding option (Julian Gruber)
- * [[`b0247a436e`](https://github.com/level/levelup/commit/b0247a436e)] - Added errors to the available namespace when requiring 'levelup'. (Braydon Fuller)
- * [[`8b8da57f7a`](https://github.com/level/levelup/commit/8b8da57f7a)] - clean up old level-ws reference (Lars-Magnus Skog)
- * [[`3d26d39a43`](https://github.com/level/levelup/commit/3d26d39a43)] - update README with info on why WriteStream was removed (Lars-Magnus Skog)
- * [[`ba51315047`](https://github.com/level/levelup/commit/ba51315047)] - add Jarrett Cruger as contributor (Lars-Magnus Skog)
- * [[`ed89907f33`](https://github.com/level/levelup/commit/ed89907f33)] - remove unused dependencies (Lars-Magnus Skog)
- * [[`6067bb4467`](https://github.com/level/levelup/commit/6067bb4467)] - \[doc\] beginning of readme adjustment (Jarrett Cruger)
- * [[`78a06b3c10`](https://github.com/level/levelup/commit/78a06b3c10)] - \[fix\] update travis and package.json scripts (Jarrett Cruger)
- * [[`fcdd49b039`](https://github.com/level/levelup/commit/fcdd49b039)] - \[rm test\] remove fstream based tests (Jarrett Cruger)
- * [[`fb73bdecc0`](https://github.com/level/levelup/commit/fb73bdecc0)] - \[fix\] remove `copy` as it requires write-stream (Jarrett Cruger)
- * [[`616da299f9`](https://github.com/level/levelup/commit/616da299f9)] - \[fix test\] remove references to write-stream in tests (Jarrett Cruger)
- * [[`a712e623a7`](https://github.com/level/levelup/commit/a712e623a7)] - \[fix\] remove references to write-stream (Jarrett Cruger)
- * [[`9e6a6b7ef4`](https://github.com/level/levelup/commit/9e6a6b7ef4)] - update logo and copyright (Lars-Magnus Skog)
- * [[`8b339def43`](https://github.com/level/levelup/commit/8b339def43)] - check notFound on err (Brian Woodward)
- * [[`36658a2c7d`](https://github.com/level/levelup/commit/36658a2c7d)] - support values to be null/undefined (David Björklund)
- * [[`f0bc944005`](https://github.com/level/levelup/commit/f0bc944005)] - explicit devdep versions (Rod Vagg)
- * [[`c951f094eb`](https://github.com/level/levelup/commit/c951f094eb)] - Use newer memdown store. Fixes build. (Eduardo Sorribas)
- * [[`c2c12c9380`](https://github.com/level/levelup/commit/c2c12c9380)] - better document #del method (Ben West)
- * [[`2410aa3aff`](https://github.com/level/levelup/commit/2410aa3aff)] - resolve #261, explain args to callback to #del (Ben West)
- * [[`ef28adbe71`](https://github.com/level/levelup/commit/ef28adbe71)] - explicit devdep versions (Rod Vagg)
- * [[`723391bb93`](https://github.com/level/levelup/commit/723391bb93)] - Use newer memdown store. Fixes build. (Eduardo Sorribas)
- * [[`23b3f7be19`](https://github.com/level/levelup/commit/23b3f7be19)] - better document #del method (Ben West)
- * [[`02bb5c3856`](https://github.com/level/levelup/commit/02bb5c3856)] - resolve #261, explain args to callback to #del (Ben West)
- * [[`e77bbd4c7d`](https://github.com/level/levelup/commit/e77bbd4c7d)] - support values to be null/undefined (David Björklund)
- * [[`b9117a001b`](https://github.com/level/levelup/commit/b9117a001b)] - fixes the leveldb link (Manuel Ernst)
- * [[`3d541dbfc9`](https://github.com/level/levelup/commit/3d541dbfc9)] - remove 0.8 from travis (Rod Vagg)
+### Added
+* Add 9 to Travis (@ralphtheninja)
 
-## 0.19.0 @ Aug 26 2014
+### Changed
+* Update `browserify` (@ralphtheninja)
+* Update `leveldown` (@ralphtheninja)
+* Update `deferred-leveldown` (@ralphtheninja)
+* README: normalize readme style (@ralphtheninja)
+* README: use markdown links instead of `<a href></a>` (@ralphtheninja)
+* Clarify 'must provide db' error message (@adityapurwa)
+* Update copyright year to 2018 (@adityapurwa)
 
- * [[`7f14058440`](https://github.com/level/levelup/commit/7f14058440)] - minor whitespace changes (Rod Vagg)
- * [[`9e6d335df2`](https://github.com/level/levelup/commit/9e6d335df2)] - fix license (Rod Vagg)
- * [[`74caa18c09`](https://github.com/level/levelup/commit/74caa18c09)] - minor style fixes (Rod Vagg)
- * [[`1c7bc43d01`](https://github.com/level/levelup/commit/1c7bc43d01)] - update nodeico badge (Rod Vagg)
- * [[`b6357cc323`](https://github.com/level/levelup/commit/b6357cc323)] - Use highest/lowest instead of largest/smallest (Arnout Engelen)
- * [[`e45ce4e9d5`](https://github.com/level/levelup/commit/e45ce4e9d5)] - Document what 'limit' does in 'reverse' mode (Arnout Engelen)
- * [[`9004e9db69`](https://github.com/level/levelup/commit/9004e9db69)] - Discourage the use of start/end a bit (Arnout Engelen)
- * [[`6178d69cdc`](https://github.com/level/levelup/commit/6178d69cdc)] - merge (Dominic Tarr)
- * [[`e3ab0ebe03`](https://github.com/level/levelup/commit/e3ab0ebe03)] - document with comments (Dominic Tarr)
- * [[`bb88572c15`](https://github.com/level/levelup/commit/bb88572c15)] - unmention bops (Dominic Tarr)
- * [[`45df8e668e`](https://github.com/level/levelup/commit/45df8e668e)] - clarify ltgt (Dominic Tarr)
- * [[`54eba03305`](https://github.com/level/levelup/commit/54eba03305)] - binary encoding in the browser (Calvin Metcalf)
+### Removed
+* Remove `abstract-leveldown` devDependency (@ralphtheninja)
 
-## 0.18.6 @ Jul 26 2014
+## [2.0.1] - 2017-11-11
 
- * (lots of stuff since 0.18.1 not recorded in changelog, ooops)
- * Extracted encoding / codec to separate modules (@dominictarr)
+### Changed
+* README: clarify that options are specific to the underlying store (@ralphtheninja)
+* Update `abstract-leveldown` (@ralphtheninja)
+* Update `encoding-down` (@ralphtheninja)
 
-## 0.18.1 @ Nov 20 2013
+### Fixed
+* Restore support for node 4 (@farskipper)
 
- * Make chained-batch obey global LevelUP object options (@mcavage)
+## [2.0.0] - 2017-10-10
 
-## 0.18.0 @ Nov 18 2013
+### Added
+* Add default export (@zixia)
+* Add test for 'key of queued operation is not serialized' (@vweevers)
+* Add test for 'value of queued operation is not serialized' (@vweevers)
+* Add test for JSON encoding with stream (@vweevers)
+* Add smoke test for `levelup` and `leveldown` without `encoding-down` (@vweevers)
 
- * Upgrade to LevelDOWN@0.10.0 (and bops@0.1.0 and readable-stream@1.1.9) (@rvagg)
+### Changed
+* Update `leveldown` (@ralphtheninja)
+* README: prefer 'underlying store' over database, backend etc (@vweevers)
+* README: update badges (@ralphtheninja)
+* README: unquote properties (@vweevers)
+* README: clarify what excluding callback means (@vweevers)
+* README: 'arbitrary data object' => 'of any type' (@vweevers)
+* README: reduce 'supported platforms' section (@vweevers)
+* README: rewrite intro and relationship with leveldown (@vweevers)
+* README: cleanup (@vweevers)
+* README: fix bad async code example (@ralphtheninja)
+* Update `deferred-leveldown` (@ralphtheninja)
 
-## 0.17.0 @ Oct 01 2013
+### Removed
+* Remove typings and Typescript tests (@MeirionHughes)
 
- * Undo factory pattern, use plain prototypal object and expose full prototype (@rvagg)
- * Move Batch object to batch.js and expose (@rvagg)
- * Use new package, DeferredLevelDOWN to handle all deferred open logic (@rvagg)
- * Code cleanup, update deps (xtend) (@rvagg, @juliangruber)
+## [2.0.0-rc3] - 2017-09-15
 
-## 0.16.0 @ Sep 10 2013
+### Changed
+* Refactor typings, use `abstract-leveldown` types (@MeirionHughes)
+* Update `leveldown` (@MeirionHughes)
 
- * Added `notFound` boolean property and `status=404` property to NotFoundError (@rvagg)
- * Upgrade to errno@0.1.0 which aliases .type and .name properties (@rvagg)
- * ReadStream gracefully handles multiple destroy() calls (@mcollina)
+### Fixed
+* Correct bad encoding options in tests (@MeirionHughes)
 
-## 0.15.0 @ Aug 25 2013
+## [2.0.0-rc2] - 2017-09-11
 
- * New ReadStream: upgrade to streams2, remove all state-management cruft, remove fstream support (@substack)
- * Update LevelDOWN dependency to ~0.8.0 with Iterator lt/lte/gt/gte support and NAN as a dependency
- * Added @substack as contributor
+### Added
+* README: add node version badge (@ralphtheninja)
+* Add Typescript definitions and testing (@MeirionHughes)
 
-## 0.14.0 @ Aug 19 2013
+### Changed
+* README: homogenize readme style (@vweevers)
+* Update `level-errors` (@ralphtheninja)
+* Optimize Typescript tests (@vweevers)
 
- * Encodings overhaul, allow custom encoders/decoders for `keyEncoding` or `valueEncoding` (@dominictarr)
+### Removed
+* Remove 7 from Travis (@ralphtheninja)
 
-## 0.13.0 @ Aug 11 2013
+## [2.0.0-rc1] - 2017-09-01
 
- * Update LevelDOWN dependency version ~0.7.0 for Node 0.8->0.11 compatibility
+### Added
+* Add `Promise` to the API if callbacks are omitted (@juliangruber)
+* Add Greenkeeper badge (@ralphtheninja)
+* Add tests for `maybeError()` calling back synchronously if db is closed (@ralphtheninja)
 
-## 0.12.0 @ Jul 25 2013
+### Changed
+* Update to `deferred-leveldown@2.0.0` (@ralphtheninja)
+* Change `levelup` constructor to take store as first parameter (@ralphtheninja)
+* Switch to use `AbstractLevelDOWN#status` (@ralphtheninja)
+* Update copyright year to 2017 (@ralphtheninja)
+* Rename `lib/util.js` to `lib/promisify.js` (@ralphtheninja)
 
-  * Update LevelDOWN dependency version ~0.6.2
+### Removed
+* Remove `approximateSize()` (@ralphtheninja)
+* Remove `destroy()` (@ralphtheninja)
+* Remove `repair()` (@ralphtheninja)
+* Remove `getProperty()` (@ralphtheninja)
+* Remove `.errorIfExists` (@ralphtheninja)
+* Remove `.createIfMissing` (@ralphtheninja)
+* Remove `.compression` (@ralphtheninja)
+* Remove `.cacheSize` (@ralphtheninja)
+* Remove `.sync` (@ralphtheninja)
+* Remove `.fillCache` (@ralphtheninja)
+* Remove optional `leveldown` (pass in as `options.db`) (@ralphtheninja)
+* Remove `options` parameter from `maybeError` (not used) (@ralphtheninja)
+* Remove `browser` field from `package.json` (@ralphtheninja)
+* Remove 0.12 and 4 from Travis (@juliangruber)
+* Remove `isDefined` from `lib/util.js` (not used) (@ralphtheninja)
+* Remove encodings (@ralphtheninja)
+* Remove `dispatchError()`, callback is always a function (@ralphtheninja)
 
-## 0.11.0 @ Jul 17 2013
+### Fixed
+* Fix problems with zalgo in `maybeError()` (@ralphtheninja)
 
-  * Remove all Function#bind calls for better browser compatibility (@juliangruber)
-  * Switch from direct Buffer access to bops for better browser compatibility (@juliangruber)
-  * WriteStream#end accepts `data` argument (@pgte)
-  * Added @pgte as contributor
+## [1.3.9] - 2017-07-26
 
-## 0.10.0 @ Jun 14 2013
+### Added
+* Add `standard` for linting (@ralphtheninja)
+* Add 8 to Travis (@ralphtheninja)
 
-  * Upgrade to LevelDOWN@0.6.0 which upgrades to LevelDB@1.11.0, some important bugfixes: https://groups.google.com/forum/#!topic/leveldb/vS1JvmGlp4E
+### Changed
+* Ignore `package-lock.json` and `yarn.lock` (@ralphtheninja)
+* README: make code examples adhere to `standard` (@ralphtheninja)
+* Update dependencies (@ralphtheninja)
 
-## 0.9.0 @ 21 May 2013
+## [1.3.8] - 2017-05-29
 
-  * Use LevelDOWN@0.5.0, see https://github.com/level/leveldown/blob/master/CHANGELOG.md for details
-  * Race-condition(ish) fixed in ReadStream--createReadStream() does not start immediately and therefore allowed put()s to happen before the stream starts (@dominictarr)
-  * ReadStream doesn't emit "ready" event (@dominictarr)
-  * Allow separate encodings per operation in db.batch() (@juliangruber)
-  * Allow separate encodings per write() in WriteStream (@juliangruber)
-  * WriteStream supports "type" option ("put" [default] or "del") on constructor and individual write()s (@mcollina)
-  * Remove "leveldown" from dependencies (see http://r.va.gg/2013/05/levelup-v0.9-some-major-changes.html) (@rvagg)
-  * Expose LevelDOWN (or LevelDOWN substitute) as `db` property on LevelUP instance (e.g. db.db.approximateSize())
-  * Chained batch exposed from LevelDOWN, invoked with argument-less db.batch() (@juliangruber, @rvagg)
-  * Significantly improve ReadStream performance by replacing .bind() and .apply() (@mcollina, @kesla)
-  * Better Browserify support (@rvagg, @juliangruber, @maxogden, etc.)
-  * Deprecate secondary LevelDB-specific operations on LevelUP, prefer direct LevelDOWN access (approximateSize(), repair(), destroy(), getProperty()--new in LevelDOWN@0.5.0) (@rvagg)
+### Changed
+* Revert previous `getLevelDOWN` fix (@ralphtheninja)
+* Throw more descriptive error if db factory is not a function (@ralphtheninja)
 
-## 0.8.0 @ 17 Apr 2013
+## [1.3.7] - 2017-05-24
 
-  * More comprehensive argument checking, will now report back directly or throw if there is a problem rather than on nextTick (@rvagg)
-  * Expose `.options` property on LevelUP instances. (@rvagg)
-  * Further clarify 'encoding' -> 'valueEncoding' shift. db.options.valueEncoding is now authoritative even if user used 'encoding' on initialisation. (@rvagg)
-  * 'level' package now published to npm that bundles LevelUP & LevelDOWN and exposes LevelUP directly; for planned shift to detaching LevelDOWN as a direct-dependency of LevelUP. (@rvagg)
+### Fixed
+* Avoid calling `getLevelDOWN` if not present (@diasdavid)
 
-## 0.7.0 @ 8 Apr 2013
+## [1.3.6] - 2017-05-10
 
-  * Windows support in LevelDOWN @0.2.0 (@rvagg)
-  * added 'db' option on constructor to replace LevelDOWN (@rvagg)
-  * added repair() & destroy() aliases for LevelDOWN implementations (@rvagg)
-  * fix early 'close' emit in WriteStream (@rvagg)
-  * improved ReadStream reverse=true start key handling (@kesla)
-  * ReadStream empty start & end keys ignored rather than segfault (@kesla)
-  * 'encoding' option now an alias for 'valueEncoding' only, 'keyEncoding' defaults to 'utf8' and must be changed explicitly (@rvagg)
+### Changed
+* Pull `LevelDOWN` loader out to non browserified module (@kemitchell)
 
-## 0.6.2 @ 4 Mar 2013
+## [1.3.5] - 2017-03-02
 
-  * use `xtend` package instead of internal util._extend @ralphtheninja
-  * internal cleanup of `callback` argument detection @ralphtheninja
-  * move deferred-open-operations into an internal `this._db` wrapper rather than make them call public .get()/.put() etc. for a second time @dominictarr
+### Changed
+* Explicitly require `leveldown/package.json` (@PascalTemel)
 
-## 0.6.1 @ 1 Mar 2013
+## [1.3.4] - 2017-03-02
 
-  * internal code cleanup & refactoring @ralphtheninja
-  * fix multiple iterator.end() calls in ReadStreams throwing errors (destroy() called while read/next is in progress) #82 #83 #84 @rvagg
+### Added
+* Add 7 to Travis (@ralphtheninja)
 
-## 0.6.0 @ Feb 25 2013
+### Removed
+* Remove 0.10 and 5 from Travis (@ralphtheninja)
 
-  * complete transition to LevelDOWN for the LevelDB binding. No native code left in LevelUP @rvagg
-    - LevelDOWN now keeps its own ChangeLog at: https://github.com/level/leveldown/blob/master/CHANGELOG.md
-    - LevelDB@1.9.0 and Snappy@1.1.0 are included in LevelDOWN@0.1.2
-  * simplify callback signature (remove extra, undocumented properties from some callbacks) @rvagg / @dominictarr
+## [1.3.3] - 2016-10-09
 
-## 0.5.4 @ Feb 16 2013
+### Changed
+* README: fix typo (@jamesgrayling)
+* README: fix typo (@danielravina)
+* README: fix typo (@juliangruber)
 
-  * explicit namespaces in C++ @rvagg
-  * memory leak, Persistent<Function> callback not Dispose()d for `readStream()` @rvagg
-  * allow one next() at a time, improve end() handling @rvagg
-  * ensure iterator end & next don't conflict @rvagg
-  * remove CloseError @ralphtheninja
-  * fix put/batch bug in WriteStream#_process() @ralphtheninja
-  * remove `useBatch` in `copy()` @rvagg
-  * move encodingOpts levelup.js -> util.js @ralphtheninja
+## [1.3.2] - 2016-05-17
 
-## 0.5.3-1 @ Feb 5 2013
+### Added
+* Add node 6 to Travis (@ralphtheninja)
 
-  * non-shrinkwrapped release @rvagg
+### Changed
+* Use `sudo: false` to run tests in containers on Travis (@ralphtheninja)
+* Update `package.json` (@0x00A)
+* README: fix typos (@pra85)
+* README: changed build status ticker from png to svg (@montyanderson)
+* README: link build badge to master branch (@a0viedo)
+* Update copyright year to 2016 (@ralphtheninja)
+* Rename `appromixate-size-test.js` to `approximate-size-test.js` (@ralphtheninja)
 
-## 0.5.3 @ Jan 28 2013
+### Removed
+* Remove non supported versions from Travis (@ralphtheninja)
 
-  * `location` exposed as read-only property on db object @rvagg
-  * swap bufferstream dependency for simple-bufferstream, remove unnecessary compile @rvagg
-  * comment out all sqlite3 benchmarks @ralphtheninja
-  * put LevelUP() into closure @ralphtheninja
+### Fixed
+* Ensure Travis can compile in case no prebuilt binaries can be found (@ralphtheninja)
+* Fix deprecation test (@juliangruber)
 
-## 0.5.2 @ Jan 24 2013
+## [1.3.1] - 2015-12-10
 
-  * fix: incorrect scope in approximateSize function @sandfox
+### Added
+* Add node 5 to travis (@ralphtheninja)
 
-## 0.5.1 @ Jan 10 2013
+### Changed
+* Update outdated dependencies (@ralphtheninja)
+* Test on latest node 2, node 3 (@ralphtheninja)
 
-  * change `createIfMissing` option default to `true` @rvagg
-  * use util._extend instead of local variant @rvagg
-  * adjust copyright & contributors @rvagg
-  * idempotent open and close, and emit _state as events @dominictarr
-  * fix: check that UINT32_OPTION_VALUE is a Uint32 @kesla
-  * feature: Support setting size of LRU-cache @kesla
-  * use util.inherits() from node core @ralphtheninja
+## [1.3.0] - 2015-11-12
 
-## 0.4.4 @ Jan 1 2013
+### Changed
+* README: fixed small typo (Stephen Sawchuck)
+* README: update url to Snappy (@hansott)
+* README: add dependency badge (@ralphtheninja)
+* Test on all major abi versions (@ralphtheninja)
+* Update outdated dependencies (@ralphtheninja)
+* Track and expose chained batch ops queue length (@kemitchell)
 
-  * set maxListeners to Infinity to prevent warnings when using deferred open @juliangruber
+### Fixed
+* Dev depend on `tap` to fix `npm@3` warning (@ralphtheninja)
 
-## 0.4.3 @ Dec 31 2012
+## [1.2.1] - 2015-06-10
 
-  * added @kesla to contributors list @rvagg
-  * feature: added approximateSize() @kesla
+### Changed
+* Improve error message when trying to require `leveldown` (@ralphtheninja)
 
-## 0.4.2 @ Dec 30 2012
+## [1.2.0] - 2015-06-04
 
-  * process.nextTick->setImmediate with polyfill Node 0.9.5 compat @rvagg
-  * added @ralphtheninja to contributors list @rvagg
+### Changed
+* Less restrictive version on `leveldown` (@ralphtheninja)
 
-## 0.4.1 @ Dec 20 2013
+### Fixed
+* Handle errors in benchmarks (@juliangruber)
 
-  * remove `useBatch` option on `writeStream()` @rvagg
+## [1.1.1] - 2015-05-29
 
-## 0.4.0 @ Dec 18 2013
+### Added
+* Add link to `level/community` (@ralphtheninja)
 
-  * remove old, unused util functions @rvagg
-  * speed up batch() & allow non-Strings to C++ @rvagg
-  * fix batch() benchmarks @rvagg
-  * improved compression test @rvagg
-  * added SQLite3 to test suite @rvagg
-  * remove compile warnings on osx @rvagg
-  * return Strings not Buffers from C++ when possible @rvagg
-  * optimised encoders & decoders @rvagg
-  * added basic get() benchmarks @rvagg
-  * revamped benchmark suite @rvagg
-  * allow JS Strings through to native layer @rvagg
-  * cleaner build for osx @rvagg
-  * remove compile warnings for solaris @rvagg
-  * LevelDB 1.7 @rvagg
-  * added `compress` boolean on open() @rvagg
+### Changed
+* Update `leveldown` dependency (@juliangruber)
 
-## 0.3.x and prior
+### Removed
+* Remove compression tests (@juliangruber)
 
-  * stuff
+## [1.1.0] - 2015-05-17
+
+### Changed
+* Batch operation default to `'put'` (@ralphtheninja)
+
+## [1.0.0] - 2015-05-14
+
+### Removed
+* Remove return values from `dispatchError()` and `readError()`, they are used as voids (@ralphtheninja)
+
+## [1.0.0-5] - 2015-05-07
+
+### Changed
+* Target multiple iojs versions, remove notifications (@ralphtheninja)
+* Deprecate static functions `destroy()` and `repair()` (@juliangruber)
+
+## [1.0.0-4] - 2015-05-06
+
+### Changed
+* Deprecate `.approximateSize()` (@juliangruber)
+
+## [1.0.0-3] - 2015-05-05
+
+### Changed
+* Replace `tap` with `tape` + `faucet` (@ralphtheninja)
+* Refactor read streams using `level-iterator-stream` and `level-codec` (@juliangruber)
+
+## [1.0.0-2] - 2015-04-30
+
+### Changed
+* Refactor ltgt encoding (@juliangruber)
+
+### Fixed
+* Fix readStream *AsBuffer options (@juliangruber)
+
+## [1.0.0-1] - 2015-04-28
+
+### Added
+* Add test for `valueEncoding` `'hex'` for `createReadStream` (@braydonf)
+
+### Changed
+* Update dependencies (@ralphtheninja)
+
+### Fixed
+* Fix `valueEncoding` bug by passing options without array (@braydonf)
+
+## [1.0.0-0] - 2015-04-28
+
+### Added
+* Add @jcrugzz as contributor
+* Add 0.12 and iojs to Travis (@ralphtheninja)
+
+### Changed
+* Support values to be `null` or `undefined` (@kesla)
+* README: explain callback arguments to `del` (@bewest)
+* README: update logo and copyright (@ralphtheninja)
+* README: remove docs on `createWriteStream()` and add note on what happened to it (@jcrugzz)
+* README: tweak explanation on why `createWriteStream()` was removed (@ralphtheninja)
+* README: clean up old `level-ws` reference (@ralphtheninja)
+* README: changed options for get to same as put (@RichardLitt)
+* README: remove reference to write-stream and iterators (@ralphtheninja)
+* Explicit devdep versions (@rvagg)
+* Update Travis and `package.json` scripts (@jcrugzz)
+* Added errors to the available namespace when requiring `levelup` (@braydonf)
+* Extract error codes into `level-errors` module (@ralphtheninja)
+* Use `level-codec` (@juliangruber)
+* Refactor iterators using new `deferred-leveldown` (@juliangruber)
+
+### Removed
+* Remove 0.8 from Travis (@rvagg)
+* Remove references to write-stream in tests (@jcrugzz)
+* Remove references to write-stream (@jcrugzz)
+* Remove fstream based tests (@jcrugzz)
+* Remove `copy` as it requires write-stream (@jcrugzz)
+* Remove unused dependencies (@ralphtheninja)
+* Remove `encoding` option (@juliangruber)
+* Remove `leveled` benchmarks (@juliangruber)
+
+### Fixed
+* README: fix the leveldb link (@seriousManual)
+* Use newer memdown store (@sorribas)
+* Check `notFound` on err (@doowb)
+* Fix benchmarks by installing `leveldown@^0.10.4` (@juliangruber)
+* Fix `stream-bench.js` (@juliangruber)
+* Replace `rvagg/node-` with `level` (@ralphtheninja)
+
+## [0.19.1] - 2016-01-23
+
+### Added
+* Add 0.12, 1.0, 1.8, 2, 3, 4, 5 to Travis (@ralphtheninja)
+* Add `tape@4.x.x` (@ralphtheninja)
+
+### Changed
+* Update `semver` (@ralphtheninja)
+* Update `tap` (@ralphtheninja)
+* Update compiler on Travis (@ralphtheninja)
+* Fix `bustermove` version (@ralphtheninja)
+
+### Removed
+* Remove 0.8 from Travis (@ralphtheninja)
+
+## [0.19.0] - 2014-08-26
+
+### Added
+* Add suport for `lt`, `lte`, `gt`, and `gte` (@dominictarr)
+* Add `isDefined` to util (@dominictarr)
+
+### Changed
+* Refactor encodings and codec from util to separate file (@dominictarr)
+* Decouple codec from levelup parts for allowing arbitrary encoding strategies (@dominictarr)
+* Decouple read-stream from encoding and opening stuff (@dominictarr)
+* Keep codec on the db as `db._codec` (@dominictarr)
+* Refactor error checks (@dominictarr)
+* README: document `lt`, `lte`, `gt`, and `gte` (@dominictarr)
+* README: clarify ltgt (@dominictarr)
+* README: unmention bops (@dominictarr)
+* README: discourage the use of `start` and `end` a bit (@raboof)
+* README: document what `limit` does in reverse mode (@raboof)
+* README: use highest/lowest instead of largest/smallest (@raboof)
+* Binary encoding in the browser (@calvinmetcalf)
+* Document code with comments (@dominictarr)
+* Minor style fixes (@rvagg)
+* Minor whitespace changes (@rvagg)
+* Update nodeico badge (@rvagg)
+
+### Fixed
+* Fix license (@rvagg)
+
+## [0.18.6] - 2014-07-26
+
+### Changed
+* Change from MIT +no-false-attribs License to plain MIT (@andrewrk)
+* Upgrade `bl` dependency (@raynos)
+
+## [0.18.5] - 2014-06-26
+
+### Fixed
+* Replace `concat-stream` with `bl`, fixes [#251](https://github.com/Level/levelup/issues/251) (@rvagg)
+
+## [0.18.4] - 2014-06-24
+
+### Changed
+* Reorder dependencies (@juliangruber)
+* Update dependencies (@rvagg)
+
+### Fixed
+* Fix race condition on read stream's `self._iterator` (@nolanlawson)
+
+## [0.18.3] - 2014-04-26
+
+### Changed
+* README: fix formatting (@rvagg)
+* README: minor corrections (@guybrush)
+* README: fix leveldown method wording (@juliangruber)
+* README: clarify `start`, `end` and `limit` options in `createReadStream` docs (@maxogden)
+
+### Removed
+* Remove `bops` and use `Buffer` instead (@nolanlawson)
+
+## [0.18.2] - 2013-11-26
+
+### Added
+* Add `DNT` configuration (@rvagg)
+
+### Changed
+* Use `readable-stream` from user land across all node version (@rvagg)
+
+## [0.18.1] - 2013-11-20
+
+### Changed
+* Make chained-batch obey global LevelUP object options (@mcavage)
+
+## [0.18.0] - 2013-11-18
+
+### Changed
+* Upgrade to `LevelDOWN@0.10.0` (and bops@0.1.0 and readable-stream@1.1.9) (@rvagg)
+
+## [0.17.0] - 2013-10-01
+
+### Changed
+* Undo factory pattern, use plain prototypal object and expose full prototype (@rvagg)
+* Move Batch object to batch.js and expose (@rvagg)
+* Use new package, DeferredLevelDOWN to handle all deferred open logic (@rvagg)
+* Code cleanup, update deps (xtend) (@rvagg, @juliangruber)
+
+## [0.16.0] - 2013-09-10
+
+### Added
+* Add `notFound` boolean property and `status=404` property to NotFoundError (@rvagg)
+
+### Changed
+* Upgrade to `errno@0.1.0` which aliases `.type` and `.name` properties (@rvagg)
+* ReadStream gracefully handles multiple `destroy()` calls (@mcollina)
+
+## [0.15.0] - 2013-08-26
+
+### Added
+* Add @substack as contributor
+
+### Changed
+* New ReadStream: upgrade to streams2, remove all state-management cruft, remove fstream support (@substack)
+* Update LevelDOWN dependency to ~0.8.0 with Iterator lt/lte/gt/gte support and NAN as a dependency (@rvagg)
+
+## [0.14.0] - 2013-08-19
+
+### Changed
+* Encodings overhaul, allow custom encoders/decoders for `keyEncoding` or `valueEncoding` (@dominictarr)
+
+## [0.13.0] - 2013-08-11
+
+### Changed
+* Update LevelDOWN dependency version ~0.7.0 for Node 0.8->0.11 compatibility (@rvagg)
+
+## [0.12.0] - 2013-07-25
+
+### Changed
+* Update LevelDOWN dependency version ~0.6.2 (@rvagg)
+
+## [0.11.0] - 2013-07-17
+
+### Added
+* Add @pgte as contributor
+
+### Changed
+* Switch from direct Buffer access to bops for better browser compatibility (@juliangruber)
+* WriteStream#end accepts `data` argument (@pgte)
+
+### Removed
+* Remove all Function#bind calls for better browser compatibility (@juliangruber)
+
+## [0.10.0] - 2013-06-14
+
+### Changed
+* Upgrade to `LevelDOWN@0.6.0` which upgrades to `LevelDB@1.11.0`, some important bugfixes: https://groups.google.com/forum/#!topic/leveldb/vS1JvmGlp4E (@rvagg)
+
+## [0.9.0] - 2013-05-21
+
+### Changed
+* Use LevelDOWN@0.5.0, see https://github.com/level/leveldown/blob/master/CHANGELOG.md for details (@rvagg)
+* Race-condition(ish) fixed in ReadStream--createReadStream() does not start immediately and therefore allowed put()s to happen before the stream starts (@dominictarr)
+* ReadStream doesn't emit "ready" event (@dominictarr)
+* Allow separate encodings per operation in db.batch() (@juliangruber)
+* Allow separate encodings per write() in WriteStream (@juliangruber)
+* WriteStream supports "type" option ("put" [default] or "del") on constructor and individual write()s (@mcollina)
+* Expose LevelDOWN (or LevelDOWN substitute) as `db` property on LevelUP instance (e.g. db.db.approximateSize()) (@rvagg)
+* Chained batch exposed from LevelDOWN, invoked with argument-less db.batch() (@juliangruber, @rvagg)
+* Significantly improve ReadStream performance by replacing .bind() and .apply() (@mcollina, @kesla)
+* Better Browserify support (@rvagg, @juliangruber, @maxogden, etc.)
+* Deprecate secondary LevelDB-specific operations on LevelUP, prefer direct LevelDOWN access (approximateSize(), repair(), destroy(), getProperty()--new in LevelDOWN@0.5.0) (@rvagg)
+
+### Removed
+* Remove "leveldown" from dependencies (see http://r.va.gg/2013/05/levelup-v0.9-some-major-changes.html) (@rvagg)
+
+## [0.8.0] - 2013-04-17
+
+### Changed
+* More comprehensive argument checking, will now report back directly or throw if there is a problem rather than on nextTick (@rvagg)
+* Expose `.options` property on LevelUP instances. (@rvagg)
+* Further clarify 'encoding' -> 'valueEncoding' shift. db.options.valueEncoding is now authoritative even if user used 'encoding' on initialisation. (@rvagg)
+* `level` package now published to npm that bundles `LevelUP` and `LevelDOWN` and exposes `LevelUP` directly; for planned shift to detaching LevelDOWN as a direct-dependency of LevelUP. (@rvagg)
+
+## [0.7.0] - 2013-04-08
+
+### Added
+* Add windows support in `LevelDOWN@0.2.0` (@rvagg)
+* Add 'db' option on constructor to replace LevelDOWN (@rvagg)
+* Add `repair()` and `destroy()` aliases for LevelDOWN implementations (@rvagg)
+
+### Changed
+* Improved ReadStream reverse=true start key handling (@kesla)
+* ReadStream empty start and end keys ignored rather than segfault (@kesla)
+* 'encoding' option now an alias for `valueEncoding` only, `keyEncoding` defaults to `'utf8'` and must be changed explicitly (@rvagg)
+
+### Fixed
+* Fix early `close` emit in WriteStream (@rvagg)
+
+## [0.6.2] - 2013-03-04
+
+### Changed
+* Use `xtend` package instead of internal `util._extend` (@ralphtheninja)
+* Internal cleanup of `callback` argument detection (@ralphtheninja)
+* Move deferred-open-operations into an internal `this._db` wrapper rather than make them call public .get()/.put() etc. for a second time (@dominictarr)
+
+## [0.6.1] - 2013-03-01
+
+### Changed
+* Internal code cleanup and refactoring (@ralphtheninja)
+
+### Fixed
+* Fix multiple `iterator.end()` calls in ReadStreams throwing errors, destroy() called while read/next is in progress #82 #83 #84 (@rvagg)
+
+## [0.6.0] - 2013-02-25
+
+### Changed
+* Rename `ReadStream`, `KeyStream` and `ValueStream` to `createReadStream`, `createKeyStream` and `createValueStream` (@rvagg)
+* Complete transition to `LevelDOWN` for the `LevelDB` binding. No native code left in `LevelUP` (@rvagg)
+  - LevelDOWN now keeps its own ChangeLog at: https://github.com/level/leveldown/blob/master/CHANGELOG.md
+  - LevelDB@1.9.0 and Snappy@1.1.0 are included in LevelDOWN@0.1.2
+
+## [0.6.0-rc1] - 2013-02-24
+
+### Changed
+* Refactor and simplify db state code (@ralphtheninja)
+* Extract all binding code to `leveldown` project (@rvagg)
+* Depend on `leveldown@0.0.1` (@rvagg)
+* Simplify callback signature by removing extra, undocumented properties from some callbacks (@rvagg, @dominictarr)
+
+## [0.5.4] - 2013-02-15
+
+### Changed
+* Move `encodingOpts` from `levelup.js` to `util.js` (@ralphtheninja)
+* Allow one `next()` at a time, improve `end()` handling (@rvagg)
+* Use explicit namespaces in C++ (@rvagg)
+
+### Removed
+* Remove `CloseError` (@ralphtheninja)
+* Remove `.useBatch` in `copy()` (@ralphtheninja)
+* Ensure iterator `end` and `next` don't conflict (@rvagg)
+
+### Fixed
+* Fix `put`/`batch` bug in `WriteStream#_process()` (@ralphtheninja)
+* Fix memory leak, `Persistent<Function>` callback not Dispose()d for `readStream()` (@rvagg)
+
+## [0.5.3-1] - 2013-02-05
+
+### Changed
+* Non shrinkwrapped release @rvagg
+
+## [0.5.3] - 2013-01-28
+
+### Changed
+* Disable all sqlite3 benchmarks (@ralphtheninja)
+* Put `LevelUP()` into closure (@ralphtheninja)
+* Swap `bufferstream` dependency for `simple-bufferstream` (@rvagg)
+* Make `location` a read-only property on db object (@rvagg)
+
+## [0.5.2] - 2013-01-23
+
+### Fixed
+* Fix incorrect scope in approximateSize function (@sandfox)
+
+## [0.5.1] - 2013-01-10
+
+### Changed
+* Version bump (@rvagg)
+
+## [0.5.0-1] - 2013-01-09
+
+### Added
+
+### Changed
+* Change `createIfMissing` option default to `true` (@rvagg)
+* Use `util._extend` instead of local variant (@rvagg)
+
+## [0.5.0] - 2013-01-08
+
+### Added
+* Add support for setting size of LRU-cache (@kesla)
+
+### Changed
+* Use `util.inherits()` from node core (@ralphtheninja)
+* Adjust copyright & contributors (@rvagg)
+
+### Fixed
+* Idempotent open and close, and emit _state as events (@dominictarr)
+* Check that UINT32_OPTION_VALUE is a Uint32 (@kesla)
+
+## [0.4.4] - 2013-01-01
+
+### Fixed
+* Set `.maxListeners` to `Infinity` to prevent warnings when using deferred open (@juliangruber)
+
+## [0.4.3] - 2012-12-30
+
+### Added
+* Add @kesla to contributors list (@rvagg)
+* Add `approximateSize()` (@kesla)
+
+## [0.4.2] - 2012-12-30
+
+### Added
+* Add @ralphtheninja to contributors list (@rvagg)
+
+### Fixed
+* Use `setImmediate` instead of `process.nextTick` for `node@0.9.5` compatibility (@rvagg)
+
+## [0.4.1] - 2012-12-19
+
+### Removed
+* Remove `useBatch` option on `writeStream()` @rvagg
+
+## [0.4.0] - 2012-12-17
+
+### Added
+* Add SQLite3 to test suite (@rvagg)
+* Add basic `get()` benchmarks (@rvagg)
+* Add `compress` boolean on `open()` (@rvagg)
+
+### Changed
+* Speed up `batch()` and allow non-Strings to C++ (@rvagg)
+* Improved compression test (@rvagg)
+* Return Strings not Buffers from C++ when possible (@rvagg)
+* Optimised encoders and decoders (@rvagg)
+* Revamped benchmark suite (@rvagg)
+* Allow JS Strings through to native layer (@rvagg)
+* Cleaner build for osx (@rvagg)
+* Update to `LevelDB@1.7` (@rvagg)
+
+### Removed
+* Remove old and unused util functions (@rvagg)
+* Remove compile warnings on osx (@rvagg)
+* Remove compile warnings for solaris (@rvagg)
+
+### Fixed
+* Fix `batch()` benchmarks (@rvagg)
+
+## [0.3.3] - 2012-12-14
+
+### Added
+* Add compression tests (@rvagg)
+
+### Fixed
+* Fix Snappy compression (@rvagg)
+
+## [0.3.2] - 2012-11-24
+
+### Added
+* Add more functional tests (@rvagg)
+* Add snapshot tests (@rvagg)
+
+### Changed
+* Emit raw keys and values in events (@rvagg)
+
+## [0.3.1] - 2012-11-21
+
+### Added
+* Add benchmark suite (@rvagg)
+* Add `limit` option to `ReadStream` (@rvagg)
+
+## [0.3.0] - 2012-11-18
+
+### Added
+* Add `.status` property to keep track of db status (@raynos, @rvagg)
+* Add `CloseError` error type (@raynos, @rvagg)
+* Add tests for deferred operations (@rvagg)
+
+### Changed
+* Document events (@rvagg)
+* Run the encoding on `start` and `end` in case your keys are JSON encoded (@raynos)
+* First attempt at deferring operations. All operations that used to throw when called before open are now called once the database is open (@raynos, @rvagg)
+
+### Fixed
+* If status is `'closing'`, call callback after db is closed (@raynos, @rvagg)
+
+## [0.2.1] - 2012-10-28
+
+### Fixed
+* Fix db GC when using multiple `ReadStream` (@rvagg)
+
+## [0.2.0] - 2012-10-28
+
+### Added
+* Add support for Solaris/SunOS/SmartOS (@rvagg)
+
+## [0.1.2] - 2012-10-26
+
+### Fixed
+* Fix bug with falsey values on `start` and `end`, fixes [#8](https://github.com/Level/levelup/issues/8) (@rvagg)
+
+## [0.1.1] - 2012-10-17
+
+### Fixed
+* Fix bug with sticky options, fixes [#6](https://github.com/Level/levelup/issues/6) (@rvagg)
+
+## [0.1.0] - 2012-09-28
+
+### Added
+* Add Travis setup (@rvagg)
+* Add `KeyStream()` and `ValueStream()` (@rvagg)
+
+## [0.0.5-1] - 2012-09-28
+
+### Added
+* Add description to `package.json` (@rvagg)
+
+## [0.0.5] - 2012-09-22
+
+### Changed
+* Native layer errors if `key` or `value` are `undefined` or `null` (@rvagg)
+
+## [0.0.4] - 2012-09-12
+
+### Fixed
+* Fix bug with `options` not being passed to readable streams (@rvagg)
+
+## [0.0.3] - 2012-09-09
+
+### Added
+* Add `reverse` functionality to readable streams (@rvagg)
+
+## [0.0.2-1] - 2012-09-07
+
+### Added
+* Add repository information to `package.json` (@rvagg)
+
+## [0.0.2] - 2012-09-07
+
+### Changed
+* Do not encourage using async `throw` in documentation (@rvagg)
+* Return to classical prototypal inheritance (@rvagg)
+
+### Fixed
+* Fix typos in documentation (@rvagg)
+
+## [0.0.1] - 2012-08-31
+
+### Added
+* Add `start` and `end` options for readable streams (@rvagg)
+* Add `'json'` encoding (@rvagg)
+* Add `.nextLocation()`, `.checkBinaryTestData()`, `.loadBinaryTestData()`, `.openTestDatabase()`, `.commonTearDown()`, `.commonSetup()` and `.binaryTestDataMD5Sum` to `test/common.js` (@rvagg)
+* Add tests for `.readStream()` with `start` being midway key (@rvagg)
+* Add keywords to `package.json` (@rvagg)
+
+### Changed
+* New API. Database constructor now accepts callback (@rvagg)
+* Update documentation for new API (@rvagg)
+
+### Removed
+* Remove usage of `global` in tests (@rvagg)
+
+## [0.0.0-1] - 2012-08-18
+
+### Added
+* Add `bufferstream` dependency (@rvagg)
+
+### Changed
+* Document `ReadStream` and `WriteStream` (@rvagg)
+* Start using `~` in dependencies (@rvagg)
+
+### Removed
+* Remove unused `inherits` variable (@rvagg)
+
+## 0.0.0 - 2012-08-17
+
+:seedling: Initial release.
+
+[Unreleased]: https://github.com/level/levelup/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/level/levelup/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/level/levelup/compare/v2.0.0-rc3...v2.0.0
+[2.0.0-rc3]: https://github.com/level/levelup/compare/v2.0.0-rc2...v2.0.0-rc3
+[2.0.0-rc2]: https://github.com/level/levelup/compare/v2.0.0-rc1...v2.0.0-rc2
+[2.0.0-rc1]: https://github.com/level/levelup/compare/v1.3.9...v2.0.0-rc1
+[1.3.9]: https://github.com/level/levelup/compare/v1.3.8...v1.3.9
+[1.3.8]: https://github.com/level/levelup/compare/v1.3.7...v1.3.8
+[1.3.7]: https://github.com/level/levelup/compare/v1.3.6...v1.3.7
+[1.3.6]: https://github.com/level/levelup/compare/v1.3.5...v1.3.6
+[1.3.5]: https://github.com/level/levelup/compare/v1.3.4...v1.3.5
+[1.3.4]: https://github.com/level/levelup/compare/v1.3.3...v1.3.4
+[1.3.3]: https://github.com/level/levelup/compare/v1.3.2...v1.3.3
+[1.3.2]: https://github.com/level/levelup/compare/v1.3.1...v1.3.2
+[1.3.1]: https://github.com/level/levelup/compare/v1.3.0...v1.3.1
+[1.3.0]: https://github.com/level/levelup/compare/v1.2.1...v1.3.0
+[1.2.1]: https://github.com/level/levelup/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/level/levelup/compare/v1.1.1...v1.2.0
+[1.1.1]: https://github.com/level/levelup/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/level/levelup/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/level/levelup/compare/v1.0.0-5...v1.0.0
+[1.0.0-5]: https://github.com/level/levelup/compare/v1.0.0-4...v1.0.0-5
+[1.0.0-4]: https://github.com/level/levelup/compare/v1.0.0-3...v1.0.0-4
+[1.0.0-3]: https://github.com/level/levelup/compare/v1.0.0-2...v1.0.0-3
+[1.0.0-2]: https://github.com/level/levelup/compare/v1.0.0-1...v1.0.0-2
+[1.0.0-1]: https://github.com/level/levelup/compare/v1.0.0-0...v1.0.0-1
+[1.0.0-0]: https://github.com/level/levelup/compare/v0.19.0...v1.0.0-0
+[0.19.1]: https://github.com/level/levelup/compare/v0.19.0...v0.19.1
+[0.19.0]: https://github.com/level/levelup/compare/v0.18.6...v0.19.0
+[0.18.6]: https://github.com/level/levelup/compare/v0.18.5...v0.18.6
+[0.18.5]: https://github.com/level/levelup/compare/v0.18.4...v0.18.5
+[0.18.4]: https://github.com/level/levelup/compare/v0.18.3...v0.18.4
+[0.18.3]: https://github.com/level/levelup/compare/v0.18.2...v0.18.3
+[0.18.2]: https://github.com/level/levelup/compare/v0.18.1...v0.18.2
+[0.18.1]: https://github.com/level/levelup/compare/0.18.0...v0.18.1
+[0.18.0]: https://github.com/level/levelup/compare/0.17.0...0.18.0
+[0.17.0]: https://github.com/level/levelup/compare/0.16.0...0.17.0
+[0.16.0]: https://github.com/level/levelup/compare/0.15.0...0.16.0
+[0.15.0]: https://github.com/level/levelup/compare/0.14.0...0.15.0
+[0.14.0]: https://github.com/level/levelup/compare/0.13.0...0.14.0
+[0.13.0]: https://github.com/level/levelup/compare/0.12.0...0.13.0
+[0.12.0]: https://github.com/level/levelup/compare/0.11.0...0.12.0
+[0.11.0]: https://github.com/level/levelup/compare/0.10.0...0.11.0
+[0.10.0]: https://github.com/level/levelup/compare/0.9.0...0.10.0
+[0.9.0]: https://github.com/level/levelup/compare/0.8.0...0.9.0
+[0.8.0]: https://github.com/level/levelup/compare/0.7.0...0.8.0
+[0.7.0]: https://github.com/level/levelup/compare/0.6.2...0.7.0
+[0.6.2]: https://github.com/level/levelup/compare/0.6.1...0.6.2
+[0.6.1]: https://github.com/level/levelup/compare/0.6.0...0.6.1
+[0.6.0]: https://github.com/level/levelup/compare/0.6.0-rc1...0.6.0
+[0.6.0-rc1]: https://github.com/level/levelup/compare/0.5.4...0.6.0-rc1
+[0.5.4]: https://github.com/level/levelup/compare/0.5.3-1...0.5.4
+[0.5.3-1]: https://github.com/level/levelup/compare/0.5.3...0.5.3-1
+[0.5.3]: https://github.com/level/levelup/compare/0.5.2...0.5.3
+[0.5.2]: https://github.com/level/levelup/compare/0.5.1...0.5.2
+[0.5.1]: https://github.com/level/levelup/compare/0.5.0-1...0.5.1
+[0.5.0-1]: https://github.com/level/levelup/compare/0.5.0...0.5.0-1
+[0.5.0]: https://github.com/level/levelup/compare/0.4.4...0.5.0
+[0.4.4]: https://github.com/level/levelup/compare/0.4.3...0.4.4
+[0.4.3]: https://github.com/level/levelup/compare/0.4.2...0.4.3
+[0.4.2]: https://github.com/level/levelup/compare/0.4.1...0.4.2
+[0.4.1]: https://github.com/level/levelup/compare/0.4.0...0.4.1
+[0.4.0]: https://github.com/level/levelup/compare/0.3.3...0.4.0
+[0.3.3]: https://github.com/level/levelup/compare/0.3.2...0.3.3
+[0.3.2]: https://github.com/level/levelup/compare/0.3.1...0.3.2
+[0.3.1]: https://github.com/level/levelup/compare/0.3.0...0.3.1
+[0.3.0]: https://github.com/level/levelup/compare/0.2.1...0.3.0
+[0.2.1]: https://github.com/level/levelup/compare/0.2.0...0.2.1
+[0.2.0]: https://github.com/level/levelup/compare/0.1.2...0.2.0
+[0.1.2]: https://github.com/level/levelup/compare/0.1.1...0.1.2
+[0.1.1]: https://github.com/level/levelup/compare/0.1.0...0.1.1
+[0.1.0]: https://github.com/level/levelup/compare/0.0.5-1...0.1.0
+[0.0.5-1]: https://github.com/level/levelup/compare/0.0.5...0.0.5-1
+[0.0.5]: https://github.com/level/levelup/compare/0.0.4...0.0.5
+[0.0.4]: https://github.com/level/levelup/compare/0.0.3...0.0.4
+[0.0.3]: https://github.com/level/levelup/compare/0.0.2-1...0.0.3
+[0.0.2-1]: https://github.com/level/levelup/compare/0.0.2...0.0.2-1
+[0.0.2]: https://github.com/level/levelup/compare/0.0.1...0.0.2
+[0.0.1]: https://github.com/level/levelup/compare/0.0.0-1...0.0.1
+[0.0.0-1]: https://github.com/level/levelup/compare/0.0.0...0.0.0-1
