@@ -6,9 +6,9 @@
 * Add 9 to Travis (@ralphtheninja)
 
 ### Changed
-* Update `browserify` (@ralphtheninja)
-* Update `leveldown` (@ralphtheninja)
-* Update `deferred-leveldown` (@ralphtheninja)
+* Update `browserify` to `16.0.0` (@ralphtheninja)
+* Update `leveldown` to `3.0.0` (@ralphtheninja)
+* Update `deferred-leveldown` to `3.0.0` (@ralphtheninja)
 * README: normalize readme style (@ralphtheninja)
 * README: use markdown links instead of `<a href></a>` (@ralphtheninja)
 * Clarify 'must provide db' error message (@adityapurwa)
@@ -21,8 +21,8 @@
 
 ### Changed
 * README: clarify that options are specific to the underlying store (@ralphtheninja)
-* Update `abstract-leveldown` (@ralphtheninja)
-* Update `encoding-down` (@ralphtheninja)
+* Update `abstract-leveldown` to `3.0.0` (@ralphtheninja)
+* Update `encoding-down` to `3.0.0` (@ralphtheninja)
 
 ### Fixed
 * Restore support for node 4 (@farskipper)
@@ -31,9 +31,8 @@
 
 ### Added
 * Add default export (@zixia)
-* Add test for 'key of queued operation is not serialized' (@vweevers)
-* Add test for 'value of queued operation is not serialized' (@vweevers)
-* Add test for JSON encoding with stream (@vweevers)
+* Test that key and value of queued operation is not serialized (@vweevers)
+* Test JSON encoding with stream (@vweevers)
 * Add smoke test for `levelup` and `leveldown` without `encoding-down` (@vweevers)
 
 ### Changed
@@ -50,7 +49,7 @@
 * Update `deferred-leveldown` (@ralphtheninja)
 
 ### Removed
-* Remove typings and Typescript tests (@MeirionHughes)
+* Remove unstable typings and Typescript tests (@MeirionHughes)
 
 ## [2.0.0-rc3] - 2017-09-15
 
@@ -83,7 +82,7 @@
 * Add tests for `maybeError()` calling back synchronously if db is closed (@ralphtheninja)
 
 ### Changed
-* Update to `deferred-leveldown@2.0.0` (@ralphtheninja)
+* Update `deferred-leveldown` to `2.0.0` (@ralphtheninja)
 * Change `levelup` constructor to take store as first parameter (@ralphtheninja)
 * Switch to use `AbstractLevelDOWN#status` (@ralphtheninja)
 * Update copyright year to 2017 (@ralphtheninja)
@@ -100,11 +99,11 @@
 * Remove `.cacheSize` (@ralphtheninja)
 * Remove `.sync` (@ralphtheninja)
 * Remove `.fillCache` (@ralphtheninja)
-* Remove optional `leveldown` (pass in as `options.db`) (@ralphtheninja)
-* Remove `options` parameter from `maybeError` (not used) (@ralphtheninja)
+* Remove optional `leveldown` (@ralphtheninja)
+* Remove unused `options` parameter from `maybeError` (@ralphtheninja)
 * Remove `browser` field from `package.json` (@ralphtheninja)
 * Remove 0.12 and 4 from Travis (@juliangruber)
-* Remove `isDefined` from `lib/util.js` (not used) (@ralphtheninja)
+* Remove unused `isDefined` from `lib/util.js` (@ralphtheninja)
 * Remove encodings (@ralphtheninja)
 * Remove `dispatchError()`, callback is always a function (@ralphtheninja)
 
@@ -258,7 +257,7 @@
 * Refactor ltgt encoding (@juliangruber)
 
 ### Fixed
-* Fix readStream *AsBuffer options (@juliangruber)
+* Fix readStream \*AsBuffer options (@juliangruber)
 
 ## [1.0.0-1] - 2015-04-28
 
