@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [2.0.2] - 2018-02-12
+
 ### Added
 * Add 9 to Travis (@ralphtheninja)
 
@@ -770,7 +772,8 @@
 
 :seedling: Initial release.
 
-[Unreleased]: https://github.com/level/levelup/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/level/levelup/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/level/levelup/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/level/levelup/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/level/levelup/compare/v2.0.0-rc3...v2.0.0
 [2.0.0-rc3]: https://github.com/level/levelup/compare/v2.0.0-rc2...v2.0.0-rc3
