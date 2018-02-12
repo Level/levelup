@@ -20,7 +20,7 @@
   * [Contributing](#contributing)
   * [License](#license)
 
-**If you are upgrading:** please see `CHANGELOG.md`.
+**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md).
 
 ## Introduction
 
