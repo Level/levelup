@@ -61,7 +61,7 @@ buster.testCase('ReadStream', {
     this.dataSpy = this.spy(onData) // so we can still verify
 
     this.openTestDatabase(function (db) {
-        // execute
+      // execute
       db.batch(this.sourceData.slice(), function (err) {
         refute(err)
 

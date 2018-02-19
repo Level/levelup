@@ -57,7 +57,7 @@
     "rimraf": "^2.6.1",
     "safe-buffer": "^5.1.0",
     "slow-stream": "0.0.4",
-    "standard": "^10.0.2",
+    "standard": "^11.0.0",
     "tape": "^4.7.0"
   },
   "scripts": {

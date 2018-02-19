@@ -39,11 +39,11 @@ var run = function (db, name, fn, color, cb) {
         fn(db, deferred.resolve.bind(deferred))
       }
     })
-    .on('complete', function (event) {
-      console.log(String(event.target)[color].bold)
-      cb()
-    })
-    .run({ async: true })
+      .on('complete', function (event) {
+        console.log(String(event.target)[color].bold)
+        cb()
+      })
+      .run({ async: true })
   }
 
   if (fn.setup) {
@@ -63,13 +63,13 @@ var runTest = function (testName, callback) {
         if (err) return callback(err)
         if (!tests[testName][engineKey]) { console.log('Skipping for', testName, engineKey); return callback() }
         run(db,
-            printableEngineName(engineKey) + ' ' + testName,
-            tests[testName][engineKey],
-            engine.color, function (err) {
-              rmdb(engine, db, location, function (_err) {
-                callback(err || _err)
-              })
+          printableEngineName(engineKey) + ' ' + testName,
+          tests[testName][engineKey],
+          engine.color, function (err) {
+            rmdb(engine, db, location, function (_err) {
+              callback(err || _err)
             })
+          })
       })
     }, function (err) {
       if (err) throw err
