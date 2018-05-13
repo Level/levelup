@@ -17,7 +17,7 @@ buster.testCase('maybeError() should be called async', {
     this.openTestDatabase(function (db) {
       db.close(function () {
         assert.isTrue(db.isClosed(), 'db is closed')
-        let sync = false
+        var sync = false
         db.put('key', 'value', {}, function (err) {
           sync = true
           assert(err)
@@ -35,7 +35,7 @@ buster.testCase('maybeError() should be called async', {
         refute(err)
         db.close(function () {
           assert.isTrue(db.isClosed(), 'db is closed')
-          let sync = false
+          var sync = false
           db.get('key', {}, function (err, value) {
             sync = true
             assert(err)
@@ -54,7 +54,7 @@ buster.testCase('maybeError() should be called async', {
         refute(err)
         db.close(function () {
           assert.isTrue(db.isClosed(), 'db is closed')
-          let sync = false
+          var sync = false
           db.del('key', {}, function (err) {
             sync = true
             assert(err)
@@ -71,7 +71,7 @@ buster.testCase('maybeError() should be called async', {
     this.openTestDatabase(function (db) {
       db.close(function () {
         assert.isTrue(db.isClosed(), 'db is closed')
-        let sync = false
+        var sync = false
         db.batch([{ type: 'put', key: 'key' }], {}, function (err) {
           sync = true
           assert(err)

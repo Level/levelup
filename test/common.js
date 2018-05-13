@@ -8,14 +8,12 @@ var assert = referee.assert
 var refute = referee.refute
 var crypto = require('crypto')
 var async = require('async')
-var rimraf = require('rimraf')
 var fs = require('fs')
 var path = require('path')
 var delayed = require('delayed').delayed
 var levelup = require('../lib/levelup.js')
 var errors = require('level-errors')
-var dbidx = 0
-var leveldown = require('leveldown')
+var memdown = require('memdown')
 var encDown = require('encoding-down')
 
 assert(levelup.errors === errors)
@@ -42,56 +40,29 @@ referee.add('isUndefined', {
   refuteMessage: '${0} expected not to be undefined' // eslint-disable-line
 })
 
-module.exports.nextLocation = function () {
-  return path.join(__dirname, '_levelup_test_db_' + dbidx++)
-}
-
-module.exports.cleanup = function (callback) {
-  fs.readdir(__dirname, function (err, list) {
-    if (err) return callback(err)
-
-    list = list.filter(function (f) {
-      return (/^_levelup_test_db_/).test(f)
-    })
-
-    if (!list.length) { return callback() }
-
-    var ret = 0
-
-    list.forEach(function (f) {
-      rimraf(path.join(__dirname, f), function () {
-        if (++ret === list.length) { callback() }
-      })
-    })
-  })
-}
-
 module.exports.openTestDatabase = function () {
   var options = typeof arguments[0] === 'object' ? arguments[0] : {}
   var callback = typeof arguments[0] === 'function' ? arguments[0] : arguments[1]
-  var location = typeof arguments[0] === 'string' ? arguments[0] : module.exports.nextLocation()
 
-  rimraf(location, function (err) {
+  levelup(encDown(memdown(), options), function (err, db) {
     refute(err)
-    this.cleanupDirs.push(location)
-    levelup(encDown(leveldown(location), options), function (err, db) {
-      refute(err)
-      if (!err) {
-        this.closeableDatabases.push(db)
-        callback(db)
-      }
-    }.bind(this))
+    if (!err) {
+      this.closeableDatabases.push(db)
+      callback(db)
+    }
   }.bind(this))
 }
 
 module.exports.commonTearDown = function (done) {
   async.forEach(this.closeableDatabases, function (db, callback) {
     db.close(callback)
-  }, module.exports.cleanup.bind(null, done))
+  }, done)
 }
 
 module.exports.loadBinaryTestData = function (callback) {
-  fs.readFile(path.join(__dirname, 'data/testdata.bin'), callback)
+  // Read synchronously to avoid an issue with brfs
+  var buf = fs.readFileSync(path.join(__dirname, 'data/testdata.bin'))
+  process.nextTick(callback, null, buf)
 }
 
 module.exports.binaryTestDataMD5Sum = '920725ef1a3b32af40ccd0b78f4a62fd'
@@ -104,11 +75,10 @@ module.exports.checkBinaryTestData = function (testData, callback) {
 }
 
 module.exports.commonSetUp = function (done) {
-  this.cleanupDirs = []
   this.closeableDatabases = []
   this.openTestDatabase = module.exports.openTestDatabase.bind(this)
   this.timeout = 10000
-  module.exports.cleanup(done)
+  process.nextTick(done)
 }
 
 module.exports.readStreamSetUp = function (done) {

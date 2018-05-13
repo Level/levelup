@@ -4,7 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
-var leveldown = require('leveldown')
+var memdown = require('memdown')
 var encDown = require('encoding-down')
 var async = require('async')
 var concat = require('concat-stream')
@@ -18,12 +18,10 @@ buster.testCase('Deferred open()', {
   'tearDown': common.commonTearDown,
 
   'put() and get() on pre-opened database': function (done) {
-    var location = common.nextLocation()
-    // 1) open database without callback, opens in worker thread
-    var db = levelup(encDown(leveldown(location)))
+    // 1) open database without callback, opens in next tick
+    var db = levelup(encDown(memdown()))
 
     this.closeableDatabases.push(db)
-    this.cleanupDirs.push(location)
     assert.isObject(db)
 
     async.parallel([
@@ -55,12 +53,10 @@ buster.testCase('Deferred open()', {
   },
 
   'batch() on pre-opened database': function (done) {
-    var location = common.nextLocation()
-    // 1) open database without callback, opens in worker thread
-    var db = levelup(encDown(leveldown(location)))
+    // 1) open database without callback, opens in next tick
+    var db = levelup(encDown(memdown()))
 
     this.closeableDatabases.push(db)
-    this.cleanupDirs.push(location)
     assert.isObject(db)
 
     // 2) insert 3 values with batch(), these should be deferred until the database is actually open
@@ -92,12 +88,10 @@ buster.testCase('Deferred open()', {
   },
 
   'chained batch() on pre-opened database': function (done) {
-    var location = common.nextLocation()
-    // 1) open database without callback, opens in worker thread
-    var db = levelup(encDown(leveldown(location)))
+    // 1) open database without callback, opens in next tick
+    var db = levelup(encDown(memdown()))
 
     this.closeableDatabases.push(db)
-    this.cleanupDirs.push(location)
     assert.isObject(db)
 
     // 2) insert 3 values with batch(), these should be deferred until the database is actually open
@@ -132,31 +126,37 @@ buster.testCase('Deferred open()', {
     'setUp': common.readStreamSetUp,
 
     'simple ReadStream': function (done) {
-      var location = common.nextLocation()
-      var db = levelup(encDown(leveldown(location)))
+      var db = levelup(encDown(memdown()))
       db.batch(this.sourceData.slice(), function (err) {
         refute(err)
         db.close(function (err) {
           refute(err, 'no error')
-          var db = levelup(encDown(leveldown(location)))
+          var async = true
+
+          db.open(function (err) {
+            async = false
+            refute(err, 'no open error')
+          })
+
           this.closeableDatabases.push(db)
           var rs = db.createReadStream()
           rs.on('data', this.dataSpy)
           rs.on('end', this.endSpy)
           rs.on('close', this.verify.bind(this, rs, done))
+
+          // db should open lazily
+          assert(async)
         }.bind(this))
       }.bind(this))
     }
   },
 
   'maxListeners warning': function (done) {
-    var location = common.nextLocation()
-    // 1) open database without callback, opens in worker thread
-    var db = levelup(encDown(leveldown(location)))
+    // 1) open database without callback, opens in next tick
+    var db = levelup(encDown(memdown()))
     var stderrMock = this.mock(console)
 
     this.closeableDatabases.push(db)
-    this.cleanupDirs.push(location)
     stderrMock.expects('error').never()
 
     // 2) provoke an EventEmitter maxListeners warning
@@ -173,11 +173,9 @@ buster.testCase('Deferred open()', {
   },
 
   'value of queued operation is not serialized': function (done) {
-    var location = common.nextLocation()
-    var db = levelup(encDown(leveldown(location), { valueEncoding: 'json' }))
+    var db = levelup(encDown(memdown(), { valueEncoding: 'json' }))
 
     this.closeableDatabases.push(db)
-    this.cleanupDirs.push(location)
 
     // deferred-leveldown < 2.0.2 would serialize the object to a string.
     db.put('key', { thing: 2 }, function (err) {
@@ -192,11 +190,9 @@ buster.testCase('Deferred open()', {
   },
 
   'key of queued operation is not serialized': function (done) {
-    var location = common.nextLocation()
-    var db = levelup(encDown(leveldown(location), { keyEncoding: 'json' }))
+    var db = levelup(encDown(memdown(), { keyEncoding: 'json' }))
 
     this.closeableDatabases.push(db)
-    this.cleanupDirs.push(location)
 
     // deferred-leveldown < 2.0.2 would serialize the key to a string.
     db.put({ thing: 2 }, 'value', function (err) {

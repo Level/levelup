@@ -4,14 +4,9 @@
  */
 
 var levelup = require('../lib/levelup.js')
-var leveldown = require('leveldown')
+var memdown = require('memdown')
 var encDown = require('encoding-down')
 var common = require('./common')
-var SlowStream = require('slow-stream')
-var delayed = require('delayed')
-var rimraf = require('rimraf')
-var async = require('async')
-var msgpack = require('msgpack-js')
 var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
@@ -417,9 +412,9 @@ buster.testCase('ReadStream', {
     var options = {
       keyEncoding: 'utf8',
       valueEncoding: {
-        decode: msgpack.decode,
-        encode: msgpack.encode,
-        buffer: true
+        encode: JSON.stringify,
+        decode: JSON.parse,
+        buffer: false
       }}
     var data = [
       { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } },
@@ -496,75 +491,12 @@ buster.testCase('ReadStream', {
     }.bind(this))
   },
 
-  // ok, so here's the deal, this is kind of obscure: when you have 2 databases open and
-  // have a readstream coming out from both of them with no references to the dbs left
-  // V8 will GC one of them and you'll get an failed assert from leveldb.
-  // This ISN'T a problem if you only have one of them open, even if the db gets GCed!
-  // Process:
-  //   * open
-  //   * batch write data
-  //   * close
-  //   * reopen
-  //   * create ReadStream, keeping no reference to the db
-  //   * pipe ReadStream through SlowStream just to make sure GC happens
-  //       - the error should occur here if the bug exists
-  //   * when both streams finish, verify all 'data' events happened
-  'test ReadStream without db ref doesn\'t get GCed': function (done) {
-    var dataSpy1 = this.spy()
-    var dataSpy2 = this.spy()
-    var location1 = common.nextLocation()
-    var location2 = common.nextLocation()
-    var sourceData = this.sourceData
-    var verify = function () {
-      // no reference to `db` here, should have been GCed by now if it could be
-      assert(dataSpy1.callCount, sourceData.length)
-      assert(dataSpy2.callCount, sourceData.length)
-      async.parallel([ rimraf.bind(null, location1), rimraf.bind(null, location2) ], done)
-    }
-    var execute = function (d, callback) {
-      // no reference to `db` here, could be GCed
-      d.readStream
-        .pipe(new SlowStream({ maxWriteInterval: 5 }))
-        .on('data', d.spy)
-        .on('close', delayed.delayed(callback, 0.05))
-    }
-    var open = function (reopen, location, callback) {
-      levelup(encDown(leveldown(location)), callback)
-    }
-    var write = function (db, callback) { db.batch(sourceData.slice(), callback) }
-    var close = function (db, callback) { db.close(callback) }
-    var setup = function (callback) {
-      async.map([ location1, location2 ], open.bind(null, false), function (err, dbs) {
-        refute(err)
-        if (err) return
-        async.map(dbs, write, function (err) {
-          refute(err)
-          if (err) return
-          async.forEach(dbs, close, callback)
-        })
-      })
-    }
-    var reopen = function () {
-      async.map([ location1, location2 ], open.bind(null, true), function (err, dbs) {
-        refute(err)
-        if (err) return
-        async.forEach([
-          { readStream: dbs[0].createReadStream(), spy: dataSpy1 },
-          { readStream: dbs[1].createReadStream(), spy: dataSpy2 }
-        ], execute, verify)
-      })
-    }
-
-    setup(delayed.delayed(reopen, 0.05))
-  },
-
   // this is just a fancy way of testing levelup(db).createReadStream()
   // i.e. not waiting for 'open' to complete
   // the logic for this is inside the ReadStream constructor which waits for 'ready'
   'test ReadStream on pre-opened db': function (done) {
-    var location = common.nextLocation()
-    var db = levelup(encDown(leveldown(location)))
-    var execute = function (db) {
+    var db = levelup(encDown(memdown()))
+    var execute = function () {
       // is in limbo
       refute(db.isOpen())
       refute(db.isClosed())
@@ -579,7 +511,17 @@ buster.testCase('ReadStream', {
         refute(err)
         db.close(function (err) {
           refute(err)
-          execute(levelup(encDown(leveldown(location))))
+
+          var async = true
+          db.open(function (err) {
+            async = false
+            refute(err, 'no open error')
+          })
+
+          execute()
+
+          // Should open lazily
+          assert(async)
         })
       })
     }.bind(this)

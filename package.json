@@ -44,24 +44,28 @@
     "after": "^0.8.2",
     "async": "^2.5.0",
     "bl": "^2.0.0",
+    "brfs": "~1.6.1",
     "browserify": "^16.0.0",
     "bustermove": "~1.0.0",
     "concat-stream": "~1.6.0",
     "delayed": "~1.0.1",
     "encoding-down": "^5.0.0",
     "faucet": "~0.0.1",
-    "leveldown": "^3.0.0",
     "memdown": "^2.0.0",
-    "msgpack-js": "~0.3.0",
+    "pinkie": "~2.0.4",
     "referee": "~1.2.0",
-    "rimraf": "^2.6.1",
     "safe-buffer": "^5.1.0",
-    "slow-stream": "0.0.4",
     "standard": "^11.0.0",
-    "tape": "^4.7.0"
+    "tape": "^4.7.0",
+    "trickle": "0.0.2"
   },
   "scripts": {
     "test": "standard && node test | faucet"
+  },
+  "browserify": {
+    "transform": [
+      "brfs"
+    ]
   },
   "engines": {
     "node": ">=6"

@@ -4,7 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
-var leveldown = require('leveldown')
+var memdown = require('memdown')
 var common = require('./common')
 var assert = require('referee').assert
 var buster = require('bustermove')
@@ -15,7 +15,6 @@ buster.testCase('Idempotent open & close', {
   'tearDown': common.commonTearDown,
 
   'call open twice, should emit "open" once': function (done) {
-    var location = common.nextLocation()
     var n = 0
     var m = 0
     var db
@@ -33,9 +32,7 @@ buster.testCase('Idempotent open & close', {
       process.nextTick(db.close.bind(db))
     }.bind(this)
 
-    this.cleanupDirs.push(location)
-
-    db = levelup(leveldown(location), function () {
+    db = levelup(memdown(), function () {
       assert.equals(n++, 0, 'callback should fire only once')
       if (n && m) { close() }
     })

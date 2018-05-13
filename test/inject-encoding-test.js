@@ -4,27 +4,24 @@
  */
 
 var levelup = require('../lib/levelup.js')
-var leveldown = require('leveldown')
+var memdown = require('memdown')
 var encDown = require('encoding-down')
 var async = require('async')
 var common = require('./common')
-var msgpack = require('msgpack-js')
 var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
 
-buster.testCase('JSON API', {
+buster.testCase('custom encoding', {
   'setUp': function (done) {
     common.commonSetUp.call(this, function () {
       this.runTest = function (testData, assertType, done) {
-        var location = common.nextLocation()
-        this.cleanupDirs.push(location)
-        levelup(encDown(leveldown(location), {
+        levelup(encDown(memdown(), {
           valueEncoding: {
-            encode: msgpack.encode,
-            decode: msgpack.decode,
-            buffer: true,
-            type: 'msgpack'
+            encode: JSON.stringify,
+            decode: JSON.parse,
+            buffer: false,
+            type: 'custom'
           }
         }), function (err, db) {
           refute(err)
@@ -62,6 +59,7 @@ buster.testCase('JSON API', {
     ], 'same', done)
   },
 
+  // TODO: keyEncoding is utf8?
   'simple-object keys in "json" encoding': function (done) {
     this.runTest([
       { value: '0', key: 0 },
@@ -85,6 +83,7 @@ buster.testCase('JSON API', {
     ], 'equals', done)
   },
 
+  // TODO: keyEncoding is utf8?
   'complex-object keys in "json" encoding': function (done) {
     this.runTest([
       {

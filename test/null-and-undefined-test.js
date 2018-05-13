@@ -4,7 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
-var leveldown = require('leveldown')
+var memdown = require('memdown')
 var errors = levelup.errors
 var common = require('./common')
 var assert = require('referee').assert
@@ -17,7 +17,7 @@ buster.testCase('null & undefined keys & values', {
 
   'null and undefined': {
     'setUp': function (done) {
-      levelup(leveldown(this.cleanupDirs[0] = common.nextLocation()), function (err, db) {
+      levelup(memdown(), function (err, db) {
         refute(err) // sanity
         this.closeableDatabases.push(db)
         assert.isTrue(db.isOpen())
