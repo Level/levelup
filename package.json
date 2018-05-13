@@ -64,7 +64,7 @@
     "test": "standard && node test | faucet"
   },
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=6"
   },
   "license": "MIT"
 }
