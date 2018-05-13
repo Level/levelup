@@ -35,7 +35,7 @@
   ],
   "main": "lib/levelup.js",
   "dependencies": {
-    "deferred-leveldown": "~3.0.0",
+    "deferred-leveldown": "~4.0.0",
     "level-errors": "~2.0.0",
     "level-iterator-stream": "~2.0.0",
     "xtend": "~4.0.0"
