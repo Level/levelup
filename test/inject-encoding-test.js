@@ -16,13 +16,16 @@ buster.testCase('custom encoding', {
   'setUp': function (done) {
     common.commonSetUp.call(this, function () {
       this.runTest = function (testData, assertType, done) {
+        var customEncoding = {
+          encode: JSON.stringify,
+          decode: JSON.parse,
+          buffer: false,
+          type: 'custom'
+        }
+
         levelup(encDown(memdown(), {
-          valueEncoding: {
-            encode: JSON.stringify,
-            decode: JSON.parse,
-            buffer: false,
-            type: 'custom'
-          }
+          keyEncoding: customEncoding,
+          valueEncoding: customEncoding
         }), function (err, db) {
           refute(err)
           if (err) return
@@ -59,10 +62,11 @@ buster.testCase('custom encoding', {
     ], 'same', done)
   },
 
-  // TODO: keyEncoding is utf8?
   'simple-object keys in "json" encoding': function (done) {
     this.runTest([
-      { value: '0', key: 0 },
+      // Test keys that would be considered the same with default utf8 encoding.
+      // Because String([1]) === String(1).
+      { value: '0', key: [1] },
       { value: '1', key: 1 },
       { value: 'string', key: 'a string' },
       { value: 'true', key: true },
@@ -83,13 +87,22 @@ buster.testCase('custom encoding', {
     ], 'equals', done)
   },
 
-  // TODO: keyEncoding is utf8?
   'complex-object keys in "json" encoding': function (done) {
     this.runTest([
+      // Test keys that would be considered the same with default utf8 encoding.
+      // Because String({}) === String({}) === '[object Object]'.
       {
         value: '0',
         key: {
           foo: 'bar',
+          bar: [ 1, 2, 3 ],
+          bang: { yes: true, no: false }
+        }
+      },
+      {
+        value: '1',
+        key: {
+          foo: 'different',
           bar: [ 1, 2, 3 ],
           bang: { yes: true, no: false }
         }
