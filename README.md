@@ -190,8 +190,6 @@ If no callback is passed, a promise is returned.
 
 Each operation is contained in an object having the following properties: `type`, `key`, `value`, where the *type* is either `'put'` or `'del'`. In the case of `'del'` the `value` property is ignored. Any entries with a `key` of `null` or `undefined` will cause an error to be returned on the `callback` and any `type: 'put'` entry with a `value` of `null` or `undefined` will return an error.
 
-If `key` and `value` are defined but `type` is not, it will default to `'put'`.
-
 ```js
 var ops = [
   { type: 'del', key: 'father' },
