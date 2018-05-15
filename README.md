@@ -8,17 +8,17 @@
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![npm](https://img.shields.io/npm/dm/levelup.svg)](https://www.npmjs.com/package/levelup)
 
-  * [Introduction](#introduction)
-  * [Supported Platforms](#supported-platforms)
-  * [Usage](#usage)
-  * [API](#api)
-  * [Promise Support](#promise-support)
-  * [Events](#events)
-  * [Extending](#extending)
-  * [Multi-process Access](#multi-process-access)
-  * [Support](#support)
-  * [Contributing](#contributing)
-  * [License](#license)
+* [Introduction](#introduction)
+* [Supported Platforms](#supported-platforms)
+* [Usage](#usage)
+* [API](#api)
+* [Promise Support](#promise-support)
+* [Events](#events)
+* [Extending](#extending)
+* [Multi-process Access](#multi-process-access)
+* [Support](#support)
+* [Contributing](#contributing)
+* [License](#license)
 
 **If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md).
 
@@ -71,25 +71,26 @@ db.put('name', 'levelup', function (err) {
 
 ## API
 
-  * [<code><b>levelup()</b></code>](#ctor)
-  * [<code>db.<b>open()</b></code>](#open)
-  * [<code>db.<b>close()</b></code>](#close)
-  * [<code>db.<b>put()</b></code>](#put)
-  * [<code>db.<b>get()</b></code>](#get)
-  * [<code>db.<b>del()</b></code>](#del)
-  * [<code>db.<b>batch()</b></code> *(array form)*](#batch)
-  * [<code>db.<b>batch()</b></code> *(chained form)*](#batch_chained)
-  * [<code>db.<b>isOpen()</b></code>](#isOpen)
-  * [<code>db.<b>isClosed()</b></code>](#isClosed)
-  * [<code>db.<b>createReadStream()</b></code>](#createReadStream)
-  * [<code>db.<b>createKeyStream()</b></code>](#createKeyStream)
-  * [<code>db.<b>createValueStream()</b></code>](#createValueStream)
+* [<code><b>levelup()</b></code>](#ctor)
+* [<code>db.<b>open()</b></code>](#open)
+* [<code>db.<b>close()</b></code>](#close)
+* [<code>db.<b>put()</b></code>](#put)
+* [<code>db.<b>get()</b></code>](#get)
+* [<code>db.<b>del()</b></code>](#del)
+* [<code>db.<b>batch()</b></code> *(array form)*](#batch)
+* [<code>db.<b>batch()</b></code> *(chained form)*](#batch_chained)
+* [<code>db.<b>isOpen()</b></code>](#isOpen)
+* [<code>db.<b>isClosed()</b></code>](#isClosed)
+* [<code>db.<b>createReadStream()</b></code>](#createReadStream)
+* [<code>db.<b>createKeyStream()</b></code>](#createKeyStream)
+* [<code>db.<b>createValueStream()</b></code>](#createValueStream)
 
 ### Special Notes
-  * <a href="#writeStreams">What happened to <code><b>db.createWriteStream()</b></code></a>
+
+* <a href="#writeStreams">What happened to <code><b>db.createWriteStream()</b></code></a>
 
 <a name="ctor"></a>
-### levelup(db[, options[, callback]])
+### `levelup(db[, options[, callback]])`
 The main entry point for creating a new `levelup` instance.
 
 - `db` must be an [`abstract-leveldown`](https://github.com/level/abstract-leveldown) compliant store.
@@ -123,7 +124,7 @@ db.get('foo', function (err, value) {
 ```
 
 <a name="open"></a>
-### db.open([callback])
+### `db.open([callback])`
 Opens the underlying store. In general you should never need to call this method directly as it's automatically called by <a href="#ctor"><code>levelup()</code></a>.
 
 However, it is possible to *reopen* the store after it has been closed with <a href="#close"><code>close()</code></a>, although this is not generally advised.
@@ -131,7 +132,7 @@ However, it is possible to *reopen* the store after it has been closed with <a h
 If no callback is passed, a promise is returned.
 
 <a name="close"></a>
-### db.close([callback])
+### `db.close([callback])`
 <code>close()</code> closes the underlying store. The callback will receive any error encountered during closing as the first argument.
 
 You should always clean up your `levelup` instance by calling `close()` when you no longer need it to free up resources. A store cannot be opened by multiple instances of `levelup` simultaneously.
@@ -139,7 +140,7 @@ You should always clean up your `levelup` instance by calling `close()` when you
 If no callback is passed, a promise is returned.
 
 <a name="put"></a>
-### db.put(key, value[, options][, callback])
+### `db.put(key, value[, options][, callback])`
 <code>put()</code> is the primary method for inserting data into the store. Both `key` and `value` can be of any type as far as `levelup` is concerned.
 
 `options` is passed on to the underlying store.
@@ -147,7 +148,7 @@ If no callback is passed, a promise is returned.
 If no callback is passed, a promise is returned.
 
 <a name="get"></a>
-### db.get(key[, options][, callback])
+### `db.get(key[, options][, callback])`
 <code>get()</code> is the primary method for fetching data from the store. The `key` can be of any type. If it doesn't exist in the store then the callback or promise will receive an error. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
 
 ```js
@@ -170,7 +171,7 @@ db.get('foo', function (err, value) {
 If no callback is passed, a promise is returned.
 
 <a name="del"></a>
-### db.del(key[, options][, callback])
+### `db.del(key[, options][, callback])`
 <code>del()</code> is the primary method for removing data from the store.
 ```js
 db.del('foo', function (err) {
@@ -184,7 +185,7 @@ db.del('foo', function (err) {
 If no callback is passed, a promise is returned.
 
 <a name="batch"></a>
-### db.batch(array[, options][, callback]) *(array form)*
+### `db.batch(array[, options][, callback])` *(array form)*
 <code>batch()</code> can be used for very fast bulk-write operations (both *put* and *delete*). The `array` argument should contain a list of operations to be executed sequentially, although as a whole they are performed as an atomic operation inside the underlying store.
 
 Each operation is contained in an object having the following properties: `type`, `key`, `value`, where the *type* is either `'put'` or `'del'`. In the case of `'del'` the `value` property is ignored. Any entries with a `key` of `null` or `undefined` will cause an error to be returned on the `callback` and any `type: 'put'` entry with a `value` of `null` or `undefined` will return an error.
@@ -211,7 +212,7 @@ db.batch(ops, function (err) {
 If no callback is passed, a promise is returned.
 
 <a name="batch_chained"></a>
-### db.batch() *(chained form)*
+### `db.batch()` *(chained form)*
 <code>batch()</code>, when called with no arguments will return a `Batch` object which can be used to build, and eventually commit, an atomic batch operation. Depending on how it's used, it is possible to obtain greater performance when using the chained form of `batch()` over the array form.
 
 ```js
@@ -251,27 +252,27 @@ Commit the queued operations for this batch. All operations not *cleared* will b
 If no callback is passed, a promise is returned.
 
 <a name="isOpen"></a>
-### db.isOpen()
+### `db.isOpen()`
 
 A `levelup` instance can be in one of the following states:
 
-  * *"new"*     - newly created, not opened or closed
-  * *"opening"* - waiting for the underlying store to be opened
-  * *"open"*    - successfully opened the store, available for use
-  * *"closing"* - waiting for the store to be closed
-  * *"closed"*  - store has been successfully closed, should not be used
+* *"new"*     - newly created, not opened or closed
+* *"opening"* - waiting for the underlying store to be opened
+* *"open"*    - successfully opened the store, available for use
+* *"closing"* - waiting for the store to be closed
+* *"closed"*  - store has been successfully closed, should not be used
 
 `isOpen()` will return `true` only when the state is "open".
 
 <a name="isClosed"></a>
-### db.isClosed()
+### `db.isClosed()`
 
 *See <a href="#put"><code>isOpen()</code></a>*
 
 `isClosed()` will return `true` only when the state is "closing" *or* "closed", it can be useful for determining if read and write operations are permissible.
 
 <a name="createReadStream"></a>
-### db.createReadStream([options])
+### `db.createReadStream([options])`
 
 Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of key-value pairs. A pair is an object with `key` and `value` properties. By default it will stream all entries in the underlying store from start to end. Use the options described below to control the range, direction and results.
 
@@ -312,7 +313,7 @@ Legacy options:
 * `end`: instead use `lte`
 
 <a name="createKeyStream"></a>
-### db.createKeyStream([options])
+### `db.createKeyStream([options])`
 
 Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of keys rather than key-value pairs. Use the same options as described for [`createReadStream`](#createReadStream) to control the range and direction.
 
@@ -332,7 +333,7 @@ db.createReadStream({ keys: true, values: false })
 ```
 
 <a name="createValueStream"></a>
-### db.createValueStream([options])
+### `db.createValueStream([options])`
 
 Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of values rather than key-value pairs. Use the same options as described for [`createReadStream`](#createReadStream) to control the range and direction.
 
