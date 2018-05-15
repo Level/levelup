@@ -43,7 +43,7 @@
   "devDependencies": {
     "after": "^0.8.2",
     "async": "^2.5.0",
-    "bl": "^1.2.1",
+    "bl": "^2.0.0",
     "browserify": "^16.0.0",
     "bustermove": "~1.0.0",
     "concat-stream": "~1.6.0",
