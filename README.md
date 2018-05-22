@@ -18,6 +18,7 @@
 * [Multi-process Access](#multi-process-access)
 * [Support](#support)
 * [Contributing](#contributing)
+* [Big Thanks](#big-thanks)
 * [License](#license)
 
 **If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md).
@@ -37,6 +38,8 @@ The most common store is [`leveldown`](https://github.com/level/leveldown/) whic
 ## Supported Platforms
 
 We aim to support Active LTS and Current Node.js releases as well as browsers. For support of the underlying store, please see the respective documentation.
+
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/levelup.svg)](https://saucelabs.com/u/levelup)
 
 ## Usage
 
@@ -443,6 +446,12 @@ There are multiple ways you can find help in using Level in Node.js:
 > Individuals making significant and valuable contributions are given commit-access to the project to contribute as they see fit. This project is more like an open wiki than a standard guarded open source project.
 
 See the [contribution guide](https://github.com/Level/community/blob/master/CONTRIBUTING.md) for more details.
+
+## Big Thanks
+
+Cross-browser Testing Platform and Open Source ♥ Provided by [Sauce Labs](https://saucelabs.com).
+
+[![Sauce Labs logo](./sauce-labs.svg)](https://saucelabs.com)
 
 ## License
 

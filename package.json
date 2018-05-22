@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "after": "^0.8.2",
+    "airtap": "0.0.5",
     "async": "^2.5.0",
     "bl": "^2.0.0",
     "brfs": "~1.6.1",
@@ -60,7 +61,9 @@
     "trickle": "0.0.2"
   },
   "scripts": {
-    "test": "standard && node test | faucet"
+    "test": "standard && node test | faucet",
+    "test-browsers": "airtap --sauce-connect --loopback airtap.local --no-coverage test/index.js",
+    "test-browser-local": "airtap --local --no-coverage test/index.js"
   },
   "browserify": {
     "transform": [
