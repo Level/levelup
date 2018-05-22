@@ -5,7 +5,7 @@
 
 var delayed = require('delayed')
 var common = require('./common')
-var SlowStream = require('slow-stream')
+var trickle = require('trickle')
 var refute = require('referee').refute
 var buster = require('bustermove')
 
@@ -20,12 +20,12 @@ buster.testCase('Snapshots', {
       db.batch(this.sourceData.slice(), function (err) {
         refute(err)
 
-        // 2) Create an iterator on the current data, pipe it through a SlowStream
+        // 2) Create an iterator on the current data, pipe it through a slow stream
         //    to make *sure* that we're going to be reading it for longer than it
         //    takes to overwrite the data in there.
 
         var rs = db.readStream()
-        rs = rs.pipe(new SlowStream({ maxWriteInterval: 5 }))
+        rs = rs.pipe(trickle({ interval: 5 }))
         rs.on('data', this.dataSpy)
         rs.once('end', this.endSpy)
 

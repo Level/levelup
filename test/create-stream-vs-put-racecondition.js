@@ -3,7 +3,10 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
+// NOTE: this file is outdated. It is not included in the test suite (index.js).
+
 var levelup = require('../lib/levelup.js')
+var memdown = require('memdown')
 var common = require('./common')
 var assert = require('referee').assert
 var buster = require('bustermove')
@@ -70,20 +73,16 @@ buster.testCase('ReadStream', {
     })
   },
   'readStream and then put in nextTick, defered open': function (done) {
-    var location = common.nextLocation()
-    var db = levelup(location)
+    var db = levelup(memdown())
 
     this.closeableDatabases.push(db)
-    this.cleanupDirs.push(location)
 
     makeTest(db, process.nextTick, done)
   },
   'readStream and then put, defered open': function (done) {
-    var location = common.nextLocation()
-    var db = levelup(location)
+    var db = levelup(memdown())
 
     this.closeableDatabases.push(db)
-    this.cleanupDirs.push(location)
 
     makeTest(db, function (f) { f() }, done)
   },

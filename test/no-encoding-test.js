@@ -4,7 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
-var leveldown = require('leveldown')
+var memdown = require('memdown')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
@@ -15,8 +15,7 @@ buster.testCase('without encoding-down', {
   'tearDown': common.commonTearDown,
 
   'serializes key': function (done) {
-    var location = common.nextLocation()
-    var down = leveldown(location)
+    var down = memdown()
 
     down._serializeKey = function (key) {
       return key.toUpperCase()
@@ -25,7 +24,6 @@ buster.testCase('without encoding-down', {
     var db = levelup(down)
 
     this.closeableDatabases.push(db)
-    this.cleanupDirs.push(location)
 
     db.put('key', 'value', function (err) {
       refute(err)
@@ -39,8 +37,7 @@ buster.testCase('without encoding-down', {
   },
 
   'serializes value': function (done) {
-    var location = common.nextLocation()
-    var down = leveldown(location)
+    var down = memdown()
 
     down._serializeValue = function (value) {
       return value.toUpperCase()
@@ -49,7 +46,6 @@ buster.testCase('without encoding-down', {
     var db = levelup(down)
 
     this.closeableDatabases.push(db)
-    this.cleanupDirs.push(location)
 
     db.put('key', 'value', function (err) {
       refute(err)

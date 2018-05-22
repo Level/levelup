@@ -3,7 +3,7 @@
  * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
  */
 
-const DB_ROOT = __dirname
+var DB_ROOT = __dirname
 var path = require('path')
 var Benchmark = require('benchmark')
 var rimraf = require('rimraf')

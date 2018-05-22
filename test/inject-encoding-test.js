@@ -4,28 +4,28 @@
  */
 
 var levelup = require('../lib/levelup.js')
-var leveldown = require('leveldown')
+var memdown = require('memdown')
 var encDown = require('encoding-down')
 var async = require('async')
 var common = require('./common')
-var msgpack = require('msgpack-js')
 var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
 
-buster.testCase('JSON API', {
+buster.testCase('custom encoding', {
   'setUp': function (done) {
     common.commonSetUp.call(this, function () {
       this.runTest = function (testData, assertType, done) {
-        var location = common.nextLocation()
-        this.cleanupDirs.push(location)
-        levelup(encDown(leveldown(location), {
-          valueEncoding: {
-            encode: msgpack.encode,
-            decode: msgpack.decode,
-            buffer: true,
-            type: 'msgpack'
-          }
+        var customEncoding = {
+          encode: JSON.stringify,
+          decode: JSON.parse,
+          buffer: false,
+          type: 'custom'
+        }
+
+        levelup(encDown(memdown(), {
+          keyEncoding: customEncoding,
+          valueEncoding: customEncoding
         }), function (err, db) {
           refute(err)
           if (err) return
@@ -64,7 +64,9 @@ buster.testCase('JSON API', {
 
   'simple-object keys in "json" encoding': function (done) {
     this.runTest([
-      { value: '0', key: 0 },
+      // Test keys that would be considered the same with default utf8 encoding.
+      // Because String([1]) === String(1).
+      { value: '0', key: [1] },
       { value: '1', key: 1 },
       { value: 'string', key: 'a string' },
       { value: 'true', key: true },
@@ -87,10 +89,20 @@ buster.testCase('JSON API', {
 
   'complex-object keys in "json" encoding': function (done) {
     this.runTest([
+      // Test keys that would be considered the same with default utf8 encoding.
+      // Because String({}) === String({}) === '[object Object]'.
       {
         value: '0',
         key: {
           foo: 'bar',
+          bar: [ 1, 2, 3 ],
+          bang: { yes: true, no: false }
+        }
+      },
+      {
+        value: '1',
+        key: {
+          foo: 'different',
           bar: [ 1, 2, 3 ],
           bang: { yes: true, no: false }
         }

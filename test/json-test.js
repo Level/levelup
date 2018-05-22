@@ -4,7 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
-var leveldown = require('leveldown')
+var memdown = require('memdown')
 var encDown = require('encoding-down')
 var async = require('async')
 var concat = require('concat-stream')
@@ -17,9 +17,7 @@ buster.testCase('JSON encoding', {
   'setUp': function (done) {
     common.commonSetUp.call(this, function () {
       this.runTest = function (testData, assertType, done) {
-        var location = common.nextLocation()
-        this.cleanupDirs.push(location)
-        levelup(encDown(leveldown(location), {
+        levelup(encDown(memdown(), {
           keyEncoding: 'json',
           valueEncoding: 'json'
         }), function (err, db) {

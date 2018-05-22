@@ -4,7 +4,7 @@
  */
 
 var levelup = require('../lib/levelup.js')
-var leveldown = require('leveldown')
+var memdown = require('memdown')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
@@ -12,12 +12,10 @@ var buster = require('bustermove')
 
 function test (fun) {
   return function (done) {
-    var location = common.nextLocation()
-    // 1) open database without callback, opens in worker thread
-    var db = levelup(leveldown(location))
+    // 1) open database without callback, opens in next tick
+    var db = levelup(memdown())
 
     this.closeableDatabases.push(db)
-    this.cleanupDirs.push(location)
     assert.isObject(db)
 
     fun(db, done)
