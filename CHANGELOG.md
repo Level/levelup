@@ -2,6 +2,31 @@
 
 ## [Unreleased]
 
+## [3.0.0] - 2018-05-23
+
+### Added
+* Add node 10 to Travis (@ralphtheninja)
+* Add browser support to test suite (@vweevers)
+* Add `airtap` for browser tests in Sauce Labs (@vweevers)
+
+### Changed
+* Update `memdown` to `^3.0.0` (@vweevers)
+* Update `encoding-down` to `^5.0.0` (@ralphtheninja)
+* Update `deferred-leveldown` to `~4.0.0` (@ralphtheninja)
+* Update `standard` to `^11.0.0` (@ralphtheninja)
+* Update `level-errors` to `~2.0.0` (@ralphtheninja)
+* Update `bl` to `^2.0.0` (@ralphtheninja)
+* README: tweak api sub sections (@ralphtheninja)
+
+### Fixed
+* Fix defunct `keyEncoding` in `inject-encoding-test.js` (@vweevers)
+
+### Removed
+* Remove irrelevant `leveldown-substitution-test.js` (@ralphtheninja)
+* Remove node 4 from Travis (@ralphtheninja)
+* Remove batch operations defaulting to `put` (@vweevers)
+* Remove compiler toolchain from Travis (@vweevers)
+
 ## [2.0.2] - 2018-02-12
 
 ### Added
@@ -772,7 +797,8 @@
 
 :seedling: Initial release.
 
-[Unreleased]: https://github.com/level/levelup/compare/v2.0.2...HEAD
+[Unreleased]: https://github.com/level/levelup/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/level/levelup/compare/v2.0.2...v3.0.0
 [2.0.2]: https://github.com/level/levelup/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/level/levelup/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/level/levelup/compare/v2.0.0-rc3...v2.0.0
