@@ -2,6 +2,11 @@
 
 This document describes breaking changes and how to upgrade. For a complete list of changes including minor and patch releases, please refer to the [changelog](CHANGELOG.md).
 
+## v3
+
+1. Dropped support for node 4.
+1. Batch operations no longer default to `'put'`. If `type` isn't specified, an error will be thrown, courtesy of `abstract-leveldown`.
+
 ## v2
 
 ### Summary
