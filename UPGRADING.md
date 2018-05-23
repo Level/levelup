@@ -4,7 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## v3
 
-Dropped support for node 4. No other breaking changes.
+* Dropped support for node 4
+* Batch operations no longer default to `.put`
 
 ## v2
 
