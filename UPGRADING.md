@@ -4,8 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## v3
 
-* Dropped support for node 4
-* Batch operations no longer default to `.put`
+1. Dropped support for node 4.
+1. Batch operations no longer default to `'put'`. If `type` isn't specified, an error will be thrown, courtesy of `abstract-leveldown`.
 
 ## v2
 
