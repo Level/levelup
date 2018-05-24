@@ -9,7 +9,7 @@
 
 ### Removed
 * Remove `.jshintrc` (@ralphtheninja)
-* Remove `brfs` and use `Buffer.from()` in favor of `fs.readFilesync()` (@ralphtheninja)
+* Remove `brfs` and use `Buffer.from()` in favor of `fs.readFileSync()` (@ralphtheninja)
 
 ## [3.0.0] - 2018-05-23
 
