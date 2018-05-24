@@ -1,7 +1,7 @@
 {
   "name": "levelup",
   "description": "Fast & simple storage - a Node.js-style LevelDB wrapper",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "contributors": [
     "Rod Vagg <r@va.gg> (https://github.com/rvagg)",
     "John Chesley <john@chesl.es> (https://github.com/chesles/)",
