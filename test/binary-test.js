@@ -10,12 +10,12 @@ var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
 
-var binaryTestDataMD5Sum = md5sum(loadBinaryTestData())
+var binaryTestDataMD5Sum = md5sum(loadData())
 
 buster.testCase('Binary API', {
   'setUp': function (done) {
     common.commonSetUp.call(this, function () {
-      this.testData = loadBinaryTestData()
+      this.testData = loadData()
       done()
     }.bind(this))
   },
@@ -24,7 +24,7 @@ buster.testCase('Binary API', {
 
   'sanity check on test data': function (done) {
     assert(Buffer.isBuffer(this.testData))
-    checkBinaryTestData(this.testData)
+    checkData(this.testData)
     done()
   },
 
@@ -35,7 +35,7 @@ buster.testCase('Binary API', {
         db.get('binarydata', { valueEncoding: 'binary' }, function (err, value) {
           refute(err)
           assert(value)
-          checkBinaryTestData(value)
+          checkData(value)
           done()
         })
       })
@@ -49,7 +49,7 @@ buster.testCase('Binary API', {
         db.get('binarydata', function (err, value) {
           refute(err)
           assert(value)
-          checkBinaryTestData(value)
+          checkData(value)
           done()
         })
       })
@@ -77,7 +77,7 @@ buster.testCase('Binary API', {
         db.get('binarydata', { keyEncoding: 'utf8', valueEncoding: 'binary' }, function (err, value) {
           refute(err)
           assert(value)
-          checkBinaryTestData(value)
+          checkData(value)
           done()
         })
       })
@@ -91,7 +91,7 @@ buster.testCase('Binary API', {
         db.get('binarydata', function (err, value) {
           refute(err)
           assert(value)
-          checkBinaryTestData(value)
+          checkData(value)
           done()
         })
       })
@@ -117,7 +117,7 @@ buster.testCase('Binary API', {
         refute(err)
         db.get(this.testData, { valueEncoding: 'binary' }, function (err, value) {
           refute(err)
-          checkBinaryTestData(value)
+          checkData(value)
           done()
         })
       }.bind(this))
@@ -156,7 +156,7 @@ buster.testCase('Binary API', {
               assert.equals(value.toString(), 'a' + key + 'value')
               callback()
             } else {
-              checkBinaryTestData(value)
+              checkData(value)
               callback()
             }
           })
@@ -166,11 +166,11 @@ buster.testCase('Binary API', {
   }
 })
 
-function loadBinaryTestData () {
+function loadData () {
   return Buffer.from('0080c0ff', 'hex')
 }
 
-function checkBinaryTestData (testData) {
+function checkData (testData) {
   assert.equals(md5sum(testData), binaryTestDataMD5Sum)
 }
 
