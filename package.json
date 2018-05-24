@@ -45,7 +45,6 @@
     "airtap": "0.0.5",
     "async": "^2.5.0",
     "bl": "^2.0.0",
-    "brfs": "~1.6.1",
     "browserify": "^16.0.0",
     "bustermove": "~1.0.0",
     "concat-stream": "~1.6.0",
@@ -64,11 +63,6 @@
     "test": "standard && node test | faucet",
     "test-browsers": "airtap --sauce-connect --loopback airtap.local --no-coverage test/index.js",
     "test-browser-local": "airtap --local --no-coverage test/index.js"
-  },
-  "browserify": {
-    "transform": [
-      "brfs"
-    ]
   },
   "engines": {
     "node": ">=6"
