@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [3.0.1] - 2018-05-24
+
+### Changed
+* Update `airtap` to `0.0.6` (@ralphtheninja)
+
+### Removed
+* Remove `.jshintrc` (@ralphtheninja)
+* Remove `brfs` and use `Buffer.from()` in favor of `fs.readFileSync()` (@ralphtheninja)
+
 ## [3.0.0] - 2018-05-23
 
 ### Added
@@ -797,7 +806,8 @@
 
 :seedling: Initial release.
 
-[Unreleased]: https://github.com/level/levelup/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/level/levelup/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/level/levelup/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/level/levelup/compare/v2.0.2...v3.0.0
 [2.0.2]: https://github.com/level/levelup/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/level/levelup/compare/v2.0.0...v2.0.1
