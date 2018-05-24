@@ -61,13 +61,17 @@ module.exports.loadBinaryTestData = function () {
   return Buffer.from('0080c0ff', 'hex')
 }
 
-module.exports.binaryTestDataMD5Sum = '855fadc0cd471445813315c0b8e3e1d8'
+module.exports.binaryTestDataMD5Sum = md5sum(module.exports.loadBinaryTestData())
 
 module.exports.checkBinaryTestData = function (testData, callback) {
-  var md5sum = crypto.createHash('md5')
-  md5sum.update(testData)
-  assert.equals(md5sum.digest('hex'), module.exports.binaryTestDataMD5Sum)
+  assert.equals(md5sum(testData), module.exports.binaryTestDataMD5Sum)
   callback()
+}
+
+function md5sum (buf) {
+  var hash = crypto.createHash('md5')
+  hash.update(buf)
+  return hash.digest('hex')
 }
 
 module.exports.commonSetUp = function (done) {
