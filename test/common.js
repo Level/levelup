@@ -8,8 +8,6 @@ var assert = referee.assert
 var refute = referee.refute
 var crypto = require('crypto')
 var async = require('async')
-var fs = require('fs')
-var path = require('path')
 var delayed = require('delayed').delayed
 var levelup = require('../lib/levelup.js')
 var errors = require('level-errors')
@@ -60,12 +58,10 @@ module.exports.commonTearDown = function (done) {
 }
 
 module.exports.loadBinaryTestData = function (callback) {
-  // Read synchronously to avoid an issue with brfs
-  var buf = fs.readFileSync(path.join(__dirname, 'data/testdata.bin'))
-  process.nextTick(callback, null, buf)
+  process.nextTick(callback, null, Buffer.from('some-string-as-a-buffer'))
 }
 
-module.exports.binaryTestDataMD5Sum = '920725ef1a3b32af40ccd0b78f4a62fd'
+module.exports.binaryTestDataMD5Sum = '4fe16fc88f0a93a8aee0dbd64701f70e'
 
 module.exports.checkBinaryTestData = function (testData, callback) {
   var md5sum = crypto.createHash('md5')
