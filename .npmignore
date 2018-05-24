@@ -1,6 +1,5 @@
-*.tar.gz
-build/
-test-data.tar
-test-data.db.tar
-test/benchmarks/
-level/
+test/*
+buster.js
+.airtap.yml
+.travis.yml
+.dntrc
