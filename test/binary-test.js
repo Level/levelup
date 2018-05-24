@@ -4,15 +4,18 @@
  */
 
 var async = require('async')
+var crypto = require('crypto')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
 
+var binaryTestDataMD5Sum = md5sum(loadBinaryTestData())
+
 buster.testCase('Binary API', {
   'setUp': function (done) {
     common.commonSetUp.call(this, function () {
-      this.testData = common.loadBinaryTestData()
+      this.testData = loadBinaryTestData()
       done()
     }.bind(this))
   },
@@ -21,7 +24,8 @@ buster.testCase('Binary API', {
 
   'sanity check on test data': function (done) {
     assert(Buffer.isBuffer(this.testData))
-    common.checkBinaryTestData(this.testData, done)
+    checkBinaryTestData(this.testData)
+    done()
   },
 
   'test put() and get() with binary value {valueEncoding:binary}': function (done) {
@@ -31,7 +35,8 @@ buster.testCase('Binary API', {
         db.get('binarydata', { valueEncoding: 'binary' }, function (err, value) {
           refute(err)
           assert(value)
-          common.checkBinaryTestData(value, done)
+          checkBinaryTestData(value)
+          done()
         })
       })
     }.bind(this))
@@ -44,7 +49,8 @@ buster.testCase('Binary API', {
         db.get('binarydata', function (err, value) {
           refute(err)
           assert(value)
-          common.checkBinaryTestData(value, done)
+          checkBinaryTestData(value)
+          done()
         })
       })
     }.bind(this))
@@ -71,7 +77,8 @@ buster.testCase('Binary API', {
         db.get('binarydata', { keyEncoding: 'utf8', valueEncoding: 'binary' }, function (err, value) {
           refute(err)
           assert(value)
-          common.checkBinaryTestData(value, done)
+          checkBinaryTestData(value)
+          done()
         })
       })
     }.bind(this))
@@ -84,7 +91,8 @@ buster.testCase('Binary API', {
         db.get('binarydata', function (err, value) {
           refute(err)
           assert(value)
-          common.checkBinaryTestData(value, done)
+          checkBinaryTestData(value)
+          done()
         })
       })
     }.bind(this))
@@ -109,7 +117,8 @@ buster.testCase('Binary API', {
         refute(err)
         db.get(this.testData, { valueEncoding: 'binary' }, function (err, value) {
           refute(err)
-          common.checkBinaryTestData(value, done)
+          checkBinaryTestData(value)
+          done()
         })
       }.bind(this))
     }.bind(this))
@@ -147,7 +156,8 @@ buster.testCase('Binary API', {
               assert.equals(value.toString(), 'a' + key + 'value')
               callback()
             } else {
-              common.checkBinaryTestData(value, callback)
+              checkBinaryTestData(value)
+              callback()
             }
           })
         }, done)
@@ -155,3 +165,17 @@ buster.testCase('Binary API', {
     }.bind(this))
   }
 })
+
+function loadBinaryTestData () {
+  return Buffer.from('0080c0ff', 'hex')
+}
+
+function checkBinaryTestData (testData) {
+  assert.equals(md5sum(testData), binaryTestDataMD5Sum)
+}
+
+function md5sum (buf) {
+  var hash = crypto.createHash('md5')
+  hash.update(buf)
+  return hash.digest('hex')
+}

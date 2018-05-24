@@ -6,7 +6,6 @@
 var referee = require('referee')
 var assert = referee.assert
 var refute = referee.refute
-var crypto = require('crypto')
 var async = require('async')
 var delayed = require('delayed').delayed
 var levelup = require('../lib/levelup.js')
@@ -55,23 +54,6 @@ module.exports.commonTearDown = function (done) {
   async.forEach(this.closeableDatabases, function (db, callback) {
     db.close(callback)
   }, done)
-}
-
-module.exports.loadBinaryTestData = function () {
-  return Buffer.from('0080c0ff', 'hex')
-}
-
-var binaryTestDataMD5Sum = md5sum(module.exports.loadBinaryTestData())
-
-module.exports.checkBinaryTestData = function (testData, callback) {
-  assert.equals(md5sum(testData), binaryTestDataMD5Sum)
-  callback()
-}
-
-function md5sum (buf) {
-  var hash = crypto.createHash('md5')
-  hash.update(buf)
-  return hash.digest('hex')
 }
 
 module.exports.commonSetUp = function (done) {
