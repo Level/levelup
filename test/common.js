@@ -57,8 +57,8 @@ module.exports.commonTearDown = function (done) {
   }, done)
 }
 
-module.exports.loadBinaryTestData = function (callback) {
-  process.nextTick(callback, null, Buffer.from('0080c0ff', 'hex'))
+module.exports.loadBinaryTestData = function () {
+  return Buffer.from('0080c0ff', 'hex')
 }
 
 module.exports.binaryTestDataMD5Sum = '855fadc0cd471445813315c0b8e3e1d8'

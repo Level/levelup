@@ -12,11 +12,8 @@ var buster = require('bustermove')
 buster.testCase('Binary API', {
   'setUp': function (done) {
     common.commonSetUp.call(this, function () {
-      common.loadBinaryTestData(function (err, data) {
-        refute(err)
-        this.testData = data
-        done()
-      }.bind(this))
+      this.testData = common.loadBinaryTestData()
+      done()
     }.bind(this))
   },
 
