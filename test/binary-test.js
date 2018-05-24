@@ -4,13 +4,10 @@
  */
 
 var async = require('async')
-var crypto = require('crypto')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
 var buster = require('bustermove')
-
-var binaryTestDataMD5Sum = md5sum(loadData())
 
 buster.testCase('Binary API', {
   'setUp': function (done) {
@@ -170,12 +167,6 @@ function loadData () {
   return Buffer.from('0080c0ff', 'hex')
 }
 
-function checkData (testData) {
-  assert.equals(md5sum(testData), binaryTestDataMD5Sum)
-}
-
-function md5sum (buf) {
-  var hash = crypto.createHash('md5')
-  hash.update(buf)
-  return hash.digest('hex')
+function checkData (buf) {
+  assert.equals(buf.equals(loadData()), true)
 }
