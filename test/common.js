@@ -58,10 +58,10 @@ module.exports.commonTearDown = function (done) {
 }
 
 module.exports.loadBinaryTestData = function (callback) {
-  process.nextTick(callback, null, Buffer.from('some-string-as-a-buffer'))
+  process.nextTick(callback, null, Buffer.from('0080c0ff', 'hex'))
 }
 
-module.exports.binaryTestDataMD5Sum = '4fe16fc88f0a93a8aee0dbd64701f70e'
+module.exports.binaryTestDataMD5Sum = '855fadc0cd471445813315c0b8e3e1d8'
 
 module.exports.checkBinaryTestData = function (testData, callback) {
   var md5sum = crypto.createHash('md5')
