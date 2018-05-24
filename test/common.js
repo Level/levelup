@@ -61,10 +61,10 @@ module.exports.loadBinaryTestData = function () {
   return Buffer.from('0080c0ff', 'hex')
 }
 
-module.exports.binaryTestDataMD5Sum = md5sum(module.exports.loadBinaryTestData())
+var binaryTestDataMD5Sum = md5sum(module.exports.loadBinaryTestData())
 
 module.exports.checkBinaryTestData = function (testData, callback) {
-  assert.equals(md5sum(testData), module.exports.binaryTestDataMD5Sum)
+  assert.equals(md5sum(testData), binaryTestDataMD5Sum)
   callback()
 }
 
