@@ -1,4 +1,4 @@
-test/*
+test
 buster.js
 .airtap.yml
 .travis.yml
