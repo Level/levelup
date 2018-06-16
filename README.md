@@ -463,9 +463,7 @@ Cross-browser Testing Platform and Open Source ♥ Provided by [Sauce Labs](http
 
 ## License
 
-Copyright &copy; 2012-present `levelup` [contributors](https://github.com/level/community#contributors).
-
-`levelup` is licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included `LICENSE.md` file for more details.
+[MIT](LICENSE.md) © 2012-present `levelup` [Contributors](CONTRIBUTORS.md).
 
 *`levelup` builds on the excellent work of the LevelDB and Snappy teams from Google and additional contributors. LevelDB and Snappy are both issued under the [New BSD License](http://opensource.org/licenses/BSD-3-Clause).*
 
