@@ -8,6 +8,8 @@
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![npm](https://img.shields.io/npm/dm/levelup.svg)](https://www.npmjs.com/package/levelup)
 
+## Table of Contents
+
 * [Introduction](#introduction)
 * [Supported Platforms](#supported-platforms)
 * [Usage](#usage)
@@ -20,8 +22,6 @@
 * [Contributing](#contributing)
 * [Big Thanks](#big-thanks)
 * [License](#license)
-
-**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md).
 
 ## Introduction
 
@@ -42,6 +42,8 @@ We aim to support Active LTS and Current Node.js releases as well as browsers. F
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/levelup.svg)](https://saucelabs.com/u/levelup)
 
 ## Usage
+
+**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md).
 
 First you need to install `levelup`! No stores are included so you must also install `leveldown` (for example).
 
