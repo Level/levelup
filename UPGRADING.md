@@ -4,8 +4,8 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## v3
 
-1. Dropped support for node 4.
-1. Batch operations no longer default to `'put'`. If `type` isn't specified, an error will be thrown, courtesy of `abstract-leveldown`.
+1.  Dropped support for node 4.
+2.  Batch operations no longer default to `'put'`. If `type` isn't specified, an error will be thrown, courtesy of `abstract-leveldown`.
 
 ## v2
 
@@ -13,10 +13,10 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 There has been quite some work done for this new major version:
 
-1. Make `levelup` more generic by reducing focus on [`leveldown`](https://github.com/Level/leveldown) and [`LevelDB`](https://github.com/google/leveldb).
-2. Make `levelup` more generic by removing code related to encodings, which would allow \*down implementations to manage encodings themselves.
-3. Use [`standard`](https://github.com/standard/standard) as linter to avoid bikeshedding.
-4. Add a native `Promise` API for promise using geeks. Many have been asking for this. Also `async/await` is awesome. Breaking change: previously, if you did not pass a callback to an async function and there was an error, `levelup` would emit an `error` event instead. This is no longer true.
+1.  Make `levelup` more generic by reducing focus on [`leveldown`](https://github.com/Level/leveldown) and [`LevelDB`](https://github.com/google/leveldb).
+2.  Make `levelup` more generic by removing code related to encodings, which would allow \*down implementations to manage encodings themselves.
+3.  Use [`standard`](https://github.com/standard/standard) as linter to avoid bikeshedding.
+4.  Add a native `Promise` API for promise using geeks. Many have been asking for this. Also `async/await` is awesome. Breaking change: previously, if you did not pass a callback to an async function and there was an error, `levelup` would emit an `error` event instead. This is no longer true.
 
 Point `1` and `2` also helps out with reducing complexity.
 
@@ -26,9 +26,7 @@ Since `levelup` no longer tries to load `leveldown` as a default backend you hav
 
 So if you previously did:
 
-```
-$ npm i levelup leveldown --save
-```
+    $ npm i levelup leveldown --save
 
 And in your code you did something like:
 
