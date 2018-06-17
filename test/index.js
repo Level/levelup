@@ -24,6 +24,7 @@ require('./null-and-undefined-test')
 require('./open-patchsafe-test')
 require('./read-stream-test')
 require('./snapshot-test')
+require('./iterator-test')
 
 if (!process.browser) {
   require('./browserify-test')

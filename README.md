@@ -87,6 +87,7 @@ db.put('name', 'levelup', function (err) {
 * [<code>db.<b>createReadStream()</b></code>](#createReadStream)
 * [<code>db.<b>createKeyStream()</b></code>](#createKeyStream)
 * [<code>db.<b>createValueStream()</b></code>](#createValueStream)
+* [<code>db.<b>iterator()</b></code>](#iterator)
 
 ### Special Notes
 
@@ -352,6 +353,11 @@ db.createReadStream({ keys: false, values: true })
     console.log('value=', data)
   })
 ```
+
+<a name="iterator"></a>
+### `db.iterator([options])`
+
+Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-leveldown/#abstractleveldown_iteratoroptions), which is what powers the readable streams above. Options are the same as the range options of [`createReadStream()`](#createReadStream) and are passed to the underlying store.
 
 <a name="writeStreams"></a>
 #### What happened to `db.createWriteStream`?
