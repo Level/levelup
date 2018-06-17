@@ -80,20 +80,20 @@ db.put('name', 'levelup', function (err) {
 
 ## API
 
-* [<code><b>levelup()</b></code>](#ctor)
-* [<code>db.<b>open()</b></code>](#open)
-* [<code>db.<b>close()</b></code>](#close)
-* [<code>db.<b>put()</b></code>](#put)
-* [<code>db.<b>get()</b></code>](#get)
-* [<code>db.<b>del()</b></code>](#del)
-* [<code>db.<b>batch()</b></code> *(array form)*](#batch)
-* [<code>db.<b>batch()</b></code> *(chained form)*](#batch_chained)
-* [<code>db.<b>isOpen()</b></code>](#isOpen)
-* [<code>db.<b>isClosed()</b></code>](#isClosed)
-* [<code>db.<b>createReadStream()</b></code>](#createReadStream)
-* [<code>db.<b>createKeyStream()</b></code>](#createKeyStream)
-* [<code>db.<b>createValueStream()</b></code>](#createValueStream)
-* [<code>db.<b>iterator()</b></code>](#iterator)
+-   [<code><b>levelup()</b></code>](#ctor)
+-   [<code>db.<b>open()</b></code>](#open)
+-   [<code>db.<b>close()</b></code>](#close)
+-   [<code>db.<b>put()</b></code>](#put)
+-   [<code>db.<b>get()</b></code>](#get)
+-   [<code>db.<b>del()</b></code>](#del)
+-   [<code>db.<b>batch()</b></code> _(array form)_](#batch)
+-   [<code>db.<b>batch()</b></code> _(chained form)_](#batch_chained)
+-   [<code>db.<b>isOpen()</b></code>](#isOpen)
+-   [<code>db.<b>isClosed()</b></code>](#isClosed)
+-   [<code>db.<b>createReadStream()</b></code>](#createReadStream)
+-   [<code>db.<b>createKeyStream()</b></code>](#createKeyStream)
+-   [<code>db.<b>createValueStream()</b></code>](#createValueStream)
+-   [<code>db.<b>iterator()</b></code>](#iterator)
 
 ### Special Notes
 
@@ -383,6 +383,7 @@ db.createReadStream({ keys: false, values: true })
 ```
 
 <a name="iterator"></a>
+
 ### `db.iterator([options])`
 
 Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-leveldown/#abstractleveldown_iteratoroptions), which is what powers the readable streams above. Options are the same as the range options of [`createReadStream()`](#createReadStream) and are passed to the underlying store.
