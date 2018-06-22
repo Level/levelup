@@ -1,8 +1,3 @@
-/* Copyright (c) 2012-2018 LevelUP contributors
- * See list at <https://github.com/level/levelup#contributing>
- * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
- */
-
 // NOTE: this file is outdated. It is not included in the test suite (index.js).
 
 var levelup = require('../lib/levelup.js')

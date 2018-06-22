@@ -2,11 +2,34 @@
 
 ## [Unreleased]
 
+## [3.1.0] - 2018-06-22
+
+### Changed
+
+-   Upgrade `airtap` from `0.0.6` to `0.0.7` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Update `.npmignore` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Tweak copyright year for less maintenance ([**@ralphtheninja**](https://github.com/ralphtheninja))
+
+### Added
+
+-   Expose `db.iterator()` ([**@vweevers**](https://github.com/vweevers))
+-   Add `remark` tooling ([**@vweevers**](https://github.com/vweevers))
+
+### Removed
+
+-   Remove `contributors` from `package.json` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Remove copyright headers from code ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Remove LevelDB and Snappy credits ([**@vweevers**](https://github.com/vweevers))
+
+### Fixed
+
+-   Replace `remark` with `remark-cli` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+
 ## [3.0.1] - 2018-05-24
 
 ### Changed
 
--   Update `airtap` to `0.0.6` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `airtap` to `0.0.6` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ### Removed
 
@@ -23,12 +46,12 @@
 
 ### Changed
 
--   Update `memdown` to `^3.0.0` ([**@vweevers**](https://github.com/vweevers))
--   Update `encoding-down` to `^5.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update `deferred-leveldown` to `~4.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update `standard` to `^11.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update `level-errors` to `~2.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update `bl` to `^2.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `memdown` to `^3.0.0` ([**@vweevers**](https://github.com/vweevers))
+-   Upgrade `encoding-down` to `^5.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `deferred-leveldown` to `~4.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `standard` to `^11.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `level-errors` to `~2.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `bl` to `^2.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   README: tweak api sub sections ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ### Fixed
@@ -50,9 +73,9 @@
 
 ### Changed
 
--   Update `browserify` to `16.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update `leveldown` to `3.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update `deferred-leveldown` to `3.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `browserify` to `16.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `leveldown` to `3.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `deferred-leveldown` to `3.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   README: normalize readme style ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   README: use markdown links instead of `<a href></a>` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   Clarify 'must provide db' error message ([**@adityapurwa**](https://github.com/adityapurwa))
@@ -67,8 +90,8 @@
 ### Changed
 
 -   README: clarify that options are specific to the underlying store ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update `abstract-leveldown` to `3.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update `encoding-down` to `3.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `abstract-leveldown` to `3.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `encoding-down` to `3.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ### Fixed
 
@@ -85,7 +108,7 @@
 
 ### Changed
 
--   Update `leveldown` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `leveldown` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   README: prefer 'underlying store' over database, backend etc ([**@vweevers**](https://github.com/vweevers))
 -   README: update badges ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   README: unquote properties ([**@vweevers**](https://github.com/vweevers))
@@ -95,7 +118,7 @@
 -   README: rewrite intro and relationship with leveldown ([**@vweevers**](https://github.com/vweevers))
 -   README: cleanup ([**@vweevers**](https://github.com/vweevers))
 -   README: fix bad async code example ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update `deferred-leveldown` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `deferred-leveldown` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ### Removed
 
@@ -106,7 +129,7 @@
 ### Changed
 
 -   Refactor typings, use `abstract-leveldown` types ([**@MeirionHughes**](https://github.com/MeirionHughes))
--   Update `leveldown` ([**@MeirionHughes**](https://github.com/MeirionHughes))
+-   Upgrade `leveldown` ([**@MeirionHughes**](https://github.com/MeirionHughes))
 
 ### Fixed
 
@@ -122,7 +145,7 @@
 ### Changed
 
 -   README: homogenize readme style ([**@vweevers**](https://github.com/vweevers))
--   Update `level-errors` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `level-errors` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   Optimize Typescript tests ([**@vweevers**](https://github.com/vweevers))
 
 ### Removed
@@ -139,10 +162,10 @@
 
 ### Changed
 
--   Update `deferred-leveldown` to `2.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `deferred-leveldown` to `2.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   Change `levelup` constructor to take store as first parameter ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   Switch to use `AbstractLevelDOWN#status` ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update copyright year to 2017 ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade copyright year to 2017 ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   Rename `lib/util.js` to `lib/promisify.js` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ### Removed
@@ -180,7 +203,7 @@
 
 -   Ignore `package-lock.json` and `yarn.lock` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   README: make code examples adhere to `standard` ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update dependencies ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade dependencies ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ## [1.3.8] - 2017-05-29
 
@@ -258,7 +281,7 @@
 
 ### Changed
 
--   Update outdated dependencies ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade outdated dependencies ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   Test on latest node 2, node 3 ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ## [1.3.0] - 2015-11-12
@@ -269,7 +292,7 @@
 -   README: update url to Snappy ([**@hansott**](https://github.com/hansott))
 -   README: add dependency badge ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   Test on all major abi versions ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update outdated dependencies ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade outdated dependencies ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   Track and expose chained batch ops queue length ([**@kemitchell**](https://github.com/kemitchell))
 
 ### Fixed
@@ -300,7 +323,7 @@
 
 ### Changed
 
--   Update `leveldown` dependency ([**@juliangruber**](https://github.com/juliangruber))
+-   Upgrade `leveldown` dependency ([**@juliangruber**](https://github.com/juliangruber))
 
 ### Removed
 
@@ -356,7 +379,7 @@
 
 ### Changed
 
--   Update dependencies ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade dependencies ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ### Fixed
 
@@ -415,8 +438,8 @@
 
 ### Changed
 
--   Update `semver` ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Update `tap` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `semver` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `tap` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   Update compiler on Travis ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   Fix `bustermove` version ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
@@ -472,7 +495,7 @@
 ### Changed
 
 -   Reorder dependencies ([**@juliangruber**](https://github.com/juliangruber))
--   Update dependencies ([**@rvagg**](https://github.com/rvagg))
+-   Upgrade dependencies ([**@rvagg**](https://github.com/rvagg))
 
 ### Fixed
 
@@ -542,7 +565,7 @@
 ### Changed
 
 -   New ReadStream: upgrade to streams2, remove all state-management cruft, remove fstream support ([**@substack**](https://github.com/substack))
--   Update LevelDOWN dependency to ~0.8.0 with Iterator lt/lte/gt/gte support and NAN as a dependency ([**@rvagg**](https://github.com/rvagg))
+-   Upgrade LevelDOWN dependency to ~0.8.0 with Iterator lt/lte/gt/gte support and NAN as a dependency ([**@rvagg**](https://github.com/rvagg))
 
 ## [0.14.0] - 2013-08-19
 
@@ -554,13 +577,13 @@
 
 ### Changed
 
--   Update LevelDOWN dependency version ~0.7.0 for Node 0.8->0.11 compatibility ([**@rvagg**](https://github.com/rvagg))
+-   Upgrade LevelDOWN dependency version ~0.7.0 for Node 0.8->0.11 compatibility ([**@rvagg**](https://github.com/rvagg))
 
 ## [0.12.0] - 2013-07-25
 
 ### Changed
 
--   Update LevelDOWN dependency version ~0.6.2 ([**@rvagg**](https://github.com/rvagg))
+-   Upgrade LevelDOWN dependency version ~0.6.2 ([**@rvagg**](https://github.com/rvagg))
 
 ## [0.11.0] - 2013-07-17
 
@@ -783,7 +806,7 @@
 -   Revamped benchmark suite ([**@rvagg**](https://github.com/rvagg))
 -   Allow JS Strings through to native layer ([**@rvagg**](https://github.com/rvagg))
 -   Cleaner build for osx ([**@rvagg**](https://github.com/rvagg))
--   Update to `LevelDB@1.7` ([**@rvagg**](https://github.com/rvagg))
+-   Upgrade to `LevelDB@1.7` ([**@rvagg**](https://github.com/rvagg))
 
 ### Removed
 
@@ -951,7 +974,9 @@
 
 :seedling: Initial release.
 
-[unreleased]: https://github.com/level/levelup/compare/v3.0.1...HEAD
+[unreleased]: https://github.com/level/levelup/compare/v3.1.0...HEAD
+
+[3.1.0]: https://github.com/level/levelup/compare/v3.0.1...v3.1.0
 
 [3.0.1]: https://github.com/level/levelup/compare/v3.0.0...v3.0.1
 

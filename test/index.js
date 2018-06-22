@@ -1,8 +1,3 @@
-/* Copyright (c) 2012-2018 LevelUP contributors
- * See list at <https://github.com/level/levelup#contributing>
- * MIT License <https://github.com/level/levelup/blob/master/LICENSE.md>
- */
-
 // Promise polyfill for IE and others.
 if (process.browser && typeof Promise !== 'function') {
   global.Promise = require('pinkie')
