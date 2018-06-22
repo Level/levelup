@@ -19,6 +19,7 @@
 
 -   Remove `contributors` from `package.json` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 -   Remove copyright headers from code ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Remove LevelDB and Snappy credits ([**@vweevers**](https://github.com/vweevers))
 
 ### Fixed
 
