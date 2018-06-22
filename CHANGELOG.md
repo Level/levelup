@@ -2,6 +2,27 @@
 
 ## [Unreleased]
 
+## [3.1.0] - 2018-06-22
+
+### Changed
+
+-   Upgrade `airtap` from `0.0.6` to `0.0.7` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Update `.npmignore` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Tweak copyright year for less maintenance ([**@ralphtheninja**](https://github.com/ralphtheninja))
+
+### Added
+
+-   Expose `db.iterator()` ([**@vweevers**](https://github.com/vweevers))
+-   Add `remark` tooling ([**@vweevers**](https://github.com/vweevers))
+
+### Removed
+
+-   Remove `contributors` from `package.json` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+
+### Fixed
+
+-   Replace `remark` with `remark-cli` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+
 ## [3.0.1] - 2018-05-24
 
 ### Changed
@@ -951,7 +972,9 @@
 
 :seedling: Initial release.
 
-[unreleased]: https://github.com/level/levelup/compare/v3.0.1...HEAD
+[unreleased]: https://github.com/level/levelup/compare/v3.1.0...HEAD
+
+[3.1.0]: https://github.com/level/levelup/compare/v3.0.1...v3.1.0
 
 [3.0.1]: https://github.com/level/levelup/compare/v3.0.0...v3.0.1
 
