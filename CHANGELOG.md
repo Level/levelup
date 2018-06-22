@@ -18,6 +18,7 @@
 ### Removed
 
 -   Remove `contributors` from `package.json` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Remove copyright headers from code ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ### Fixed
 
