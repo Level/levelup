@@ -602,7 +602,9 @@ buster.testCase('ReadStream', {
       db.batch(data, function (err) {
         refute(!!err)
         var rs = db.createReadStream().on('close', done)
-        rs.once('data', rs.destroy.bind(rs))
+        rs.once('data', function () {
+          rs.destroy()
+        })
       })
     })
   },
