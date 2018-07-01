@@ -4,9 +4,10 @@
 [![npm](https://img.shields.io/npm/v/levelup.svg)](https://www.npmjs.com/package/levelup)
 ![Node version](https://img.shields.io/node/v/levelup.svg)
 [![Build Status](https://secure.travis-ci.org/Level/levelup.svg?branch=master)](http://travis-ci.org/Level/levelup)
-[![david](https://david-dm.org/Level/levelup.svg)](https://david-dm.org/level/levelup)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![dependencies](https://david-dm.org/Level/levelup.svg)](https://david-dm.org/level/levelup)
 [![npm](https://img.shields.io/npm/dm/levelup.svg)](https://www.npmjs.com/package/levelup)
+[![Coverage Status](https://coveralls.io/repos/github/Level/levelup/badge.svg)](https://coveralls.io/github/Level/levelup)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Table of Contents
 
