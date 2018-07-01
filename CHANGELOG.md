@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Changed
+
+-   Upgrade `airtap` from `0.0.7` to `0.0.8` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `level-iterator-stream` from `~2.0.0` to `~3.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Call `rs.destroy()` without using `.bind()` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+
+### Added
+
+-   Add `nyc` and `coveralls` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+
 ## [3.1.0] - 2018-06-22
 
 ### Changed
