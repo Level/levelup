@@ -52,8 +52,8 @@
   "scripts": {
     "test": "standard && nyc node test",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test-browsers": "airtap --sauce-connect --loopback airtap.local --no-coverage test/index.js",
-    "test-browser-local": "airtap --local --no-coverage test/index.js",
+    "test-browsers": "airtap --sauce-connect --loopback airtap.local test/index.js",
+    "test-browser-local": "airtap --local test/index.js",
     "remark": "remark README.md CHANGELOG.md UPGRADING.md CONTRIBUTORS.md -o"
   },
   "remarkConfig": {
