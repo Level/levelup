@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "after": "^0.8.2",
-    "airtap": "0.0.8",
+    "airtap": "0.0.9",
     "async": "^2.5.0",
     "bl": "^2.0.0",
     "browserify": "^16.0.0",
