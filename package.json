@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "after": "^0.8.2",
-    "airtap": "0.0.9",
+    "airtap": "0.1.0",
     "async": "^2.5.0",
     "bl": "^2.0.0",
     "browserify": "^16.0.0",
@@ -52,8 +52,8 @@
   "scripts": {
     "test": "standard && nyc node test",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test-browsers": "airtap --sauce-connect --loopback airtap.local test/index.js",
-    "test-browser-local": "airtap --local -- test/index.js",
+    "test-browsers": "airtap --loopback airtap.local test/index.js",
+    "test-browser-local": "airtap --local test/index.js",
     "remark": "remark README.md CHANGELOG.md UPGRADING.md CONTRIBUTORS.md -o"
   },
   "remarkConfig": {
