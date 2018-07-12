@@ -9,8 +9,6 @@ matrix:
     env: CMD=test
   - node_js: 8
     env: CMD=test
-  - node_js: 9
-    env: CMD=test
   - node_js: 10
     env: CMD=test
   - node_js: stable
