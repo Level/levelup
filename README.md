@@ -271,9 +271,11 @@ Clear all queued operations on the current batch, any previous operations will b
 
 The number of queued operations on the current batch.
 
-<b><code>batch.write([callback])</code></b>
+<b><code>batch.write(\[options][, callback])</code></b>
 
 Commit the queued operations for this batch. All operations not _cleared_ will be written to the underlying store atomically, that is, they will either all succeed or fail with no partial commits.
+
+The optional `options` object is passed to the `.write()` operation of the underlying batch object.
 
 If no callback is passed, a promise is returned.
 
