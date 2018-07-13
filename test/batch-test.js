@@ -121,6 +121,41 @@ buster.testCase('batch()', {
     })
   },
 
+  'batch() with chained interface - options': function (done) {
+    this.openTestDatabase(function (db) {
+      var batch = db.batch()
+
+      var write = batch.batch.write.bind(batch.batch)
+      batch.batch.write = function (options, cb) {
+        assert.equals(options, { foo: 'bar' })
+        write(options, cb)
+      }
+
+      batch.put('one', '1')
+        .write({ foo: 'bar' }, function (err) {
+          refute(err)
+          done()
+        })
+    })
+  },
+
+  'batch() with chained promise interface - options': function (done) {
+    this.openTestDatabase(function (db) {
+      var batch = db.batch()
+
+      var write = batch.batch.write.bind(batch.batch)
+      batch.batch.write = function (options, cb) {
+        assert.equals(options, { foo: 'bar' })
+        write(options, cb)
+      }
+
+      batch.put('one', '1')
+        .write({ foo: 'bar' })
+        .then(done)
+        .catch(done)
+    })
+  },
+
   'batch() with chained promise interface': function (done) {
     this.openTestDatabase(function (db) {
       db.put('1', 'one', function (err) {
