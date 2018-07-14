@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [3.1.1] - 2018-07-14
+
 ### Changed
 
 -   Upgrade `airtap` from `0.0.7` to `0.1.0` ([**@vweevers**](https://github.com/vweevers), [**@ralphtheninja**](https://github.com/ralphtheninja))
@@ -993,7 +995,9 @@
 
 :seedling: Initial release.
 
-[unreleased]: https://github.com/level/levelup/compare/v3.1.0...HEAD
+[unreleased]: https://github.com/level/levelup/compare/v3.1.1...HEAD
+
+[3.1.1]: https://github.com/level/levelup/compare/v3.1.0...v3.1.1
 
 [3.1.0]: https://github.com/level/levelup/compare/v3.0.1...v3.1.0
 
