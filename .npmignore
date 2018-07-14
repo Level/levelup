@@ -3,3 +3,4 @@ buster.js
 .airtap.yml
 .travis.yml
 .dntrc
+.nyc_output/
