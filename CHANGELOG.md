@@ -2,15 +2,26 @@
 
 ## [Unreleased]
 
+## [3.1.1] - 2018-07-14
+
 ### Changed
 
--   Upgrade `airtap` from `0.0.7` to `0.0.8` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Upgrade `airtap` from `0.0.7` to `0.1.0` ([**@vweevers**](https://github.com/vweevers), [**@ralphtheninja**](https://github.com/ralphtheninja))
 -   Upgrade `level-iterator-stream` from `~2.0.0` to `~3.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
--   Call `rs.destroy()` without using `.bind()` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Pass options to `batch.write()` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ### Added
 
 -   Add `nyc` and `coveralls` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+
+### Removed
+
+-   Remove node 9 ([**@ralphtheninja**](https://github.com/ralphtheninja))
+
+### Fixed
+
+-   Fix issue with `airtap --local` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+-   Call `rs.destroy()` without using `.bind()` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ## [3.1.0] - 2018-06-22
 
@@ -984,7 +995,9 @@
 
 :seedling: Initial release.
 
-[unreleased]: https://github.com/level/levelup/compare/v3.1.0...HEAD
+[unreleased]: https://github.com/level/levelup/compare/v3.1.1...HEAD
+
+[3.1.1]: https://github.com/level/levelup/compare/v3.1.0...v3.1.1
 
 [3.1.0]: https://github.com/level/levelup/compare/v3.0.1...v3.1.0
 
