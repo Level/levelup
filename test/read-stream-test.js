@@ -410,7 +410,8 @@ buster.testCase('ReadStream', {
         encode: JSON.stringify,
         decode: JSON.parse,
         buffer: false
-      }}
+      }
+    }
     var data = [
       { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } },
       { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } },
