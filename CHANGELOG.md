@@ -636,7 +636,7 @@
 -   ReadStream doesn't emit "ready" event ([**@dominictarr**](https://github.com/dominictarr))
 -   Allow separate encodings per operation in db.batch() ([**@juliangruber**](https://github.com/juliangruber))
 -   Allow separate encodings per write() in WriteStream ([**@juliangruber**](https://github.com/juliangruber))
--   WriteStream supports "type" option ("put" [default] or "del") on constructor and individual write()s ([**@mcollina**](https://github.com/mcollina))
+-   WriteStream supports "type" option ("put" \[default\] or "del") on constructor and individual write()s ([**@mcollina**](https://github.com/mcollina))
 -   Expose LevelDOWN (or LevelDOWN substitute) as `db` property on LevelUP instance (e.g. db.db.approximateSize()) ([**@rvagg**](https://github.com/rvagg))
 -   Chained batch exposed from LevelDOWN, invoked with argument-less db.batch() ([**@juliangruber**](https://github.com/juliangruber), [**@rvagg**](https://github.com/rvagg))
 -   Significantly improve ReadStream performance by replacing .bind() and .apply() ([**@mcollina**](https://github.com/mcollina), [**@kesla**](https://github.com/kesla))
