@@ -34,52 +34,27 @@
     "coveralls": "~3.0.2",
     "delayed": "~1.0.1",
     "encoding-down": "^5.0.0",
+    "hallmark": "~0.1.0",
     "level-community": "~3.0.0",
     "memdown": "^3.0.0",
     "nyc": "~12.0.2",
     "pinkie": "~2.0.4",
     "referee": "~1.2.0",
-    "remark-cli": "^5.0.0",
-    "remark-collapse": "~0.1.2",
-    "remark-git-contributors": "~0.2.1",
-    "remark-github": "~7.0.3",
-    "remark-toc": "~5.0.0",
     "safe-buffer": "^5.1.0",
     "standard": "^12.0.0",
     "tape": "^4.7.0",
     "trickle": "0.0.2"
   },
   "scripts": {
-    "test": "standard && nyc node test",
+    "test": "standard && hallmark && nyc node test",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test-browsers": "airtap --loopback airtap.local test/index.js",
     "test-browser-local": "airtap --local test/index.js",
-    "remark": "remark README.md CHANGELOG.md UPGRADING.md CONTRIBUTORS.md -o"
+    "hallmark": "hallmark --fix"
   },
-  "remarkConfig": {
-    "plugins": [
-      [
-        "remark-git-contributors",
-        "level-community"
-      ],
-      [
-        "remark-github"
-      ],
-      [
-        "remark-toc",
-        {
-          "maxDepth": 2,
-          "tight": true
-        }
-      ],
-      [
-        "remark-collapse",
-        {
-          "test": "Table of Contents",
-          "summary": "Click to expand"
-        }
-      ]
-    ]
+  "hallmark": {
+    "community": "level-community",
+    "validateLinks": false
   },
   "engines": {
     "node": ">=6"
