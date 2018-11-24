@@ -41,7 +41,7 @@
     "referee": "~1.2.0",
     "remark-cli": "^5.0.0",
     "remark-collapse": "~0.1.2",
-    "remark-git-contributors": "~0.2.1",
+    "remark-git-contributors": "~0.3.0",
     "remark-github": "~7.0.3",
     "remark-toc": "~5.0.0",
     "safe-buffer": "^5.1.0",
