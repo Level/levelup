@@ -1,7 +1,7 @@
 # Contributors
 
 | Name                 | GitHub                                                 | Social                                                              |
-| -------------------- | ------------------------------------------------------ | ------------------------------------------------------------------- |
+| :------------------- | :----------------------------------------------------- | :------------------------------------------------------------------ |
 | **Lars-Magnus Skog** | [**@ralphtheninja**](https://github.com/ralphtheninja) | [**@ralph@social.weho.st**](https://social.weho.st/@ralph)          |
 | **Rod Vagg**         | [**@rvagg**](https://github.com/rvagg)                 | [**@rvagg@twitter**](https://twitter.com/rvagg)                     |
 | **Julian Gruber**    | [**@juliangruber**](https://github.com/juliangruber)   | [**@juliangruber@twitter**](https://twitter.com/juliangruber)       |
@@ -10,7 +10,7 @@
 | **Matteo Collina**   | [**@mcollina**](https://github.com/mcollina)           | [**@matteocollina@twitter**](https://twitter.com/matteocollina)     |
 | **James Halliday**   | [**@substack**](https://github.com/substack)           | [**@substack@twitter**](https://twitter.com/substack)               |
 | **David Björklund**  | [**@kesla**](https://github.com/kesla)                 | [**@david_bjorklund@twitter**](https://twitter.com/david_bjorklund) |
-| **Jake Verbaten**    | [**@Raynos**](https://github.com/Raynos)               | [**@raynos@twitter**](https://twitter.com/raynos)                   |
+| **Raynos**           |                                                        |                                                                     |
 | **Meirion Hughes**   | [**@MeirionHughes**](https://github.com/MeirionHughes) |                                                                     |
 | **Jarrett Cruger**   | [**@jcrugzz**](https://github.com/jcrugzz)             | [**@jcrugzz@twitter**](https://twitter.com/jcrugzz)                 |
 | **Ben West**         | [**@bewest**](https://github.com/bewest)               |                                                                     |
