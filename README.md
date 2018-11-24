@@ -13,18 +13,18 @@
 
 <details><summary>Click to expand</summary>
 
--   [Introduction](#introduction)
--   [Supported Platforms](#supported-platforms)
--   [Usage](#usage)
--   [API](#api)
--   [Promise Support](#promise-support)
--   [Events](#events)
--   [Extending](#extending)
--   [Multi-process Access](#multi-process-access)
--   [Support](#support)
--   [Contributing](#contributing)
--   [Big Thanks](#big-thanks)
--   [License](#license)
+- [Introduction](#introduction)
+- [Supported Platforms](#supported-platforms)
+- [Usage](#usage)
+- [API](#api)
+- [Promise Support](#promise-support)
+- [Events](#events)
+- [Extending](#extending)
+- [Multi-process Access](#multi-process-access)
+- [Support](#support)
+- [Contributing](#contributing)
+- [Big Thanks](#big-thanks)
+- [License](#license)
 
 </details>
 
@@ -81,24 +81,24 @@ db.put('name', 'levelup', function (err) {
 
 ## API
 
--   [<code><b>levelup()</b></code>](#ctor)
--   [<code>db.<b>open()</b></code>](#open)
--   [<code>db.<b>close()</b></code>](#close)
--   [<code>db.<b>put()</b></code>](#put)
--   [<code>db.<b>get()</b></code>](#get)
--   [<code>db.<b>del()</b></code>](#del)
--   [<code>db.<b>batch()</b></code> _(array form)_](#batch)
--   [<code>db.<b>batch()</b></code> _(chained form)_](#batch_chained)
--   [<code>db.<b>isOpen()</b></code>](#isOpen)
--   [<code>db.<b>isClosed()</b></code>](#isClosed)
--   [<code>db.<b>createReadStream()</b></code>](#createReadStream)
--   [<code>db.<b>createKeyStream()</b></code>](#createKeyStream)
--   [<code>db.<b>createValueStream()</b></code>](#createValueStream)
--   [<code>db.<b>iterator()</b></code>](#iterator)
+- [<code><b>levelup()</b></code>](#ctor)
+- [<code>db.<b>open()</b></code>](#open)
+- [<code>db.<b>close()</b></code>](#close)
+- [<code>db.<b>put()</b></code>](#put)
+- [<code>db.<b>get()</b></code>](#get)
+- [<code>db.<b>del()</b></code>](#del)
+- [<code>db.<b>batch()</b></code> _(array form)_](#batch)
+- [<code>db.<b>batch()</b></code> _(chained form)_](#batch_chained)
+- [<code>db.<b>isOpen()</b></code>](#isOpen)
+- [<code>db.<b>isClosed()</b></code>](#isClosed)
+- [<code>db.<b>createReadStream()</b></code>](#createReadStream)
+- [<code>db.<b>createKeyStream()</b></code>](#createKeyStream)
+- [<code>db.<b>createValueStream()</b></code>](#createValueStream)
+- [<code>db.<b>iterator()</b></code>](#iterator)
 
 ### Special Notes
 
--   <a href="#writeStreams">What happened to <code><b>db.createWriteStream()</b></code></a>
+- <a href="#writeStreams">What happened to <code><b>db.createWriteStream()</b></code></a>
 
 <a name="ctor"></a>
 
@@ -106,8 +106,8 @@ db.put('name', 'levelup', function (err) {
 
 The main entry point for creating a new `levelup` instance.
 
--   `db` must be an [`abstract-leveldown`](https://github.com/level/abstract-leveldown) compliant store.
--   `options` is passed on to the underlying store when opened and is specific to the type of store being used
+- `db` must be an [`abstract-leveldown`](https://github.com/level/abstract-leveldown) compliant store.
+- `options` is passed on to the underlying store when opened and is specific to the type of store being used
 
 Calling `levelup(db)` will also open the underlying store. This is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form `function (err, db) {}` where `db` is the `levelup` instance. If you don't provide a callback, any read & write operations are simply queued internally until the store is fully opened.
 
@@ -271,7 +271,7 @@ Clear all queued operations on the current batch, any previous operations will b
 
 The number of queued operations on the current batch.
 
-<b><code>batch.write(\[options][, callback])</code></b>
+<b><code>batch.write(\[options]\[, callback])</code></b>
 
 Commit the queued operations for this batch. All operations not _cleared_ will be written to the underlying store atomically, that is, they will either all succeed or fail with no partial commits.
 
@@ -285,11 +285,11 @@ If no callback is passed, a promise is returned.
 
 A `levelup` instance can be in one of the following states:
 
--   _"new"_     - newly created, not opened or closed
--   _"opening"_ - waiting for the underlying store to be opened
--   _"open"_    - successfully opened the store, available for use
--   _"closing"_ - waiting for the store to be closed
--   _"closed"_  - store has been successfully closed, should not be used
+- _"new"_     - newly created, not opened or closed
+- _"opening"_ - waiting for the underlying store to be opened
+- _"open"_    - successfully opened the store, available for use
+- _"closing"_ - waiting for the store to be closed
+- _"closed"_  - store has been successfully closed, should not be used
 
 `isOpen()` will return `true` only when the state is "open".
 
@@ -325,23 +325,23 @@ db.createReadStream()
 
 You can supply an options object as the first parameter to `createReadStream()` with the following properties:
 
--   `gt` (greater than), `gte` (greater than or equal) define the lower bound of the range to be streamed. Only entries where the key is greater than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries streamed will be the same.
+- `gt` (greater than), `gte` (greater than or equal) define the lower bound of the range to be streamed. Only entries where the key is greater than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries streamed will be the same.
 
--   `lt` (less than), `lte` (less than or equal) define the higher bound of the range to be streamed. Only entries where the key is less than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries streamed will be the same.
+- `lt` (less than), `lte` (less than or equal) define the higher bound of the range to be streamed. Only entries where the key is less than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries streamed will be the same.
 
--   `reverse` _(boolean, default: `false`)_: stream entries in reverse order. Beware that due to the way that stores like LevelDB work, a reverse seek can be slower than a forward seek.
+- `reverse` _(boolean, default: `false`)_: stream entries in reverse order. Beware that due to the way that stores like LevelDB work, a reverse seek can be slower than a forward seek.
 
--   `limit` _(number, default: `-1`)_: limit the number of entries collected by this stream. This number represents a _maximum_ number of entries and may not be reached if you get to the end of the range first. A value of `-1` means there is no limit. When `reverse=true` the entries with the highest keys will be returned instead of the lowest keys.
+- `limit` _(number, default: `-1`)_: limit the number of entries collected by this stream. This number represents a _maximum_ number of entries and may not be reached if you get to the end of the range first. A value of `-1` means there is no limit. When `reverse=true` the entries with the highest keys will be returned instead of the lowest keys.
 
--   `keys` _(boolean, default: `true`)_: whether the results should contain keys. If set to `true` and `values` set to `false` then results will simply be keys, rather than objects with a `key` property. Used internally by the `createKeyStream()` method.
+- `keys` _(boolean, default: `true`)_: whether the results should contain keys. If set to `true` and `values` set to `false` then results will simply be keys, rather than objects with a `key` property. Used internally by the `createKeyStream()` method.
 
--   `values` _(boolean, default: `true`)_: whether the results should contain values. If set to `true` and `keys` set to `false` then results will simply be values, rather than objects with a `value` property. Used internally by the `createValueStream()` method.
+- `values` _(boolean, default: `true`)_: whether the results should contain values. If set to `true` and `keys` set to `false` then results will simply be values, rather than objects with a `value` property. Used internally by the `createValueStream()` method.
 
 Legacy options:
 
--   `start`: instead use `gte`
+- `start`: instead use `gte`
 
--   `end`: instead use `lte`
+- `end`: instead use `lte`
 
 <a name="createKeyStream"></a>
 
@@ -407,11 +407,11 @@ Check out the implementations that the community has already produced [here](htt
 
 Each function accepting a callback returns a promise if the callback is omitted. This applies for:
 
--   `db.get(key[, options])`
--   `db.put(key, value[, options])`
--   `db.del(key[, options])`
--   `db.batch(ops[, options])`
--   `db.batch().write()`
+- `db.get(key[, options])`
+- `db.put(key, value[, options])`
+- `db.del(key[, options])`
+- `db.batch(ops[, options])`
+- `db.batch().write()`
 
 The only exception is the `levelup` constructor itself, which if no callback is passed will lazily open the underlying store in the background.
 
@@ -474,9 +474,9 @@ See the aformentioned <a href="https://github.com/level/levelup/wiki/Modules"><b
 
 There are multiple ways you can find help in using Level in Node.js:
 
--   **IRC:** you'll find an active group of `levelup` users in the **##leveldb** channel on Freenode, including most of the contributors to this project.
--   **Mailing list:** there is an active [Node.js LevelDB](https://groups.google.com/forum/#!forum/node-levelup) Google Group.
--   **GitHub:** you're welcome to open an issue here on this GitHub repository if you have a question.
+- **IRC:** you'll find an active group of `levelup` users in the **##leveldb** channel on Freenode, including most of the contributors to this project.
+- **Mailing list:** there is an active [Node.js LevelDB](https://groups.google.com/forum/#!forum/node-levelup) Google Group.
+- **GitHub:** you're welcome to open an issue here on this GitHub repository if you have a question.
 
 ## Contributing
 
