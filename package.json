@@ -20,7 +20,7 @@
   "dependencies": {
     "deferred-leveldown": "~4.0.0",
     "level-errors": "~2.0.0",
-    "level-iterator-stream": "~3.0.0",
+    "level-iterator-stream": "~4.0.0",
     "xtend": "~4.0.0"
   },
   "devDependencies": {
