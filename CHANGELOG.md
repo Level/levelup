@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+## [4.0.0] - 2018-12-22
+
+### Changed
+* Upgrade `nyc` devDependency from `~12.0.2` to `~13.1.0` (@ralphtheninja)
+* Upgrade `deferred-leveldown` dependency from `~4.0.0` to `~5.0.0` (@vweevers)
+* Upgrade `concat-stream` devDependency from `~1.6.0` to `~2.0.0` (@ralphtheninja)
+* Upgrade `level-iterator-stream` dependency from `~3.0.0` to `~4.0.0` (@ralphtheninja)
+* Replace `remark-cli` with `hallmark` (#621) (@vweevers)
+* Upgrade `standard` devDependency from `^11.0.0` to `^12.0.0` (@ralphtheninja)
+* Add `.nyc_output/` to `.npmignore` (@ralphtheninja)
+
+### Removed
+* Remove `IE10` from `airtap` (#625) (@ralphtheninja)
+
 ## [3.1.1] - 2018-07-14
 
 ### Changed
@@ -995,7 +1009,9 @@
 
 :seedling: Initial release.
 
-[unreleased]: https://github.com/level/levelup/compare/v3.1.1...HEAD
+[unreleased]: https://github.com/level/levelup/compare/v4.0.0...HEAD
+
+[4.0.0]: https://github.com/level/levelup/compare/v3.1.1...v4.0.0
 
 [3.1.1]: https://github.com/level/levelup/compare/v3.1.0...v3.1.1
 

@@ -2,6 +2,10 @@
 
 This document describes breaking changes and how to upgrade. For a complete list of changes including minor and patch releases, please refer to the [changelog](CHANGELOG.md).
 
+## v4
+
+There has been many major updates to dependencies but the main reason for this major is due to `level-iterator-stream` which now is based on `readable-stream@3` which has dropped support for `IE10`.
+
 ## v3
 
 1. Dropped support for node 4.
