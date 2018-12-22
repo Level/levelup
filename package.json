@@ -37,7 +37,7 @@
     "hallmark": "~0.1.0",
     "level-community": "~3.0.0",
     "memdown": "^3.0.0",
-    "nyc": "~12.0.2",
+    "nyc": "~13.1.0",
     "pinkie": "~2.0.4",
     "referee": "~1.2.0",
     "safe-buffer": "^5.1.0",
