@@ -4,7 +4,9 @@ This document describes breaking changes and how to upgrade. For a complete list
 
 ## v4
 
-There has been many major updates to dependencies but the main reason for this major is due to `level-iterator-stream` which now is based on `readable-stream@3` which has dropped support for `IE10`.
+There have been two major updates to dependencies. First, `level-iterator-stream` is now based on [`readable-stream@3`](https://github.com/nodejs/readable-stream#version-3xx). Second, `deferred-leveldown` is now based on [`abstract-leveldown@6`](https://github.com/Level/abstract-leveldown/blob/master/UPGRADING.md#v6). Please follow these links for more information; both contain significant enough changes to warrant this `levelup` major. In addition, all aforementioned dependencies and by extension `levelup` have dropped support of IE10. 
+
+To get a consistent behavior between opening and opened `levelup` instances (in the former case, your store will be wrapped with `deferred-leveldown`), we recommend to pair `levelup@4` only with a store based on `abstract-leveldown` >= 6. For example, `deferred-leveldown` now rejects `null` and `undefined` values. If you pair `levelup@4` with an older store, `db.put('key', null)` would only throw an error if `db` is still opening itself.
 
 ## v3
 
