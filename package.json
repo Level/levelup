@@ -33,7 +33,7 @@
     "concat-stream": "~2.0.0",
     "coveralls": "~3.0.2",
     "delayed": "~1.0.1",
-    "encoding-down": "^5.0.0",
+    "encoding-down": "^6.0.0",
     "hallmark": "~0.1.0",
     "level-community": "~3.0.0",
     "memdown": "^3.0.0",
