@@ -494,6 +494,6 @@ Cross-browser Testing Platform and Open Source ♥ Provided by [Sauce Labs](http
 
 ## License
 
-[MIT](LICENSE.md) © 2012-present `levelup` [Contributors](CONTRIBUTORS.md).
+[MIT](LICENSE.md) © 2012-present [Contributors](CONTRIBUTORS.md).
 
 [level-badge]: http://leveldb.org/img/badge.svg
