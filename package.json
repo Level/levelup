@@ -29,7 +29,7 @@
     "delayed": "~1.0.1",
     "encoding-down": "^6.0.0",
     "hallmark": "^0.1.0",
-    "level-community": "~3.0.0",
+    "level-community": "^3.0.0",
     "memdown": "^3.0.0",
     "nyc": "~13.1.0",
     "pinkie": "~2.0.4",
