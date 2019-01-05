@@ -1,20 +1,22 @@
 # Changelog
 
-## [Unreleased]
+## [Unreleased][unreleased]
 
 ## [4.0.0] - 2018-12-22
 
 ### Changed
-* Upgrade `nyc` devDependency from `~12.0.2` to `~13.1.0` (@ralphtheninja)
-* Upgrade `deferred-leveldown` dependency from `~4.0.0` to `~5.0.0` (@vweevers)
-* Upgrade `concat-stream` devDependency from `~1.6.0` to `~2.0.0` (@ralphtheninja)
-* Upgrade `level-iterator-stream` dependency from `~3.0.0` to `~4.0.0` (@ralphtheninja)
-* Replace `remark-cli` with `hallmark` (#621) (@vweevers)
-* Upgrade `standard` devDependency from `^11.0.0` to `^12.0.0` (@ralphtheninja)
-* Add `.nyc_output/` to `.npmignore` (@ralphtheninja)
+
+- Upgrade `nyc` devDependency from `~12.0.2` to `~13.1.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+- Upgrade `deferred-leveldown` dependency from `~4.0.0` to `~5.0.0` ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `concat-stream` devDependency from `~1.6.0` to `~2.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+- Upgrade `level-iterator-stream` dependency from `~3.0.0` to `~4.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+- Replace `remark-cli` with `hallmark` ([#621](https://github.com/level/levelup/issues/621)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `standard` devDependency from `^11.0.0` to `^12.0.0` ([**@ralphtheninja**](https://github.com/ralphtheninja))
+- Add `.nyc_output/` to `.npmignore` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ### Removed
-* Remove `IE10` from `airtap` (#625) (@ralphtheninja)
+
+- Remove `IE10` from `airtap` ([#625](https://github.com/level/levelup/issues/625)) ([**@ralphtheninja**](https://github.com/ralphtheninja))
 
 ## [3.1.1] - 2018-07-14
 
