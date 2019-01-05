@@ -48,9 +48,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/level/levelup.git"
+    "url": "https://github.com/Level/levelup.git"
   },
-  "homepage": "https://github.com/level/levelup",
+  "homepage": "https://github.com/Level/levelup",
   "keywords": [
     "level",
     "leveldb",
