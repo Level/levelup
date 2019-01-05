@@ -1,22 +1,16 @@
 {
   "name": "levelup",
-  "description": "Fast & simple storage - a Node.js-style LevelDB wrapper",
   "version": "4.0.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/level/levelup.git"
-  },
-  "homepage": "https://github.com/level/levelup",
-  "keywords": [
-    "leveldb",
-    "stream",
-    "database",
-    "db",
-    "store",
-    "storage",
-    "json"
-  ],
+  "description": "Fast & simple storage - a Node.js-style LevelDB wrapper",
+  "license": "MIT",
   "main": "lib/levelup.js",
+  "scripts": {
+    "test": "standard && hallmark && nyc node test",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "test-browsers": "airtap --loopback airtap.local test/index.js",
+    "test-browser-local": "airtap --local test/index.js",
+    "hallmark": "hallmark --fix"
+  },
   "dependencies": {
     "deferred-leveldown": "~5.0.0",
     "level-errors": "~2.0.0",
@@ -45,19 +39,25 @@
     "tape": "^4.7.0",
     "trickle": "0.0.2"
   },
-  "scripts": {
-    "test": "standard && hallmark && nyc node test",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test-browsers": "airtap --loopback airtap.local test/index.js",
-    "test-browser-local": "airtap --local test/index.js",
-    "hallmark": "hallmark --fix"
-  },
   "hallmark": {
     "community": "level-community",
     "validateLinks": false
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/level/levelup.git"
+  },
+  "homepage": "https://github.com/level/levelup",
+  "keywords": [
+    "leveldb",
+    "stream",
+    "database",
+    "db",
+    "store",
+    "storage",
+    "json"
+  ],
   "engines": {
     "node": ">=6"
-  },
-  "license": "MIT"
+  }
 }
