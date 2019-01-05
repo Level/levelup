@@ -480,11 +480,11 @@ There are multiple ways you can find help in using Level in Node.js:
 
 ## Contributing
 
-`levelup` is an **OPEN Open Source Project**. This means that:
+[`Level/levelup`](https://github.com/Level/levelup) is an **OPEN Open Source Project**. This means that:
 
 > Individuals making significant and valuable contributions are given commit-access to the project to contribute as they see fit. This project is more like an open wiki than a standard guarded open source project.
 
-See the [contribution guide](https://github.com/Level/community/blob/master/CONTRIBUTING.md) for more details.
+See the [Contribution Guide](https://github.com/Level/community/blob/master/CONTRIBUTING.md) for more details.
 
 ## Big Thanks
 
