@@ -41,7 +41,10 @@
   },
   "hallmark": {
     "community": "level-community",
-    "validateLinks": false
+    "validateLinks": false,
+    "ignore": [
+      "README.md"
+    ]
   },
   "repository": {
     "type": "git",
