@@ -49,6 +49,7 @@
   },
   "homepage": "https://github.com/level/levelup",
   "keywords": [
+    "level",
     "leveldb",
     "stream",
     "database",
