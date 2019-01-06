@@ -43,11 +43,7 @@
     "trickle": "0.0.2"
   },
   "hallmark": {
-    "community": "level-community",
-    "validateLinks": false,
-    "ignore": [
-      "README.md"
-    ]
+    "community": "level-community"
   },
   "repository": {
     "type": "git",
