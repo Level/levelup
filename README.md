@@ -25,6 +25,7 @@
 - [Support](#support)
 - [Contributing](#contributing)
 - [Big Thanks](#big-thanks)
+- [Donate](#donate)
 - [License](#license)
 
 </details>
