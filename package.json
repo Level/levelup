@@ -9,7 +9,9 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test-browsers": "airtap --loopback airtap.local test/index.js",
     "test-browser-local": "airtap --local test/index.js",
-    "hallmark": "hallmark --fix"
+    "hallmark": "hallmark --fix",
+    "dependency-check": "dependency-check . buster.js test/*.js",
+    "prepublishOnly": "npm run dependency-check"
   },
   "dependencies": {
     "deferred-leveldown": "~5.0.0",
@@ -27,6 +29,7 @@
     "concat-stream": "~2.0.0",
     "coveralls": "~3.0.2",
     "delayed": "~1.0.1",
+    "dependency-check": "^3.3.0",
     "encoding-down": "^6.0.0",
     "hallmark": "^0.1.0",
     "level-community": "^3.0.0",
