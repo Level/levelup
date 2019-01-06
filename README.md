@@ -1,10 +1,9 @@
 # levelup
 
-[![level badge][level-badge]](https://github.com/level/awesome)
+[![level badge][level-badge]](https://github.com/Level/awesome)
 [![npm](https://img.shields.io/npm/v/levelup.svg?label=&logo=npm)](https://www.npmjs.com/package/levelup)
 [![Node version](https://img.shields.io/node/v/levelup.svg)](https://www.npmjs.com/package/levelup)
-[![Build Status](https://secure.travis-ci.org/Level/levelup.svg?branch=master)](http://travis-ci.org/Level/levelup)
-[![dependencies](https://david-dm.org/Level/levelup.svg)](https://david-dm.org/level/levelup)
+[![Travis](https://img.shields.io/travis/Level/levelup.svg?logo=travis&label=)](https://travis-ci.org/Level/levelup)
 [![npm](https://img.shields.io/npm/dm/levelup.svg?label=dl)](https://www.npmjs.com/package/levelup)
 [![Coverage Status](https://coveralls.io/repos/github/Level/levelup/badge.svg)](https://coveralls.io/github/Level/levelup)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
@@ -38,9 +37,9 @@ LevelDB is a simple key-value store built by Google. It's used in Google Chrome 
 
 LevelDB stores entries sorted lexicographically by keys. This makes the [streaming interface](#createReadStream) of `levelup` - which exposes LevelDB iterators as [Readable Streams](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) - a very powerful query mechanism.
 
-The most common store is [`leveldown`](https://github.com/level/leveldown/) which provides a pure C++ binding to LevelDB. [Many alternative stores are available](https://github.com/Level/awesome/#stores) such as [`level.js`](https://github.com/level/level.js) in the browser or [`memdown`](https://github.com/level/memdown) for an in-memory store. They typically support strings and Buffers for both keys and values. For a richer set of data types you can wrap the store with [`encoding-down`](https://github.com/level/encoding-down).
+The most common store is [`leveldown`](https://github.com/Level/leveldown/) which provides a pure C++ binding to LevelDB. [Many alternative stores are available](https://github.com/Level/awesome/#stores) such as [`level.js`](https://github.com/Level/level.js) in the browser or [`memdown`](https://github.com/Level/memdown) for an in-memory store. They typically support strings and Buffers for both keys and values. For a richer set of data types you can wrap the store with [`encoding-down`](https://github.com/Level/encoding-down).
 
-**The [`level`](https://github.com/level/level) package is the recommended way to get started.** It conveniently bundles `levelup`, [`leveldown`](https://github.com/level/leveldown/) and [`encoding-down`](https://github.com/level/encoding-down). Its main export is `levelup` - i.e. you can do `var db = require('level')`.
+**The [`level`](https://github.com/Level/level) package is the recommended way to get started.** It conveniently bundles `levelup`, [`leveldown`](https://github.com/Level/leveldown/) and [`encoding-down`](https://github.com/Level/encoding-down). Its main export is `levelup` - i.e. you can do `var db = require('level')`.
 
 ## Supported Platforms
 
@@ -108,7 +107,7 @@ db.put('name', 'levelup', function (err) {
 
 The main entry point for creating a new `levelup` instance.
 
-- `db` must be an [`abstract-leveldown`](https://github.com/level/abstract-leveldown) compliant store.
+- `db` must be an [`abstract-leveldown`](https://github.com/Level/abstract-leveldown) compliant store.
 - `options` is passed on to the underlying store when opened and is specific to the type of store being used
 
 Calling `levelup(db)` will also open the underlying store. This is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form `function (err, db) {}` where `db` is the `levelup` instance. If you don't provide a callback, any read & write operations are simply queued internally until the store is fully opened.
@@ -397,11 +396,11 @@ Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-lev
 
 #### What happened to `db.createWriteStream`?
 
-`db.createWriteStream()` has been removed in order to provide a smaller and more maintainable core. It primarily existed to create symmetry with `db.createReadStream()` but through much [discussion](https://github.com/level/levelup/issues/199), removing it was the best course of action.
+`db.createWriteStream()` has been removed in order to provide a smaller and more maintainable core. It primarily existed to create symmetry with `db.createReadStream()` but through much [discussion](https://github.com/Level/levelup/issues/199), removing it was the best course of action.
 
 The main driver for this was performance. While `db.createReadStream()` performs well under most use cases, `db.createWriteStream()` was highly dependent on the application keys and values. Thus we can't provide a standard implementation and encourage more `write-stream` implementations to be created to solve the broad spectrum of use cases.
 
-Check out the implementations that the community has already produced [here](https://github.com/level/levelup/wiki/Modules#write-streams).
+Check out the implementations that the community has already produced [here](https://github.com/Level/levelup/wiki/Modules#write-streams).
 
 ## Promise Support
 
@@ -464,13 +463,13 @@ db.on('put', function (key, value) {
 
 ## Extending
 
-A list of <a href="https://github.com/level/levelup/wiki/Modules"><b>Level modules and projects</b></a> can be found in the wiki. We are in the process of moving all this to [`awesome`](https://github.com/Level/awesome/).
+A list of <a href="https://github.com/Level/levelup/wiki/Modules"><b>Level modules and projects</b></a> can be found in the wiki. We are in the process of moving all this to [`awesome`](https://github.com/Level/awesome/).
 
 ## Multi-process Access
 
 Stores like LevelDB are thread-safe but they are **not** suitable for accessing with multiple processes. You should only ever have a store open from a single Node.js process. Node.js clusters are made up of multiple processes so a `levelup` instance cannot be shared between them either.
 
-See the aformentioned <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for modules like [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
+See the aformentioned <a href="https://github.com/Level/levelup/wiki/Modules"><b>wiki</b></a> for modules like [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
 
 ## Support
 
