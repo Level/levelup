@@ -35,7 +35,7 @@
 
 LevelDB is a simple key-value store built by Google. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular _get_, _put_ and _delete_ operations, _batched put and delete_, bi-directional iterators and simple compression using the very fast [Snappy](http://google.github.io/snappy/) algorithm.
 
-LevelDB stores entries sorted lexicographically by keys. This makes the [streaming interface](#createReadStream) of `levelup` - which exposes LevelDB iterators as [Readable Streams](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) - a very powerful query mechanism.
+LevelDB stores entries sorted lexicographically by keys. This makes the <a href="#createReadStream">streaming interface</a> of `levelup` - which exposes LevelDB iterators as [Readable Streams](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) - a very powerful query mechanism.
 
 The most common store is [`leveldown`](https://github.com/Level/leveldown/) which provides a pure C++ binding to LevelDB. [Many alternative stores are available](https://github.com/Level/awesome/#stores) such as [`level.js`](https://github.com/Level/level.js) in the browser or [`memdown`](https://github.com/Level/memdown) for an in-memory store. They typically support strings and Buffers for both keys and values. For a richer set of data types you can wrap the store with [`encoding-down`](https://github.com/Level/encoding-down).
 
@@ -82,20 +82,20 @@ db.put('name', 'levelup', function (err) {
 
 ## API
 
-- [<code><b>levelup()</b></code>](#ctor)
-- [<code>db.<b>open()</b></code>](#open)
-- [<code>db.<b>close()</b></code>](#close)
-- [<code>db.<b>put()</b></code>](#put)
-- [<code>db.<b>get()</b></code>](#get)
-- [<code>db.<b>del()</b></code>](#del)
-- [<code>db.<b>batch()</b></code> _(array form)_](#batch)
-- [<code>db.<b>batch()</b></code> _(chained form)_](#batch_chained)
-- [<code>db.<b>isOpen()</b></code>](#isOpen)
-- [<code>db.<b>isClosed()</b></code>](#isClosed)
-- [<code>db.<b>createReadStream()</b></code>](#createReadStream)
-- [<code>db.<b>createKeyStream()</b></code>](#createKeyStream)
-- [<code>db.<b>createValueStream()</b></code>](#createValueStream)
-- [<code>db.<b>iterator()</b></code>](#iterator)
+- <a href="#ctor"><code><b>levelup()</b></code></a>
+- <a href="#open"><code>db.<b>open()</b></code></a>
+- <a href="#close"><code>db.<b>close()</b></code></a>
+- <a href="#put"><code>db.<b>put()</b></code></a>
+- <a href="#get"><code>db.<b>get()</b></code></a>
+- <a href="#del"><code>db.<b>del()</b></code></a>
+- <a href="#batch"><code>db.<b>batch()</b></code></a> _(array form)_
+- <a href="#batch_chained"><code>db.<b>batch()</b></code></a> _(chained form)_
+- <a href="#isOpen"><code>db.<b>isOpen()</b></code></a>
+- <a href="#isClosed"><code>db.<b>isClosed()</b></code></a>
+- <a href="#createReadStream"><code>db.<b>createReadStream()</b></code></a>
+- <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
+- <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
+- <a href="#iterator"><code>db.<b>iterator()</b></code></a>
 
 ### Special Notes
 
@@ -348,7 +348,7 @@ Legacy options:
 
 ### `db.createKeyStream([options])`
 
-Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of keys rather than key-value pairs. Use the same options as described for [`createReadStream`](#createReadStream) to control the range and direction.
+Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of keys rather than key-value pairs. Use the same options as described for <a href="#createReadStream"><code>createReadStream</code></a> to control the range and direction.
 
 You can also obtain this stream by passing an options object to `createReadStream()` with `keys` set to `true` and `values` set to `false`. The result is equivalent; both streams operate in [object mode](https://nodejs.org/docs/latest/api/stream.html#stream_object_mode).
 
@@ -369,7 +369,7 @@ db.createReadStream({ keys: true, values: false })
 
 ### `db.createValueStream([options])`
 
-Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of values rather than key-value pairs. Use the same options as described for [`createReadStream`](#createReadStream) to control the range and direction.
+Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of values rather than key-value pairs. Use the same options as described for <a href="#createReadStream"><code>createReadStream</code></a> to control the range and direction.
 
 You can also obtain this stream by passing an options object to `createReadStream()` with `values` set to `true` and `keys` set to `false`. The result is equivalent; both streams operate in [object mode](https://nodejs.org/docs/latest/api/stream.html#stream_object_mode).
 
@@ -390,7 +390,7 @@ db.createReadStream({ keys: false, values: true })
 
 ### `db.iterator([options])`
 
-Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-leveldown/#abstractleveldown_iteratoroptions), which is what powers the readable streams above. Options are the same as the range options of [`createReadStream()`](#createReadStream) and are passed to the underlying store.
+Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-leveldown/#abstractleveldown_iteratoroptions), which is what powers the readable streams above. Options are the same as the range options of <a href="#createReadStream"><code>createReadStream</code></a> and are passed to the underlying store.
 
 <a name="writeStreams"></a>
 
