@@ -1,13 +1,14 @@
 # levelup
 
-[![level badge][level-badge]](https://github.com/level/awesome)
-[![npm](https://img.shields.io/npm/v/levelup.svg)](https://www.npmjs.com/package/levelup)
-![Node version](https://img.shields.io/node/v/levelup.svg)
-[![Build Status](https://secure.travis-ci.org/Level/levelup.svg?branch=master)](http://travis-ci.org/Level/levelup)
-[![dependencies](https://david-dm.org/Level/levelup.svg)](https://david-dm.org/level/levelup)
-[![npm](https://img.shields.io/npm/dm/levelup.svg)](https://www.npmjs.com/package/levelup)
+[![level badge][level-badge]](https://github.com/Level/awesome)
+[![npm](https://img.shields.io/npm/v/levelup.svg?label=&logo=npm)](https://www.npmjs.com/package/levelup)
+[![Node version](https://img.shields.io/node/v/levelup.svg)](https://www.npmjs.com/package/levelup)
+[![Travis](https://img.shields.io/travis/Level/levelup.svg?logo=travis&label=)](https://travis-ci.org/Level/levelup)
+[![npm](https://img.shields.io/npm/dm/levelup.svg?label=dl)](https://www.npmjs.com/package/levelup)
 [![Coverage Status](https://coveralls.io/repos/github/Level/levelup/badge.svg)](https://coveralls.io/github/Level/levelup)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![Backers on Open Collective](https://opencollective.com/level/backers/badge.svg?color=orange)](#backers)
+[![Sponsors on Open Collective](https://opencollective.com/level/sponsors/badge.svg?color=orange)](#sponsors)
 
 ## Table of Contents
 
@@ -24,6 +25,7 @@
 - [Support](#support)
 - [Contributing](#contributing)
 - [Big Thanks](#big-thanks)
+- [Donate](#donate)
 - [License](#license)
 
 </details>
@@ -34,11 +36,11 @@
 
 LevelDB is a simple key-value store built by Google. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular _get_, _put_ and _delete_ operations, _batched put and delete_, bi-directional iterators and simple compression using the very fast [Snappy](http://google.github.io/snappy/) algorithm.
 
-LevelDB stores entries sorted lexicographically by keys. This makes the [streaming interface](#createReadStream) of `levelup` - which exposes LevelDB iterators as [Readable Streams](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) - a very powerful query mechanism.
+LevelDB stores entries sorted lexicographically by keys. This makes the <a href="#createReadStream">streaming interface</a> of `levelup` - which exposes LevelDB iterators as [Readable Streams](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) - a very powerful query mechanism.
 
-The most common store is [`leveldown`](https://github.com/level/leveldown/) which provides a pure C++ binding to LevelDB. [Many alternative stores are available](https://github.com/Level/awesome/#stores) such as [`level.js`](https://github.com/level/level.js) in the browser or [`memdown`](https://github.com/level/memdown) for an in-memory store. They typically support strings and Buffers for both keys and values. For a richer set of data types you can wrap the store with [`encoding-down`](https://github.com/level/encoding-down).
+The most common store is [`leveldown`](https://github.com/Level/leveldown/) which provides a pure C++ binding to LevelDB. [Many alternative stores are available](https://github.com/Level/awesome/#stores) such as [`level.js`](https://github.com/Level/level.js) in the browser or [`memdown`](https://github.com/Level/memdown) for an in-memory store. They typically support strings and Buffers for both keys and values. For a richer set of data types you can wrap the store with [`encoding-down`](https://github.com/Level/encoding-down).
 
-**The [`level`](https://github.com/level/level) package is the recommended way to get started.** It conveniently bundles `levelup`, [`leveldown`](https://github.com/level/leveldown/) and [`encoding-down`](https://github.com/level/encoding-down). Its main export is `levelup` - i.e. you can do `var db = require('level')`.
+**The [`level`](https://github.com/Level/level) package is the recommended way to get started.** It conveniently bundles `levelup`, [`leveldown`](https://github.com/Level/leveldown/) and [`encoding-down`](https://github.com/Level/encoding-down). Its main export is `levelup` - i.e. you can do `var db = require('level')`.
 
 ## Supported Platforms
 
@@ -81,20 +83,20 @@ db.put('name', 'levelup', function (err) {
 
 ## API
 
-- [<code><b>levelup()</b></code>](#ctor)
-- [<code>db.<b>open()</b></code>](#open)
-- [<code>db.<b>close()</b></code>](#close)
-- [<code>db.<b>put()</b></code>](#put)
-- [<code>db.<b>get()</b></code>](#get)
-- [<code>db.<b>del()</b></code>](#del)
-- [<code>db.<b>batch()</b></code> _(array form)_](#batch)
-- [<code>db.<b>batch()</b></code> _(chained form)_](#batch_chained)
-- [<code>db.<b>isOpen()</b></code>](#isOpen)
-- [<code>db.<b>isClosed()</b></code>](#isClosed)
-- [<code>db.<b>createReadStream()</b></code>](#createReadStream)
-- [<code>db.<b>createKeyStream()</b></code>](#createKeyStream)
-- [<code>db.<b>createValueStream()</b></code>](#createValueStream)
-- [<code>db.<b>iterator()</b></code>](#iterator)
+- <a href="#ctor"><code><b>levelup()</b></code></a>
+- <a href="#open"><code>db.<b>open()</b></code></a>
+- <a href="#close"><code>db.<b>close()</b></code></a>
+- <a href="#put"><code>db.<b>put()</b></code></a>
+- <a href="#get"><code>db.<b>get()</b></code></a>
+- <a href="#del"><code>db.<b>del()</b></code></a>
+- <a href="#batch"><code>db.<b>batch()</b></code></a> _(array form)_
+- <a href="#batch_chained"><code>db.<b>batch()</b></code></a> _(chained form)_
+- <a href="#isOpen"><code>db.<b>isOpen()</b></code></a>
+- <a href="#isClosed"><code>db.<b>isClosed()</b></code></a>
+- <a href="#createReadStream"><code>db.<b>createReadStream()</b></code></a>
+- <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
+- <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
+- <a href="#iterator"><code>db.<b>iterator()</b></code></a>
 
 ### Special Notes
 
@@ -106,7 +108,7 @@ db.put('name', 'levelup', function (err) {
 
 The main entry point for creating a new `levelup` instance.
 
-- `db` must be an [`abstract-leveldown`](https://github.com/level/abstract-leveldown) compliant store.
+- `db` must be an [`abstract-leveldown`](https://github.com/Level/abstract-leveldown) compliant store.
 - `options` is passed on to the underlying store when opened and is specific to the type of store being used
 
 Calling `levelup(db)` will also open the underlying store. This is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form `function (err, db) {}` where `db` is the `levelup` instance. If you don't provide a callback, any read & write operations are simply queued internally until the store is fully opened.
@@ -347,7 +349,7 @@ Legacy options:
 
 ### `db.createKeyStream([options])`
 
-Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of keys rather than key-value pairs. Use the same options as described for [`createReadStream`](#createReadStream) to control the range and direction.
+Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of keys rather than key-value pairs. Use the same options as described for <a href="#createReadStream"><code>createReadStream</code></a> to control the range and direction.
 
 You can also obtain this stream by passing an options object to `createReadStream()` with `keys` set to `true` and `values` set to `false`. The result is equivalent; both streams operate in [object mode](https://nodejs.org/docs/latest/api/stream.html#stream_object_mode).
 
@@ -368,7 +370,7 @@ db.createReadStream({ keys: true, values: false })
 
 ### `db.createValueStream([options])`
 
-Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of values rather than key-value pairs. Use the same options as described for [`createReadStream`](#createReadStream) to control the range and direction.
+Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of values rather than key-value pairs. Use the same options as described for <a href="#createReadStream"><code>createReadStream</code></a> to control the range and direction.
 
 You can also obtain this stream by passing an options object to `createReadStream()` with `values` set to `true` and `keys` set to `false`. The result is equivalent; both streams operate in [object mode](https://nodejs.org/docs/latest/api/stream.html#stream_object_mode).
 
@@ -389,17 +391,17 @@ db.createReadStream({ keys: false, values: true })
 
 ### `db.iterator([options])`
 
-Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-leveldown/#abstractleveldown_iteratoroptions), which is what powers the readable streams above. Options are the same as the range options of [`createReadStream()`](#createReadStream) and are passed to the underlying store.
+Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-leveldown/#abstractleveldown_iteratoroptions), which is what powers the readable streams above. Options are the same as the range options of <a href="#createReadStream"><code>createReadStream</code></a> and are passed to the underlying store.
 
 <a name="writeStreams"></a>
 
 #### What happened to `db.createWriteStream`?
 
-`db.createWriteStream()` has been removed in order to provide a smaller and more maintainable core. It primarily existed to create symmetry with `db.createReadStream()` but through much [discussion](https://github.com/level/levelup/issues/199), removing it was the best course of action.
+`db.createWriteStream()` has been removed in order to provide a smaller and more maintainable core. It primarily existed to create symmetry with `db.createReadStream()` but through much [discussion](https://github.com/Level/levelup/issues/199), removing it was the best course of action.
 
 The main driver for this was performance. While `db.createReadStream()` performs well under most use cases, `db.createWriteStream()` was highly dependent on the application keys and values. Thus we can't provide a standard implementation and encourage more `write-stream` implementations to be created to solve the broad spectrum of use cases.
 
-Check out the implementations that the community has already produced [here](https://github.com/level/levelup/wiki/Modules#write-streams).
+Check out the implementations that the community has already produced [here](https://github.com/Level/levelup/wiki/Modules#write-streams).
 
 ## Promise Support
 
@@ -462,13 +464,13 @@ db.on('put', function (key, value) {
 
 ## Extending
 
-A list of <a href="https://github.com/level/levelup/wiki/Modules"><b>Level modules and projects</b></a> can be found in the wiki. We are in the process of moving all this to [`awesome`](https://github.com/Level/awesome/).
+A list of <a href="https://github.com/Level/levelup/wiki/Modules"><b>Level modules and projects</b></a> can be found in the wiki. We are in the process of moving all this to [`awesome`](https://github.com/Level/awesome/).
 
 ## Multi-process Access
 
 Stores like LevelDB are thread-safe but they are **not** suitable for accessing with multiple processes. You should only ever have a store open from a single Node.js process. Node.js clusters are made up of multiple processes so a `levelup` instance cannot be shared between them either.
 
-See the aformentioned <a href="https://github.com/level/levelup/wiki/Modules"><b>wiki</b></a> for modules like [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
+See the aformentioned <a href="https://github.com/Level/levelup/wiki/Modules"><b>wiki</b></a> for modules like [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
 
 ## Support
 
@@ -491,6 +493,18 @@ See the [Contribution Guide](https://github.com/Level/community/blob/master/CONT
 Cross-browser Testing Platform and Open Source ♥ Provided by [Sauce Labs](https://saucelabs.com).
 
 [![Sauce Labs logo](./sauce-labs.svg)](https://saucelabs.com)
+
+## Donate
+
+To sustain [`Level`](https://github.com/Level) and its activities, become a backer or sponsor on [Open Collective](https://opencollective.com/level). Your logo or avatar will be displayed on our 28+ [GitHub repositories](https://github.com/Level), [npm](https://www.npmjs.com/) packages and (soon) [our website](http://leveldb.org). 💖
+
+### Backers
+
+[![Open Collective backers](https://opencollective.com/level/backers.svg?width=890)](https://opencollective.com/level)
+
+### Sponsors
+
+[![Open Collective sponsors](https://opencollective.com/level/sponsors.svg?width=890)](https://opencollective.com/level)
 
 ## License
 
