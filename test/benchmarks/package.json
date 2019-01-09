@@ -3,14 +3,17 @@
   "version": "0.0.0",
   "description": "benchmarks for LevelUP",
   "main": "index.js",
+  "scripts": {
+    "postinstall": "cd ../../ && npm install"
+  },
   "private": true,
   "dependencies": {
-    "async": "~0.1.22",
-    "benchmark": "~1.0.0",
+    "async": "^2.6.1",
+    "benchmark": "^2.1.4",
     "colors": "~0.6.0-1",
-    "leveldown": "^1.7.2",
+    "leveldown": "^4.0.1",
     "levelup": "*",
-    "rimraf": "~2.0.2",
+    "rimraf": "^2.6.3",
     "sqlite3": "*"
   }
 }
