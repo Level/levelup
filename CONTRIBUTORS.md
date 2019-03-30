@@ -22,8 +22,9 @@
 | **Eduardo Sorribas** | [**@sorribas**](https://github.com/sorribas)           |                                                                     |
 | **Nolan Lawson**     | [**@nolanlawson**](https://github.com/nolanlawson)     | [**@nolan@toot.cafe**](https://toot.cafe/@nolan)                    |
 | **James Butler**     | [**@sandfox**](https://github.com/sandfox)             |                                                                     |
-| **Matthew Wright**   | [**@farskipper**](https://github.com/farskipper)       |                                                                     |
+| **moro**             |                                                        |                                                                     |
 | **Super-User**       |                                                        |                                                                     |
+| **David Dias**       | [**@diasdavid**](https://github.com/diasdavid)         |                                                                     |
 | **Pascal Temel**     | [**@PascalTemel**](https://github.com/PascalTemel)     |                                                                     |
 | **Daniel Ravina**    | [**@danielravina**](https://github.com/danielravina)   |                                                                     |
 | **James Brown**      |                                                        |                                                                     |
@@ -43,4 +44,4 @@
 | **Mark Cavage**      | [**@mcavage**](https://github.com/mcavage)             |                                                                     |
 | **Pomke**            |                                                        |                                                                     |
 | **Pedro Teixeira**   | [**@pgte**](https://github.com/pgte)                   | [**@pgte@twitter**](https://twitter.com/pgte)                       |
-| **David Dias**       | [**@diasdavid**](https://github.com/diasdavid)         |                                                                     |
+| **Matthew Wright**   | [**@farskipper**](https://github.com/farskipper)       |                                                                     |

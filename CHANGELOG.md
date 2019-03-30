@@ -1,6 +1,19 @@
 # Changelog
 
+_**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
+
 ## [Unreleased][unreleased]
+
+## [4.0.1] - 2019-03-30
+
+### Changed
+
+- Upgrade dependencies of benchmarks ([#637](https://github.com/Level/levelup/issues/637)) ([**@morolt**](https://github.com/morolt))
+- Upgrade `memdown` devDependency from `^3.0.0` to `^4.0.0` ([#646](https://github.com/Level/levelup/issues/646)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `bl` devDependency from `^2.0.0` to `^3.0.0` ([#643](https://github.com/Level/levelup/issues/643)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `airtap` devDependency from `0.1.0` to `^2.0.0` ([#631](https://github.com/Level/levelup/issues/631)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `encoding-down` devDependency from `^5.0.0` to `^6.0.0` ([#629](https://github.com/Level/levelup/issues/629)) ([**@vweevers**](https://github.com/vweevers))
+- Apply common project tweaks ([#634](https://github.com/Level/levelup/issues/634), [#635](https://github.com/Level/levelup/issues/635), [`b83add5`](https://github.com/Level/levelup/commit/b83add5)) ([**@vweevers**](https://github.com/vweevers))
 
 ## [4.0.0] - 2018-12-22
 
@@ -1011,7 +1024,9 @@
 
 :seedling: Initial release.
 
-[unreleased]: https://github.com/level/levelup/compare/v4.0.0...HEAD
+[unreleased]: https://github.com/level/levelup/compare/v4.0.1...HEAD
+
+[4.0.1]: https://github.com/level/levelup/compare/v4.0.0...v4.0.1
 
 [4.0.0]: https://github.com/level/levelup/compare/v3.1.1...v4.0.0
 
