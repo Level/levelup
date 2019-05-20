@@ -20,7 +20,6 @@
 - [API](#api)
 - [Promise Support](#promise-support)
 - [Events](#events)
-- [Extending](#extending)
 - [Multi-process Access](#multi-process-access)
 - [Support](#support)
 - [Contributing](#contributing)
@@ -401,7 +400,7 @@ Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-lev
 
 The main driver for this was performance. While `db.createReadStream()` performs well under most use cases, `db.createWriteStream()` was highly dependent on the application keys and values. Thus we can't provide a standard implementation and encourage more `write-stream` implementations to be created to solve the broad spectrum of use cases.
 
-Check out the implementations that the community has already produced [here](https://github.com/Level/levelup/wiki/Modules#write-streams).
+Check out the implementations that the community has produced [here](https://github.com/Level/awesome#streams).
 
 ## Promise Support
 
@@ -462,15 +461,11 @@ db.on('put', function (key, value) {
 })
 ```
 
-## Extending
-
-A list of <a href="https://github.com/Level/levelup/wiki/Modules"><b>Level modules and projects</b></a> can be found in the wiki. We are in the process of moving all this to [`awesome`](https://github.com/Level/awesome/).
-
 ## Multi-process Access
 
 Stores like LevelDB are thread-safe but they are **not** suitable for accessing with multiple processes. You should only ever have a store open from a single Node.js process. Node.js clusters are made up of multiple processes so a `levelup` instance cannot be shared between them either.
 
-See the aformentioned <a href="https://github.com/Level/levelup/wiki/Modules"><b>wiki</b></a> for modules like [multilevel](https://github.com/juliangruber/multilevel), that may help if you require a single store to be shared across processes.
+See [`Level/awesome`](https://github.com/Level/awesome#shared-access) for modules like [`multileveldown`](https://github.com/mafintosh/multileveldown) that may help if you require a single store to be shared across processes.
 
 ## Support
 
