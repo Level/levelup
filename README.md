@@ -21,7 +21,6 @@
 - [Promise Support](#promise-support)
 - [Events](#events)
 - [Multi-process Access](#multi-process-access)
-- [Support](#support)
 - [Contributing](#contributing)
 - [Big Thanks](#big-thanks)
 - [Donate](#donate)
@@ -466,14 +465,6 @@ db.on('put', function (key, value) {
 Stores like LevelDB are thread-safe but they are **not** suitable for accessing with multiple processes. You should only ever have a store open from a single Node.js process. Node.js clusters are made up of multiple processes so a `levelup` instance cannot be shared between them either.
 
 See [`Level/awesome`](https://github.com/Level/awesome#shared-access) for modules like [`multileveldown`](https://github.com/mafintosh/multileveldown) that may help if you require a single store to be shared across processes.
-
-## Support
-
-There are multiple ways you can find help in using Level in Node.js:
-
-- **IRC:** you'll find an active group of `levelup` users in the **##leveldb** channel on Freenode, including most of the contributors to this project.
-- **Mailing list:** there is an active [Node.js LevelDB](https://groups.google.com/forum/#!forum/node-levelup) Google Group.
-- **GitHub:** you're welcome to open an issue here on this GitHub repository if you have a question.
 
 ## Contributing
 
