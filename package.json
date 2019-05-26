@@ -22,7 +22,7 @@
   "devDependencies": {
     "after": "^0.8.2",
     "airtap": "^2.0.0",
-    "async": "^2.5.0",
+    "async": "^3.0.1",
     "bl": "^3.0.0",
     "browserify": "^16.0.0",
     "bustermove": "^1.0.0",
