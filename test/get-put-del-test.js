@@ -1,6 +1,7 @@
 var levelup = require('../lib/levelup.js')
 var errors = levelup.errors
-var async = require('async')
+var each = require('async-each')
+var series = require('run-series')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
@@ -86,9 +87,9 @@ buster.testCase('get() / put() / del()', {
 
     'del() works on real entries': function (done) {
       this.openTestDatabase(function (db) {
-        async.series([
+        series([
           function (callback) {
-            async.forEach(['foo', 'bar', 'baz'], function (key, callback) {
+            each(['foo', 'bar', 'baz'], function (key, callback) {
               db.put(key, 1 + Math.random(), callback)
             }, callback)
           },
@@ -96,7 +97,7 @@ buster.testCase('get() / put() / del()', {
             db.del('bar', callback)
           },
           function (callback) {
-            async.forEach(['foo', 'bar', 'baz'], function (key, callback) {
+            each(['foo', 'bar', 'baz'], function (key, callback) {
               db.get(key, function (err, value) {
                 // we should get foo & baz but not bar
                 if (key === 'bar') {

@@ -1,7 +1,8 @@
 var levelup = require('../lib/levelup.js')
 var memdown = require('memdown')
 var encDown = require('encoding-down')
-var async = require('async')
+var each = require('async-each')
+var parallel = require('run-parallel')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
@@ -28,9 +29,9 @@ buster.testCase('custom encoding', {
           this.closeableDatabases.push(db)
 
           var PUT = testData.map(function (d) { return db.put.bind(db, d.key, d.value) })
-          async.parallel(PUT, function (err) {
+          parallel(PUT, function (err) {
             refute(err)
-            async.forEach(testData, function (d, callback) {
+            each(testData, function (d, callback) {
               db.get(d.key, function (err, value) {
                 if (err) console.error(err.stack)
                 refute(err)

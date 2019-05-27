@@ -1,7 +1,7 @@
 var referee = require('referee')
 var assert = referee.assert
 var refute = referee.refute
-var async = require('async')
+var each = require('async-each')
 var delayed = require('delayed').delayed
 var levelup = require('../lib/levelup.js')
 var errors = require('level-errors')
@@ -46,7 +46,7 @@ module.exports.openTestDatabase = function () {
 }
 
 module.exports.commonTearDown = function (done) {
-  async.forEach(this.closeableDatabases, function (db, callback) {
+  each(this.closeableDatabases, function (db, callback) {
     db.close(callback)
   }, done)
 }

@@ -1,4 +1,4 @@
-var async = require('async')
+var each = require('async-each')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
@@ -140,7 +140,7 @@ buster.testCase('Binary API', {
         { type: 'put', key: 'baz', value: 'abazvalue' }
       ], { keyEncoding: 'utf8', valueEncoding: 'binary' }, function (err) {
         refute(err)
-        async.forEach(['foo', 'bar', 'baz'], function (key, callback) {
+        each(['foo', 'bar', 'baz'], function (key, callback) {
           db.get(key, { valueEncoding: 'binary' }, function (err, value) {
             refute(err)
             if (key === 'baz') {
