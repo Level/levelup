@@ -1,7 +1,8 @@
 var levelup = require('../lib/levelup.js')
 var memdown = require('memdown')
 var encDown = require('encoding-down')
-var async = require('async')
+var each = require('async-each')
+var parallel = require('run-parallel')
 var concat = require('concat-stream')
 var common = require('./common')
 var assert = require('referee').assert
@@ -19,7 +20,7 @@ buster.testCase('Deferred open()', {
     this.closeableDatabases.push(db)
     assert.isObject(db)
 
-    async.parallel([
+    parallel([
       // 2) insert 3 values with put(), these should be deferred until the database is actually open
       db.put.bind(db, 'k1', 'v1'),
       db.put.bind(db, 'k2', 'v2'),
@@ -27,7 +28,7 @@ buster.testCase('Deferred open()', {
     ], function () {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
-      async.forEach([1, 2, 3], function (k, cb) {
+      each([1, 2, 3], function (k, cb) {
         db.get('k' + k, function (err, v) {
           refute(err)
           assert.equals(v, 'v' + k)
@@ -62,7 +63,7 @@ buster.testCase('Deferred open()', {
     ], function () {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
-      async.forEach([1, 2, 3], function (k, cb) {
+      each([1, 2, 3], function (k, cb) {
         db.get('k' + k, function (err, v) {
           refute(err)
           assert.equals(v, 'v' + k)
@@ -97,7 +98,7 @@ buster.testCase('Deferred open()', {
       .write(function () {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
-        async.forEach([1, 2, 3], function (k, cb) {
+        each([1, 2, 3], function (k, cb) {
           db.get('k' + k, function (err, v) {
             refute(err)
             assert.equals(v, 'v' + k)

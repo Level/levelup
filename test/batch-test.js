@@ -1,6 +1,7 @@
 var levelup = require('../lib/levelup')
 var errors = levelup.errors
-var async = require('async')
+var each = require('async-each')
+var series = require('run-series')
 var common = require('./common')
 var assert = require('referee').assert
 var refute = require('referee').refute
@@ -18,7 +19,7 @@ buster.testCase('batch()', {
         { type: 'put', key: 'baz', value: 'abazvalue' }
       ], function (err) {
         refute(err)
-        async.forEach(['foo', 'bar', 'baz'], function (key, callback) {
+        each(['foo', 'bar', 'baz'], function (key, callback) {
           db.get(key, function (err, value) {
             refute(err)
             assert.equals(value, 'a' + key + 'value')
@@ -37,7 +38,7 @@ buster.testCase('batch()', {
         { type: 'put', key: 'baz', value: 'abazvalue' }
       ])
         .then(function () {
-          async.forEach(['foo', 'bar', 'baz'], function (key, callback) {
+          each(['foo', 'bar', 'baz'], function (key, callback) {
             db.get(key, function (err, value) {
               refute(err)
               assert.equals(value, 'a' + key + 'value')
@@ -51,7 +52,7 @@ buster.testCase('batch()', {
 
   'batch() with multiple puts and deletes': function (done) {
     this.openTestDatabase(function (db) {
-      async.series([
+      series([
         function (callback) {
           db.batch([
             { type: 'put', key: '1', value: 'one' },
@@ -70,7 +71,7 @@ buster.testCase('batch()', {
         },
         function (callback) {
           // these should exist
-          async.forEach(['2', '3', 'bar', 'baz'], function (key, callback) {
+          each(['2', '3', 'bar', 'baz'], function (key, callback) {
             db.get(key, function (err, value) {
               refute(err)
               refute.isNull(value)
@@ -80,7 +81,7 @@ buster.testCase('batch()', {
         },
         function (callback) {
           // these shouldn't exist
-          async.forEach(['1', 'foo'], function (key, callback) {
+          each(['1', 'foo'], function (key, callback) {
             db.get(key, function (err, value) {
               assert(err)
               assert.isInstanceOf(err, errors.NotFoundError)
@@ -110,7 +111,7 @@ buster.testCase('batch()', {
           .write(function (err) {
             refute(err)
 
-            async.forEach([ 'one', 'three', '1', '2', '3' ], function (key, callback) {
+            each([ 'one', 'three', '1', '2', '3' ], function (key, callback) {
               db.get(key, function (err) {
                 if ([ 'one', 'three', '1', '3' ].indexOf(key) > -1) { assert(err) } else { refute(err) }
                 callback()
@@ -172,7 +173,7 @@ buster.testCase('batch()', {
           .del('3')
           .write()
           .then(function () {
-            async.forEach([ 'one', 'three', '1', '2', '3' ], function (key, callback) {
+            each([ 'one', 'three', '1', '2', '3' ], function (key, callback) {
               db.get(key, function (err) {
                 if ([ 'one', 'three', '1', '3' ].indexOf(key) > -1) { assert(err) } else { refute(err) }
                 callback()
@@ -206,7 +207,7 @@ buster.testCase('batch()', {
   'batch() with can manipulate data from put()': function (done) {
     // checks encoding and whatnot
     this.openTestDatabase(function (db) {
-      async.series(
+      series(
         [
           db.put.bind(db, '1', 'one'),
           db.put.bind(db, '2', 'two'),
@@ -222,7 +223,7 @@ buster.testCase('batch()', {
           },
           function (callback) {
             // these should exist
-            async.forEach(['2', '3', 'bar', 'baz'], function (key, callback) {
+            each(['2', '3', 'bar', 'baz'], function (key, callback) {
               db.get(key, function (err, value) {
                 refute(err)
                 refute.isNull(value)
@@ -232,7 +233,7 @@ buster.testCase('batch()', {
           },
           function (callback) {
             // these shouldn't exist
-            async.forEach(['1', 'foo'], function (key, callback) {
+            each(['1', 'foo'], function (key, callback) {
               db.get(key, function (err, value) {
                 assert(err)
                 assert.isInstanceOf(err, errors.NotFoundError)
@@ -247,7 +248,7 @@ buster.testCase('batch()', {
 
   'batch() data can be read with get() and del()': function (done) {
     this.openTestDatabase(function (db) {
-      async.series([
+      series([
         function (callback) {
           db.batch([
             { type: 'put', key: '1', value: 'one' },
@@ -258,7 +259,7 @@ buster.testCase('batch()', {
         db.del.bind(db, '1', 'one'),
         function (callback) {
           // these should exist
-          async.forEach(['2', '3'], function (key, callback) {
+          each(['2', '3'], function (key, callback) {
             db.get(key, function (err, value) {
               refute(err)
               refute.isNull(value)
