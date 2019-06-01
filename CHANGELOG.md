@@ -4,6 +4,28 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 ## [Unreleased][unreleased]
 
+## [4.0.2] - 2019-06-01
+
+### Changed
+
+- Replace `async` devDependency with `async-each` and `run-*` ([#654](https://github.com/Level/levelup/issues/654)) ([`d9ff554`](https://github.com/Level/levelup/commit/d9ff554)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `nyc` devDependency from `^13.1.0` to `^14.0.0` ([#649](https://github.com/Level/levelup/issues/649)) ([`4f8b141`](https://github.com/Level/levelup/commit/4f8b141)) ([**@vweevers**](https://github.com/vweevers))
+
+### Added
+
+- Document need of Promise polyfill for IE ([`a2e7a49`](https://github.com/Level/levelup/commit/a2e7a49)) ([**@vweevers**](https://github.com/vweevers))
+
+### Removed
+
+- Remove unused `test-10k-times.sh` ([#651](https://github.com/Level/levelup/issues/651)) ([`6a033f1`](https://github.com/Level/levelup/commit/6a033f1)) ([**@MadsAndreasenTechPeople**](https://github.com/MadsAndreasenTechPeople))
+- Remove outdated `Support` section from `README.md` ([`956eb0b`](https://github.com/Level/levelup/commit/956eb0b)) ([**@vweevers**](https://github.com/vweevers))
+- Remove references to old wiki in favor of [`Level/awesome`](https://github.com/Level/awesome) ([`f534fde`](https://github.com/Level/levelup/commit/f534fde)) ([**@vweevers**](https://github.com/vweevers))
+
+### Fixed
+
+- Fix Level badge ([`1a2199f`](https://github.com/Level/levelup/commit/1a2199f)) ([**@vweevers**](https://github.com/vweevers))
+- Remove link to dead website ([`c8ccb6c`](https://github.com/Level/levelup/commit/c8ccb6c)) ([**@vweevers**](https://github.com/vweevers))
+
 ## [4.0.1] - 2019-03-30
 
 ### Changed
@@ -1024,7 +1046,9 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 :seedling: Initial release.
 
-[unreleased]: https://github.com/level/levelup/compare/v4.0.1...HEAD
+[unreleased]: https://github.com/level/levelup/compare/v4.0.2...HEAD
+
+[4.0.2]: https://github.com/level/levelup/compare/v4.0.1...v4.0.2
 
 [4.0.1]: https://github.com/level/levelup/compare/v4.0.0...v4.0.1
 
