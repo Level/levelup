@@ -58,5 +58,24 @@ buster.testCase('Init & open()', {
       return done()
     }
     throw new Error('did not throw')
+  },
+
+  'support open options': function (done) {
+    var down = memdown()
+
+    levelup(down, (err, up) => {
+      refute(err, 'no error')
+
+      up.close(() => {
+        down.open = (opts) => {
+          assert.equals(opts.foo, 'bar')
+          done()
+        }
+
+        up.open({
+          foo: 'bar'
+        })
+      })
+    })
   }
 })
