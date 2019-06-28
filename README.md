@@ -138,7 +138,7 @@ db.get('foo', function (err, value) {
 
 <a name="open"></a>
 
-### `db.open([callback])`
+### `db.open([options][, callback])`
 
 Opens the underlying store. In general you should never need to call this method directly as it's automatically called by <a href="#ctor"><code>levelup()</code></a>.
 
