@@ -63,18 +63,16 @@ buster.testCase('Init & open()', {
   'support open options': function (done) {
     var down = memdown()
 
-    levelup(down, (err, up) => {
+    levelup(down, function (err, up) {
       refute(err, 'no error')
 
-      up.close(() => {
-        down.open = (opts) => {
+      up.close(function () {
+        down.open = function (opts) {
           assert.equals(opts.foo, 'bar')
           done()
         }
 
-        up.open({
-          foo: 'bar'
-        })
+        up.open({ foo: 'bar' })
       })
     })
   }
