@@ -22,9 +22,10 @@
 | **Eduardo Sorribas** | [**@sorribas**](https://github.com/sorribas)                               |                                                                     |
 | **Nolan Lawson**     | [**@nolanlawson**](https://github.com/nolanlawson)                         | [**@nolan@toot.cafe**](https://toot.cafe/@nolan)                    |
 | **James Butler**     | [**@sandfox**](https://github.com/sandfox)                                 |                                                                     |
+| **Alex Potsides**    |                                                                            |                                                                     |
 | **Mads Andreasen**   | [**@MadsAndreasenTechPeople**](https://github.com/MadsAndreasenTechPeople) |                                                                     |
-| **moro**             |                                                                            |                                                                     |
 | **Super-User**       |                                                                            |                                                                     |
+| **Matthew Wright**   | [**@farskipper**](https://github.com/farskipper)                           |                                                                     |
 | **David Dias**       | [**@diasdavid**](https://github.com/diasdavid)                             |                                                                     |
 | **Pascal Temel**     | [**@PascalTemel**](https://github.com/PascalTemel)                         |                                                                     |
 | **Daniel Ravina**    | [**@danielravina**](https://github.com/danielravina)                       |                                                                     |
@@ -45,4 +46,4 @@
 | **Mark Cavage**      | [**@mcavage**](https://github.com/mcavage)                                 |                                                                     |
 | **Pomke**            |                                                                            |                                                                     |
 | **Pedro Teixeira**   | [**@pgte**](https://github.com/pgte)                                       | [**@pgte@twitter**](https://twitter.com/pgte)                       |
-| **Matthew Wright**   | [**@farskipper**](https://github.com/farskipper)                           |                                                                     |
+| **moro**             |                                                                            |                                                                     |

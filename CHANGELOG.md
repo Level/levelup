@@ -4,6 +4,20 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 ## [Unreleased][unreleased]
 
+## [4.1.0] - 2019-06-28
+
+### Changed
+
+- Upgrade `deferred-leveldown` from `~5.0.0` to `~5.1.0` ([#657](https://github.com/Level/levelup/issues/657)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `delayed` devDependency from `^1.0.1` to `^2.0.0` ([#659](https://github.com/Level/levelup/issues/659)) ([**@vweevers**](https://github.com/vweevers))
+
+### Added
+
+- Test `seek()` integration ([#661](https://github.com/Level/levelup/issues/661)) ([**@vweevers**](https://github.com/vweevers)) \*
+- Support options passed to `open()` ([#660](https://github.com/Level/levelup/issues/660), [#662](https://github.com/Level/levelup/issues/662)) ([**@achingbrain**](https://github.com/achingbrain), [**@vweevers**](https://github.com/vweevers))
+
+**\* Historical Note** Many thanks to [**@MeirionHughes**](https://github.com/MeirionHughes) for adding `seek()` support to `memdown`, `encoding-down`, `deferred-leveldown` and `subleveldown`. At the time of writing, all but `subleveldown` have been released. Go forth and seek!
+
 ## [4.0.2] - 2019-06-08
 
 ### Changed
@@ -1046,7 +1060,9 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 :seedling: Initial release.
 
-[unreleased]: https://github.com/level/levelup/compare/v4.0.2...HEAD
+[unreleased]: https://github.com/level/levelup/compare/v4.1.0...HEAD
+
+[4.1.0]: https://github.com/level/levelup/compare/v4.0.2...v4.1.0
 
 [4.0.2]: https://github.com/level/levelup/compare/v4.0.1...v4.0.2
 
