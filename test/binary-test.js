@@ -5,14 +5,14 @@ var refute = require('referee').refute
 var buster = require('bustermove')
 
 buster.testCase('Binary API', {
-  'setUp': function (done) {
+  setUp: function (done) {
     common.commonSetUp.call(this, function () {
       this.testData = loadData()
       done()
     }.bind(this))
   },
 
-  'tearDown': common.commonTearDown,
+  tearDown: common.commonTearDown,
 
   'sanity check on test data': function (done) {
     assert(Buffer.isBuffer(this.testData))

@@ -10,7 +10,7 @@ var refute = require('referee').refute
 var buster = require('bustermove')
 
 buster.testCase('JSON encoding', {
-  'setUp': function (done) {
+  setUp: function (done) {
     common.commonSetUp.call(this, function () {
       this.runTest = function (testData, assertType, done) {
         levelup(encDown(memdown(), {
@@ -51,7 +51,7 @@ buster.testCase('JSON encoding', {
     }.bind(this))
   },
 
-  'tearDown': common.commonTearDown,
+  tearDown: common.commonTearDown,
 
   'simple-object values in "json" encoding': function (done) {
     this.runTest([
@@ -79,7 +79,7 @@ buster.testCase('JSON encoding', {
         key: '0',
         value: {
           foo: 'bar',
-          bar: [ 1, 2, 3 ],
+          bar: [1, 2, 3],
           bang: { yes: true, no: false }
         }
       }
@@ -92,7 +92,7 @@ buster.testCase('JSON encoding', {
         value: '0',
         key: {
           foo: 'bar',
-          bar: [ 1, 2, 3 ],
+          bar: [1, 2, 3],
           bang: { yes: true, no: false }
         }
       }

@@ -8,9 +8,9 @@ var buster = require('bustermove')
 var bigBlob = Array.apply(null, Array(1024 * 100)).map(function () { return 'aaaaaaaaaa' }).join('')
 
 buster.testCase('ReadStream', {
-  'setUp': common.readStreamSetUp,
+  setUp: common.readStreamSetUp,
 
-  'tearDown': common.commonTearDown,
+  tearDown: common.commonTearDown,
 
   // TODO: test various encodings
 
@@ -381,14 +381,14 @@ buster.testCase('ReadStream', {
     var options = { keyEncoding: 'utf8', valueEncoding: 'json' }
     var data = [
       { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } },
-      { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } },
-      { type: 'put', key: 'ac', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } },
+      { type: 'put', key: 'ab', value: { b: 'foo', bar: [1, 2, 3] } },
+      { type: 'put', key: 'ac', value: { c: 'w00t', d: { e: [0, 10, 20, 30], f: 1, g: 'wow' } } },
       { type: 'put', key: 'ba', value: { a: 'complex', obj: 100 } },
-      { type: 'put', key: 'bb', value: { b: 'foo', bar: [ 1, 2, 3 ] } },
-      { type: 'put', key: 'bc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } },
+      { type: 'put', key: 'bb', value: { b: 'foo', bar: [1, 2, 3] } },
+      { type: 'put', key: 'bc', value: { c: 'w00t', d: { e: [0, 10, 20, 30], f: 1, g: 'wow' } } },
       { type: 'put', key: 'ca', value: { a: 'complex', obj: 100 } },
-      { type: 'put', key: 'cb', value: { b: 'foo', bar: [ 1, 2, 3 ] } },
-      { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+      { type: 'put', key: 'cb', value: { b: 'foo', bar: [1, 2, 3] } },
+      { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [0, 10, 20, 30], f: 1, g: 'wow' } } }
     ]
 
     this.openTestDatabase(options, function (db) {
@@ -414,14 +414,14 @@ buster.testCase('ReadStream', {
     }
     var data = [
       { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } },
-      { type: 'put', key: 'ab', value: { b: 'foo', bar: [ 1, 2, 3 ] } },
-      { type: 'put', key: 'ac', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } },
+      { type: 'put', key: 'ab', value: { b: 'foo', bar: [1, 2, 3] } },
+      { type: 'put', key: 'ac', value: { c: 'w00t', d: { e: [0, 10, 20, 30], f: 1, g: 'wow' } } },
       { type: 'put', key: 'ba', value: { a: 'complex', obj: 100 } },
-      { type: 'put', key: 'bb', value: { b: 'foo', bar: [ 1, 2, 3 ] } },
-      { type: 'put', key: 'bc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } },
+      { type: 'put', key: 'bb', value: { b: 'foo', bar: [1, 2, 3] } },
+      { type: 'put', key: 'bc', value: { c: 'w00t', d: { e: [0, 10, 20, 30], f: 1, g: 'wow' } } },
       { type: 'put', key: 'ca', value: { a: 'complex', obj: 100 } },
-      { type: 'put', key: 'cb', value: { b: 'foo', bar: [ 1, 2, 3 ] } },
-      { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [ 0, 10, 20, 30 ], f: 1, g: 'wow' } } }
+      { type: 'put', key: 'cb', value: { b: 'foo', bar: [1, 2, 3] } },
+      { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [0, 10, 20, 30], f: 1, g: 'wow' } } }
     ]
 
     this.openTestDatabase(options, function (db) {

@@ -9,7 +9,7 @@ var refute = require('referee').refute
 var buster = require('bustermove')
 
 buster.testCase('custom encoding', {
-  'setUp': function (done) {
+  setUp: function (done) {
     common.commonSetUp.call(this, function () {
       this.runTest = function (testData, assertType, done) {
         var customEncoding = {
@@ -46,7 +46,7 @@ buster.testCase('custom encoding', {
     }.bind(this))
   },
 
-  'tearDown': common.commonTearDown,
+  tearDown: common.commonTearDown,
 
   'simple-object values in "json" encoding': function (done) {
     this.runTest([
@@ -76,7 +76,7 @@ buster.testCase('custom encoding', {
         key: '0',
         value: {
           foo: 'bar',
-          bar: [ 1, 2, 3 ],
+          bar: [1, 2, 3],
           bang: { yes: true, no: false }
         }
       }
@@ -91,7 +91,7 @@ buster.testCase('custom encoding', {
         value: '0',
         key: {
           foo: 'bar',
-          bar: [ 1, 2, 3 ],
+          bar: [1, 2, 3],
           bang: { yes: true, no: false }
         }
       },
@@ -99,7 +99,7 @@ buster.testCase('custom encoding', {
         value: '1',
         key: {
           foo: 'different',
-          bar: [ 1, 2, 3 ],
+          bar: [1, 2, 3],
           bang: { yes: true, no: false }
         }
       }

@@ -57,9 +57,9 @@ function makeTest (db, delay, done) {
 }
 
 buster.testCase('ReadStream', {
-  'setUp': common.readStreamSetUp,
+  setUp: common.readStreamSetUp,
 
-  'tearDown': common.commonTearDown,
+  tearDown: common.commonTearDown,
 
   // TODO: test various encodings
   'readStream and then put in nextTick': function (done) {

@@ -7,8 +7,8 @@ var levelup = require('../lib/levelup')
 var common = require('./common')
 
 buster.testCase('iterator', {
-  'setUp': common.commonSetUp,
-  'tearDown': common.commonTearDown,
+  setUp: common.commonSetUp,
+  tearDown: common.commonTearDown,
 
   'test simple iterator': function (done) {
     var db = levelup(memdown())

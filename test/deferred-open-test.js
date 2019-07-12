@@ -10,8 +10,8 @@ var refute = require('referee').refute
 var buster = require('bustermove')
 
 buster.testCase('Deferred open()', {
-  'setUp': common.commonSetUp,
-  'tearDown': common.commonTearDown,
+  setUp: common.commonSetUp,
+  tearDown: common.commonTearDown,
 
   'put() and get() on pre-opened database': function (done) {
     // 1) open database without callback, opens in next tick
@@ -119,7 +119,7 @@ buster.testCase('Deferred open()', {
   },
 
   'test deferred ReadStream': {
-    'setUp': common.readStreamSetUp,
+    setUp: common.readStreamSetUp,
 
     'simple ReadStream': function (done) {
       var db = levelup(encDown(memdown()))
