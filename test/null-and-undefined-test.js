@@ -7,11 +7,11 @@ var refute = require('referee').refute
 var buster = require('bustermove')
 
 buster.testCase('null & undefined keys & values', {
-  'setUp': common.commonSetUp,
-  'tearDown': common.commonTearDown,
+  setUp: common.commonSetUp,
+  tearDown: common.commonTearDown,
 
   'null and undefined': {
-    'setUp': function (done) {
+    setUp: function (done) {
       levelup(memdown(), function (err, db) {
         refute(err) // sanity
         this.closeableDatabases.push(db)

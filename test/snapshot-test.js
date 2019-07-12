@@ -5,9 +5,9 @@ var refute = require('referee').refute
 var buster = require('bustermove')
 
 buster.testCase('Snapshots', {
-  'setUp': common.readStreamSetUp,
+  setUp: common.readStreamSetUp,
 
-  'tearDown': common.commonTearDown,
+  tearDown: common.commonTearDown,
 
   'test ReadStream implicit snapshot': function (done) {
     this.openTestDatabase(function (db) {

@@ -6,8 +6,8 @@ var refute = require('referee').refute
 var buster = require('bustermove')
 
 buster.testCase('without encoding-down', {
-  'setUp': common.commonSetUp,
-  'tearDown': common.commonTearDown,
+  setUp: common.commonSetUp,
+  tearDown: common.commonTearDown,
 
   'serializes key': function (done) {
     var down = memdown()

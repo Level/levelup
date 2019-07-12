@@ -21,8 +21,8 @@ function test (fun) {
 }
 
 buster.testCase('Deferred open() is patch-safe', {
-  'setUp': common.commonSetUp,
-  'tearDown': common.commonTearDown,
+  setUp: common.commonSetUp,
+  tearDown: common.commonTearDown,
 
   'put() on pre-opened database': test(function (db, done) {
     var put = db.put

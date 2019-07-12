@@ -6,8 +6,8 @@ var refute = require('referee').refute
 var buster = require('bustermove')
 
 buster.testCase('Init & open()', {
-  'setUp': common.commonSetUp,
-  'tearDown': common.commonTearDown,
+  setUp: common.commonSetUp,
+  tearDown: common.commonTearDown,
 
   'levelup()': function () {
     assert.isFunction(levelup)

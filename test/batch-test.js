@@ -8,8 +8,8 @@ var refute = require('referee').refute
 var buster = require('bustermove')
 
 buster.testCase('batch()', {
-  'setUp': common.commonSetUp,
-  'tearDown': common.commonTearDown,
+  setUp: common.commonSetUp,
+  tearDown: common.commonTearDown,
 
   'batch() with multiple puts': function (done) {
     this.openTestDatabase(function (db) {
@@ -111,9 +111,9 @@ buster.testCase('batch()', {
           .write(function (err) {
             refute(err)
 
-            each([ 'one', 'three', '1', '2', '3' ], function (key, callback) {
+            each(['one', 'three', '1', '2', '3'], function (key, callback) {
               db.get(key, function (err) {
-                if ([ 'one', 'three', '1', '3' ].indexOf(key) > -1) { assert(err) } else { refute(err) }
+                if (['one', 'three', '1', '3'].indexOf(key) > -1) { assert(err) } else { refute(err) }
                 callback()
               })
             }, done)
@@ -173,9 +173,9 @@ buster.testCase('batch()', {
           .del('3')
           .write()
           .then(function () {
-            each([ 'one', 'three', '1', '2', '3' ], function (key, callback) {
+            each(['one', 'three', '1', '2', '3'], function (key, callback) {
               db.get(key, function (err) {
-                if ([ 'one', 'three', '1', '3' ].indexOf(key) > -1) { assert(err) } else { refute(err) }
+                if (['one', 'three', '1', '3'].indexOf(key) > -1) { assert(err) } else { refute(err) }
                 callback()
               })
             }, done)
@@ -281,7 +281,7 @@ buster.testCase('batch()', {
   },
 
   'chained batch() arguments': {
-    'setUp': function (done) {
+    setUp: function (done) {
       this.openTestDatabase(function (db) {
         this.db = db
         this.batch = db.batch()
@@ -357,7 +357,7 @@ buster.testCase('batch()', {
     },
 
     'test batch operations after write()': {
-      'setUp': function (done) {
+      setUp: function (done) {
         this.batch.put('foo', 'bar').put('boom', 'bang').del('foo').write(done)
         this.verify = function (cb) {
           assert.exception(cb, function (err) {

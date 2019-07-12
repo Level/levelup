@@ -29,8 +29,8 @@ var rmdb = function (engine, db, location, callback) {
 var run = function (db, name, fn, color, cb) {
   var exec = function () {
     new Benchmark(name, {
-      'defer': true,
-      'fn': function (deferred) {
+      defer: true,
+      fn: function (deferred) {
         fn(db, deferred.resolve.bind(deferred))
       }
     })

@@ -6,8 +6,8 @@ var refute = require('referee').refute
 var buster = require('bustermove')
 
 buster.testCase('maybeError() should be called async', {
-  'setUp': common.commonSetUp,
-  'tearDown': common.commonTearDown,
+  setUp: common.commonSetUp,
+  tearDown: common.commonTearDown,
 
   'put()': function (done) {
     this.openTestDatabase(function (db) {

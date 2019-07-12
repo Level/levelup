@@ -5,9 +5,9 @@ var assert = require('referee').assert
 var buster = require('bustermove')
 
 buster.testCase('Idempotent open & close', {
-  'setUp': common.readStreamSetUp,
+  setUp: common.readStreamSetUp,
 
-  'tearDown': common.commonTearDown,
+  tearDown: common.commonTearDown,
 
   'call open twice, should emit "open" once': function (done) {
     var n = 0

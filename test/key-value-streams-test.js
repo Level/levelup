@@ -5,7 +5,7 @@ var buster = require('bustermove')
 var delayed = require('delayed').delayed
 
 buster.testCase('Key and Value Streams', {
-  'setUp': function (done) {
+  setUp: function (done) {
     common.commonSetUp.call(this, function () {
       this.dataSpy = this.spy()
       this.endSpy = this.spy()
@@ -43,7 +43,7 @@ buster.testCase('Key and Value Streams', {
     }.bind(this))
   },
 
-  'tearDown': common.commonTearDown,
+  tearDown: common.commonTearDown,
 
   'test .keyStream()': function (done) {
     this.openTestDatabase(function (db) {

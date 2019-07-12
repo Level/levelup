@@ -3,8 +3,8 @@ var assert = require('referee').assert
 var buster = require('bustermove')
 
 buster.testCase('Argument checking', {
-  'setUp': common.commonSetUp,
-  'tearDown': common.commonTearDown,
+  setUp: common.commonSetUp,
+  tearDown: common.commonTearDown,
 
   'test get() throwables': function (done) {
     this.openTestDatabase(function (db) {
