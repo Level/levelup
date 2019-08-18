@@ -33,6 +33,7 @@
     "encoding-down": "^6.0.0",
     "hallmark": "^2.0.0",
     "level-community": "^3.0.0",
+    "level-concat-iterator": "^2.0.1",
     "memdown": "^5.0.0",
     "nyc": "^14.0.0",
     "pinkie": "^2.0.4",
