@@ -30,7 +30,7 @@
     "coveralls": "^3.0.2",
     "delayed": "^2.0.0",
     "dependency-check": "^3.3.0",
-    "encoding-down": "^6.0.0",
+    "encoding-down": "^6.2.0",
     "hallmark": "^2.0.0",
     "level-community": "^3.0.0",
     "level-concat-iterator": "^2.0.1",
