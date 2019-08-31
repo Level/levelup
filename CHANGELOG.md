@@ -794,12 +794,6 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 - Fix `put`/`batch` bug in `WriteStream#_process()` ([**@ralphtheninja**](https://github.com/ralphtheninja))
 - Fix memory leak, `Persistent<Function>` callback not Dispose()d for `readStream()` ([**@rvagg**](https://github.com/rvagg))
 
-## [0.5.3-1] - 2013-02-05
-
-### Changed
-
-- Non shrinkwrapped release [**@rvagg**](https://github.com/rvagg)
-
 ## [0.5.3] - 2013-01-28
 
 ### Changed
@@ -808,6 +802,12 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 - Put `LevelUP()` into closure ([**@ralphtheninja**](https://github.com/ralphtheninja))
 - Swap `bufferstream` dependency for `simple-bufferstream` ([**@rvagg**](https://github.com/rvagg))
 - Make `location` a read-only property on db object ([**@rvagg**](https://github.com/rvagg))
+
+## [0.5.3-1] - 2013-02-05
+
+### Changed
+
+- Non shrinkwrapped release [**@rvagg**](https://github.com/rvagg)
 
 ## [0.5.2] - 2013-01-23
 
@@ -820,15 +820,6 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ### Changed
 
 - Version bump ([**@rvagg**](https://github.com/rvagg))
-
-## [0.5.0-1] - 2013-01-09
-
-### Added
-
-### Changed
-
-- Change `createIfMissing` option default to `true` ([**@rvagg**](https://github.com/rvagg))
-- Use `util._extend` instead of local variant ([**@rvagg**](https://github.com/rvagg))
 
 ## [0.5.0] - 2013-01-08
 
@@ -845,6 +836,15 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 - Idempotent open and close, and emit \_state as events ([**@dominictarr**](https://github.com/dominictarr))
 - Check that UINT32_OPTION_VALUE is a Uint32 ([**@kesla**](https://github.com/kesla))
+
+## [0.5.0-1] - 2013-01-09
+
+### Added
+
+### Changed
+
+- Change `createIfMissing` option default to `true` ([**@rvagg**](https://github.com/rvagg))
+- Use `util._extend` instead of local variant ([**@rvagg**](https://github.com/rvagg))
 
 ## [0.4.4] - 2013-01-01
 
@@ -981,17 +981,17 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 - Add Travis setup ([**@rvagg**](https://github.com/rvagg))
 - Add `KeyStream()` and `ValueStream()` ([**@rvagg**](https://github.com/rvagg))
 
-## [0.0.5-1] - 2012-09-28
-
-### Added
-
-- Add description to `package.json` ([**@rvagg**](https://github.com/rvagg))
-
 ## [0.0.5] - 2012-09-22
 
 ### Changed
 
 - Native layer errors if `key` or `value` are `undefined` or `null` ([**@rvagg**](https://github.com/rvagg))
+
+## [0.0.5-1] - 2012-09-28
+
+### Added
+
+- Add description to `package.json` ([**@rvagg**](https://github.com/rvagg))
 
 ## [0.0.4] - 2012-09-12
 
@@ -1005,12 +1005,6 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 - Add `reverse` functionality to readable streams ([**@rvagg**](https://github.com/rvagg))
 
-## [0.0.2-1] - 2012-09-07
-
-### Added
-
-- Add repository information to `package.json` ([**@rvagg**](https://github.com/rvagg))
-
 ## [0.0.2] - 2012-09-07
 
 ### Changed
@@ -1021,6 +1015,12 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ### Fixed
 
 - Fix typos in documentation ([**@rvagg**](https://github.com/rvagg))
+
+## [0.0.2-1] - 2012-09-07
+
+### Added
+
+- Add repository information to `package.json` ([**@rvagg**](https://github.com/rvagg))
 
 ## [0.0.1] - 2012-08-31
 
@@ -1041,7 +1041,11 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 - Remove usage of `global` in tests ([**@rvagg**](https://github.com/rvagg))
 
-## [0.0.0-1] - 2012-08-18
+## [0.0.0] - 2012-08-17
+
+:seedling: Initial release.
+
+## 0.0.0-1 - 2012-08-18
 
 ### Added
 
@@ -1056,184 +1060,180 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 - Remove unused `inherits` variable ([**@rvagg**](https://github.com/rvagg))
 
-## 0.0.0 - 2012-08-17
+[unreleased]: https://github.com/Level/levelup/compare/v4.1.0...HEAD
 
-:seedling: Initial release.
+[4.1.0]: https://github.com/Level/levelup/compare/v4.0.2...v4.1.0
 
-[unreleased]: https://github.com/level/levelup/compare/v4.1.0...HEAD
+[4.0.2]: https://github.com/Level/levelup/compare/v4.0.1...v4.0.2
 
-[4.1.0]: https://github.com/level/levelup/compare/v4.0.2...v4.1.0
+[4.0.1]: https://github.com/Level/levelup/compare/v4.0.0...v4.0.1
 
-[4.0.2]: https://github.com/level/levelup/compare/v4.0.1...v4.0.2
+[4.0.0]: https://github.com/Level/levelup/compare/v3.1.1...v4.0.0
 
-[4.0.1]: https://github.com/level/levelup/compare/v4.0.0...v4.0.1
+[3.1.1]: https://github.com/Level/levelup/compare/v3.1.0...v3.1.1
 
-[4.0.0]: https://github.com/level/levelup/compare/v3.1.1...v4.0.0
+[3.1.0]: https://github.com/Level/levelup/compare/v3.0.1...v3.1.0
 
-[3.1.1]: https://github.com/level/levelup/compare/v3.1.0...v3.1.1
+[3.0.1]: https://github.com/Level/levelup/compare/v3.0.0...v3.0.1
 
-[3.1.0]: https://github.com/level/levelup/compare/v3.0.1...v3.1.0
+[3.0.0]: https://github.com/Level/levelup/compare/v2.0.2...v3.0.0
 
-[3.0.1]: https://github.com/level/levelup/compare/v3.0.0...v3.0.1
+[2.0.2]: https://github.com/Level/levelup/compare/v2.0.1...v2.0.2
 
-[3.0.0]: https://github.com/level/levelup/compare/v2.0.2...v3.0.0
+[2.0.1]: https://github.com/Level/levelup/compare/v2.0.0...v2.0.1
 
-[2.0.2]: https://github.com/level/levelup/compare/v2.0.1...v2.0.2
+[2.0.0]: https://github.com/Level/levelup/compare/v2.0.0-rc3...v2.0.0
 
-[2.0.1]: https://github.com/level/levelup/compare/v2.0.0...v2.0.1
+[2.0.0-rc3]: https://github.com/Level/levelup/compare/v2.0.0-rc2...v2.0.0-rc3
 
-[2.0.0]: https://github.com/level/levelup/compare/v2.0.0-rc3...v2.0.0
+[2.0.0-rc2]: https://github.com/Level/levelup/compare/v2.0.0-rc1...v2.0.0-rc2
 
-[2.0.0-rc3]: https://github.com/level/levelup/compare/v2.0.0-rc2...v2.0.0-rc3
+[2.0.0-rc1]: https://github.com/Level/levelup/compare/v1.3.9...v2.0.0-rc1
 
-[2.0.0-rc2]: https://github.com/level/levelup/compare/v2.0.0-rc1...v2.0.0-rc2
+[1.3.9]: https://github.com/Level/levelup/compare/v1.3.8...v1.3.9
 
-[2.0.0-rc1]: https://github.com/level/levelup/compare/v1.3.9...v2.0.0-rc1
+[1.3.8]: https://github.com/Level/levelup/compare/v1.3.7...v1.3.8
 
-[1.3.9]: https://github.com/level/levelup/compare/v1.3.8...v1.3.9
+[1.3.7]: https://github.com/Level/levelup/compare/v1.3.6...v1.3.7
 
-[1.3.8]: https://github.com/level/levelup/compare/v1.3.7...v1.3.8
+[1.3.6]: https://github.com/Level/levelup/compare/v1.3.5...v1.3.6
 
-[1.3.7]: https://github.com/level/levelup/compare/v1.3.6...v1.3.7
+[1.3.5]: https://github.com/Level/levelup/compare/v1.3.4...v1.3.5
 
-[1.3.6]: https://github.com/level/levelup/compare/v1.3.5...v1.3.6
+[1.3.4]: https://github.com/Level/levelup/compare/v1.3.3...v1.3.4
 
-[1.3.5]: https://github.com/level/levelup/compare/v1.3.4...v1.3.5
+[1.3.3]: https://github.com/Level/levelup/compare/v1.3.2...v1.3.3
 
-[1.3.4]: https://github.com/level/levelup/compare/v1.3.3...v1.3.4
+[1.3.2]: https://github.com/Level/levelup/compare/v1.3.1...v1.3.2
 
-[1.3.3]: https://github.com/level/levelup/compare/v1.3.2...v1.3.3
+[1.3.1]: https://github.com/Level/levelup/compare/v1.3.0...v1.3.1
 
-[1.3.2]: https://github.com/level/levelup/compare/v1.3.1...v1.3.2
+[1.3.0]: https://github.com/Level/levelup/compare/v1.2.1...v1.3.0
 
-[1.3.1]: https://github.com/level/levelup/compare/v1.3.0...v1.3.1
+[1.2.1]: https://github.com/Level/levelup/compare/v1.2.0...v1.2.1
 
-[1.3.0]: https://github.com/level/levelup/compare/v1.2.1...v1.3.0
+[1.2.0]: https://github.com/Level/levelup/compare/v1.1.1...v1.2.0
 
-[1.2.1]: https://github.com/level/levelup/compare/v1.2.0...v1.2.1
+[1.1.1]: https://github.com/Level/levelup/compare/v1.1.0...v1.1.1
 
-[1.2.0]: https://github.com/level/levelup/compare/v1.1.1...v1.2.0
+[1.1.0]: https://github.com/Level/levelup/compare/v1.0.0...v1.1.0
 
-[1.1.1]: https://github.com/level/levelup/compare/v1.1.0...v1.1.1
+[1.0.0]: https://github.com/Level/levelup/compare/v1.0.0-5...v1.0.0
 
-[1.1.0]: https://github.com/level/levelup/compare/v1.0.0...v1.1.0
+[1.0.0-5]: https://github.com/Level/levelup/compare/v1.0.0-4...v1.0.0-5
 
-[1.0.0]: https://github.com/level/levelup/compare/v1.0.0-5...v1.0.0
+[1.0.0-4]: https://github.com/Level/levelup/compare/v1.0.0-3...v1.0.0-4
 
-[1.0.0-5]: https://github.com/level/levelup/compare/v1.0.0-4...v1.0.0-5
+[1.0.0-3]: https://github.com/Level/levelup/compare/v1.0.0-2...v1.0.0-3
 
-[1.0.0-4]: https://github.com/level/levelup/compare/v1.0.0-3...v1.0.0-4
+[1.0.0-2]: https://github.com/Level/levelup/compare/v1.0.0-1...v1.0.0-2
 
-[1.0.0-3]: https://github.com/level/levelup/compare/v1.0.0-2...v1.0.0-3
+[1.0.0-1]: https://github.com/Level/levelup/compare/v1.0.0-0...v1.0.0-1
 
-[1.0.0-2]: https://github.com/level/levelup/compare/v1.0.0-1...v1.0.0-2
+[1.0.0-0]: https://github.com/Level/levelup/compare/v0.19.1...v1.0.0-0
 
-[1.0.0-1]: https://github.com/level/levelup/compare/v1.0.0-0...v1.0.0-1
+[0.19.1]: https://github.com/Level/levelup/compare/v0.19.0...v0.19.1
 
-[1.0.0-0]: https://github.com/level/levelup/compare/v0.19.0...v1.0.0-0
+[0.19.0]: https://github.com/Level/levelup/compare/v0.18.6...v0.19.0
 
-[0.19.1]: https://github.com/level/levelup/compare/v0.19.0...v0.19.1
+[0.18.6]: https://github.com/Level/levelup/compare/v0.18.5...v0.18.6
 
-[0.19.0]: https://github.com/level/levelup/compare/v0.18.6...v0.19.0
+[0.18.5]: https://github.com/Level/levelup/compare/v0.18.4...v0.18.5
 
-[0.18.6]: https://github.com/level/levelup/compare/v0.18.5...v0.18.6
+[0.18.4]: https://github.com/Level/levelup/compare/v0.18.3...v0.18.4
 
-[0.18.5]: https://github.com/level/levelup/compare/v0.18.4...v0.18.5
+[0.18.3]: https://github.com/Level/levelup/compare/v0.18.2...v0.18.3
 
-[0.18.4]: https://github.com/level/levelup/compare/v0.18.3...v0.18.4
+[0.18.2]: https://github.com/Level/levelup/compare/v0.18.1...v0.18.2
 
-[0.18.3]: https://github.com/level/levelup/compare/v0.18.2...v0.18.3
+[0.18.1]: https://github.com/Level/levelup/compare/0.18.0...v0.18.1
 
-[0.18.2]: https://github.com/level/levelup/compare/v0.18.1...v0.18.2
+[0.18.0]: https://github.com/Level/levelup/compare/0.17.0...0.18.0
 
-[0.18.1]: https://github.com/level/levelup/compare/0.18.0...v0.18.1
+[0.17.0]: https://github.com/Level/levelup/compare/0.16.0...0.17.0
 
-[0.18.0]: https://github.com/level/levelup/compare/0.17.0...0.18.0
+[0.16.0]: https://github.com/Level/levelup/compare/0.15.0...0.16.0
 
-[0.17.0]: https://github.com/level/levelup/compare/0.16.0...0.17.0
+[0.15.0]: https://github.com/Level/levelup/compare/0.14.0...0.15.0
 
-[0.16.0]: https://github.com/level/levelup/compare/0.15.0...0.16.0
+[0.14.0]: https://github.com/Level/levelup/compare/0.13.0...0.14.0
 
-[0.15.0]: https://github.com/level/levelup/compare/0.14.0...0.15.0
+[0.13.0]: https://github.com/Level/levelup/compare/0.12.0...0.13.0
 
-[0.14.0]: https://github.com/level/levelup/compare/0.13.0...0.14.0
+[0.12.0]: https://github.com/Level/levelup/compare/0.11.0...0.12.0
 
-[0.13.0]: https://github.com/level/levelup/compare/0.12.0...0.13.0
+[0.11.0]: https://github.com/Level/levelup/compare/0.10.0...0.11.0
 
-[0.12.0]: https://github.com/level/levelup/compare/0.11.0...0.12.0
+[0.10.0]: https://github.com/Level/levelup/compare/0.9.0...0.10.0
 
-[0.11.0]: https://github.com/level/levelup/compare/0.10.0...0.11.0
+[0.9.0]: https://github.com/Level/levelup/compare/0.8.0...0.9.0
 
-[0.10.0]: https://github.com/level/levelup/compare/0.9.0...0.10.0
+[0.8.0]: https://github.com/Level/levelup/compare/0.7.0...0.8.0
 
-[0.9.0]: https://github.com/level/levelup/compare/0.8.0...0.9.0
+[0.7.0]: https://github.com/Level/levelup/compare/0.6.2...0.7.0
 
-[0.8.0]: https://github.com/level/levelup/compare/0.7.0...0.8.0
+[0.6.2]: https://github.com/Level/levelup/compare/0.6.1...0.6.2
 
-[0.7.0]: https://github.com/level/levelup/compare/0.6.2...0.7.0
+[0.6.1]: https://github.com/Level/levelup/compare/0.6.0...0.6.1
 
-[0.6.2]: https://github.com/level/levelup/compare/0.6.1...0.6.2
+[0.6.0]: https://github.com/Level/levelup/compare/0.6.0-rc1...0.6.0
 
-[0.6.1]: https://github.com/level/levelup/compare/0.6.0...0.6.1
+[0.6.0-rc1]: https://github.com/Level/levelup/compare/0.5.4...0.6.0-rc1
 
-[0.6.0]: https://github.com/level/levelup/compare/0.6.0-rc1...0.6.0
+[0.5.4]: https://github.com/Level/levelup/compare/0.5.3...0.5.4
 
-[0.6.0-rc1]: https://github.com/level/levelup/compare/0.5.4...0.6.0-rc1
+[0.5.3]: https://github.com/Level/levelup/compare/0.5.3-1...0.5.3
 
-[0.5.4]: https://github.com/level/levelup/compare/0.5.3-1...0.5.4
+[0.5.3-1]: https://github.com/Level/levelup/compare/0.5.2...0.5.3-1
 
-[0.5.3-1]: https://github.com/level/levelup/compare/0.5.3...0.5.3-1
+[0.5.2]: https://github.com/Level/levelup/compare/0.5.1...0.5.2
 
-[0.5.3]: https://github.com/level/levelup/compare/0.5.2...0.5.3
+[0.5.1]: https://github.com/Level/levelup/compare/0.5.0...0.5.1
 
-[0.5.2]: https://github.com/level/levelup/compare/0.5.1...0.5.2
+[0.5.0]: https://github.com/Level/levelup/compare/0.5.0-1...0.5.0
 
-[0.5.1]: https://github.com/level/levelup/compare/0.5.0-1...0.5.1
+[0.5.0-1]: https://github.com/Level/levelup/compare/0.4.4...0.5.0-1
 
-[0.5.0-1]: https://github.com/level/levelup/compare/0.5.0...0.5.0-1
+[0.4.4]: https://github.com/Level/levelup/compare/0.4.3...0.4.4
 
-[0.5.0]: https://github.com/level/levelup/compare/0.4.4...0.5.0
+[0.4.3]: https://github.com/Level/levelup/compare/0.4.2...0.4.3
 
-[0.4.4]: https://github.com/level/levelup/compare/0.4.3...0.4.4
+[0.4.2]: https://github.com/Level/levelup/compare/0.4.1...0.4.2
 
-[0.4.3]: https://github.com/level/levelup/compare/0.4.2...0.4.3
+[0.4.1]: https://github.com/Level/levelup/compare/0.4.0...0.4.1
 
-[0.4.2]: https://github.com/level/levelup/compare/0.4.1...0.4.2
+[0.4.0]: https://github.com/Level/levelup/compare/0.3.3...0.4.0
 
-[0.4.1]: https://github.com/level/levelup/compare/0.4.0...0.4.1
+[0.3.3]: https://github.com/Level/levelup/compare/0.3.2...0.3.3
 
-[0.4.0]: https://github.com/level/levelup/compare/0.3.3...0.4.0
+[0.3.2]: https://github.com/Level/levelup/compare/0.3.1...0.3.2
 
-[0.3.3]: https://github.com/level/levelup/compare/0.3.2...0.3.3
+[0.3.1]: https://github.com/Level/levelup/compare/0.3.0...0.3.1
 
-[0.3.2]: https://github.com/level/levelup/compare/0.3.1...0.3.2
+[0.3.0]: https://github.com/Level/levelup/compare/0.2.1...0.3.0
 
-[0.3.1]: https://github.com/level/levelup/compare/0.3.0...0.3.1
+[0.2.1]: https://github.com/Level/levelup/compare/0.2.0...0.2.1
 
-[0.3.0]: https://github.com/level/levelup/compare/0.2.1...0.3.0
+[0.2.0]: https://github.com/Level/levelup/compare/0.1.2...0.2.0
 
-[0.2.1]: https://github.com/level/levelup/compare/0.2.0...0.2.1
+[0.1.2]: https://github.com/Level/levelup/compare/0.1.1...0.1.2
 
-[0.2.0]: https://github.com/level/levelup/compare/0.1.2...0.2.0
+[0.1.1]: https://github.com/Level/levelup/compare/0.1.0...0.1.1
 
-[0.1.2]: https://github.com/level/levelup/compare/0.1.1...0.1.2
+[0.1.0]: https://github.com/Level/levelup/compare/0.0.5...0.1.0
 
-[0.1.1]: https://github.com/level/levelup/compare/0.1.0...0.1.1
+[0.0.5]: https://github.com/Level/levelup/compare/0.0.5-1...0.0.5
 
-[0.1.0]: https://github.com/level/levelup/compare/0.0.5-1...0.1.0
+[0.0.5-1]: https://github.com/Level/levelup/compare/0.0.4...0.0.5-1
 
-[0.0.5-1]: https://github.com/level/levelup/compare/0.0.5...0.0.5-1
+[0.0.4]: https://github.com/Level/levelup/compare/0.0.3...0.0.4
 
-[0.0.5]: https://github.com/level/levelup/compare/0.0.4...0.0.5
+[0.0.3]: https://github.com/Level/levelup/compare/0.0.2...0.0.3
 
-[0.0.4]: https://github.com/level/levelup/compare/0.0.3...0.0.4
+[0.0.2]: https://github.com/Level/levelup/compare/0.0.2-1...0.0.2
 
-[0.0.3]: https://github.com/level/levelup/compare/0.0.2-1...0.0.3
+[0.0.2-1]: https://github.com/Level/levelup/compare/0.0.1...0.0.2-1
 
-[0.0.2-1]: https://github.com/level/levelup/compare/0.0.2...0.0.2-1
+[0.0.1]: https://github.com/Level/levelup/compare/0.0.0...0.0.1
 
-[0.0.2]: https://github.com/level/levelup/compare/0.0.1...0.0.2
-
-[0.0.1]: https://github.com/level/levelup/compare/0.0.0-1...0.0.1
-
-[0.0.0-1]: https://github.com/level/levelup/compare/0.0.0...0.0.0-1
+[0.0.0]: https://github.com/Level/levelup/compare/0.0.0-1...0.0.0
