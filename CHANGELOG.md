@@ -2,8 +2,6 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
-## [Unreleased][unreleased]
-
 ## [4.1.0] - 2019-06-28
 
 ### Changed
@@ -1059,8 +1057,6 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ### Removed
 
 - Remove unused `inherits` variable ([**@rvagg**](https://github.com/rvagg))
-
-[unreleased]: https://github.com/Level/levelup/compare/v4.1.0...HEAD
 
 [4.1.0]: https://github.com/Level/levelup/compare/v4.0.2...v4.1.0
 
