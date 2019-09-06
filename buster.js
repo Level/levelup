@@ -1,6 +1,6 @@
 var config = module.exports
 
-config['unit'] = {
+config.unit = {
   environment: 'node',
   tests: ['test/*-test.js'],
   libs: ['test/common.js']

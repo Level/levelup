@@ -40,7 +40,7 @@
     "run-parallel": "^1.1.9",
     "run-series": "^1.1.8",
     "safe-buffer": "^5.1.0",
-    "standard": "^13.0.1",
+    "standard": "^14.1.0",
     "tape": "^4.7.0",
     "trickle": "0.0.2"
   },
