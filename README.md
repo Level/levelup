@@ -396,7 +396,7 @@ Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-lev
 
 ### `db.clear([options][, callback])`
 
-**This method is experimental. Not all stores support it yet.**
+**This method is experimental. Not all underlying stores support it yet. Consult [Level/community#79](https://github.com/Level/community/issues/79) to find out if your (combination of) dependencies support `db.clear()`.**
 
 Delete all entries or a range. Not guaranteed to be atomic. Accepts the following range options (with the same rules as on iterators):
 
