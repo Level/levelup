@@ -6,6 +6,7 @@ if (process.browser && typeof Promise !== 'function') {
 require('./argument-checking-test')
 require('./batch-test')
 require('./binary-test')
+require('./clear-test')
 require('./deferred-open-test')
 require('./get-put-del-test')
 require('./idempotent-test')

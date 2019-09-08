@@ -95,6 +95,7 @@ db.put('name', 'levelup', function (err) {
 - <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
 - <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
 - <a href="#iterator"><code>db.<b>iterator()</b></code></a>
+- <a href="#clear"><code>db.<b>clear()</b></code></a>
 
 ### Special Notes
 
@@ -391,6 +392,23 @@ db.createReadStream({ keys: false, values: true })
 
 Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-leveldown/#abstractleveldown_iteratoroptions), which is what powers the readable streams above. Options are the same as the range options of <a href="#createReadStream"><code>createReadStream</code></a> and are passed to the underlying store.
 
+<a name="clear"></a>
+
+### `db.clear([options][, callback])`
+
+**This method is experimental. Not all underlying stores support it yet. Consult [Level/community#79](https://github.com/Level/community/issues/79) to find out if your (combination of) dependencies support `db.clear()`.**
+
+Delete all entries or a range. Not guaranteed to be atomic. Accepts the following range options (with the same rules as on iterators):
+
+- `gt` (greater than), `gte` (greater than or equal) define the lower bound of the range to be deleted. Only entries where the key is greater than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries deleted will be the same.
+- `lt` (less than), `lte` (less than or equal) define the higher bound of the range to be deleted. Only entries where the key is less than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries deleted will be the same.
+- `reverse` _(boolean, default: `false`)_: delete entries in reverse order. Only effective in combination with `limit`, to remove the last N records.
+- `limit` _(number, default: `-1`)_: limit the number of entries to be deleted. This number represents a _maximum_ number of entries and may not be reached if you get to the end of the range first. A value of `-1` means there is no limit. When `reverse=true` the entries with the highest keys will be deleted instead of the lowest keys.
+
+If no options are provided, all entries will be deleted. The `callback` function will be called with no arguments if the operation was successful or with an `WriteError` if it failed for any reason.
+
+If no callback is passed, a promise is returned.
+
 <a name="writeStreams"></a>
 
 #### What happened to `db.createWriteStream`?
@@ -446,6 +464,7 @@ const main = async () => {
 | `put`     | Key has been updated        | `key, value` (any)   |
 | `del`     | Key has been deleted        | `key` (any)          |
 | `batch`   | Batch has executed          | `operations` (array) |
+| `clear`   | Entries were deleted        | `options` (object)   |
 | `opening` | Underlying store is opening | -                    |
 | `open`    | Store has opened            | -                    |
 | `ready`   | Alias of `open`             | -                    |
