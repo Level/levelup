@@ -2,6 +2,19 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
+## [4.2.0] - 2019-09-08
+
+### Changed
+
+- Upgrade `deferred-leveldown` from `~5.1.0` to `~5.2.0` ([#669](https://github.com/Level/levelup/issues/669)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `hallmark` devDependency from `^0.1.0` to `^2.0.0` ([#664](https://github.com/Level/levelup/issues/664), [#672](https://github.com/Level/levelup/issues/672)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `standard` devDependency from `^12.0.0` to `^14.1.0` ([#663](https://github.com/Level/levelup/issues/663), [`cd3af83`](https://github.com/Level/levelup/commit/cd3af83)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `memdown` devDependency from `^4.0.0` to `^5.0.0` ([#668](https://github.com/Level/levelup/issues/668)) ([**@vweevers**](https://github.com/vweevers))
+
+### Added
+
+- Add `clear()` method to delete all entries or a range ([#669](https://github.com/Level/levelup/issues/669)) ([**@vweevers**](https://github.com/vweevers))
+
 ## [4.1.0] - 2019-06-28
 
 ### Changed
@@ -1057,6 +1070,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ### Removed
 
 - Remove unused `inherits` variable ([**@rvagg**](https://github.com/rvagg))
+
+[4.2.0]: https://github.com/Level/levelup/compare/v4.1.0...v4.2.0
 
 [4.1.0]: https://github.com/Level/levelup/compare/v4.0.2...v4.1.0
 
