@@ -5,7 +5,7 @@
   "license": "MIT",
   "main": "lib/levelup.js",
   "scripts": {
-    "test": "standard && hallmark && nyc node test",
+    "test": "standard && hallmark && (nyc -s node test | faucet) && nyc report",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test-browsers": "airtap --loopback airtap.local test/index.js",
     "test-browser-local": "airtap --local test/index.js",
@@ -31,6 +31,7 @@
     "delayed": "^2.0.0",
     "dependency-check": "^3.3.0",
     "encoding-down": "^6.2.0",
+    "faucet": "^0.0.1",
     "hallmark": "^2.0.0",
     "level-community": "^3.0.0",
     "level-concat-iterator": "^2.0.1",
