@@ -1,48 +1,47 @@
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
 var browserify = require('browserify')
 var path = require('path')
 var after = require('after')
-var bl = require('bl')
+var concat = require('simple-concat')
 var spawn = require('child_process').spawn
 var PACKAGE_JSON = path.join(__dirname, '..', 'package.json')
 
-buster.testCase('Browserify Bundle', {
-  'does not contain package.json': function (done) {
+module.exports = function (test) {
+  test('does not contain package.json', function (t) {
     var b = browserify(path.join(__dirname, '..'), { browserField: true })
-      .once('error', function (error) {
-        assert.fail(error)
-        done()
-      })
+      .once('error', t.end.bind(t))
     b.pipeline
       .on('file', function (file, id, parent) {
-        refute.equals(file, PACKAGE_JSON)
+        t.isNot(file, PACKAGE_JSON)
       })
-    b.bundle(done)
-  },
-  'throws error if missing db factory': function (done) {
+    b.bundle(t.end.bind(t))
+  })
+
+  test('throws error if missing db factory', function (t) {
     var b = browserify(path.join(__dirname, 'data/browser-throws.js'), { browserField: true })
     var node = spawn('node')
-    var fin = after(2, done)
-    node.stderr.pipe(bl(function (err, buf) {
-      refute(err)
-      assert.match(buf.toString(), /InitializationError: First argument must be an abstract-leveldown compliant store/)
-      fin()
-    }))
-    node.on('exit', function (code) {
-      assert.equals(code, 1)
-      fin()
+    var next = after(2, t.end.bind(t))
+
+    concat(node.stderr, function (err, buf) {
+      t.ifError(err)
+      t.ok(/InitializationError: First argument must be an abstract-leveldown compliant store/.test(buf))
+      next()
     })
+
+    node.on('exit', function (code) {
+      t.is(code, 1)
+      next()
+    })
+
     b.bundle().pipe(node.stdin)
-  },
-  'works with valid db factory (memdown)': function (done) {
+  })
+
+  test('works with valid db factory (memdown)', function (t) {
     var b = browserify(path.join(__dirname, 'data/browser-works.js'), { browserField: true })
     var node = spawn('node')
     node.on('exit', function (code) {
-      assert.equals(code, 0)
-      done()
+      t.is(code, 0)
+      t.end()
     })
     b.bundle().pipe(node.stdin)
-  }
-})
+  })
+}
