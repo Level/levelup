@@ -1,5 +1,3 @@
-// NOTE: this file is outdated. It is not included in the test suite (index.js).
-
 var levelup = require('../lib/levelup.js')
 var memdown = require('memdown')
 var common = require('./common')
@@ -20,9 +18,9 @@ function makeTest (db, delay, done) {
       i++
     })
     .on('end', function () {
-      // since the readStream is created before inserting anything
-      // it should be empty? right?
-      assert.equals(i, 0, 'stream read the future')
+      // since the readStream is created before inserting anything,
+      // it should be empty
+      assert.equals(i, 0, 'got no data')
 
       if (putEnd) done()
       streamEnd = true
@@ -61,7 +59,6 @@ buster.testCase('ReadStream', {
 
   tearDown: common.commonTearDown,
 
-  // TODO: test various encodings
   'readStream and then put in nextTick': function (done) {
     this.openTestDatabase(function (db) {
       makeTest(db, process.nextTick, done)
