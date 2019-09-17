@@ -19,7 +19,7 @@ module.exports = function testCommon (options) {
     // createIfMissing: options.createIfMissing !== false,
     // errorIfExists: options.errorIfExists !== false,
     snapshots: options.snapshots !== false,
-    // seek: options.seek !== false,
+    seek: options.seek !== false,
     clear: !!options.clear
   }
 }

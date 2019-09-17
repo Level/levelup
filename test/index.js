@@ -41,6 +41,7 @@ require('./open-patchsafe-test')
 require('./read-stream-test')
 if (testCommon.snapshots) require('./snapshot-test')(test, testCommon)
 require('./iterator-test')(test, testCommon)
+if (testCommon.seek) require('./iterator-seek-test')(test, testCommon)
 
 if (!process.browser) {
   require('./browserify-test')(test)
