@@ -15,7 +15,7 @@ module.exports = function testCommon (options) {
     test: test,
     factory: factory,
 
-    // bufferKeys: options.bufferKeys !== false,
+    bufferKeys: options.bufferKeys !== false,
     // createIfMissing: options.createIfMissing !== false,
     // errorIfExists: options.errorIfExists !== false,
     snapshots: options.snapshots !== false,

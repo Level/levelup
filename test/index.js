@@ -24,7 +24,7 @@ var testCommon = require('./common2')({
 
 require('./argument-checking-test')(test, testCommon)
 require('./batch-test')
-require('./binary-test')
+require('./binary-test')(test, testCommon)
 if (testCommon.clear) require('./clear-test')(test)
 if (testCommon.snapshots) require('./create-stream-vs-put-racecondition')(test, testCommon)
 require('./deferred-open-test')
