@@ -1,77 +1,33 @@
-var levelup = require('../lib/levelup.js')
+var levelup = require('../lib/levelup')
 var memdown = require('memdown')
-var encDown = require('encoding-down')
+var encdown = require('encoding-down')
 var each = require('async-each')
-var parallel = require('run-parallel')
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
 
-buster.testCase('custom encoding', {
-  setUp: function (done) {
-    common.commonSetUp.call(this, function () {
-      this.runTest = function (testData, assertType, done) {
-        var customEncoding = {
-          encode: JSON.stringify,
-          decode: JSON.parse,
-          buffer: false,
-          type: 'custom'
-        }
-
-        levelup(encDown(memdown(), {
-          keyEncoding: customEncoding,
-          valueEncoding: customEncoding
-        }), function (err, db) {
-          refute(err)
-          if (err) return
-
-          this.closeableDatabases.push(db)
-
-          var PUT = testData.map(function (d) { return db.put.bind(db, d.key, d.value) })
-          parallel(PUT, function (err) {
-            refute(err)
-            each(testData, function (d, callback) {
-              db.get(d.key, function (err, value) {
-                if (err) console.error(err.stack)
-                refute(err)
-                assert[assertType](d.value, value)
-                callback()
-              })
-            }, done)
-          })
-        }.bind(this))
-      }
-      done()
-    }.bind(this))
-  },
-
-  tearDown: common.commonTearDown,
-
-  'simple-object values in "json" encoding': function (done) {
-    this.runTest([
+module.exports = function (test, testCommon) {
+  test('custom encoding: simple-object values in "json" encoding', function (t) {
+    run(t, [
       { key: '0', value: 0 },
       { key: '1', value: 1 },
       { key: 'string', value: 'a string' },
       { key: 'true', value: true },
       { key: 'false', value: false }
-    ], 'same', done)
-  },
+    ])
+  })
 
-  'simple-object keys in "json" encoding': function (done) {
-    this.runTest([
-      // Test keys that would be considered the same with default utf8 encoding.
-      // Because String([1]) === String(1).
+  test('custom encoding: simple-object keys in "json" encoding', function (t) {
+    // Test keys that would be considered the same with default utf8 encoding.
+    // Because String([1]) === String(1).
+    run(t, [
       { value: '0', key: [1] },
       { value: '1', key: 1 },
       { value: 'string', key: 'a string' },
       { value: 'true', key: true },
       { value: 'false', key: false }
-    ], 'same', done)
-  },
+    ])
+  })
 
-  'complex-object values in "json" encoding': function (done) {
-    this.runTest([
+  test('custom encoding: complex-object values in "json" encoding', function (t) {
+    run(t, [
       {
         key: '0',
         value: {
@@ -80,13 +36,13 @@ buster.testCase('custom encoding', {
           bang: { yes: true, no: false }
         }
       }
-    ], 'equals', done)
-  },
+    ])
+  })
 
-  'complex-object keys in "json" encoding': function (done) {
-    this.runTest([
-      // Test keys that would be considered the same with default utf8 encoding.
-      // Because String({}) === String({}) === '[object Object]'.
+  test('custom encoding: complex-object keys in "json" encoding', function (t) {
+    // Test keys that would be considered the same with default utf8 encoding.
+    // Because String({}) === String({}) === '[object Object]'.
+    run(t, [
       {
         value: '0',
         key: {
@@ -103,6 +59,43 @@ buster.testCase('custom encoding', {
           bang: { yes: true, no: false }
         }
       }
-    ], 'same', done)
+    ])
+  })
+
+  function run (t, entries) {
+    var customEncoding = {
+      encode: JSON.stringify,
+      decode: JSON.parse,
+      buffer: false,
+      type: 'custom'
+    }
+
+    levelup(encdown(memdown(), {
+      keyEncoding: customEncoding,
+      valueEncoding: customEncoding
+    }), function (err, db) {
+      t.ifError(err)
+
+      var ops = entries.map(function (entry) {
+        return { type: 'put', key: entry.key, value: entry.value }
+      })
+
+      db.batch(ops, function (err) {
+        t.ifError(err)
+        each(entries, visit, finish)
+
+        function visit (entry, next) {
+          db.get(entry.key, function (err, value) {
+            t.ifError(err)
+            t.same(entry.value, value)
+            next()
+          })
+        }
+
+        function finish () {
+          db.close(t.end.bind(t))
+        }
+      })
+    })
   }
-})
+}
