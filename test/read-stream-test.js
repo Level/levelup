@@ -377,65 +377,6 @@ buster.testCase('ReadStream', {
     }.bind(this))
   },
 
-  'test json encoding': function (done) {
-    var options = { keyEncoding: 'utf8', valueEncoding: 'json' }
-    var data = [
-      { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } },
-      { type: 'put', key: 'ab', value: { b: 'foo', bar: [1, 2, 3] } },
-      { type: 'put', key: 'ac', value: { c: 'w00t', d: { e: [0, 10, 20, 30], f: 1, g: 'wow' } } },
-      { type: 'put', key: 'ba', value: { a: 'complex', obj: 100 } },
-      { type: 'put', key: 'bb', value: { b: 'foo', bar: [1, 2, 3] } },
-      { type: 'put', key: 'bc', value: { c: 'w00t', d: { e: [0, 10, 20, 30], f: 1, g: 'wow' } } },
-      { type: 'put', key: 'ca', value: { a: 'complex', obj: 100 } },
-      { type: 'put', key: 'cb', value: { b: 'foo', bar: [1, 2, 3] } },
-      { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [0, 10, 20, 30], f: 1, g: 'wow' } } }
-    ]
-
-    this.openTestDatabase(options, function (db) {
-      db.batch(data.slice(), function (err) {
-        refute(err)
-
-        var rs = db.createReadStream()
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done, data))
-      }.bind(this))
-    }.bind(this))
-  },
-
-  'test injectable encoding': function (done) {
-    var options = {
-      keyEncoding: 'utf8',
-      valueEncoding: {
-        encode: JSON.stringify,
-        decode: JSON.parse,
-        buffer: false
-      }
-    }
-    var data = [
-      { type: 'put', key: 'aa', value: { a: 'complex', obj: 100 } },
-      { type: 'put', key: 'ab', value: { b: 'foo', bar: [1, 2, 3] } },
-      { type: 'put', key: 'ac', value: { c: 'w00t', d: { e: [0, 10, 20, 30], f: 1, g: 'wow' } } },
-      { type: 'put', key: 'ba', value: { a: 'complex', obj: 100 } },
-      { type: 'put', key: 'bb', value: { b: 'foo', bar: [1, 2, 3] } },
-      { type: 'put', key: 'bc', value: { c: 'w00t', d: { e: [0, 10, 20, 30], f: 1, g: 'wow' } } },
-      { type: 'put', key: 'ca', value: { a: 'complex', obj: 100 } },
-      { type: 'put', key: 'cb', value: { b: 'foo', bar: [1, 2, 3] } },
-      { type: 'put', key: 'cc', value: { c: 'w00t', d: { e: [0, 10, 20, 30], f: 1, g: 'wow' } } }
-    ]
-
-    this.openTestDatabase(options, function (db) {
-      db.batch(data.slice(), function (err) {
-        refute(err)
-
-        var rs = db.createReadStream()
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done, data))
-      }.bind(this))
-    }.bind(this))
-  },
-
   'test readStream() "reverse=true" not sticky (issue #6)': function (done) {
     this.openTestDatabase(function (db) {
       // execute
