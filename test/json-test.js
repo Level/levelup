@@ -1,80 +1,34 @@
-var levelup = require('../lib/levelup.js')
+var levelup = require('../lib/levelup')
 var memdown = require('memdown')
-var encDown = require('encoding-down')
+var encdown = require('encoding-down')
 var each = require('async-each')
 var parallel = require('run-parallel')
-var concat = require('concat-stream')
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
+var concatStream = require('concat-stream')
+var concatIterator = require('level-concat-iterator')
 
-buster.testCase('JSON encoding', {
-  setUp: function (done) {
-    common.commonSetUp.call(this, function () {
-      this.runTest = function (testData, assertType, done) {
-        levelup(encDown(memdown(), {
-          keyEncoding: 'json',
-          valueEncoding: 'json'
-        }), function (err, db) {
-          refute(err)
-          if (err) return
-
-          this.closeableDatabases.push(db)
-
-          var PUT = testData.map(function (d) { return db.put.bind(db, d.key, d.value) })
-          parallel(PUT, function (err) {
-            refute(err)
-            parallel([testGet, testStream], done)
-          })
-
-          function testGet (next) {
-            each(testData, function (d, callback) {
-              db.get(d.key, function (err, value) {
-                if (err) console.error(err.stack)
-                refute(err)
-                assert[assertType](d.value, value)
-                callback()
-              })
-            }, next)
-          }
-
-          function testStream (next) {
-            db.createReadStream().pipe(concat(function (result) {
-              assert.equals(result, testData)
-              next()
-            }))
-          }
-        }.bind(this))
-      }
-      done()
-    }.bind(this))
-  },
-
-  tearDown: common.commonTearDown,
-
-  'simple-object values in "json" encoding': function (done) {
-    this.runTest([
+module.exports = function (test, testCommon) {
+  test('json encoding: simple-object values in "json" encoding', function (t) {
+    run(t, [
       { key: '0', value: 0 },
       { key: '1', value: 1 },
       { key: '2', value: 'a string' },
       { key: '3', value: true },
       { key: '4', value: false }
-    ], 'same', done)
-  },
+    ])
+  })
 
-  'simple-object keys in "json" encoding': function (done) {
-    this.runTest([
+  test('json encoding: simple-object keys in "json" encoding', function (t) {
+    run(t, [
       { value: 'string', key: 'a string' },
       { value: '0', key: 0 },
       { value: '1', key: 1 },
       { value: 'false', key: false },
       { value: 'true', key: true }
-    ], 'same', done)
-  },
+    ])
+  })
 
-  'complex-object values in "json" encoding': function (done) {
-    this.runTest([
+  test('json encoding: complex-object values in "json" encoding', function (t) {
+    run(t, [
       {
         key: '0',
         value: {
@@ -83,11 +37,11 @@ buster.testCase('JSON encoding', {
           bang: { yes: true, no: false }
         }
       }
-    ], 'equals', done)
-  },
+    ])
+  })
 
-  'complex-object keys in "json" encoding': function (done) {
-    this.runTest([
+  test('json encoding: complex-object keys in "json" encoding', function (t) {
+    run(t, [
       {
         value: '0',
         key: {
@@ -96,6 +50,53 @@ buster.testCase('JSON encoding', {
           bang: { yes: true, no: false }
         }
       }
-    ], 'same', done)
+    ])
+  })
+
+  function run (t, entries) {
+    levelup(encdown(memdown(), {
+      keyEncoding: 'json',
+      valueEncoding: 'json'
+    }), function (err, db) {
+      t.ifError(err)
+
+      var ops = entries.map(function (entry) {
+        return { type: 'put', key: entry.key, value: entry.value }
+      })
+
+      db.batch(ops, function (err) {
+        t.ifError(err)
+
+        parallel([testGet, testStream, testIterator], function (err) {
+          t.ifError(err)
+          db.close(t.end.bind(t))
+        })
+      })
+
+      function testGet (next) {
+        each(entries, function (entry, next) {
+          db.get(entry.key, function (err, value) {
+            t.ifError(err)
+            t.same(entry.value, value)
+            next()
+          })
+        }, next)
+      }
+
+      function testStream (next) {
+        db.createReadStream().pipe(concatStream(function (result) {
+          t.same(result, entries)
+          next()
+        }))
+      }
+
+      function testIterator (next) {
+        concatIterator(db.iterator(), function (err, result) {
+          t.ifError(err)
+          t.same(result, entries)
+          next()
+        })
+      }
+    })
   }
-})
+}
