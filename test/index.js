@@ -30,7 +30,7 @@ if (testCommon.snapshots) require('./create-stream-vs-put-racecondition')(test, 
 require('./deferred-open-test')
 require('./get-put-del-test')
 require('./idempotent-test')(test, testCommon)
-require('./init-test')
+require('./init-test')(test, testCommon)
 require('./custom-encoding-test')(test, testCommon)
 require('./json-encoding-test')(test, testCommon)
 require('./key-value-streams-test')
