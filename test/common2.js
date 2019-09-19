@@ -20,6 +20,7 @@ module.exports = function testCommon (options) {
     // errorIfExists: options.errorIfExists !== false,
     snapshots: options.snapshots !== false,
     seek: options.seek !== false,
-    clear: !!options.clear
+    clear: !!options.clear,
+    deferredOpen: !!options.deferredOpen
   }
 }

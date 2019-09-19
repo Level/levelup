@@ -20,7 +20,7 @@ module.exports = function readStreamContext (t) {
     })
   }
 
-  ctx.verify = function (done, data) {
+  ctx.verify = function (data) {
     if (!data) data = ctx.sourceData // can pass alternative data array for verification
 
     t.is(ctx.endSpy.callCount, 1, 'ReadStream emitted single "end" event')
@@ -36,8 +36,6 @@ module.exports = function readStreamContext (t) {
         t.is(+call.args[0].value, +d.value, 'ReadStream "data" event #' + i + ' argument has correct "value"')
       }
     })
-
-    done()
   }
 
   return ctx

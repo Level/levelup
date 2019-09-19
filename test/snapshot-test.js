@@ -20,7 +20,10 @@ module.exports = function (test, testCommon) {
 
         rs.on('data', ctx.dataSpy)
         rs.once('end', ctx.endSpy)
-        rs.once('close', delayed(ctx.verify.bind(ctx, done), 0.05))
+        rs.once('close', delayed(function () {
+          ctx.verify()
+          done()
+        }, 0.05))
 
         process.nextTick(function () {
           // 3) Concoct and write new random data over the top of existing items.

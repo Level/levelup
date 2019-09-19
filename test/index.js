@@ -19,7 +19,8 @@ var testCommon = require('./common2')({
       return levelup(encode(memdown(), options))
     }
   },
-  clear: true
+  clear: true,
+  deferredOpen: true
 })
 
 require('./argument-checking-test')(test, testCommon)
@@ -27,7 +28,7 @@ require('./batch-test')(test, testCommon)
 require('./binary-test')(test, testCommon)
 if (testCommon.clear) require('./clear-test')(test)
 if (testCommon.snapshots) require('./create-stream-vs-put-racecondition')(test, testCommon)
-require('./deferred-open-test')
+if (testCommon.deferredOpen) require('./deferred-open-test')(test, testCommon)
 require('./get-put-del-test')
 require('./idempotent-test')(test, testCommon)
 require('./init-test')(test, testCommon)
