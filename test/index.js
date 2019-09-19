@@ -23,7 +23,7 @@ var testCommon = require('./common2')({
 })
 
 require('./argument-checking-test')(test, testCommon)
-require('./batch-test')
+require('./batch-test')(test, testCommon)
 require('./binary-test')(test, testCommon)
 if (testCommon.clear) require('./clear-test')(test)
 if (testCommon.snapshots) require('./create-stream-vs-put-racecondition')(test, testCommon)
