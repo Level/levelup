@@ -1,13 +1,13 @@
-module.exports = function discardable (t, testCommon, options, callback) {
+module.exports = function discardable (t, testCommon, options, fn) {
   if (typeof options === 'function') {
-    callback = options
+    fn = options
     options = {}
   }
 
-  testCommon.factory(options, function (err, db) {
-    t.ifError(err, 'no open error')
+  var db = testCommon.factory(options)
 
-    callback(db, function done (err) {
+  db.open(function () {
+    fn(db, function done (err) {
       t.ifError(err, 'no test error')
 
       db.close(function (err) {

@@ -10,32 +10,27 @@ var levelup = require('../lib/levelup')
 
 var testCommon = require('./common2')({
   test: test,
-  factory: function (options, callback) {
-    if (typeof options === 'function') {
-      return levelup(encode(memdown()), options)
-    } else if (callback) {
-      return levelup(encode(memdown(), options), callback)
-    } else {
-      return levelup(encode(memdown(), options))
-    }
+  factory: function (options) {
+    return levelup(encode(memdown(), options))
   },
   clear: true,
   deferredOpen: true,
   promises: true,
-  streams: true
+  streams: true,
+  encodings: true
 })
 
 require('./argument-checking-test')(test, testCommon)
 require('./batch-test')(test, testCommon)
-require('./binary-test')(test, testCommon)
+if (testCommon.encodings) require('./binary-test')(test, testCommon)
 if (testCommon.clear) require('./clear-test')(test)
 if (testCommon.snapshots) require('./create-stream-vs-put-racecondition')(test, testCommon)
 if (testCommon.deferredOpen) require('./deferred-open-test')(test, testCommon)
 require('./get-put-del-test')(test, testCommon)
 require('./idempotent-test')(test, testCommon)
 require('./init-test')(test, testCommon)
-require('./custom-encoding-test')(test, testCommon)
-require('./json-encoding-test')(test, testCommon)
+if (testCommon.encodings) require('./custom-encoding-test')(test, testCommon)
+if (testCommon.encodings) require('./json-encoding-test')(test, testCommon)
 if (testCommon.streams) require('./key-value-streams-test')(test, testCommon)
 require('./maybe-error-test')(test, testCommon)
 require('./no-encoding-test')(test, testCommon)

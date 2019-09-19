@@ -1,7 +1,5 @@
-var levelup = require('../lib/levelup')
-var memdown = require('memdown')
-var encdown = require('encoding-down')
 var each = require('async-each')
+var discardable = require('./util/discardable')
 
 module.exports = function (test, testCommon) {
   test('custom encoding: simple-object values in "json" encoding', function (t) {
@@ -70,19 +68,17 @@ module.exports = function (test, testCommon) {
       type: 'custom'
     }
 
-    levelup(encdown(memdown(), {
+    discardable(t, testCommon, {
       keyEncoding: customEncoding,
       valueEncoding: customEncoding
-    }), function (err, db) {
-      t.ifError(err)
-
+    }, function (db, done) {
       var ops = entries.map(function (entry) {
         return { type: 'put', key: entry.key, value: entry.value }
       })
 
       db.batch(ops, function (err) {
         t.ifError(err)
-        each(entries, visit, finish)
+        each(entries, visit, done)
 
         function visit (entry, next) {
           db.get(entry.key, function (err, value) {
@@ -90,10 +86,6 @@ module.exports = function (test, testCommon) {
             t.same(entry.value, value)
             next()
           })
-        }
-
-        function finish () {
-          db.close(t.end.bind(t))
         }
       })
     })

@@ -23,6 +23,7 @@ module.exports = function testCommon (options) {
     clear: !!options.clear,
     deferredOpen: !!options.deferredOpen,
     promises: !!options.promises,
-    streams: !!options.streams
+    streams: !!options.streams,
+    encodings: !!options.encodings
   }
 }

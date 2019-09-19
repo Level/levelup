@@ -1,10 +1,8 @@
-var levelup = require('../lib/levelup')
-var memdown = require('memdown')
-var encdown = require('encoding-down')
 var each = require('async-each')
 var parallel = require('run-parallel')
 var concatStream = require('concat-stream')
 var concatIterator = require('level-concat-iterator')
+var discardable = require('./util/discardable')
 
 module.exports = function (test, testCommon) {
   test('json encoding: simple-object values in "json" encoding', function (t) {
@@ -54,12 +52,10 @@ module.exports = function (test, testCommon) {
   })
 
   function run (t, entries) {
-    levelup(encdown(memdown(), {
+    discardable(t, testCommon, {
       keyEncoding: 'json',
       valueEncoding: 'json'
-    }), function (err, db) {
-      t.ifError(err)
-
+    }, function (db, done) {
       var ops = entries.map(function (entry) {
         return { type: 'put', key: entry.key, value: entry.value }
       })
@@ -69,7 +65,7 @@ module.exports = function (test, testCommon) {
 
         parallel([testGet, testStream, testIterator], function (err) {
           t.ifError(err)
-          db.close(t.end.bind(t))
+          done()
         })
       })
 
