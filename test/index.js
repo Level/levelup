@@ -8,7 +8,7 @@ var memdown = require('memdown')
 var encode = require('encoding-down')
 var levelup = require('../lib/levelup')
 
-var testCommon = require('./common2')({
+var testCommon = require('./common')({
   test: test,
   factory: function (options) {
     return levelup(encode(memdown(), options))
