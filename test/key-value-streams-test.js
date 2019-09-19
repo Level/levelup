@@ -1,103 +1,114 @@
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
-var delayed = require('delayed').delayed
+var sinon = require('sinon')
+var discardable = require('./util/discardable')
 
-buster.testCase('Key and Value Streams', {
-  setUp: function (done) {
-    common.commonSetUp.call(this, function () {
-      this.dataSpy = this.spy()
-      this.endSpy = this.spy()
-      this.sourceData = []
+module.exports = function (test, testCommon) {
+  test('key and value streams: keyStream()', function (t) {
+    var ctx = createContext(t)
 
-      for (var i = 0; i < 100; i++) {
-        var k = (i < 10 ? '0' : '') + i
-        this.sourceData.push({
-          type: 'put',
-          key: k,
-          value: Math.random()
-        })
-      }
-
-      this.sourceKeys = Object.keys(this.sourceData)
-        .map(function (k) { return this.sourceData[k].key }.bind(this))
-      this.sourceValues = Object.keys(this.sourceData)
-        .map(function (k) { return this.sourceData[k].value }.bind(this))
-
-      this.verify = delayed(function (rs, data, done) {
-        assert.equals(this.endSpy.callCount, 1, 'Stream emitted single "end" event')
-        assert.equals(this.dataSpy.callCount, data.length, 'Stream emitted correct number of "data" events')
-        data.forEach(function (d, i) {
-          var call = this.dataSpy.getCall(i)
-          if (call) {
-            // console.log('call', i, ':', call.args[0].key, '=', call.args[0].value, '(expected', d.key, '=', d.value, ')')
-            assert.equals(call.args.length, 1, 'Stream "data" event #' + i + ' fired with 1 argument')
-            assert.equals(+call.args[0].toString(), +d, 'Stream correct "data" event #' + i + ': ' + d)
-          }
-        }.bind(this))
-        done()
-      }, 0.05, this)
-
-      done()
-    }.bind(this))
-  },
-
-  tearDown: common.commonTearDown,
-
-  'test .keyStream()': function (done) {
-    this.openTestDatabase(function (db) {
-      // execute
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+    discardable(t, testCommon, function (db, done) {
+      db.batch(ctx.sourceData.slice(), function (err) {
+        t.ifError(err)
 
         var rs = db.keyStream()
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, this.sourceKeys, done))
-      }.bind(this))
-    }.bind(this))
-  },
+        rs.on('data', ctx.dataSpy)
+        rs.on('end', ctx.endSpy)
+        rs.on('close', function () {
+          ctx.verify(ctx.sourceKeys)
+          done()
+        })
+      })
+    })
+  })
 
-  'test .readStream({keys:true,values:false})': function (done) {
-    this.openTestDatabase(function (db) {
-      // execute
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('key and value streams: readStream({keys:true,values:false})', function (t) {
+    var ctx = createContext(t)
+
+    discardable(t, testCommon, function (db, done) {
+      db.batch(ctx.sourceData.slice(), function (err) {
+        t.ifError(err)
 
         var rs = db.readStream({ keys: true, values: false })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, this.sourceKeys, done))
-      }.bind(this))
-    }.bind(this))
-  },
+        rs.on('data', ctx.dataSpy)
+        rs.on('end', ctx.endSpy)
+        rs.on('close', function () {
+          ctx.verify(ctx.sourceKeys)
+          done()
+        })
+      })
+    })
+  })
 
-  'test .valueStream()': function (done) {
-    this.openTestDatabase(function (db) {
-      // execute
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('key and value streams: valueStream()', function (t) {
+    var ctx = createContext(t)
+
+    discardable(t, testCommon, function (db, done) {
+      db.batch(ctx.sourceData.slice(), function (err) {
+        t.ifError(err)
 
         var rs = db.valueStream()
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, this.sourceValues, done))
-      }.bind(this))
-    }.bind(this))
-  },
+        rs.on('data', ctx.dataSpy)
+        rs.on('end', ctx.endSpy)
+        rs.on('close', function () {
+          ctx.verify(ctx.sourceValues)
+          done()
+        })
+      })
+    })
+  })
 
-  'test .readStream({keys:false,values:true})': function (done) {
-    this.openTestDatabase(function (db) {
-      // execute
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('key and value streams: readStream({keys:false,values:true})', function (t) {
+    var ctx = createContext(t)
+
+    discardable(t, testCommon, function (db, done) {
+      db.batch(ctx.sourceData.slice(), function (err) {
+        t.ifError(err)
 
         var rs = db.readStream({ keys: false, values: true })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, this.sourceValues, done))
-      }.bind(this))
-    }.bind(this))
+        rs.on('data', ctx.dataSpy)
+        rs.on('end', ctx.endSpy)
+        rs.on('close', function () {
+          ctx.verify(ctx.sourceValues)
+          done()
+        })
+      })
+    })
+  })
+}
+
+function createContext (t) {
+  var ctx = {}
+
+  ctx.dataSpy = sinon.spy()
+  ctx.endSpy = sinon.spy()
+  ctx.sourceData = []
+
+  for (var i = 0; i < 100; i++) {
+    var k = (i < 10 ? '0' : '') + i
+    ctx.sourceData.push({
+      type: 'put',
+      key: k,
+      value: Math.random()
+    })
   }
-})
+
+  ctx.sourceKeys = Object.keys(ctx.sourceData)
+    .map(function (k) { return ctx.sourceData[k].key })
+  ctx.sourceValues = Object.keys(ctx.sourceData)
+    .map(function (k) { return ctx.sourceData[k].value })
+
+  ctx.verify = function (data) {
+    t.is(ctx.endSpy.callCount, 1, 'stream emitted single "end" event')
+    t.is(ctx.dataSpy.callCount, data.length, 'stream emitted correct number of "data" events')
+
+    data.forEach(function (d, i) {
+      var call = ctx.dataSpy.getCall(i)
+
+      if (call) {
+        t.is(call.args.length, 1, 'stream "data" event #' + i + ' fired with 1 argument')
+        t.is(+call.args[0].toString(), +d, 'stream correct "data" event #' + i + ': ' + d)
+      }
+    })
+  }
+
+  return ctx
+}

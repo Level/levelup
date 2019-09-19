@@ -22,6 +22,7 @@ module.exports = function testCommon (options) {
     seek: options.seek !== false,
     clear: !!options.clear,
     deferredOpen: !!options.deferredOpen,
-    promises: !!options.promises
+    promises: !!options.promises,
+    streams: !!options.streams
   }
 }

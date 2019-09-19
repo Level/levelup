@@ -21,7 +21,8 @@ var testCommon = require('./common2')({
   },
   clear: true,
   deferredOpen: true,
-  promises: true
+  promises: true,
+  streams: true
 })
 
 require('./argument-checking-test')(test, testCommon)
@@ -35,12 +36,12 @@ require('./idempotent-test')(test, testCommon)
 require('./init-test')(test, testCommon)
 require('./custom-encoding-test')(test, testCommon)
 require('./json-encoding-test')(test, testCommon)
-require('./key-value-streams-test')
+if (testCommon.streams) require('./key-value-streams-test')(test, testCommon)
 require('./maybe-error-test')(test, testCommon)
 require('./no-encoding-test')
 require('./null-and-undefined-test')
 require('./open-patchsafe-test')
-require('./read-stream-test')
+if (testCommon.streams) require('./read-stream-test')
 if (testCommon.snapshots) require('./snapshot-test')(test, testCommon)
 require('./iterator-test')(test, testCommon)
 if (testCommon.seek) require('./iterator-seek-test')(test, testCommon)
