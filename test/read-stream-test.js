@@ -1,38 +1,36 @@
-var levelup = require('../lib/levelup.js')
-var memdown = require('memdown')
-var encDown = require('encoding-down')
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
+var sinon = require('sinon')
 var bigBlob = Array.apply(null, Array(1024 * 100)).map(function () { return 'aaaaaaaaaa' }).join('')
+var discardable = require('./util/discardable')
+var readStreamContext = require('./util/rs-context')
 
-buster.testCase('ReadStream', {
-  setUp: common.readStreamSetUp,
+module.exports = function (test, testCommon) {
+  function makeTest (fn) {
+    return function (t) {
+      discardable(t, testCommon, function (db, done) {
+        fn(t, db, readStreamContext(t), done)
+      })
+    }
+  }
 
-  tearDown: common.commonTearDown,
+  test('ReadStream: simple ReadStream', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-  // TODO: test various encodings
+      var rs = db.createReadStream()
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
+        ctx.verify()
+        done()
+      })
+    })
+  }))
 
-  'test simple ReadStream': function (done) {
-    this.openTestDatabase(function (db) {
-      // execute
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
-
-        var rs = db.createReadStream()
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-      }.bind(this))
-    }.bind(this))
-  },
-
-  'test pausing': function (done) {
+  test('ReadStream: pausing', makeTest(function (t, db, ctx, done) {
     var calls = 0
     var rs
     var pauseVerify = function () {
-      assert.equals(calls, 5, 'stream should still be paused')
+      t.is(calls, 5, 'stream should still be paused')
       rs.resume()
       pauseVerify.called = true
     }
@@ -42,495 +40,460 @@ buster.testCase('ReadStream', {
         setTimeout(pauseVerify, 50)
       }
     }
-    var verify = function () {
-      assert.equals(calls, this.sourceData.length, 'onData was used in test')
-      assert(pauseVerify.called, 'pauseVerify was used in test')
-      this.verify(rs, done)
-    }.bind(this)
 
-    this.dataSpy = this.spy(onData) // so we can still verify
+    // so we can still verify
+    ctx.dataSpy = sinon.spy(onData)
 
-    this.openTestDatabase(function (db) {
-      // execute
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        rs = db.createReadStream()
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('end', verify.bind(this))
-      }.bind(this))
-    }.bind(this))
-  },
+      rs = db.createReadStream()
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('end', function () {
+        t.is(calls, ctx.sourceData.length, 'onData was used in test')
+        t.ok(pauseVerify.called, 'pauseVerify was used in test')
+        ctx.verify()
+        done()
+      })
+    })
+  }))
 
-  'test destroy() immediately': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: destroy() immediately', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream()
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', function () {
-          assert.equals(this.dataSpy.callCount, 0, '"data" event was not fired')
-          assert.equals(this.endSpy.callCount, 0, '"end" event was not fired')
-          done()
-        }.bind(this))
+      var rs = db.createReadStream()
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
+        t.is(ctx.dataSpy.callCount, 0, '"data" event was not fired')
+        t.is(ctx.endSpy.callCount, 0, '"end" event was not fired')
+        done()
+      })
+      rs.destroy()
+    })
+  }))
+
+  test('ReadStream: destroy() after close', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
+
+      var rs = db.createReadStream()
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
         rs.destroy()
-      }.bind(this))
-    }.bind(this))
-  },
-
-  'test destroy() after close': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
-
-        var rs = db.createReadStream()
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', function () {
-          rs.destroy()
-          done()
-        })
-      }.bind(this))
-    }.bind(this))
-  },
-
-  'test destroy() after closing db': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
-        db.close(function (err) {
-          refute(err)
-          var rs = db.createReadStream()
-          rs.destroy()
-          done()
-        })
+        done()
       })
-    }.bind(this))
-  },
+    })
+  }))
 
-  'test destroy() twice': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
-
+  test('ReadStream: destroy() after closing db', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
+      db.close(function (err) {
+        t.ifError(err)
         var rs = db.createReadStream()
-        rs.on('data', function () {
-          rs.destroy()
-          rs.destroy()
-          done()
-        })
+        rs.destroy()
+        done()
       })
-    }.bind(this))
-  },
+    })
+  }))
 
-  'test destroy() half way through': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: destroy() twice', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream()
-        var endSpy = this.spy()
-        var calls = 0
-        this.dataSpy = this.spy(function () {
-          if (++calls === 5) { rs.destroy() }
+      var rs = db.createReadStream()
+      rs.on('data', function () {
+        rs.destroy()
+        rs.destroy()
+        done()
+      })
+    })
+  }))
+
+  test('ReadStream: destroy() half way through', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
+
+      var rs = db.createReadStream()
+      var endSpy = sinon.spy()
+      var calls = 0
+      ctx.dataSpy = sinon.spy(function () {
+        if (++calls === 5) { rs.destroy() }
+      })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', endSpy)
+      rs.on('close', function () {
+        // should do "data" 5 times ONLY
+        t.is(ctx.dataSpy.callCount, 5, 'ReadStream emitted correct number of "data" events (5)')
+
+        ctx.sourceData.slice(0, 5).forEach(function (d, i) {
+          var call = ctx.dataSpy.getCall(i)
+          t.ok(call)
+
+          if (call) {
+            t.is(call.args.length, 1, 'ReadStream "data" event #' + i + ' fired with 1 argument')
+            t.ok(call.args[0].key != null, 'ReadStream "data" event #' + i + ' argument has "key" property')
+            t.ok(call.args[0].value != null, 'ReadStream "data" event #' + i + ' argument has "value" property')
+            t.is(call.args[0].key, d.key, 'ReadStream "data" event #' + i + ' argument has correct "key"')
+            t.is(+call.args[0].value, +d.value, 'ReadStream "data" event #' + i + ' argument has correct "value"')
+          }
         })
-        rs.on('data', this.dataSpy)
-        rs.on('end', endSpy)
-        rs.on('close', function () {
-          // should do "data" 5 times ONLY
-          assert.equals(this.dataSpy.callCount, 5, 'ReadStream emitted correct number of "data" events (5)')
-          this.sourceData.slice(0, 5).forEach(function (d, i) {
-            var call = this.dataSpy.getCall(i)
-            assert(call)
-            if (call) {
-              assert.equals(call.args.length, 1, 'ReadStream "data" event #' + i + ' fired with 1 argument')
-              refute.isNull(call.args[0].key, 'ReadStream "data" event #' + i + ' argument has "key" property')
-              refute.isNull(call.args[0].value, 'ReadStream "data" event #' + i + ' argument has "value" property')
-              assert.equals(call.args[0].key, d.key, 'ReadStream "data" event #' + i + ' argument has correct "key"')
-              assert.equals(+call.args[0].value, +d.value, 'ReadStream "data" event #' + i + ' argument has correct "value"')
-            }
-          }.bind(this))
-          done()
-        }.bind(this))
-      }.bind(this))
-    }.bind(this))
-  },
 
-  'test readStream() with "reverse=true"': function (done) {
-    this.openTestDatabase(function (db) {
-      // execute
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+        done()
+      })
+    })
+  }))
 
-        var rs = db.createReadStream({ reverse: true })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
+  test('ReadStream: readStream() with "reverse=true"', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        this.sourceData.reverse() // for verify
-      }.bind(this))
-    }.bind(this))
-  },
+      var rs = db.createReadStream({ reverse: true })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
+        ctx.verify(ctx.sourceData.slice().reverse())
+        done()
+      })
+    })
+  }))
 
-  'test readStream() with "start"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: readStream() with "start"', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream({ start: '50' })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
+      var rs = db.createReadStream({ start: '50' })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
         // slice off the first 50 so verify() expects only the last 50 even though all 100 are in the db
-        this.sourceData = this.sourceData.slice(50)
-      }.bind(this))
-    }.bind(this))
-  },
+        ctx.verify(ctx.sourceData.slice(50))
+        done()
+      })
+    })
+  }))
 
-  'test readStream() with "start" and "reverse=true"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: readStream() with "start" and "reverse=true"', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream({ start: '50', reverse: true })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
+      var rs = db.createReadStream({ start: '50', reverse: true })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
         // reverse and slice off the first 50 so verify() expects only the first 50 even though all 100 are in the db
-        this.sourceData.reverse()
-        this.sourceData = this.sourceData.slice(49)
-      }.bind(this))
-    }.bind(this))
-  },
+        ctx.verify(ctx.sourceData.slice().reverse().slice(49))
+        done()
+      })
+    })
+  }))
 
-  'test readStream() with "start" being mid-way key (float)': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: readStream() with "start" being mid-way key (float)', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        // '49.5' doesn't actually exist but we expect it to start at '50' because '49' < '49.5' < '50' (in string terms as well as numeric)
-        var rs = db.createReadStream({ start: '49.5' })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
+      // '49.5' doesn't actually exist but we expect it to start at '50' because '49' < '49.5' < '50' (in string terms as well as numeric)
+      var rs = db.createReadStream({ start: '49.5' })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
         // slice off the first 50 so verify() expects only the last 50 even though all 100 are in the db
-        this.sourceData = this.sourceData.slice(50)
-      }.bind(this))
-    }.bind(this))
-  },
+        ctx.verify(ctx.sourceData.slice(50))
+        done()
+      })
+    })
+  }))
 
-  'test readStream() with "start" being mid-way key (float) and "reverse=true"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: readStream() with "start" being mid-way key (float) and "reverse=true"', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream({ start: '49.5', reverse: true })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
+      var rs = db.createReadStream({ start: '49.5', reverse: true })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
         // reverse & slice off the first 50 so verify() expects only the first 50 even though all 100 are in the db
-        this.sourceData.reverse()
-        this.sourceData = this.sourceData.slice(50)
-      }.bind(this))
-    }.bind(this))
-  },
+        ctx.verify(ctx.sourceData.slice().reverse().slice(50))
+        done()
+      })
+    })
+  }))
 
-  'test readStream() with "start" being mid-way key (string)': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: readStream() with "start" being mid-way key (string)', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        // '499999' doesn't actually exist but we expect it to start at '50' because '49' < '499999' < '50' (in string terms)
-        // the same as the previous test but we're relying solely on string ordering
-        var rs = db.createReadStream({ start: '499999' })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
+      // '499999' doesn't actually exist but we expect it to start at '50' because '49' < '499999' < '50' (in string terms)
+      // the same as the previous test but we're relying solely on string ordering
+      var rs = db.createReadStream({ start: '499999' })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
         // slice off the first 50 so verify() expects only the last 50 even though all 100 are in the db
-        this.sourceData = this.sourceData.slice(50)
-      }.bind(this))
-    }.bind(this))
-  },
+        ctx.verify(ctx.sourceData.slice(50))
+        done()
+      })
+    })
+  }))
 
-  'test readStream() with "end"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: readStream() with "end"', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream({ end: '50' })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
+      var rs = db.createReadStream({ end: '50' })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
         // slice off the last 49 so verify() expects only 0 -> 50 inclusive, even though all 100 are in the db
-        this.sourceData = this.sourceData.slice(0, 51)
-      }.bind(this))
-    }.bind(this))
-  },
+        ctx.verify(ctx.sourceData = ctx.sourceData.slice(0, 51))
+        done()
+      })
+    })
+  }))
 
-  'test readStream() with "end" being mid-way key (float)': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: readStream() with "end" being mid-way key (float)', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream({ end: '50.5' })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
+      var rs = db.createReadStream({ end: '50.5' })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
         // slice off the last 49 so verify() expects only 0 -> 50 inclusive, even though all 100 are in the db
-        this.sourceData = this.sourceData.slice(0, 51)
-      }.bind(this))
-    }.bind(this))
-  },
+        ctx.verify(ctx.sourceData.slice(0, 51))
+        done()
+      })
+    })
+  }))
 
-  'test readStream() with "end" being mid-way key (string)': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: readStream() with "end" being mid-way key (string)', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream({ end: '50555555' })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
+      var rs = db.createReadStream({ end: '50555555' })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
         // slice off the last 49 so verify() expects only 0 -> 50 inclusive, even though all 100 are in the db
-        this.sourceData = this.sourceData.slice(0, 51)
-      }.bind(this))
-    }.bind(this))
-  },
+        ctx.verify(ctx.sourceData.slice(0, 51))
+        done()
+      })
+    })
+  }))
 
-  'test readStream() with "end" being mid-way key (float) and "reverse=true"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: readStream() with "end" being mid-way key (float) and "reverse=true"', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream({ end: '50.5', reverse: true })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
+      var rs = db.createReadStream({ end: '50.5', reverse: true })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
+        ctx.verify(ctx.sourceData.slice().reverse().slice(0, 49))
+        done()
+      })
+    })
+  }))
 
-        this.sourceData.reverse()
-        this.sourceData = this.sourceData.slice(0, 49)
-      }.bind(this))
-    }.bind(this))
-  },
+  test('ReadStream: readStream() with both "start" and "end"', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-  'test readStream() with both "start" and "end"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
-
-        var rs = db.createReadStream({ start: 30, end: 70 })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
+      var rs = db.createReadStream({ start: 30, end: 70 })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
         // should include 30 to 70, inclusive
-        this.sourceData = this.sourceData.slice(30, 71)
-      }.bind(this))
-    }.bind(this))
-  },
+        ctx.verify(ctx.sourceData.slice(30, 71))
+        done()
+      })
+    })
+  }))
 
-  'test readStream() with both "start" and "end" and "reverse=true"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: readStream() with both "start" and "end" and "reverse=true"', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream({ start: 70, end: 30, reverse: true })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
+      var rs = db.createReadStream({ start: 70, end: 30, reverse: true })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
         // expect 70 -> 30 inclusive
-        this.sourceData.reverse()
-        this.sourceData = this.sourceData.slice(29, 70)
-      }.bind(this))
-    }.bind(this))
-  },
+        ctx.verify(ctx.sourceData.slice().reverse().slice(29, 70))
+        done()
+      })
+    })
+  }))
 
-  'test hex encoding': function (done) {
+  // TODO: move this test out
+  testCommon.encodings && test('ReadStream: hex encoding', makeTest(function (t, db, ctx, done) {
     var options = { keyEncoding: 'utf8', valueEncoding: 'hex' }
     var data = [
       { type: 'put', key: 'ab', value: 'abcdef0123456789' }
     ]
 
-    this.openTestDatabase({}, function (db) {
-      db.batch(data.slice(), options, function (err) {
-        refute(err)
+    db.batch(data.slice(), options, function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream(options)
-        rs.on('data', function (data) {
-          assert.equals(data.value, 'abcdef0123456789')
-        })
-        rs.on('end', this.endSpy)
-        rs.on('close', done)
-      }.bind(this))
-    }.bind(this))
-  },
+      var rs = db.createReadStream(options)
+      rs.on('data', function (data) {
+        t.is(data.value, 'abcdef0123456789')
+      })
+      rs.on('end', ctx.endSpy)
+      rs.on('close', done)
+    })
+  }))
 
-  'test readStream() "reverse=true" not sticky (issue #6)': function (done) {
-    this.openTestDatabase(function (db) {
-      // execute
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
-        // read in reverse, assume all's good
-        var rs = db.createReadStream({ reverse: true })
+  test('ReadStream: readStream() "reverse=true" not sticky (issue #6)', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
+      // read in reverse, assume all's good
+      var rs = db.createReadStream({ reverse: true })
+      rs.on('close', function () {
+        // now try reading the other way
+        var rs = db.createReadStream()
+        rs.on('data', ctx.dataSpy)
+        rs.on('end', ctx.endSpy)
         rs.on('close', function () {
-          // now try reading the other way
-          var rs = db.createReadStream()
-          rs.on('data', this.dataSpy)
-          rs.on('end', this.endSpy)
-          rs.on('close', this.verify.bind(this, rs, done))
-        }.bind(this))
-        rs.resume()
-      }.bind(this))
-    }.bind(this))
-  },
+          ctx.verify()
+          done()
+        })
+      })
+      rs.resume()
+    })
+  }))
 
-  'test ReadStream, start=0': function (done) {
-    this.openTestDatabase(function (db) {
-      // execute
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: ReadStream, start=0', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream({ start: 0 })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-      }.bind(this))
-    }.bind(this))
-  },
+      var rs = db.createReadStream({ start: 0 })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
+        ctx.verify()
+        done()
+      })
+    })
+  }))
 
   // we don't expect any data to come out of here because the keys start at '00' not 0
   // we just want to ensure that we don't kill the process
-  'test ReadStream, end=0': function (done) {
-    this.openTestDatabase(function (db) {
-      // execute
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: ReadStream, end=0', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream({ end: 0 })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
-        this.sourceData = []
-      }.bind(this))
-    }.bind(this))
-  },
+      var rs = db.createReadStream({ end: 0 })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
+        ctx.verify([])
+        done()
+      })
+    })
+  }))
 
   // this is just a fancy way of testing levelup(db).createReadStream()
   // i.e. not waiting for 'open' to complete
-  // the logic for this is inside the ReadStream constructor which waits for 'ready'
-  'test ReadStream on pre-opened db': function (done) {
-    var db = levelup(encDown(memdown()))
-    var execute = function () {
-      // is in limbo
-      refute(db.isOpen())
-      refute(db.isClosed())
+  // TODO: move this test out
+  testCommon.deferredOpen && test('ReadStream: deferred ReadStream on new db', function (t) {
+    var db = testCommon.factory()
+    var ctx = readStreamContext(t)
 
-      var rs = db.createReadStream()
-      rs.on('data', this.dataSpy)
-      rs.on('end', this.endSpy)
-      rs.on('close', this.verify.bind(this, rs, done))
-    }.bind(this)
-    var setup = function () {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
-        db.close(function (err) {
-          refute(err)
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
+      db.close(function (err) {
+        t.ifError(err)
 
-          var async = true
-          db.open(function (err) {
-            async = false
-            refute(err, 'no open error')
-          })
-
-          execute()
-
-          // Should open lazily
-          assert(async)
+        var async = true
+        db.open(function (err) {
+          async = false
+          t.ifError(err, 'no open error')
         })
+
+        // is in limbo
+        t.is(db.isOpen(), false)
+        t.is(db.isClosed(), false)
+
+        var rs = db.createReadStream()
+        rs.on('data', ctx.dataSpy)
+        rs.on('end', ctx.endSpy)
+        rs.on('close', function () {
+          ctx.verify()
+          db.close(t.end.bind(t))
+        })
+
+        // Should open lazily
+        t.ok(async)
       })
-    }.bind(this)
+    })
+  })
 
-    setup()
-  },
+  test('ReadStream: readStream() with "limit"', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-  'test readStream() with "limit"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+      var rs = db.createReadStream({ limit: 20 })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
+        ctx.verify(ctx.sourceData.slice(0, 20))
+        done()
+      })
+    })
+  }))
 
-        var rs = db.createReadStream({ limit: 20 })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
+  test('ReadStream: readStream() with "start" and "limit"', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        this.sourceData = this.sourceData.slice(0, 20)
-      }.bind(this))
-    }.bind(this))
-  },
+      var rs = db.createReadStream({ start: '20', limit: 20 })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
+        ctx.verify(ctx.sourceData.slice(20, 40))
+        done()
+      })
+    })
+  }))
 
-  'test readStream() with "start" and "limit"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: readStream() with "end" after "limit"', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream({ start: '20', limit: 20 })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
+      var rs = db.createReadStream({ end: '50', limit: 20 })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
+        ctx.verify(ctx.sourceData.slice(0, 20))
+        done()
+      })
+    })
+  }))
 
-        this.sourceData = this.sourceData.slice(20, 40)
-      }.bind(this))
-    }.bind(this))
-  },
+  test('ReadStream: readStream() with "end" before "limit"', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-  'test readStream() with "end" after "limit"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
-
-        var rs = db.createReadStream({ end: '50', limit: 20 })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
-        this.sourceData = this.sourceData.slice(0, 20)
-      }.bind(this))
-    }.bind(this))
-  },
-
-  'test readStream() with "end" before "limit"': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
-
-        var rs = db.createReadStream({ end: '30', limit: 50 })
-        rs.on('data', this.dataSpy)
-        rs.on('end', this.endSpy)
-        rs.on('close', this.verify.bind(this, rs, done))
-
-        this.sourceData = this.sourceData.slice(0, 31)
-      }.bind(this))
-    }.bind(this))
-  },
+      var rs = db.createReadStream({ end: '30', limit: 50 })
+      rs.on('data', ctx.dataSpy)
+      rs.on('end', ctx.endSpy)
+      rs.on('close', function () {
+        ctx.verify(ctx.sourceData.slice(0, 31))
+        done()
+      })
+    })
+  }))
 
   // can, fairly reliably, trigger a core dump if next/end isn't
   // protected properly
   // the use of large blobs means that next() takes time to return
   // so we should be able to slip in an end() while it's working
-  'test iterator next/end race condition': function (done) {
+  test('ReadStream: iterator next/end race condition', makeTest(function (t, db, ctx, done) {
     var data = []
     var i = 5
     var v
@@ -540,29 +503,25 @@ buster.testCase('ReadStream', {
       data.push({ type: 'put', key: v, value: v })
     }
 
-    this.openTestDatabase(function (db) {
-      db.batch(data, function (err) {
-        refute(!!err)
-        var rs = db.createReadStream().on('close', done)
-        rs.once('data', function () {
-          rs.destroy()
-        })
+    db.batch(data, function (err) {
+      t.ifError(err)
+      var rs = db.createReadStream().on('close', done)
+      rs.once('data', function () {
+        rs.destroy()
       })
     })
-  },
+  }))
 
-  'test can only end once': function (done) {
-    this.openTestDatabase(function (db) {
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
+  test('ReadStream: can only end once', makeTest(function (t, db, ctx, done) {
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
 
-        var rs = db.createReadStream()
-          .on('close', done)
+      var rs = db.createReadStream()
+        .on('close', done)
 
-        process.nextTick(function () {
-          rs.destroy()
-        })
+      process.nextTick(function () {
+        rs.destroy()
       })
-    }.bind(this))
-  }
-})
+    })
+  }))
+}
