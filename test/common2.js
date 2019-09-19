@@ -21,6 +21,7 @@ module.exports = function testCommon (options) {
     snapshots: options.snapshots !== false,
     seek: options.seek !== false,
     clear: !!options.clear,
-    deferredOpen: !!options.deferredOpen
+    deferredOpen: !!options.deferredOpen,
+    promises: !!options.promises
   }
 }

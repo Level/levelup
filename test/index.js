@@ -20,7 +20,8 @@ var testCommon = require('./common2')({
     }
   },
   clear: true,
-  deferredOpen: true
+  deferredOpen: true,
+  promises: true
 })
 
 require('./argument-checking-test')(test, testCommon)
@@ -29,7 +30,7 @@ require('./binary-test')(test, testCommon)
 if (testCommon.clear) require('./clear-test')(test)
 if (testCommon.snapshots) require('./create-stream-vs-put-racecondition')(test, testCommon)
 if (testCommon.deferredOpen) require('./deferred-open-test')(test, testCommon)
-require('./get-put-del-test')
+require('./get-put-del-test')(test, testCommon)
 require('./idempotent-test')(test, testCommon)
 require('./init-test')(test, testCommon)
 require('./custom-encoding-test')(test, testCommon)
