@@ -23,7 +23,7 @@
     "after": "^0.8.2",
     "airtap": "^2.0.0",
     "async-each": "^1.0.3",
-    "bl": "^3.0.0",
+    "bl": "^4.0.0",
     "browserify": "^16.0.0",
     "bustermove": "^1.0.0",
     "concat-stream": "^2.0.0",
