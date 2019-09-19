@@ -1,30 +1,5 @@
-var levelup = require('../lib/levelup.js')
-var memdown = require('memdown')
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
-
-function test (fun) {
-  return function (done) {
-    // 1) open database without callback, opens in next tick
-    var db = levelup(memdown())
-
-    this.closeableDatabases.push(db)
-    assert.isObject(db)
-
-    fun(db, done)
-    // we should still be in a state of limbo down here, not opened or closed, but 'new'
-    refute(db.isOpen())
-    refute(db.isClosed())
-  }
-}
-
-buster.testCase('Deferred open() is patch-safe', {
-  setUp: common.commonSetUp,
-  tearDown: common.commonTearDown,
-
-  'put() on pre-opened database': test(function (db, done) {
+module.exports = function (test, testCommon) {
+  test('deferred open() is patch-safe: put() on new database', makeTest(function (t, db, done) {
     var put = db.put
     var called = 0
 
@@ -34,11 +9,12 @@ buster.testCase('Deferred open() is patch-safe', {
     }
 
     db.put('key', 'VALUE', function () {
-      assert.equals(called, 1)
+      t.is(called, 1)
       done()
     })
-  }),
-  'del() on pre-opened database': test(function (db, done) {
+  }))
+
+  test('deferred open() is patch-safe: del() on new database', makeTest(function (t, db, done) {
     var del = db.del
     var called = 0
 
@@ -48,11 +24,12 @@ buster.testCase('Deferred open() is patch-safe', {
     }
 
     db.del('key', function () {
-      assert.equals(called, 1)
+      t.is(called, 1)
       done()
     })
-  }),
-  'batch() on pre-opened database': test(function (db, done) {
+  }))
+
+  test('deferred open() is patch-safe: batch() on new database', makeTest(function (t, db, done) {
     var batch = db.batch
     var called = 0
 
@@ -65,8 +42,24 @@ buster.testCase('Deferred open() is patch-safe', {
       { key: 'key', value: 'v', type: 'put' },
       { key: 'key2', value: 'v2', type: 'put' }
     ], function () {
-      assert.equals(called, 1)
+      t.is(called, 1)
       done()
     })
-  })
-})
+  }))
+
+  function makeTest (fn) {
+    return function (t) {
+      // 1) open database without callback, opens in next tick
+      var db = testCommon.factory()
+
+      fn(t, db, function (err) {
+        t.ifError(err, 'no test error')
+        db.close(t.end.bind(t))
+      })
+
+      // we should still be in a state of limbo down here, not opened or closed, but 'new'
+      t.is(db.isOpen(), false)
+      t.is(db.isClosed(), false)
+    }
+  }
+}
