@@ -1,112 +1,50 @@
-var levelup = require('../lib/levelup.js')
-var memdown = require('memdown')
-var errors = levelup.errors
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
+var errors = require('../lib/levelup').errors
+var after = require('after')
+var discardable = require('./util/discardable')
 
-buster.testCase('null & undefined keys & values', {
-  setUp: common.commonSetUp,
-  tearDown: common.commonTearDown,
+module.exports = function (test, testCommon) {
+  test('null & undefined keys & values: cause error', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      t.throws(db.get.bind(db, null), /^ReadError: get\(\) requires a key argument/)
+      t.throws(db.get.bind(db, undefined), /^ReadError: get\(\) requires a key argument/)
+      t.throws(db.del.bind(db, null), /^WriteError: del\(\) requires a key argument/)
+      t.throws(db.del.bind(db, undefined), /^WriteError: del\(\) requires a key argument/)
+      t.throws(db.put.bind(db, null, 'foo'), /^WriteError: put\(\) requires a key argument/)
+      t.throws(db.put.bind(db, undefined, 'foo'), /^WriteError: put\(\) requires a key argument/)
 
-  'null and undefined': {
-    setUp: function (done) {
-      levelup(memdown(), function (err, db) {
-        refute(err) // sanity
-        this.closeableDatabases.push(db)
-        assert.isTrue(db.isOpen())
-        this.db = db
-        done()
-      }.bind(this))
-    },
+      var next = after(6, done)
 
-    'get() with null key causes error': function (done) {
-      assert.exception(
-        this.db.get.bind(this.db, null),
-        { name: 'ReadError', message: 'get() requires a key argument' }
-      )
-      done()
-    },
-
-    'get() with undefined key causes error': function (done) {
-      assert.exception(
-        this.db.get.bind(this.db, undefined),
-        { name: 'ReadError', message: 'get() requires a key argument' }
-      )
-      done()
-    },
-
-    'del() with null key causes error': function (done) {
-      assert.exception(
-        this.db.del.bind(this.db, null),
-        { name: 'WriteError', message: 'del() requires a key argument' }
-      )
-      done()
-    },
-
-    'del() with undefined key causes error': function (done) {
-      assert.exception(
-        this.db.del.bind(this.db, undefined),
-        { name: 'WriteError', message: 'del() requires a key argument' }
-      )
-      done()
-    },
-
-    'put() with null key causes error': function (done) {
-      assert.exception(
-        this.db.put.bind(this.db, null, 'foo'),
-        { name: 'WriteError', message: 'put() requires a key argument' }
-      )
-      done()
-    },
-
-    'put() with undefined key causes error': function (done) {
-      assert.exception(
-        this.db.put.bind(this.db, undefined, 'foo'),
-        { name: 'WriteError', message: 'put() requires a key argument' }
-      )
-      done()
-    },
-
-    'put() with null value causes error': function (done) {
-      this.db.put('foo', null, function (err, value) {
-        assert.equals(err.message, 'value cannot be `null` or `undefined`')
-        done()
+      db.put('foo', null, function (err, value) {
+        t.is(err.message, 'value cannot be `null` or `undefined`')
+        next()
       })
-    },
 
-    'put() with undefined value causes error': function (done) {
-      this.db.put('foo', undefined, function (err, value) {
-        assert.equals(err.message, 'value cannot be `null` or `undefined`')
-        done()
+      db.put('foo', undefined, function (err, value) {
+        t.is(err.message, 'value cannot be `null` or `undefined`')
+        next()
       })
-    },
-    'batch() with undefined value causes error': function (done) {
-      this.db.batch([{ key: 'foo', value: undefined, type: 'put' }], function (err) {
-        assert.equals(err.message, 'value cannot be `null` or `undefined`')
-        done()
+
+      db.batch([{ key: 'foo', value: undefined, type: 'put' }], function (err) {
+        t.is(err.message, 'value cannot be `null` or `undefined`')
+        next()
       })
-    },
-    'batch() with null value causes error': function (done) {
-      this.db.batch([{ key: 'foo', value: null, type: 'put' }], function (err) {
-        assert.equals(err.message, 'value cannot be `null` or `undefined`')
-        done()
+
+      db.batch([{ key: 'foo', value: null, type: 'put' }], function (err) {
+        t.is(err.message, 'value cannot be `null` or `undefined`')
+        next()
       })
-    },
-    'batch() with undefined key causes error': function (done) {
-      this.db.batch([{ key: undefined, value: 'bar', type: 'put' }], function (err) {
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
+
+      db.batch([{ key: undefined, value: 'bar', type: 'put' }], function (err) {
+        t.ok(err instanceof Error)
+        t.ok(err instanceof errors.LevelUPError)
+        next()
       })
-    },
-    'batch() with null key causes error': function (done) {
-      this.db.batch([{ key: null, value: 'bar', type: 'put' }], function (err) {
-        assert.isInstanceOf(err, Error)
-        assert.isInstanceOf(err, errors.LevelUPError)
-        done()
+
+      db.batch([{ key: null, value: 'bar', type: 'put' }], function (err) {
+        t.ok(err instanceof Error)
+        t.ok(err instanceof errors.LevelUPError)
+        next()
       })
-    }
-  }
-})
+    })
+  })
+}
