@@ -1,79 +1,75 @@
-var levelup = require('../lib/levelup.js')
+var levelup = require('../lib/levelup')
 var memdown = require('memdown')
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
 
-buster.testCase('Init & open()', {
-  setUp: common.commonSetUp,
-  tearDown: common.commonTearDown,
+module.exports = function (test, testCommon) {
+  test('Init & open(): levelup()', function (t) {
+    t.is(typeof levelup, 'function')
+    t.is(levelup.length, 3) // db, options & callback arguments
+    t.throws(levelup, /^InitializationError/) // no db
+    t.end()
+  })
 
-  'levelup()': function () {
-    assert.isFunction(levelup)
-    assert.equals(levelup.length, 3) // db, options & callback arguments
-    assert.exception(levelup, 'InitializationError') // no db
-  },
-
-  'open and close statuses': function (done) {
+  test('Init & open(): open and close statuses', function (t) {
     levelup(memdown(), function (err, db) {
-      refute(err, 'no error')
-      assert.isTrue(db.isOpen())
-      this.closeableDatabases.push(db)
-      db.close(function (err) {
-        refute(err)
+      t.ifError(err, 'no error')
+      t.is(db.isOpen(), true)
 
-        assert.isFalse(db.isOpen())
-        assert.isTrue(db.isClosed())
+      db.close(function (err) {
+        t.ifError(err)
+
+        t.is(db.isOpen(), false)
+        t.is(db.isClosed(), true)
 
         levelup(memdown(), function (err, db) {
-          refute(err)
-          assert.isObject(db)
-          done()
+          t.ifError(err)
+          t.ok(typeof db === 'object' && db !== null)
+
+          db.close(t.end.bind(t))
         })
       })
-    }.bind(this))
-  },
-
-  'without callback': function (done) {
-    var db = levelup(memdown())
-    this.closeableDatabases.push(db)
-    assert.isObject(db)
-    db.on('ready', function () {
-      assert.isTrue(db.isOpen())
-      done()
     })
-  },
+  })
 
-  'validate abstract-leveldown': function (done) {
+  test('Init & open(): without callback', function (t) {
+    var db = levelup(memdown())
+    t.ok(typeof db === 'object' && db !== null)
+    db.on('ready', function () {
+      t.is(db.isOpen(), true)
+      db.close(t.end.bind(t))
+    })
+  })
+
+  test('Init & open(): validate abstract-leveldown', function (t) {
+    t.plan(1)
+
     var down = memdown()
+
     Object.defineProperty(down, 'status', {
       get: function () { return null },
       set: function () {}
     })
+
     try {
       levelup(down)
     } catch (err) {
-      assert.equals(err.message, '.status required, old abstract-leveldown')
-      return done()
+      t.is(err.message, '.status required, old abstract-leveldown')
     }
-    throw new Error('did not throw')
-  },
+  })
 
-  'support open options': function (done) {
+  test('Init & open(): support open options', function (t) {
     var down = memdown()
 
     levelup(down, function (err, up) {
-      refute(err, 'no error')
+      t.ifError(err, 'no error')
 
       up.close(function () {
         down.open = function (opts) {
-          assert.equals(opts.foo, 'bar')
-          done()
+          t.is(opts.foo, 'bar')
+          t.end()
         }
 
         up.open({ foo: 'bar' })
       })
     })
-  }
-})
+  })
+}

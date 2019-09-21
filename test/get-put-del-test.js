@@ -1,154 +1,119 @@
-var levelup = require('../lib/levelup.js')
-var errors = levelup.errors
+var errors = require('../lib/levelup').errors
 var each = require('async-each')
 var series = require('run-series')
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
+var discardable = require('./util/discardable')
 
-buster.testCase('get() / put() / del()', {
-  setUp: common.commonSetUp,
-  tearDown: common.commonTearDown,
+module.exports = function (test, testCommon) {
+  test('get() / put() / del(): get() on empty database causes error', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      db.get('undefkey', function (err, value) {
+        t.notOk(value)
+        t.ok(err instanceof Error)
+        t.ok(err instanceof errors.LevelUPError)
+        t.ok(err instanceof errors.NotFoundError)
+        t.is(err.notFound, true, 'err.notFound is `true`')
+        t.is(err.status, 404, 'err.status is 404')
+        t.ok(/\[undefkey\]/.test(err))
+        done()
+      })
+    })
+  })
 
-  'Simple operations': {
-    'get() on empty database causes error': function (done) {
-      this.openTestDatabase(function (db) {
-        db.get('undefkey', function (err, value) {
-          refute(value)
-          assert.isInstanceOf(err, Error)
-          assert.isInstanceOf(err, errors.LevelUPError)
-          assert.isInstanceOf(err, errors.NotFoundError)
-          assert(err.notFound === true, 'err.notFound is `true`')
-          assert.equals(err.status, 404, 'err.status is 404')
-          assert.match(err, '[undefkey]')
+  testCommon.promises && test('get() / put() / del(): get() on empty database causes error (promise)', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      db.get('undefkey').catch(function (err) {
+        t.ok(err instanceof Error)
+        t.ok(err instanceof errors.LevelUPError)
+        t.ok(err instanceof errors.NotFoundError)
+        t.is(err.notFound, true, 'err.notFound is `true`')
+        t.is(err.status, 404, 'err.status is 404')
+        t.ok(/\[undefkey\]/.test(err))
+        done()
+      })
+    })
+  })
+
+  test('get() / put() / del(): put() and get() simple string entries', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      db.put('some key', 'some value stored in the database', function (err) {
+        t.ifError(err)
+        db.get('some key', function (err, value) {
+          t.ifError(err)
+          t.is(value, 'some value stored in the database')
           done()
         })
       })
-    },
+    })
+  })
 
-    'get() on empty database raises promise error': function (done) {
-      this.openTestDatabase(function (db) {
-        db.get('undefkey').catch(function (err) {
-          assert.isInstanceOf(err, Error)
-          assert.isInstanceOf(err, errors.LevelUPError)
-          assert.isInstanceOf(err, errors.NotFoundError)
-          assert(err.notFound === true, 'err.notFound is `true`')
-          assert.equals(err.status, 404, 'err.status is 404')
-          assert.match(err, '[undefkey]')
+  testCommon.promises && test('get() / put() / del(): put() and get() simple string entries (promise)', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      db.put('some key', 'some value stored in the database')
+        .then(function () {
+          return db.get('some key')
+        })
+        .then(function (value) {
+          t.is(value, 'some value stored in the database')
           done()
         })
-      })
-    },
+        .catch(done)
+    })
+  })
 
-    'put() and get() simple string key/value pairs': function (done) {
-      this.openTestDatabase(function (db) {
-        db.put('some key', 'some value stored in the database', function (err) {
-          refute(err)
-          db.get('some key', function (err, value) {
-            refute(err)
-            assert.equals(value, 'some value stored in the database')
-            done()
-          })
-        })
+  test('get() / put() / del(): can del() on empty database', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      db.del('undefkey', function (err) {
+        t.ifError(err)
+        done()
       })
-    },
+    })
+  })
 
-    'put() and get() promise interface': function (done) {
-      this.openTestDatabase(function (db) {
-        db.put('some key', 'some value stored in the database')
-          .then(function () {
-            return db.get('some key')
-          })
-          .then(function (value) {
-            assert.equals(value, 'some value stored in the database')
-            done()
-          })
-          .catch(done)
-      })
-    },
+  testCommon.promises && test('get() / put() / del(): can del() on empty database (promise)', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      db.del('undefkey')
+        .then(done)
+        .catch(done)
+    })
+  })
 
-    'del() on empty database doesn\'t cause error': function (done) {
-      this.openTestDatabase(function (db) {
-        db.del('undefkey', function (err) {
-          refute(err)
-          done()
-        })
-      })
-    },
+  test('get() / put() / del(): del() works on real entries', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      series([
+        function (next) {
+          each(['foo', 'bar', 'baz'], function (key, next) {
+            db.put(key, 1 + Math.random(), next)
+          }, next)
+        },
+        function (next) {
+          db.del('bar', next)
+        },
+        function (next) {
+          each(['foo', 'bar', 'baz'], function (key, next) {
+            db.get(key, function (err, value) {
+              // we should get foo & baz but not bar
+              if (key === 'bar') {
+                t.ok(err)
+                t.notOk(value)
+              } else {
+                t.ifError(err)
+                t.ok(value)
+              }
 
-    'del() promise interface': function (done) {
-      this.openTestDatabase(function (db) {
-        db.del('undefkey')
-          .then(done)
-          .catch(done)
-      })
-    },
+              next()
+            })
+          }, next)
+        }
+      ], done)
+    })
+  })
 
-    'del() works on real entries': function (done) {
-      this.openTestDatabase(function (db) {
-        series([
-          function (callback) {
-            each(['foo', 'bar', 'baz'], function (key, callback) {
-              db.put(key, 1 + Math.random(), callback)
-            }, callback)
-          },
-          function (callback) {
-            db.del('bar', callback)
-          },
-          function (callback) {
-            each(['foo', 'bar', 'baz'], function (key, callback) {
-              db.get(key, function (err, value) {
-                // we should get foo & baz but not bar
-                if (key === 'bar') {
-                  assert(err)
-                  refute(value)
-                } else {
-                  refute(err)
-                  assert(value)
-                }
-                callback()
-              })
-            }, callback)
-          }
-        ], done)
-      })
-    }
-  },
-
-  'test get() throwables': function (done) {
-    this.openTestDatabase(function (db) {
-      assert.exception(
-        db.get.bind(db),
-        { name: 'ReadError', message: 'get() requires a key argument' },
-        'no-arg get() throws'
-      )
+  test('get() / put() / del(): throw if no key is provided', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      t.throws(db.get.bind(db), /^ReadError: get\(\) requires a key argument/, 'no-arg get() throws')
+      t.throws(db.put.bind(db), /^WriteError: put\(\) requires a key argument/, 'no-arg put() throws')
+      t.throws(db.del.bind(db), /^WriteError: del\(\) requires a key argument/, 'no-arg del() throws')
       done()
     })
-  },
-
-  'test put() throwables': function (done) {
-    this.openTestDatabase(function (db) {
-      assert.exception(
-        db.put.bind(db),
-        { name: 'WriteError', message: 'put() requires a key argument' },
-        'no-arg put() throws'
-      )
-
-      done()
-    })
-  },
-
-  'test del() throwables': function (done) {
-    this.openTestDatabase(function (db) {
-      assert.exception(
-        db.del.bind(db),
-        { name: 'WriteError', message: 'del() requires a key argument' },
-        'no-arg del() throws'
-      )
-
-      done()
-    })
-  }
-
-})
+  })
+}

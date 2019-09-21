@@ -1,15 +1,8 @@
-var levelup = require('../lib/levelup.js')
+var levelup = require('../lib/levelup')
 var memdown = require('memdown')
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
 
-buster.testCase('without encoding-down', {
-  setUp: common.commonSetUp,
-  tearDown: common.commonTearDown,
-
-  'serializes key': function (done) {
+module.exports = function (test, testCommon) {
+  test('without encoding-down: serializes key', function (t) {
     var down = memdown()
 
     down._serializeKey = function (key) {
@@ -18,20 +11,18 @@ buster.testCase('without encoding-down', {
 
     var db = levelup(down)
 
-    this.closeableDatabases.push(db)
-
     db.put('key', 'value', function (err) {
-      refute(err)
+      t.ifError(err)
 
       db.get('KEY', { asBuffer: false }, function (err, value) {
-        refute(err)
-        assert.same(value, 'value')
-        done()
+        t.ifError(err)
+        t.is(value, 'value')
+        db.close(t.end.bind(t))
       })
     })
-  },
+  })
 
-  'serializes value': function (done) {
+  test('without encoding-down: serializes value', function (t) {
     var down = memdown()
 
     down._serializeValue = function (value) {
@@ -40,16 +31,14 @@ buster.testCase('without encoding-down', {
 
     var db = levelup(down)
 
-    this.closeableDatabases.push(db)
-
     db.put('key', 'value', function (err) {
-      refute(err)
+      t.ifError(err)
 
       db.get('key', { asBuffer: false }, function (err, value) {
-        refute(err)
-        assert.same(value, 'VALUE')
-        done()
+        t.ifError(err)
+        t.is(value, 'VALUE')
+        db.close(t.end.bind(t))
       })
     })
-  }
-})
+  })
+}

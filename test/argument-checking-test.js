@@ -1,61 +1,37 @@
-var common = require('./common')
-var assert = require('referee').assert
-var buster = require('bustermove')
+module.exports = function (test, testCommon) {
+  test('argument checking', function (t) {
+    var db = testCommon.factory()
 
-buster.testCase('Argument checking', {
-  setUp: common.commonSetUp,
-  tearDown: common.commonTearDown,
+    t.throws(
+      db.get.bind(db),
+      /^ReadError: get\(\) requires a key argument$/,
+      'no-arg get() throws'
+    )
 
-  'test get() throwables': function (done) {
-    this.openTestDatabase(function (db) {
-      assert.exception(
-        db.get.bind(db),
-        { name: 'ReadError', message: 'get() requires a key argument' },
-        'no-arg get() throws'
-      )
-      done()
-    })
-  },
+    t.throws(
+      db.put.bind(db),
+      /^WriteError: put\(\) requires a key argument$/,
+      'no-arg put() throws'
+    )
 
-  'test put() throwables': function (done) {
-    this.openTestDatabase(function (db) {
-      assert.exception(
-        db.put.bind(db),
-        { name: 'WriteError', message: 'put() requires a key argument' },
-        'no-arg put() throws'
-      )
+    t.throws(
+      db.del.bind(db),
+      /^WriteError: del\(\) requires a key argument$/,
+      'no-arg del() throws'
+    )
 
-      done()
-    })
-  },
+    t.throws(
+      db.batch.bind(db, null, {}),
+      /^WriteError: batch\(\) requires an array argument$/,
+      'null-arg batch() throws'
+    )
 
-  'test del() throwables': function (done) {
-    this.openTestDatabase(function (db) {
-      assert.exception(
-        db.del.bind(db),
-        { name: 'WriteError', message: 'del() requires a key argument' },
-        'no-arg del() throws'
-      )
+    t.throws(
+      db.batch.bind(db, {}),
+      /^WriteError: batch\(\) requires an array argument$/,
+      '1-arg, no array batch() throws'
+    )
 
-      done()
-    })
-  },
-
-  'test batch() throwables': function (done) {
-    this.openTestDatabase(function (db) {
-      assert.exception(
-        db.batch.bind(db, null, {}),
-        { name: 'WriteError', message: 'batch() requires an array argument' },
-        'no-arg batch() throws'
-      )
-
-      assert.exception(
-        db.batch.bind(db, {}),
-        { name: 'WriteError', message: 'batch() requires an array argument' },
-        '1-arg, no Array batch() throws'
-      )
-
-      done()
-    })
-  }
-})
+    db.close(t.end.bind(t))
+  })
+}

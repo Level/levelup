@@ -1,24 +1,14 @@
-var levelup = require('../lib/levelup.js')
-var memdown = require('memdown')
-var encDown = require('encoding-down')
 var each = require('async-each')
 var parallel = require('run-parallel')
 var concat = require('concat-stream')
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
+var sinon = require('sinon')
+var readStreamContext = require('./util/rs-context')
 
-buster.testCase('Deferred open()', {
-  setUp: common.commonSetUp,
-  tearDown: common.commonTearDown,
-
-  'put() and get() on pre-opened database': function (done) {
+module.exports = function (test, testCommon) {
+  test('deferred open(): put() and get() on new database', function (t) {
     // 1) open database without callback, opens in next tick
-    var db = levelup(encDown(memdown()))
-
-    this.closeableDatabases.push(db)
-    assert.isObject(db)
+    var db = testCommon.factory()
+    t.ok(typeof db === 'object' && db !== null)
 
     parallel([
       // 2) insert 3 values with put(), these should be deferred until the database is actually open
@@ -28,32 +18,29 @@ buster.testCase('Deferred open()', {
     ], function () {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
-      each([1, 2, 3], function (k, cb) {
+      each([1, 2, 3], function (k, next) {
         db.get('k' + k, function (err, v) {
-          refute(err)
-          assert.equals(v, 'v' + k)
-          cb()
+          t.ifError(err)
+          t.is(v, 'v' + k)
+          next()
         })
       }, function () {
         db.get('k4', function (err) {
-          assert(err)
-          // DONE
-          done()
+          t.ok(err)
+          db.close(t.end.bind(t))
         })
       })
     })
 
     // we should still be in a state of limbo down here, not opened or closed, but 'new'
-    refute(db.isOpen())
-    refute(db.isClosed())
-  },
+    t.is(db.isOpen(), false)
+    t.is(db.isClosed(), false)
+  })
 
-  'batch() on pre-opened database': function (done) {
+  test('deferred open(): batch() on new database', function (t) {
     // 1) open database without callback, opens in next tick
-    var db = levelup(encDown(memdown()))
-
-    this.closeableDatabases.push(db)
-    assert.isObject(db)
+    var db = testCommon.factory()
+    t.ok(typeof db === 'object' && db !== null)
 
     // 2) insert 3 values with batch(), these should be deferred until the database is actually open
     db.batch([
@@ -63,32 +50,29 @@ buster.testCase('Deferred open()', {
     ], function () {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
-      each([1, 2, 3], function (k, cb) {
+      each([1, 2, 3], function (k, next) {
         db.get('k' + k, function (err, v) {
-          refute(err)
-          assert.equals(v, 'v' + k)
-          cb()
+          t.ifError(err)
+          t.is(v, 'v' + k)
+          next()
         })
       }, function () {
         db.get('k4', function (err) {
-          assert(err)
-          // DONE
-          done()
+          t.ok(err)
+          db.close(t.end.bind(t))
         })
       })
     })
 
     // we should still be in a state of limbo down here, not opened or closed, but 'new'
-    refute(db.isOpen())
-    refute(db.isClosed())
-  },
+    t.is(db.isOpen(), false)
+    t.is(db.isClosed(), false)
+  })
 
-  'chained batch() on pre-opened database': function (done) {
+  test('deferred open(): chained batch() on new database', function (t) {
     // 1) open database without callback, opens in next tick
-    var db = levelup(encDown(memdown()))
-
-    this.closeableDatabases.push(db)
-    assert.isObject(db)
+    var db = testCommon.factory()
+    t.ok(typeof db === 'object' && db !== null)
 
     // 2) insert 3 values with batch(), these should be deferred until the database is actually open
     db.batch()
@@ -98,61 +82,59 @@ buster.testCase('Deferred open()', {
       .write(function () {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
-        each([1, 2, 3], function (k, cb) {
+        each([1, 2, 3], function (k, next) {
           db.get('k' + k, function (err, v) {
-            refute(err)
-            assert.equals(v, 'v' + k)
-            cb()
+            t.ifError(err)
+            t.is(v, 'v' + k)
+            next()
           })
         }, function () {
           db.get('k4', function (err) {
-            assert(err)
-            // DONE
-            done()
+            t.ok(err)
+            db.close(t.end.bind(t))
           })
         })
       })
 
     // we should still be in a state of limbo down here, not opened or closed, but 'new'
-    refute(db.isOpen())
-    refute(db.isClosed())
-  },
+    t.is(db.isOpen(), false)
+    t.is(db.isClosed(), false)
+  })
 
-  'test deferred ReadStream': {
-    setUp: common.readStreamSetUp,
+  test('deferred open(): test deferred ReadStream', function (t) {
+    var ctx = readStreamContext(t)
+    var db = testCommon.factory()
 
-    'simple ReadStream': function (done) {
-      var db = levelup(encDown(memdown()))
-      db.batch(this.sourceData.slice(), function (err) {
-        refute(err)
-        db.close(function (err) {
-          refute(err, 'no error')
-          var async = true
+    db.batch(ctx.sourceData.slice(), function (err) {
+      t.ifError(err)
+      db.close(function (err) {
+        t.ifError(err, 'no error')
+        var async = true
 
-          db.open(function (err) {
-            async = false
-            refute(err, 'no open error')
+        db.open(function (err) {
+          async = false
+          t.ifError(err, 'no open error')
+        })
+
+        db.createReadStream()
+          .on('data', ctx.dataSpy)
+          .on('end', ctx.endSpy)
+          .on('close', function () {
+            ctx.verify()
+            db.close(t.end.bind(t))
           })
 
-          this.closeableDatabases.push(db)
-          var rs = db.createReadStream()
-          rs.on('data', this.dataSpy)
-          rs.on('end', this.endSpy)
-          rs.on('close', this.verify.bind(this, rs, done))
+        // db should open lazily
+        t.ok(async)
+      })
+    })
+  })
 
-          // db should open lazily
-          assert(async)
-        }.bind(this))
-      }.bind(this))
-    }
-  },
-
-  'maxListeners warning': function (done) {
+  test('deferred open(): maxListeners warning', function (t) {
     // 1) open database without callback, opens in next tick
-    var db = levelup(encDown(memdown()))
-    var stderrMock = this.mock(console)
+    var db = testCommon.factory()
+    var stderrMock = sinon.mock(console)
 
-    this.closeableDatabases.push(db)
     stderrMock.expects('error').never()
 
     // 2) provoke an EventEmitter maxListeners warning
@@ -160,44 +142,40 @@ buster.testCase('Deferred open()', {
 
     for (var i = 0; i < toPut; i++) {
       db.put('some', 'string', function (err) {
-        refute(err)
+        t.ifError(err)
         if (!--toPut) {
-          done()
+          db.close(t.end.bind(t))
         }
       })
     }
-  },
+  })
 
-  'value of queued operation is not serialized': function (done) {
-    var db = levelup(encDown(memdown(), { valueEncoding: 'json' }))
-
-    this.closeableDatabases.push(db)
+  test('deferred open(): value of queued operation is not serialized', function (t) {
+    var db = testCommon.factory({ valueEncoding: 'json' })
 
     // deferred-leveldown < 2.0.2 would serialize the object to a string.
     db.put('key', { thing: 2 }, function (err) {
-      refute(err)
+      t.ifError(err)
 
       db.get('key', function (err, value) {
-        refute(err)
-        assert.equals(value, { thing: 2 })
-        done()
+        t.ifError(err)
+        t.same(value, { thing: 2 })
+        db.close(t.end.bind(t))
       })
     })
-  },
+  })
 
-  'key of queued operation is not serialized': function (done) {
-    var db = levelup(encDown(memdown(), { keyEncoding: 'json' }))
-
-    this.closeableDatabases.push(db)
+  test('deferred open(): key of queued operation is not serialized', function (t) {
+    var db = testCommon.factory({ keyEncoding: 'json' })
 
     // deferred-leveldown < 2.0.2 would serialize the key to a string.
     db.put({ thing: 2 }, 'value', function (err) {
-      refute(err)
+      t.ifError(err)
 
       db.createKeyStream().pipe(concat(function (result) {
-        assert.equals(result, [{ thing: 2 }])
-        done()
+        t.same(result, [{ thing: 2 }])
+        db.close(t.end.bind(t))
       }))
     })
-  }
-})
+  })
+}

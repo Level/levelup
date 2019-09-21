@@ -2,102 +2,97 @@ var levelup = require('../lib/levelup')
 var errors = levelup.errors
 var each = require('async-each')
 var series = require('run-series')
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
+var discardable = require('./util/discardable')
 
-buster.testCase('batch()', {
-  setUp: common.commonSetUp,
-  tearDown: common.commonTearDown,
-
-  'batch() with multiple puts': function (done) {
-    this.openTestDatabase(function (db) {
+module.exports = function (test, testCommon) {
+  test('array-form batch(): multiple puts', function (t) {
+    discardable(t, testCommon, function (db, done) {
       db.batch([
         { type: 'put', key: 'foo', value: 'afoovalue' },
         { type: 'put', key: 'bar', value: 'abarvalue' },
         { type: 'put', key: 'baz', value: 'abazvalue' }
       ], function (err) {
-        refute(err)
-        each(['foo', 'bar', 'baz'], function (key, callback) {
+        t.ifError(err)
+
+        each(['foo', 'bar', 'baz'], function (key, next) {
           db.get(key, function (err, value) {
-            refute(err)
-            assert.equals(value, 'a' + key + 'value')
-            callback()
+            t.ifError(err)
+            t.is(value, 'a' + key + 'value')
+            next()
           })
         }, done)
       })
     })
-  },
+  })
 
-  'batch() with promise interface': function (done) {
-    this.openTestDatabase(function (db) {
+  test('array-form batch(): promise interface', function (t) {
+    discardable(t, testCommon, function (db, done) {
       db.batch([
         { type: 'put', key: 'foo', value: 'afoovalue' },
         { type: 'put', key: 'bar', value: 'abarvalue' },
         { type: 'put', key: 'baz', value: 'abazvalue' }
       ])
         .then(function () {
-          each(['foo', 'bar', 'baz'], function (key, callback) {
+          each(['foo', 'bar', 'baz'], function (key, next) {
             db.get(key, function (err, value) {
-              refute(err)
-              assert.equals(value, 'a' + key + 'value')
-              callback()
+              t.ifError(err)
+              t.is(value, 'a' + key + 'value')
+              next()
             })
           }, done)
         })
         .catch(done)
     })
-  },
+  })
 
-  'batch() with multiple puts and deletes': function (done) {
-    this.openTestDatabase(function (db) {
+  test('array-form batch(): multiple operations', function (t) {
+    discardable(t, testCommon, function (db, done) {
       series([
-        function (callback) {
+        function (next) {
           db.batch([
             { type: 'put', key: '1', value: 'one' },
             { type: 'put', key: '2', value: 'two' },
             { type: 'put', key: '3', value: 'three' }
-          ], callback)
+          ], next)
         },
-        function (callback) {
+        function (next) {
           db.batch([
             { type: 'put', key: 'foo', value: 'afoovalue' },
             { type: 'del', key: '1' },
             { type: 'put', key: 'bar', value: 'abarvalue' },
             { type: 'del', key: 'foo' },
             { type: 'put', key: 'baz', value: 'abazvalue' }
-          ], callback)
+          ], next)
         },
-        function (callback) {
+        function (next) {
           // these should exist
-          each(['2', '3', 'bar', 'baz'], function (key, callback) {
+          each(['2', '3', 'bar', 'baz'], function (key, next) {
             db.get(key, function (err, value) {
-              refute(err)
-              refute.isNull(value)
-              callback()
+              t.ifError(err)
+              t.ok(value != null)
+              next()
             })
-          }, callback)
+          }, next)
         },
-        function (callback) {
+        function (next) {
           // these shouldn't exist
-          each(['1', 'foo'], function (key, callback) {
+          each(['1', 'foo'], function (key, next) {
             db.get(key, function (err, value) {
-              assert(err)
-              assert.isInstanceOf(err, errors.NotFoundError)
-              refute(value)
-              callback()
+              t.ok(err)
+              t.ok(err instanceof errors.NotFoundError)
+              t.is(value, undefined)
+              next()
             })
-          }, callback)
+          }, next)
         }
       ], done)
     })
-  },
+  })
 
-  'batch() with chained interface': function (done) {
-    this.openTestDatabase(function (db) {
+  test('chained batch(): multiple operations', function (t) {
+    discardable(t, testCommon, function (db, done) {
       db.put('1', 'one', function (err) {
-        refute(err)
+        t.ifError(err)
 
         db.batch()
           .put('one', '1')
@@ -109,44 +104,49 @@ buster.testCase('batch()', {
           .put('3', 'three')
           .del('3')
           .write(function (err) {
-            refute(err)
+            t.ifError(err)
 
-            each(['one', 'three', '1', '2', '3'], function (key, callback) {
+            each(['one', 'three', '1', '2', '3'], function (key, next) {
               db.get(key, function (err) {
-                if (['one', 'three', '1', '3'].indexOf(key) > -1) { assert(err) } else { refute(err) }
-                callback()
+                if (['one', 'three', '1', '3'].indexOf(key) > -1) {
+                  t.ok(err)
+                } else {
+                  t.ifError(err)
+                }
+
+                next()
               })
             }, done)
           })
       })
     })
-  },
+  })
 
-  'batch() with chained interface - options': function (done) {
-    this.openTestDatabase(function (db) {
+  test('chained batch(): options', function (t) {
+    discardable(t, testCommon, function (db, done) {
       var batch = db.batch()
 
       var write = batch.batch.write.bind(batch.batch)
       batch.batch.write = function (options, cb) {
-        assert.equals(options, { foo: 'bar' })
+        t.same(options, { foo: 'bar' })
         write(options, cb)
       }
 
       batch.put('one', '1')
         .write({ foo: 'bar' }, function (err) {
-          refute(err)
+          t.ifError(err)
           done()
         })
     })
-  },
+  })
 
-  'batch() with chained promise interface - options': function (done) {
-    this.openTestDatabase(function (db) {
+  test('chained batch(): promise interface - options', function (t) {
+    discardable(t, testCommon, function (db, done) {
       var batch = db.batch()
 
       var write = batch.batch.write.bind(batch.batch)
       batch.batch.write = function (options, cb) {
-        assert.equals(options, { foo: 'bar' })
+        t.same(options, { foo: 'bar' })
         write(options, cb)
       }
 
@@ -155,12 +155,12 @@ buster.testCase('batch()', {
         .then(done)
         .catch(done)
     })
-  },
+  })
 
-  'batch() with chained promise interface': function (done) {
-    this.openTestDatabase(function (db) {
+  test('chained batch(): promise interface', function (t) {
+    discardable(t, testCommon, function (db, done) {
       db.put('1', 'one', function (err) {
-        refute(err)
+        t.ifError(err)
 
         db.batch()
           .put('one', '1')
@@ -173,218 +173,211 @@ buster.testCase('batch()', {
           .del('3')
           .write()
           .then(function () {
-            each(['one', 'three', '1', '2', '3'], function (key, callback) {
+            each(['one', 'three', '1', '2', '3'], function (key, next) {
               db.get(key, function (err) {
-                if (['one', 'three', '1', '3'].indexOf(key) > -1) { assert(err) } else { refute(err) }
-                callback()
+                if (['one', 'three', '1', '3'].indexOf(key) > -1) {
+                  t.ok(err)
+                } else {
+                  t.ifError(err)
+                }
+
+                next()
               })
             }, done)
           })
           .catch(done)
       })
     })
-  },
+  })
 
-  'batch() exposes ops queue length': function (done) {
-    this.openTestDatabase(function (db) {
+  test('chained batch(): exposes ops queue length', function (t) {
+    discardable(t, testCommon, function (db, done) {
       var batch = db.batch()
         .put('one', '1')
         .del('two')
         .put('three', '3')
-      assert.equals(batch.length, 3)
+      t.is(batch.length, 3)
       batch.clear()
-      assert.equals(batch.length, 0)
+      t.is(batch.length, 0)
       batch
         .del('1')
         .put('2', 'two')
         .put('3', 'three')
         .del('3')
-      assert.equals(batch.length, 4)
+      t.is(batch.length, 4)
       done()
     })
-  },
+  })
 
-  'batch() with can manipulate data from put()': function (done) {
-    // checks encoding and whatnot
-    this.openTestDatabase(function (db) {
-      series(
-        [
-          db.put.bind(db, '1', 'one'),
-          db.put.bind(db, '2', 'two'),
-          db.put.bind(db, '3', 'three'),
-          function (callback) {
-            db.batch([
-              { type: 'put', key: 'foo', value: 'afoovalue' },
-              { type: 'del', key: '1' },
-              { type: 'put', key: 'bar', value: 'abarvalue' },
-              { type: 'del', key: 'foo' },
-              { type: 'put', key: 'baz', value: 'abazvalue' }
-            ], callback)
-          },
-          function (callback) {
-            // these should exist
-            each(['2', '3', 'bar', 'baz'], function (key, callback) {
-              db.get(key, function (err, value) {
-                refute(err)
-                refute.isNull(value)
-                callback()
-              })
-            }, callback)
-          },
-          function (callback) {
-            // these shouldn't exist
-            each(['1', 'foo'], function (key, callback) {
-              db.get(key, function (err, value) {
-                assert(err)
-                assert.isInstanceOf(err, errors.NotFoundError)
-                refute(value)
-                callback()
-              })
-            }, callback)
-          }
-        ], done)
-    })
-  },
-
-  'batch() data can be read with get() and del()': function (done) {
-    this.openTestDatabase(function (db) {
+  test('array-form batch(): can overwrite data from put()', function (t) {
+    // checks encoding and whatnot  (?)
+    discardable(t, testCommon, function (db, done) {
       series([
-        function (callback) {
+        db.put.bind(db, '1', 'one'),
+        db.put.bind(db, '2', 'two'),
+        db.put.bind(db, '3', 'three'),
+        function (next) {
+          db.batch([
+            { type: 'put', key: 'foo', value: 'afoovalue' },
+            { type: 'del', key: '1' },
+            { type: 'put', key: 'bar', value: 'abarvalue' },
+            { type: 'del', key: 'foo' },
+            { type: 'put', key: 'baz', value: 'abazvalue' }
+          ], next)
+        },
+        function (next) {
+          // these should exist
+          each(['2', '3', 'bar', 'baz'], function (key, next) {
+            db.get(key, function (err, value) {
+              t.ifError(err)
+              t.ok(value != null)
+              next()
+            })
+          }, next)
+        },
+        function (next) {
+          // these shouldn't exist
+          each(['1', 'foo'], function (key, next) {
+            db.get(key, function (err, value) {
+              t.ok(err)
+              t.ok(err instanceof errors.NotFoundError)
+              t.is(value, undefined)
+              next()
+            })
+          }, next)
+        }
+      ], done)
+    })
+  })
+
+  test('array-form batch(): data can be read with get() and del()', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      series([
+        function (next) {
           db.batch([
             { type: 'put', key: '1', value: 'one' },
             { type: 'put', key: '2', value: 'two' },
             { type: 'put', key: '3', value: 'three' }
-          ], callback)
+          ], next)
         },
         db.del.bind(db, '1', 'one'),
-        function (callback) {
+        function (next) {
           // these should exist
-          each(['2', '3'], function (key, callback) {
+          each(['2', '3'], function (key, next) {
             db.get(key, function (err, value) {
-              refute(err)
-              refute.isNull(value)
-              callback()
+              t.ifError(err)
+              t.ok(value != null)
+              next()
             })
-          }, callback)
+          }, next)
         },
-        function (callback) {
+        function (next) {
           // this shouldn't exist
           db.get('1', function (err, value) {
-            assert(err)
-            assert.isInstanceOf(err, errors.NotFoundError)
-            refute(value)
-            callback()
+            t.ok(err)
+            t.ok(err instanceof errors.NotFoundError)
+            t.is(value, undefined)
+            next()
           })
         }
       ], done)
     })
-  },
+  })
 
-  'chained batch() arguments': {
-    setUp: function (done) {
-      this.openTestDatabase(function (db) {
-        this.db = db
-        this.batch = db.batch()
+  test('chained batch() arguments', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      var batch = db.batch()
+
+      t.test('chained batch() arguments: batch#put() with missing `value`', function (t) {
+        throws(t, batch.put.bind(batch, 'foo1'), function (err) {
+          t.is(err.name, 'WriteError')
+          t.is(err.message, 'value cannot be `null` or `undefined`')
+        })
+
+        throws(t, batch.put.bind(batch, 'foo1', null), function (err) {
+          t.is(err.name, 'WriteError')
+          t.is(err.message, 'value cannot be `null` or `undefined`')
+        })
+
+        t.end()
+      })
+
+      t.test('chained batch() arguments: batch#put() with missing `key`', function (t) {
+        throws(t, batch.put.bind(batch, undefined, 'foo1'), function (err) {
+          t.is(err.name, 'WriteError')
+          t.is(err.message, 'key cannot be `null` or `undefined`')
+        })
+
+        throws(t, batch.put.bind(batch, null, 'foo1'), function (err) {
+          t.is(err.name, 'WriteError')
+          t.is(err.message, 'key cannot be `null` or `undefined`')
+        })
+
+        t.end()
+      })
+
+      t.test('chained batch() arguments: batch#put() with missing `key` and `value`', function (t) {
+        throws(t, batch.put.bind(batch), function (err) {
+          t.is(err.name, 'WriteError')
+          t.is(err.message, 'key cannot be `null` or `undefined`')
+        })
+
+        throws(t, batch.put.bind(batch, null, null), function (err) {
+          t.is(err.name, 'WriteError')
+          t.is(err.message, 'key cannot be `null` or `undefined`')
+        })
+
+        t.end()
+      })
+
+      t.test('chained batch() arguments: batch#del() with missing `key`', function (t) {
+        throws(t, batch.del.bind(batch, undefined, 'foo1'), function (err) {
+          t.is(err.name, 'WriteError')
+          t.is(err.message, 'key cannot be `null` or `undefined`')
+        })
+
+        throws(t, batch.del.bind(batch, null, 'foo1'), function (err) {
+          t.is(err.name, 'WriteError')
+          t.is(err.message, 'key cannot be `null` or `undefined`')
+        })
+
+        t.end()
+      })
+
+      t.test('chained batch() arguments: teardown', function (t) {
+        t.end()
         done()
-      }.bind(this))
-    },
-
-    'test batch#put() with missing `value`': function () {
-      // value = undefined
-      assert.exception(this.batch.put.bind(this.batch, 'foo1'), function (err) {
-        if (err.name !== 'WriteError') { return false }
-        if (err.message !== 'value cannot be `null` or `undefined`') { return false }
-        return true
       })
+    })
+  })
 
-      assert.exception(this.batch.put.bind(this.batch, 'foo1', null), function (err) {
-        if (err.name !== 'WriteError') { return false }
-        if (err.message !== 'value cannot be `null` or `undefined`') { return false }
-        return true
-      })
-    },
-
-    'test batch#put() with missing `key`': function () {
-      // key = undefined
-      assert.exception(this.batch.put.bind(this.batch, undefined, 'foo1'), function (err) {
-        if (err.name !== 'WriteError') { return false }
-        if (err.message !== 'key cannot be `null` or `undefined`') { return false }
-        return true
-      })
-
-      // key = null
-      assert.exception(this.batch.put.bind(this.batch, null, 'foo1'), function (err) {
-        if (err.name !== 'WriteError') { return false }
-        if (err.message !== 'key cannot be `null` or `undefined`') { return false }
-        return true
-      })
-    },
-
-    'test batch#put() with missing `key` and `value`': function () {
-      // undefined
-      assert.exception(this.batch.put.bind(this.batch), function (err) {
-        if (err.name !== 'WriteError') { return false }
-        if (err.message !== 'key cannot be `null` or `undefined`') { return false }
-        return true
-      })
-
-      // null
-      assert.exception(this.batch.put.bind(this.batch, null, null), function (err) {
-        if (err.name !== 'WriteError') { return false }
-        if (err.message !== 'key cannot be `null` or `undefined`') { return false }
-        return true
-      })
-    },
-
-    'test batch#del() with missing `key`': function () {
-      // key = undefined
-      assert.exception(this.batch.del.bind(this.batch, undefined, 'foo1'), function (err) {
-        if (err.name !== 'WriteError') { return false }
-        if (err.message !== 'key cannot be `null` or `undefined`') { return false }
-        return true
-      })
-
-      // key = null
-      assert.exception(this.batch.del.bind(this.batch, null, 'foo1'), function (err) {
-        if (err.name !== 'WriteError') { return false }
-        if (err.message !== 'key cannot be `null` or `undefined`') { return false }
-        return true
-      })
-    },
-
-    'test batch#write() with no callback': function () {
-      this.batch.write() // should not cause an error with no cb
-    },
-
-    'test batch operations after write()': {
-      setUp: function (done) {
-        this.batch.put('foo', 'bar').put('boom', 'bang').del('foo').write(done)
-        this.verify = function (cb) {
-          assert.exception(cb, function (err) {
-            if (err.name !== 'WriteError') { return false }
-            if (err.message !== 'write() already called on this batch') { return false }
-            return true
-          })
-        }
-      },
-
-      'test put()': function () {
-        this.verify(function () {
-          this.batch.put('whoa', 'dude')
-        }.bind(this))
-      },
-
-      'test del()': function () {
-        this.verify(function () {
-          this.batch.del('foo')
-        }.bind(this))
-      },
-
-      'test clear()': function () {
-        this.verify(function () {
-          this.batch.clear()
-        }.bind(this))
+  test('chained batch(): rejects operations after write()', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      function verify (err) {
+        t.is(err.name, 'WriteError')
+        t.is(err.message, 'write() already called on this batch')
       }
-    }
+
+      var batch = db.batch()
+      batch.put('foo', 'bar').put('boom', 'bang').del('foo').write(function (err) {
+        t.ifError(err, 'no batch error')
+
+        throws(t, function () { batch.put('whoa', 'dude') }, verify)
+        throws(t, function () { batch.del('foo') }, verify)
+        throws(t, function () { batch.clear() }, verify)
+
+        done()
+      })
+    })
+  })
+}
+
+function throws (t, fn, verify) {
+  try {
+    fn()
+  } catch (err) {
+    return verify(err)
   }
-})
+
+  t.fail('did not throw')
+}

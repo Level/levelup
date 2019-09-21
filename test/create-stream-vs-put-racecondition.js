@@ -1,89 +1,69 @@
-// NOTE: this file is outdated. It is not included in the test suite (index.js).
-
-var levelup = require('../lib/levelup.js')
+var levelup = require('../lib/levelup')
 var memdown = require('memdown')
-var common = require('./common')
-var assert = require('referee').assert
-var buster = require('bustermove')
+var encdown = require('encoding-down')
+var after = require('after')
 
-function makeTest (db, delay, done) {
-  // this should be an empty stream
-  var i = 0
-  var j = 0
-  var k = 0
-  var m = 0
-  var streamEnd = false
-  var putEnd = false
-
-  db.createReadStream()
-    .on('data', function (data) {
-      i++
+module.exports = function (test, testCommon) {
+  ;[true, false].forEach(function (encode) {
+    ;[true, false].forEach(function (deferredOpen) {
+      ;[true, false].forEach(function (delayedPut) {
+        makeTest(test, encode, deferredOpen, delayedPut)
+      })
     })
-    .on('end', function () {
-      // since the readStream is created before inserting anything
-      // it should be empty? right?
-      assert.equals(i, 0, 'stream read the future')
-
-      if (putEnd) done()
-      streamEnd = true
-    })
-
-  db.on('put', function (key, value) {
-    j++
   })
-
-  // insert 10 things,
-  // then check the right number of events where emitted.
-  function insert () {
-    m++
-    db.put('hello' + k++ / 10, k, next)
-  }
-
-  delay(function () {
-    insert(); insert(); insert(); insert(); insert()
-    insert(); insert(); insert(); insert(); insert()
-  })
-
-  function next () {
-    if (--m) return
-    process.nextTick(function () {
-      assert.equals(j, 10)
-      assert.equals(i, 0)
-
-      if (streamEnd) done()
-      putEnd = true
-    })
-  }
 }
 
-buster.testCase('ReadStream', {
-  setUp: common.readStreamSetUp,
+function makeTest (test, encode, deferredOpen, delayedPut) {
+  var name = [
+    'readStream before put',
+    encode && 'encode',
+    deferredOpen && 'deferred open',
+    delayedPut && 'delayed put'
+  ].filter(Boolean).join(', ')
 
-  tearDown: common.commonTearDown,
+  test(name, function (t) {
+    var db = encode ? levelup(encdown(memdown())) : levelup(memdown())
+    var delay = delayedPut ? process.nextTick : callFn
 
-  // TODO: test various encodings
-  'readStream and then put in nextTick': function (done) {
-    this.openTestDatabase(function (db) {
-      makeTest(db, process.nextTick, done)
-    })
-  },
-  'readStream and then put in nextTick, defered open': function (done) {
-    var db = levelup(memdown())
+    run(t, db, !deferredOpen, delay)
+  })
+}
 
-    this.closeableDatabases.push(db)
-
-    makeTest(db, process.nextTick, done)
-  },
-  'readStream and then put, defered open': function (done) {
-    var db = levelup(memdown())
-
-    this.closeableDatabases.push(db)
-
-    makeTest(db, function (f) { f() }, done)
-  },
-  'readStream and then put': function (done) {
-    this.openTestDatabase(function (db) {
-      makeTest(db, function (f) { f() }, done)
+function run (t, db, explicitOpen, delay) {
+  if (explicitOpen) {
+    return db.open(function (err) {
+      t.ifError(err, 'no open error')
+      run(t, db, false, delay)
     })
   }
-})
+
+  var reads = 0
+  var next = after(11, function (err) {
+    t.ifError(err, 'no error')
+    t.is(reads, 0, 'got 0 items from snaphot')
+
+    db.close(function (err) {
+      t.ifError(err, 'no close error')
+      t.end()
+    })
+  })
+
+  // Should read from a snapshot, unaffected by later writes,
+  // even if those are performed in the same tick.
+  db.createReadStream()
+    .on('data', function () {
+      reads++
+    })
+    .on('end', next)
+
+  // Write data
+  delay(function () {
+    for (var i = 0; i < 10; i++) {
+      db.put(String(i), String(i), next)
+    }
+  })
+}
+
+function callFn (fn) {
+  fn()
+}

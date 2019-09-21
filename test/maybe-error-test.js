@@ -1,81 +1,75 @@
 'use strict'
 
-var common = require('./common')
-var assert = require('referee').assert
-var refute = require('referee').refute
-var buster = require('bustermove')
+var discardable = require('./util/discardable')
 
-buster.testCase('maybeError() should be called async', {
-  setUp: common.commonSetUp,
-  tearDown: common.commonTearDown,
-
-  'put()': function (done) {
-    this.openTestDatabase(function (db) {
+module.exports = function (test, testCommon) {
+  test('maybeError() should be called async: put()', function (t) {
+    discardable(t, testCommon, function (db, done) {
       db.close(function () {
-        assert.isTrue(db.isClosed(), 'db is closed')
+        t.is(db.isClosed(), true, 'db is closed')
         var sync = false
         db.put('key', 'value', {}, function (err) {
           sync = true
-          assert(err)
-          assert.equals(err.message, 'Database is not open')
+          t.ok(err)
+          t.is(err.message, 'Database is not open')
         })
-        assert.isFalse(sync, '.put cb called synchronously')
+        t.is(sync, false, '.put cb called asynchronously')
         done()
       })
     })
-  },
+  })
 
-  'get()': function (done) {
-    this.openTestDatabase(function (db) {
+  test('maybeError() should be called async: get()', function (t) {
+    discardable(t, testCommon, function (db, done) {
       db.put('key', 'value', {}, function (err) {
-        refute(err)
+        t.ifError(err)
         db.close(function () {
-          assert.isTrue(db.isClosed(), 'db is closed')
+          t.is(db.isClosed(), true, 'db is closed')
           var sync = false
           db.get('key', {}, function (err, value) {
             sync = true
-            assert(err)
-            assert.equals(err.message, 'Database is not open')
+            t.ok(err)
+            t.is(err.message, 'Database is not open')
           })
-          assert.isFalse(sync, '.get cb called synchronously')
+          t.is(sync, false, '.get cb called asynchronously')
           done()
         })
       })
     })
-  },
+  })
 
-  'del()': function (done) {
-    this.openTestDatabase(function (db) {
+  test('maybeError() should be called async: del()', function (t) {
+    discardable(t, testCommon, function (db, done) {
       db.put('key', 'value', {}, function (err) {
-        refute(err)
+        t.ifError(err)
         db.close(function () {
-          assert.isTrue(db.isClosed(), 'db is closed')
+          t.is(db.isClosed(), true, 'db is closed')
           var sync = false
           db.del('key', {}, function (err) {
             sync = true
-            assert(err)
-            assert.equals(err.message, 'Database is not open')
+            t.ok(err)
+            t.is(err.message, 'Database is not open')
           })
-          assert.isFalse(sync, '.del cb called synchronously')
+          t.is(sync, false, '.del cb called asynchronously')
           done()
         })
       })
     })
-  },
+  })
 
-  'batch()': function (done) {
-    this.openTestDatabase(function (db) {
+  test('maybeError() should be called async: batch()', function (t) {
+    discardable(t, testCommon, function (db, done) {
       db.close(function () {
-        assert.isTrue(db.isClosed(), 'db is closed')
+        t.is(db.isClosed(), true, 'db is closed')
         var sync = false
         db.batch([{ type: 'put', key: 'key' }], {}, function (err) {
           sync = true
-          assert(err)
-          assert.equals(err.message, 'Database is not open')
+          t.ok(err)
+          t.is(err.message, 'Database is not open')
         })
-        assert.isFalse(sync, '.batch cb called synchronously')
+        t.is(sync, false, '.batch cb called asynchronously')
         done()
       })
     })
-  }
-})
+  })
+}
