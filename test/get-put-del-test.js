@@ -37,7 +37,7 @@ module.exports = function (test, testCommon) {
     discardable(t, testCommon, function (db, done) {
       db.put('some key', 'some value stored in the database', function (err) {
         t.ifError(err)
-        db.get('some key', function (err, value) {
+        db.get('some key', { asBuffer: false }, function (err, value) {
           t.ifError(err)
           t.is(value, 'some value stored in the database')
           done()
@@ -50,7 +50,7 @@ module.exports = function (test, testCommon) {
     discardable(t, testCommon, function (db, done) {
       db.put('some key', 'some value stored in the database')
         .then(function () {
-          return db.get('some key')
+          return db.get('some key', { asBuffer: false })
         })
         .then(function (value) {
           t.is(value, 'some value stored in the database')
@@ -90,7 +90,7 @@ module.exports = function (test, testCommon) {
         },
         function (next) {
           each(['foo', 'bar', 'baz'], function (key, next) {
-            db.get(key, function (err, value) {
+            db.get(key, { asBuffer: false }, function (err, value) {
               // we should get foo & baz but not bar
               if (key === 'bar') {
                 t.ok(err)

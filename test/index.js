@@ -23,7 +23,7 @@ function suite (options) {
   require('./null-and-undefined-test')(test, testCommon)
   if (testCommon.deferredOpen) require('./open-patchsafe-test')(test, testCommon)
   if (testCommon.streams) require('./read-stream-test')(test, testCommon)
-  if (testCommon.snapshots) require('./snapshot-test')(test, testCommon)
+  if (testCommon.snapshots && testCommon.streams) require('./snapshot-test')(test, testCommon)
   require('./iterator-test')(test, testCommon)
   if (testCommon.seek) require('./iterator-seek-test')(test, testCommon)
 }
