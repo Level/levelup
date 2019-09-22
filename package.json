@@ -17,6 +17,7 @@
     "deferred-leveldown": "~5.2.1",
     "level-errors": "~2.0.0",
     "level-iterator-stream": "~4.0.0",
+    "level-supports": "~1.0.0",
     "xtend": "~4.0.0"
   },
   "devDependencies": {
