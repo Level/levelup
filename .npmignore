@@ -3,3 +3,4 @@ test
 .travis.yml
 .dntrc
 .nyc_output/
+airtap.log

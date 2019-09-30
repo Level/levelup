@@ -10,3 +10,4 @@ libpeerconnection.log
 yarn.lock
 package-lock.json
 .nyc_output/
+airtap.log

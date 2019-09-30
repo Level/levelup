@@ -1,10 +1,12 @@
 var each = require('async-each')
 var parallel = require('run-parallel')
 var concat = require('concat-stream')
-var sinon = require('sinon')
 var readStreamContext = require('./util/rs-context')
+var rsFactory = require('./util/rs-factory')
 
 module.exports = function (test, testCommon) {
+  var createReadStream = rsFactory(testCommon)
+
   test('deferred open(): put() and get() on new database', function (t) {
     // 1) open database without callback, opens in next tick
     var db = testCommon.factory()
@@ -19,13 +21,13 @@ module.exports = function (test, testCommon) {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
       each([1, 2, 3], function (k, next) {
-        db.get('k' + k, function (err, v) {
+        db.get('k' + k, { asBuffer: false }, function (err, v) {
           t.ifError(err)
           t.is(v, 'v' + k)
           next()
         })
       }, function () {
-        db.get('k4', function (err) {
+        db.get('k4', { asBuffer: false }, function (err) {
           t.ok(err)
           db.close(t.end.bind(t))
         })
@@ -51,13 +53,13 @@ module.exports = function (test, testCommon) {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
       each([1, 2, 3], function (k, next) {
-        db.get('k' + k, function (err, v) {
+        db.get('k' + k, { asBuffer: false }, function (err, v) {
           t.ifError(err)
           t.is(v, 'v' + k)
           next()
         })
       }, function () {
-        db.get('k4', function (err) {
+        db.get('k4', { asBuffer: false }, function (err) {
           t.ok(err)
           db.close(t.end.bind(t))
         })
@@ -83,13 +85,13 @@ module.exports = function (test, testCommon) {
       // 3) when the callbacks have returned, the database should be open and those values should be in
       //    verify that the values are there
         each([1, 2, 3], function (k, next) {
-          db.get('k' + k, function (err, v) {
+          db.get('k' + k, { asBuffer: false }, function (err, v) {
             t.ifError(err)
             t.is(v, 'v' + k)
             next()
           })
         }, function () {
-          db.get('k4', function (err) {
+          db.get('k4', { asBuffer: false }, function (err) {
             t.ok(err)
             db.close(t.end.bind(t))
           })
@@ -101,7 +103,7 @@ module.exports = function (test, testCommon) {
     t.is(db.isClosed(), false)
   })
 
-  test('deferred open(): test deferred ReadStream', function (t) {
+  testCommon.streams && test('deferred open(): test deferred ReadStream', function (t) {
     var ctx = readStreamContext(t)
     var db = testCommon.factory()
 
@@ -116,7 +118,7 @@ module.exports = function (test, testCommon) {
           t.ifError(err, 'no open error')
         })
 
-        db.createReadStream()
+        createReadStream(db)
           .on('data', ctx.dataSpy)
           .on('end', ctx.endSpy)
           .on('close', function () {
@@ -130,12 +132,12 @@ module.exports = function (test, testCommon) {
     })
   })
 
-  test('deferred open(): maxListeners warning', function (t) {
+  test('deferred open(): no maxListeners warning', function (t) {
     // 1) open database without callback, opens in next tick
     var db = testCommon.factory()
-    var stderrMock = sinon.mock(console)
+    var fail = t.fail.bind(t)
 
-    stderrMock.expects('error').never()
+    process.on('warning', fail)
 
     // 2) provoke an EventEmitter maxListeners warning
     var toPut = 11
@@ -144,13 +146,14 @@ module.exports = function (test, testCommon) {
       db.put('some', 'string', function (err) {
         t.ifError(err)
         if (!--toPut) {
+          process.removeListener('warning', fail)
           db.close(t.end.bind(t))
         }
       })
     }
   })
 
-  test('deferred open(): value of queued operation is not serialized', function (t) {
+  testCommon.encodings && test('deferred open(): value of queued operation is not serialized', function (t) {
     var db = testCommon.factory({ valueEncoding: 'json' })
 
     // deferred-leveldown < 2.0.2 would serialize the object to a string.
@@ -165,7 +168,7 @@ module.exports = function (test, testCommon) {
     })
   })
 
-  test('deferred open(): key of queued operation is not serialized', function (t) {
+  testCommon.encodings && test('deferred open(): key of queued operation is not serialized', function (t) {
     var db = testCommon.factory({ keyEncoding: 'json' })
 
     // deferred-leveldown < 2.0.2 would serialize the key to a string.

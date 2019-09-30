@@ -15,7 +15,7 @@ module.exports = function (test, testCommon) {
         t.ifError(err)
 
         each(['foo', 'bar', 'baz'], function (key, next) {
-          db.get(key, function (err, value) {
+          db.get(key, { asBuffer: false }, function (err, value) {
             t.ifError(err)
             t.is(value, 'a' + key + 'value')
             next()
@@ -25,7 +25,7 @@ module.exports = function (test, testCommon) {
     })
   })
 
-  test('array-form batch(): promise interface', function (t) {
+  testCommon.promises && test('array-form batch(): promise interface', function (t) {
     discardable(t, testCommon, function (db, done) {
       db.batch([
         { type: 'put', key: 'foo', value: 'afoovalue' },
@@ -34,7 +34,7 @@ module.exports = function (test, testCommon) {
       ])
         .then(function () {
           each(['foo', 'bar', 'baz'], function (key, next) {
-            db.get(key, function (err, value) {
+            db.get(key, { asBuffer: false }, function (err, value) {
               t.ifError(err)
               t.is(value, 'a' + key + 'value')
               next()
@@ -67,7 +67,7 @@ module.exports = function (test, testCommon) {
         function (next) {
           // these should exist
           each(['2', '3', 'bar', 'baz'], function (key, next) {
-            db.get(key, function (err, value) {
+            db.get(key, { asBuffer: false }, function (err, value) {
               t.ifError(err)
               t.ok(value != null)
               next()
@@ -77,7 +77,7 @@ module.exports = function (test, testCommon) {
         function (next) {
           // these shouldn't exist
           each(['1', 'foo'], function (key, next) {
-            db.get(key, function (err, value) {
+            db.get(key, { asBuffer: false }, function (err, value) {
               t.ok(err)
               t.ok(err instanceof errors.NotFoundError)
               t.is(value, undefined)
@@ -107,7 +107,7 @@ module.exports = function (test, testCommon) {
             t.ifError(err)
 
             each(['one', 'three', '1', '2', '3'], function (key, next) {
-              db.get(key, function (err) {
+              db.get(key, { asBuffer: false }, function (err) {
                 if (['one', 'three', '1', '3'].indexOf(key) > -1) {
                   t.ok(err)
                 } else {
@@ -125,9 +125,11 @@ module.exports = function (test, testCommon) {
   test('chained batch(): options', function (t) {
     discardable(t, testCommon, function (db, done) {
       var batch = db.batch()
+      var underlying = batch
+      while (underlying.batch) underlying = underlying.batch
 
-      var write = batch.batch.write.bind(batch.batch)
-      batch.batch.write = function (options, cb) {
+      var write = underlying.write.bind(underlying)
+      underlying.write = function (options, cb) {
         t.same(options, { foo: 'bar' })
         write(options, cb)
       }
@@ -140,7 +142,7 @@ module.exports = function (test, testCommon) {
     })
   })
 
-  test('chained batch(): promise interface - options', function (t) {
+  testCommon.promises && test('chained batch(): promise interface - options', function (t) {
     discardable(t, testCommon, function (db, done) {
       var batch = db.batch()
 
@@ -157,7 +159,7 @@ module.exports = function (test, testCommon) {
     })
   })
 
-  test('chained batch(): promise interface', function (t) {
+  testCommon.promises && test('chained batch(): promise interface', function (t) {
     discardable(t, testCommon, function (db, done) {
       db.put('1', 'one', function (err) {
         t.ifError(err)
@@ -174,7 +176,7 @@ module.exports = function (test, testCommon) {
           .write()
           .then(function () {
             each(['one', 'three', '1', '2', '3'], function (key, next) {
-              db.get(key, function (err) {
+              db.get(key, { asBuffer: false }, function (err) {
                 if (['one', 'three', '1', '3'].indexOf(key) > -1) {
                   t.ok(err)
                 } else {
@@ -228,7 +230,7 @@ module.exports = function (test, testCommon) {
         function (next) {
           // these should exist
           each(['2', '3', 'bar', 'baz'], function (key, next) {
-            db.get(key, function (err, value) {
+            db.get(key, { asBuffer: false }, function (err, value) {
               t.ifError(err)
               t.ok(value != null)
               next()
@@ -238,7 +240,7 @@ module.exports = function (test, testCommon) {
         function (next) {
           // these shouldn't exist
           each(['1', 'foo'], function (key, next) {
-            db.get(key, function (err, value) {
+            db.get(key, { asBuffer: false }, function (err, value) {
               t.ok(err)
               t.ok(err instanceof errors.NotFoundError)
               t.is(value, undefined)
@@ -264,7 +266,7 @@ module.exports = function (test, testCommon) {
         function (next) {
           // these should exist
           each(['2', '3'], function (key, next) {
-            db.get(key, function (err, value) {
+            db.get(key, { asBuffer: false }, function (err, value) {
               t.ifError(err)
               t.ok(value != null)
               next()
@@ -273,7 +275,7 @@ module.exports = function (test, testCommon) {
         },
         function (next) {
           // this shouldn't exist
-          db.get('1', function (err, value) {
+          db.get('1', { asBuffer: false }, function (err, value) {
             t.ok(err)
             t.ok(err instanceof errors.NotFoundError)
             t.is(value, undefined)

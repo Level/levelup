@@ -2,8 +2,11 @@ var delayed = require('delayed').delayed
 var trickle = require('trickle')
 var discardable = require('./util/discardable')
 var readStreamContext = require('./util/rs-context')
+var rsFactory = require('./util/rs-factory')
 
 module.exports = function (test, testCommon) {
+  var createReadStream = rsFactory(testCommon)
+
   test('ReadStream implicit snapshot', function (t) {
     discardable(t, testCommon, function (db, done) {
       var ctx = readStreamContext(t)
@@ -16,7 +19,7 @@ module.exports = function (test, testCommon) {
         //    to make *sure* that we're going to be reading it for longer than it
         //    takes to overwrite the data in there.
 
-        var rs = db.readStream().pipe(trickle({ interval: 5 }))
+        var rs = createReadStream(db).pipe(trickle({ interval: 5 }))
 
         rs.on('data', ctx.dataSpy)
         rs.once('end', ctx.endSpy)
