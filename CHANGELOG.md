@@ -2,6 +2,18 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
+## [4.3.0] - 2019-09-30
+
+### Changed
+
+- Rewrite `buster` tests as `tape` tests ([#674](https://github.com/Level/levelup/issues/674)) ([**@vweevers**](https://github.com/vweevers))
+- Create test suite ([#677](https://github.com/Level/levelup/issues/677)) ([**@vweevers**](https://github.com/vweevers))
+
+### Added
+
+- Add manifest ([Level/community#83](https://github.com/Level/community/issues/83)) ([#678](https://github.com/Level/levelup/issues/678)) ([**@vweevers**](https://github.com/vweevers))
+- Add `type` property for `reachdown` ([Level/community#82](https://github.com/Level/community/issues/82)) ([#678](https://github.com/Level/levelup/issues/678)) ([**@vweevers**](https://github.com/vweevers))
+
 ## [4.2.0] - 2019-09-08
 
 ### Changed
@@ -1070,6 +1082,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ### Removed
 
 - Remove unused `inherits` variable ([**@rvagg**](https://github.com/rvagg))
+
+[4.3.0]: https://github.com/Level/levelup/compare/v4.2.0...v4.3.0
 
 [4.2.0]: https://github.com/Level/levelup/compare/v4.1.0...v4.2.0
 
