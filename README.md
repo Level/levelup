@@ -82,6 +82,7 @@ db.put('name', 'levelup', function (err) {
 ## API
 
 - <a href="#ctor"><code><b>levelup()</b></code></a>
+- <a href="#supports"><code>db.<b>supports</b></code></a>
 - <a href="#open"><code>db.<b>open()</b></code></a>
 - <a href="#close"><code>db.<b>close()</b></code></a>
 - <a href="#put"><code>db.<b>put()</b></code></a>
@@ -135,6 +136,22 @@ db.get('foo', function (err, value) {
   if (err) return console.log('foo does not exist')
   console.log('got foo =', value)
 })
+```
+
+<a name="supports"></a>
+
+### `db.supports`
+
+A read-only [manifest](https://github.com/Level/supports). Not [widely supported yet](https://github.com/Level/community/issues/83). Might be used like so:
+
+```js
+if (!db.supports.permanence) {
+  throw new Error('Persistent storage is required')
+}
+
+if (db.supports.bufferKeys && db.supports.promises) {
+  await db.put(Buffer.from('key'), 'value')
+}
 ```
 
 <a name="open"></a>
