@@ -2,6 +2,12 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
+## [4.3.1] - 2019-10-03
+
+### Fixed
+
+- Fix floating promise in constructor ([#680](https://github.com/Level/levelup/issues/680)) ([**@vweevers**](https://github.com/vweevers))
+
 ## [4.3.0] - 2019-09-30
 
 ### Changed
@@ -1082,6 +1088,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ### Removed
 
 - Remove unused `inherits` variable ([**@rvagg**](https://github.com/rvagg))
+
+[4.3.1]: https://github.com/Level/levelup/compare/v4.3.0...v4.3.1
 
 [4.3.0]: https://github.com/Level/levelup/compare/v4.2.0...v4.3.0
 
