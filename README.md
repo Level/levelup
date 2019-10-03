@@ -111,7 +111,7 @@ The main entry point for creating a new `levelup` instance.
 - `db` must be an [`abstract-leveldown`](https://github.com/Level/abstract-leveldown) compliant store.
 - `options` is passed on to the underlying store when opened and is specific to the type of store being used
 
-Calling `levelup(db)` will also open the underlying store. This is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form `function (err, db) {}` where `db` is the `levelup` instance. If you don't provide a callback, any read & write operations are simply queued internally until the store is fully opened.
+Calling `levelup(db)` will also open the underlying store. This is an asynchronous operation which will trigger your callback if you provide one. The callback should take the form `function (err, db) {}` where `db` is the `levelup` instance. If you don't provide a callback, any read & write operations are simply queued internally until the store is fully opened, unless it fails to open, in which case an `error` event will be emitted.
 
 This leads to two alternative ways of managing a `levelup` instance:
 
@@ -487,6 +487,7 @@ const main = async () => {
 | `ready`   | Alias of `open`             | -                    |
 | `closing` | Store is closing            | -                    |
 | `closed`  | Store has closed.           | -                    |
+| `error`   | An error occurred           | `error` (Error)      |
 
 For example you can do:
 

@@ -39,6 +39,40 @@ module.exports = function (test, testCommon) {
     })
   })
 
+  test('Init & open(): error with callback', function (t) {
+    t.plan(1)
+
+    var mem = memdown()
+    mem._open = function (opts, cb) {
+      process.nextTick(cb, new Error('from underlying store'))
+    }
+
+    levelup(mem, function (err) {
+      t.is(err.message, 'from underlying store')
+    }).on('open', function () {
+      t.fail('should not finish opening')
+    }).on('error', function () {
+      t.fail('should not emit error')
+    })
+  })
+
+  test('Init & open(): error without callback', function (t) {
+    t.plan(1)
+
+    var mem = memdown()
+    mem._open = function (opts, cb) {
+      process.nextTick(cb, new Error('from underlying store'))
+    }
+
+    levelup(mem)
+      .on('open', function () {
+        t.fail('should not finish opening')
+      })
+      .on('error', function (err) {
+        t.is(err.message, 'from underlying store')
+      })
+  })
+
   test('Init & open(): validate abstract-leveldown', function (t) {
     t.plan(1)
 
