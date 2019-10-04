@@ -52,6 +52,9 @@ suite({
   encodings: false
 })
 
+// Integration tests that can't use a generic testCommon.factory()
+require('./self/manifest-test')
+
 if (!process.browser) {
   require('./browserify-test')(test)
 }
