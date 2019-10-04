@@ -2,6 +2,16 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
+## [4.3.2] - 2019-10-04
+
+### Changed
+
+- Upgrade `deferred-leveldown` from `~5.2.1` to `~5.3.0` ([#682](https://github.com/Level/levelup/issues/682)) ([**@vweevers**](https://github.com/vweevers)). This fixes the manifest added in 4.3.0.
+
+### Added
+
+- Test manifest integration with `deferred-leveldown` ([#681](https://github.com/Level/levelup/issues/681)) ([**@vweevers**](https://github.com/vweevers))
+
 ## [4.3.1] - 2019-10-03
 
 ### Fixed
@@ -1088,6 +1098,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ### Removed
 
 - Remove unused `inherits` variable ([**@rvagg**](https://github.com/rvagg))
+
+[4.3.2]: https://github.com/Level/levelup/compare/v4.3.1...v4.3.2
 
 [4.3.1]: https://github.com/Level/levelup/compare/v4.3.0...v4.3.1
 
