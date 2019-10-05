@@ -24,3 +24,6 @@ script:
   - DEBUG=airtap:* npm run $CMD
 
 after_success: npm run coverage
+
+notifications:
+  email: false
