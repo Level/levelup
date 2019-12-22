@@ -41,7 +41,7 @@
     "run-series": "^1.1.8",
     "safe-buffer": "^5.1.0",
     "simple-concat": "^1.0.0",
-    "sinon": "^7.4.2",
+    "sinon": "^8.0.0",
     "standard": "^14.1.0",
     "tape": "^4.7.0",
     "trickle": "0.0.2"
