@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "after": "^0.8.2",
-    "airtap": "^2.0.0",
+    "airtap": "^3.0.0",
     "async-each": "^1.0.3",
     "browserify": "^16.0.0",
     "concat-stream": "^2.0.0",
