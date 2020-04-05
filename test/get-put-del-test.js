@@ -107,13 +107,4 @@ module.exports = function (test, testCommon) {
       ], done)
     })
   })
-
-  test('get() / put() / del(): throw if no key is provided', function (t) {
-    discardable(t, testCommon, function (db, done) {
-      t.throws(db.get.bind(db), /^ReadError: get\(\) requires a key argument/, 'no-arg get() throws')
-      t.throws(db.put.bind(db), /^WriteError: put\(\) requires a key argument/, 'no-arg put() throws')
-      t.throws(db.del.bind(db), /^WriteError: del\(\) requires a key argument/, 'no-arg del() throws')
-      done()
-    })
-  })
 }
