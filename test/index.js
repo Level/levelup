@@ -6,7 +6,6 @@ function suite (options) {
   var testCommon = common(options)
   var test = testCommon.test
 
-  require('./argument-checking-test')(test, testCommon)
   require('./manifest-test')(test, testCommon)
   require('./batch-test')(test, testCommon)
   if (testCommon.encodings) require('./binary-test')(test, testCommon)
