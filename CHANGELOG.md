@@ -2,6 +2,16 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
+## [4.4.0] - 2020-04-11
+
+### Changed
+
+- Increase `abstract-leveldown` parity ([#692](https://github.com/Level/levelup/issues/692)) ([**@vweevers**](https://github.com/vweevers)):
+  - Add `db` property to chained batch
+  - Remove type checks that are also performed by `abstract-leveldown`
+- Upgrade `dependency-check` devDependency from `^3.3.0` to `^4.1.0` ([`71a6aa3`](https://github.com/Level/levelup/commit/71a6aa3)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `airtap` devDependency from `^2.0.0` to `^3.0.0` ([#687](https://github.com/Level/levelup/issues/687)) ([**@vweevers**](https://github.com/vweevers))
+
 ## [4.3.2] - 2019-10-04
 
 ### Changed
@@ -1098,6 +1108,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ### Removed
 
 - Remove unused `inherits` variable ([**@rvagg**](https://github.com/rvagg))
+
+[4.4.0]: https://github.com/Level/levelup/compare/v4.3.2...v4.4.0
 
 [4.3.2]: https://github.com/Level/levelup/compare/v4.3.1...v4.3.2
 

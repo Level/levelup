@@ -2,48 +2,48 @@
 
 | Name                       | GitHub                                                                     | Social                                                              |
 | :------------------------- | :------------------------------------------------------------------------- | :------------------------------------------------------------------ |
-| **Lars-Magnus Skog**       | [**@ralphtheninja**](https://github.com/ralphtheninja)                     | [**@ralph@social.weho.st**](https://social.weho.st/@ralph)          |
 | **Rod Vagg**               | [**@rvagg**](https://github.com/rvagg)                                     | [**@rvagg@twitter**](https://twitter.com/rvagg)                     |
-| **Julian Gruber**          | [**@juliangruber**](https://github.com/juliangruber)                       | [**@juliangruber@twitter**](https://twitter.com/juliangruber)       |
+| **Lars-Magnus Skog**       | [**@ralphtheninja**](https://github.com/ralphtheninja)                     | [**@ralph@social.weho.st**](https://social.weho.st/@ralph)          |
 | **Vincent Weevers**        | [**@vweevers**](https://github.com/vweevers)                               | [**@vweevers@twitter**](https://twitter.com/vweevers)               |
+| **Julian Gruber**          | [**@juliangruber**](https://github.com/juliangruber)                       | [**@juliangruber@twitter**](https://twitter.com/juliangruber)       |
 | **Dominic Tarr**           | [**@dominictarr**](https://github.com/dominictarr)                         | [**@dominictarr@twitter**](https://twitter.com/dominictarr)         |
 | **Matteo Collina**         | [**@mcollina**](https://github.com/mcollina)                               | [**@matteocollina@twitter**](https://twitter.com/matteocollina)     |
 | **James Halliday**         | [**@substack**](https://github.com/substack)                               | [**@substack@twitter**](https://twitter.com/substack)               |
 | **David Björklund**        | [**@kesla**](https://github.com/kesla)                                     | [**@david_bjorklund@twitter**](https://twitter.com/david_bjorklund) |
-| **Raynos (Jake Verbaten)** |                                                                            |                                                                     |
 | **Meirion Hughes**         | [**@MeirionHughes**](https://github.com/MeirionHughes)                     |                                                                     |
+| **Raynos (Jake Verbaten)** |                                                                            |                                                                     |
 | **Jarrett Cruger**         | [**@jcrugzz**](https://github.com/jcrugzz)                                 | [**@jcrugzz@twitter**](https://twitter.com/jcrugzz)                 |
 | **Arnout Engelen**         | [**@raboof**](https://github.com/raboof)                                   |                                                                     |
 | **Ben West**               | [**@bewest**](https://github.com/bewest)                                   |                                                                     |
-| **Braydon Fuller**         | [**@braydonf**](https://github.com/braydonf)                               |                                                                     |
-| **Kyle E. Mitchell**       |                                                                            |                                                                     |
 | **Huan LI**                | [**@zixia**](https://github.com/zixia)                                     | [**@zixia@twitter**](https://twitter.com/zixia)                     |
-| **Eduardo Sorribas**       | [**@sorribas**](https://github.com/sorribas)                               |                                                                     |
+| **Kyle E. Mitchell**       |                                                                            |                                                                     |
 | **Aditya Purwa**           | [**@adityapurwa**](https://github.com/adityapurwa)                         |                                                                     |
-| **Nolan Lawson**           | [**@nolanlawson**](https://github.com/nolanlawson)                         | [**@nolan@toot.cafe**](https://toot.cafe/@nolan)                    |
+| **Eduardo Sorribas**       | [**@sorribas**](https://github.com/sorribas)                               |                                                                     |
 | **James Butler**           | [**@sandfox**](https://github.com/sandfox)                                 |                                                                     |
-| **Manuel Ernst**           | [**@seriousManual**](https://github.com/seriousManual)                     |                                                                     |
-| **Stephen Sawchuk**        |                                                                            |                                                                     |
-| **Alex Potsides**          |                                                                            |                                                                     |
-| **Richard Littauer**       | [**@RichardLitt**](https://github.com/RichardLitt)                         |                                                                     |
-| **James Brown**            |                                                                            |                                                                     |
-| **Brian Woodward**         | [**@doowb**](https://github.com/doowb)                                     | [**@doowb@twitter**](https://twitter.com/doowb)                     |
-| **Daniel Ravina**          | [**@danielravina**](https://github.com/danielravina)                       |                                                                     |
-| **Pascal Temel**           | [**@PascalTemel**](https://github.com/PascalTemel)                         |                                                                     |
-| **Monty Anderson**         | [**@montyanderson**](https://github.com/montyanderson)                     |                                                                     |
-| **David Dias**             | [**@diasdavid**](https://github.com/diasdavid)                             |                                                                     |
-| **Prayag Verma**           | [**@pra85**](https://github.com/pra85)                                     |                                                                     |
-| **Matthew Wright**         | [**@farskipper**](https://github.com/farskipper)                           |                                                                     |
+| **Nolan Lawson**           | [**@nolanlawson**](https://github.com/nolanlawson)                         | [**@nolan@toot.cafe**](https://toot.cafe/@nolan)                    |
 | **Alejandro Oviedo**       | [**@a0viedo**](https://github.com/a0viedo)                                 |                                                                     |
-| **Calvin Metcalf**         | [**@calvinmetcalf**](https://github.com/calvinmetcalf)                     |                                                                     |
+| **Alex Potsides**          |                                                                            |                                                                     |
 | **Andrew Kelley**          | [**@andrewrk**](https://github.com/andrewrk)                               |                                                                     |
+| **Braydon Fuller**         | [**@braydonf**](https://github.com/braydonf)                               |                                                                     |
+| **Brian Woodward**         | [**@doowb**](https://github.com/doowb)                                     | [**@doowb@twitter**](https://twitter.com/doowb)                     |
+| **Calvin Metcalf**         | [**@calvinmetcalf**](https://github.com/calvinmetcalf)                     |                                                                     |
+| **Daniel Ravina**          | [**@danielravina**](https://github.com/danielravina)                       |                                                                     |
+| **David Dias**             | [**@diasdavid**](https://github.com/diasdavid)                             |                                                                     |
+| **Hans Ott**               | [**@hansott**](https://github.com/hansott)                                 |                                                                     |
+| **James Brown**            |                                                                            |                                                                     |
+| **Mads Andreasen**         | [**@MadsAndreasenTechPeople**](https://github.com/MadsAndreasenTechPeople) |                                                                     |
+| **Manuel Ernst**           | [**@seriousManual**](https://github.com/seriousManual)                     |                                                                     |
+| **Mark Cavage**            | [**@mcavage**](https://github.com/mcavage)                                 |                                                                     |
+| **Matthew Wright**         | [**@farskipper**](https://github.com/farskipper)                           |                                                                     |
+| **Max Ogden**              | [**@maxogden**](https://github.com/maxogden)                               | [**@maxogden@twitter**](https://twitter.com/maxogden)               |
+| **Monty Anderson**         | [**@montyanderson**](https://github.com/montyanderson)                     |                                                                     |
 | **moro**                   |                                                                            |                                                                     |
 | **Paolo Fragomeni**        | [**@hxoht**](https://github.com/hxoht)                                     | [**@hxoht@twitter**](https://twitter.com/hxoht)                     |
-| **Max Ogden**              | [**@maxogden**](https://github.com/maxogden)                               | [**@maxogden@twitter**](https://twitter.com/maxogden)               |
+| **Pascal Temel**           | [**@PascalTemel**](https://github.com/PascalTemel)                         |                                                                     |
 | **Patrick Pfeiffer**       |                                                                            |                                                                     |
-| **Mark Cavage**            | [**@mcavage**](https://github.com/mcavage)                                 |                                                                     |
-| **Mads Andreasen**         | [**@MadsAndreasenTechPeople**](https://github.com/MadsAndreasenTechPeople) |                                                                     |
-| **Pomke**                  |                                                                            |                                                                     |
 | **Pedro Teixeira**         | [**@pgte**](https://github.com/pgte)                                       | [**@pgte@twitter**](https://twitter.com/pgte)                       |
-| **Hans Ott**               | [**@hansott**](https://github.com/hansott)                                 |                                                                     |
+| **Pomke**                  |                                                                            |                                                                     |
+| **Prayag Verma**           | [**@pra85**](https://github.com/pra85)                                     |                                                                     |
+| **Richard Littauer**       | [**@RichardLitt**](https://github.com/RichardLitt)                         |                                                                     |
+| **Stephen Sawchuk**        |                                                                            |                                                                     |
 | **Super-User**             |                                                                            |                                                                     |
