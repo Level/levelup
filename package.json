@@ -31,7 +31,7 @@
     "dependency-check": "^4.1.0",
     "encoding-down": "^6.2.0",
     "faucet": "^0.0.1",
-    "hallmark": "^2.0.0",
+    "hallmark": "^3.0.0",
     "level-community": "^3.0.0",
     "level-concat-iterator": "^2.0.1",
     "memdown": "^5.0.0",
