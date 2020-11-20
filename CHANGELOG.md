@@ -669,7 +669,7 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 ### Changed
 
-- Upgrade to `LevelDOWN@0.10.0` (and bops@0.1.0 and readable-stream@1.1.9) ([**@rvagg**](https://github.com/rvagg))
+- Upgrade to `leveldown@0.10.0` (and `bops@0.1.0` and `readable-stream@1.1.9`) ([**@rvagg**](https://github.com/rvagg))
 
 ## [0.17.0] - 2013-10-01
 
@@ -745,7 +745,7 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 ### Changed
 
-- Use LevelDOWN@0.5.0, see <https://github.com/level/leveldown/blob/master/CHANGELOG.md> for details ([**@rvagg**](https://github.com/rvagg))
+- Use `leveldown@0.5.0`, see <https://github.com/level/leveldown/blob/master/CHANGELOG.md> for details ([**@rvagg**](https://github.com/rvagg))
 - Race-condition(ish) fixed in ReadStream--createReadStream() does not start immediately and therefore allowed put()s to happen before the stream starts ([**@dominictarr**](https://github.com/dominictarr))
 - ReadStream doesn't emit "ready" event ([**@dominictarr**](https://github.com/dominictarr))
 - Allow separate encodings per operation in db.batch() ([**@juliangruber**](https://github.com/juliangruber))
@@ -755,7 +755,7 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 - Chained batch exposed from LevelDOWN, invoked with argument-less db.batch() ([**@juliangruber**](https://github.com/juliangruber), [**@rvagg**](https://github.com/rvagg))
 - Significantly improve ReadStream performance by replacing .bind() and .apply() ([**@mcollina**](https://github.com/mcollina), [**@kesla**](https://github.com/kesla))
 - Better Browserify support ([**@rvagg**](https://github.com/rvagg), [**@juliangruber**](https://github.com/juliangruber), [**@maxogden**](https://github.com/maxogden), etc.)
-- Deprecate secondary LevelDB-specific operations on LevelUP, prefer direct LevelDOWN access (approximateSize(), repair(), destroy(), getProperty()--new in LevelDOWN@0.5.0) ([**@rvagg**](https://github.com/rvagg))
+- Deprecate secondary LevelDB-specific operations on LevelUP, prefer direct LevelDOWN access (approximateSize(), repair(), destroy(), getProperty()--new in `leveldown@0.5.0`) ([**@rvagg**](https://github.com/rvagg))
 
 ### Removed
 
@@ -813,7 +813,7 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 - Rename `ReadStream`, `KeyStream` and `ValueStream` to `createReadStream`, `createKeyStream` and `createValueStream` ([**@rvagg**](https://github.com/rvagg))
 - Complete transition to `LevelDOWN` for the `LevelDB` binding. No native code left in `LevelUP` ([**@rvagg**](https://github.com/rvagg))
   - LevelDOWN now keeps its own ChangeLog at: <https://github.com/level/leveldown/blob/master/CHANGELOG.md>
-  - LevelDB@1.9.0 and Snappy@1.1.0 are included in LevelDOWN@0.1.2
+  - `LevelDB@1.9.0` and `Snappy@1.1.0` are included in `leveldown@0.1.2`
 
 ## [0.6.0-rc1] - 2013-02-24
 
@@ -887,8 +887,6 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 - Check that UINT32_OPTION_VALUE is a Uint32 ([**@kesla**](https://github.com/kesla))
 
 ## [0.5.0-1] - 2013-01-09
-
-### Added
 
 ### Changed
 
