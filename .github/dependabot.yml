@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    ignore:
+      - dependency-name: dependency-check
+      - dependency-name: sinon
+      - dependency-name: airtap
+      - dependency-name: nyc
+      - dependency-name: standard
