@@ -14,14 +14,13 @@ matrix:
   - node_js: stable
     env: CMD=test-browsers
     addons:
-      sauce_connect: true
       hosts:
         - airtap.local
 
 before_script: git fetch --tags
 
 script:
-  - DEBUG=airtap:* npm run $CMD
+  - npm run $CMD
 
 after_success: npm run coverage
 
