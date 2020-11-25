@@ -12,7 +12,10 @@ matrix:
   - node_js: 10
     env: CMD=test
   - node_js: stable
-    env: CMD=test-browsers
+    env:
+      - CMD=test-browsers
+      # Download Sauce Connect binary on install instead of on first run
+      - SAUCE_CONNECT_DOWNLOAD_ON_INSTALL=true
     addons:
       hosts:
         - airtap.local
