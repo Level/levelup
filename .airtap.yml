@@ -3,13 +3,13 @@ providers:
 
 browsers:
   - name: chrome
-  - name: ie
-  - name: firefox
-  # - name: iphone
-  #   version: '10.3'
-  - name: android
-    version: '6.0'
-  - name: edge
+  # - name: ie
+  # - name: firefox
+  # # - name: iphone
+  # #   version: '10.3'
+  # - name: android
+  #   version: '6.0'
+  # - name: edge
 
 presets:
   local:

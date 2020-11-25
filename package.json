@@ -7,7 +7,7 @@
   "scripts": {
     "test": "standard && hallmark && (nyc -s node test/self.js | faucet) && nyc report",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test-browsers": "airtap test/self.js > airtap.log",
+    "test-browsers": "airtap --verbose test/self.js",
     "test-browsers-local": "airtap -p local test/self.js",
     "hallmark": "hallmark --fix",
     "dependency-check": "dependency-check --no-dev .",

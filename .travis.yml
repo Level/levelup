@@ -14,6 +14,7 @@ matrix:
   - node_js: stable
     env: CMD=test-browsers
     addons:
+      sauce_connect: true
       hosts:
         - airtap.local
 
