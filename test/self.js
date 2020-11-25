@@ -32,7 +32,7 @@ suite({
   clear: true,
   deferredOpen: true,
   promises: true,
-  streams: false,
+  streams: true,
   encodings: false
 })
 
