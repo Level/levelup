@@ -4,8 +4,15 @@ var memdown = require('memdown')
 module.exports = function (test, testCommon) {
   test('Init & open(): levelup()', function (t) {
     t.is(typeof levelup, 'function')
-    t.is(levelup.length, 3) // db, options & callback arguments
-    t.throws(levelup, /^InitializationError/) // no db
+
+    // db, options & callback arguments
+    t.is(levelup.length, 3)
+
+    // no db
+    throws(t, levelup, function (err) {
+      return /^InitializationError/.test(err)
+    })
+
     t.end()
   })
 
@@ -106,4 +113,14 @@ module.exports = function (test, testCommon) {
       })
     })
   })
+}
+
+function throws (t, fn, verify) {
+  try {
+    fn()
+  } catch (err) {
+    return verify(err)
+  }
+
+  t.fail('did not throw')
 }

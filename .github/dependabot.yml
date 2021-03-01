@@ -10,3 +10,7 @@ updates:
       - dependency-name: airtap
       - dependency-name: nyc
       - dependency-name: standard
+
+      # Pinned to 1.1.10 for browser compatibility (later versions depend
+      # on `queue-microtask` which uses arrow functions and promises).
+      - dependency-name: run-parallel
