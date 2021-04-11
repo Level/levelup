@@ -166,11 +166,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with "start"', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with "gte"', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { start: '50' })
+      const rs = createReadStream(db, { gte: '50' })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -181,11 +181,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with "start" and "reverse=true"', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with "lte" and "reverse=true"', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { start: '50', reverse: true })
+      const rs = createReadStream(db, { lte: '50', reverse: true })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -196,12 +196,12 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with "start" being mid-way key (float)', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with "gte" being mid-way key (float)', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
       // '49.5' doesn't actually exist but we expect it to start at '50' because '49' < '49.5' < '50' (in string terms as well as numeric)
-      const rs = createReadStream(db, { start: '49.5' })
+      const rs = createReadStream(db, { gte: '49.5' })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -212,11 +212,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with "start" being mid-way key (float) and "reverse=true"', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with "lte" being mid-way key (float) and "reverse=true"', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { start: '49.5', reverse: true })
+      const rs = createReadStream(db, { lte: '49.5', reverse: true })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -227,13 +227,13 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with "start" being mid-way key (string)', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with "gte" being mid-way key (string)', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
       // '499999' doesn't actually exist but we expect it to start at '50' because '49' < '499999' < '50' (in string terms)
       // the same as the previous test but we're relying solely on string ordering
-      const rs = createReadStream(db, { start: '499999' })
+      const rs = createReadStream(db, { gte: '499999' })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -244,11 +244,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with "end"', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with "lte"', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { end: '50' })
+      const rs = createReadStream(db, { lte: '50' })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -259,11 +259,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with "end" being mid-way key (float)', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with "lte" being mid-way key (float)', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { end: '50.5' })
+      const rs = createReadStream(db, { lte: '50.5' })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -274,11 +274,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with "end" being mid-way key (string)', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with "lte" being mid-way key (string)', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { end: '50555555' })
+      const rs = createReadStream(db, { lte: '50555555' })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -289,11 +289,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with "end" being mid-way key (float) and "reverse=true"', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with "gte" being mid-way key (float) and "reverse=true"', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { end: '50.5', reverse: true })
+      const rs = createReadStream(db, { gte: '50.5', reverse: true })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -303,11 +303,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with both "start" and "end"', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with both "gte" and "lte"', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { start: 30, end: 70 })
+      const rs = createReadStream(db, { gte: 30, lte: 70 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -318,11 +318,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with both "start" and "end" and "reverse=true"', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with both "gte" and "lte" and "reverse=true"', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { start: 70, end: 30, reverse: true })
+      const rs = createReadStream(db, { gte: 30, lte: 70, reverse: true })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -371,11 +371,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: ReadStream, start=0', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: ReadStream, gte=0', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { start: 0 })
+      const rs = createReadStream(db, { gte: 0 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -387,11 +387,11 @@ module.exports = function (test, testCommon) {
 
   // we don't expect any data to come out of here because the keys start at '00' not 0
   // we just want to ensure that we don't kill the process
-  test('ReadStream: ReadStream, end=0', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: ReadStream, lte=0', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { end: 0 })
+      const rs = createReadStream(db, { lte: 0 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -451,11 +451,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with "start" and "limit"', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with "gte" and "limit"', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { start: '20', limit: 20 })
+      const rs = createReadStream(db, { gte: '20', limit: 20 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -465,11 +465,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with "end" after "limit"', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with "lte" after "limit"', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { end: '50', limit: 20 })
+      const rs = createReadStream(db, { lte: '50', limit: 20 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -479,11 +479,11 @@ module.exports = function (test, testCommon) {
     })
   }))
 
-  test('ReadStream: readStream() with "end" before "limit"', makeTest(function (t, db, ctx, done) {
+  test('ReadStream: readStream() with "lte" before "limit"', makeTest(function (t, db, ctx, done) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      const rs = createReadStream(db, { end: '30', limit: 50 })
+      const rs = createReadStream(db, { lte: '30', limit: 50 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
