@@ -1,11 +1,9 @@
 'use strict'
 
-const xtend = require('xtend')
-
 module.exports = function (testCommon) {
   return function createReadStream (db, options) {
     if (!testCommon.encodings) {
-      options = xtend(options, {
+      options = Object.assign({}, options, {
         keyAsBuffer: false,
         valueAsBuffer: false
       })
