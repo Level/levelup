@@ -1,10 +1,5 @@
 'use strict'
 
-// Promise polyfill for IE and others.
-if (process.browser && typeof Promise !== 'function') {
-  global.Promise = require('pinkie')
-}
-
 const test = require('tape')
 const memdown = require('memdown')
 const encode = require('encoding-down')

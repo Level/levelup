@@ -3,13 +3,14 @@ providers:
 
 browsers:
   - name: chrome
-  - name: ie
   - name: firefox
-  - name: iphone
-    version: '10.3'
-  - name: android
-    version: '6.0'
-  - name: edge
+  - name: safari
+    version: 12..latest
+  - name: ios_saf
+    version: 12..latest
+  - name: chrome for android
+    version: 6..latest
+  - name: msedge
 
 presets:
   local:

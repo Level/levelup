@@ -62,9 +62,9 @@ The most common store is [`leveldown`](https://github.com/Level/leveldown/) whic
 
 ## Supported Platforms
 
-We aim to support Active LTS and Current Node.js releases as well as browsers. For support of the underlying store, please see the respective documentation. If you want to use [Promises](#promise-support), you will need a polyfill like [`pinkie`](https://github.com/floatdrop/pinkie) in older browsers like IE.
+We aim to support Active LTS and Current Node.js releases as well as browsers. For support of the underlying store, please see the respective documentation.
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/levelup.svg)](https://saucelabs.com/u/levelup)
+[![Sauce Test Status](https://app.saucelabs.com/browser-matrix/levelup.svg)](https://app.saucelabs.com/u/levelup)
 
 ## Usage
 
