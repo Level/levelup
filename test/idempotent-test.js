@@ -1,4 +1,5 @@
 const levelup = require('../lib/levelup.js')
+const nextTick = require('../lib/next-tick')
 const memdown = require('memdown')
 const sinon = require('sinon')
 
@@ -18,7 +19,7 @@ module.exports = function (test, testCommon) {
 
       // close needs to be idempotent too.
       db.close()
-      process.nextTick(db.close.bind(db))
+      nextTick(db.close.bind(db))
     }
 
     const db = levelup(memdown(), function () {
