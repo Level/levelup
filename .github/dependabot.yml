@@ -6,9 +6,3 @@ updates:
       interval: monthly
     ignore:
       - dependency-name: dependency-check
-      - dependency-name: sinon
-      - dependency-name: nyc
-
-      # Pinned to 1.1.10 for browser compatibility (later versions depend
-      # on `queue-microtask` which uses arrow functions and promises).
-      - dependency-name: run-parallel
