@@ -3,6 +3,7 @@ const trickle = require('trickle')
 const discardable = require('./util/discardable')
 const readStreamContext = require('./util/rs-context')
 const rsFactory = require('./util/rs-factory')
+const nextTick = require('../lib/next-tick')
 
 module.exports = function (test, testCommon) {
   const createReadStream = rsFactory(testCommon)
@@ -28,7 +29,7 @@ module.exports = function (test, testCommon) {
           done()
         }, 0.05))
 
-        process.nextTick(function () {
+        nextTick(function () {
           // 3) Concoct and write new random data over the top of existing items.
           //    If we're not using a snapshot then then we'd expect the test
           //    to fail because it'll pick up these new values rather than the

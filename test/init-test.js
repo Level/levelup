@@ -1,4 +1,5 @@
 const levelup = require('../lib/levelup')
+const nextTick = require('../lib/next-tick')
 const memdown = require('memdown')
 
 module.exports = function (test, testCommon) {
@@ -51,7 +52,7 @@ module.exports = function (test, testCommon) {
 
     const mem = memdown()
     mem._open = function (opts, cb) {
-      process.nextTick(cb, new Error('from underlying store'))
+      nextTick(cb, new Error('from underlying store'))
     }
 
     levelup(mem, function (err) {
@@ -68,7 +69,7 @@ module.exports = function (test, testCommon) {
 
     const mem = memdown()
     mem._open = function (opts, cb) {
-      process.nextTick(cb, new Error('from underlying store'))
+      nextTick(cb, new Error('from underlying store'))
     }
 
     levelup(mem)

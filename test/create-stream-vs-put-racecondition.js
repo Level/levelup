@@ -1,4 +1,5 @@
 const levelup = require('../lib/levelup')
+const nextTick = require('../lib/next-tick')
 const memdown = require('memdown')
 const encdown = require('encoding-down')
 const after = require('after')
@@ -23,7 +24,7 @@ function makeTest (test, encode, deferredOpen, delayedPut) {
 
   test(name, function (t) {
     const db = encode ? levelup(encdown(memdown())) : levelup(memdown())
-    const delay = delayedPut ? process.nextTick : callFn
+    const delay = delayedPut ? nextTick : callFn
 
     run(t, db, !deferredOpen, delay)
   })

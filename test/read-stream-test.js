@@ -3,6 +3,7 @@ const bigBlob = Array.apply(null, Array(1024 * 100)).map(function () { return 'a
 const discardable = require('./util/discardable')
 const readStreamContext = require('./util/rs-context')
 const rsFactory = require('./util/rs-factory')
+const nextTick = require('../lib/next-tick')
 
 module.exports = function (test, testCommon) {
   const createReadStream = rsFactory(testCommon)
@@ -523,7 +524,7 @@ module.exports = function (test, testCommon) {
       const rs = createReadStream(db)
         .on('close', done)
 
-      process.nextTick(function () {
+      nextTick(function () {
         rs.destroy()
       })
     })

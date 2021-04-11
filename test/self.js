@@ -50,6 +50,6 @@ suite({
 // Integration tests that can't use a generic testCommon.factory()
 require('./self/manifest-test')
 
-if (!process.browser) {
+if (typeof process === 'undefined' || !process.browser) {
   require('./browserify-test')(test)
 }

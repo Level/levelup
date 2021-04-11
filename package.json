@@ -4,13 +4,16 @@
   "description": "Fast & simple storage - a Node.js-style LevelDB wrapper",
   "license": "MIT",
   "main": "lib/levelup.js",
+  "browser": {
+    "./lib/next-tick.js": "./lib/next-tick-browser.js"
+  },
   "scripts": {
     "test": "standard && hallmark && (nyc -s node test/self.js | faucet) && nyc report",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test-browsers": "airtap --verbose test/self.js > airtap.log",
     "test-browsers-local": "airtap -p local test/self.js",
     "hallmark": "hallmark --fix",
-    "dependency-check": "dependency-check --no-dev .",
+    "dependency-check": "dependency-check --no-dev -i queue-microtask .",
     "prepublishOnly": "npm run dependency-check"
   },
   "files": [
@@ -25,7 +28,8 @@
     "deferred-leveldown": "~5.3.0",
     "level-errors": "^3.0.0",
     "level-iterator-stream": "^5.0.0",
-    "level-supports": "^2.0.0"
+    "level-supports": "^2.0.0",
+    "queue-microtask": "^1.2.3"
   },
   "devDependencies": {
     "after": "^0.8.2",
