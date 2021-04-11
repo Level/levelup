@@ -1,7 +1,7 @@
-var sqlite3 = require('sqlite3')
+const sqlite3 = require('sqlite3')
 
-var createDb = function (location, callback) {
-  var db = new sqlite3.Database(location, function (err) {
+const createDb = function (location, callback) {
+  const db = new sqlite3.Database(location, function (err) {
     if (err) return callback(err)
     db.run('CREATE TABLE bench (key VARCHAR(32), value TEXT)', function (err) {
       if (err) return callback(err)
@@ -10,7 +10,7 @@ var createDb = function (location, callback) {
   })
 }
 
-var closeDb = function (db, callback) {
+const closeDb = function (db, callback) {
   db.close() // does it have a callback?
   setTimeout(callback, 50)
 }

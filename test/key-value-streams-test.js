@@ -1,15 +1,15 @@
-var sinon = require('sinon')
-var discardable = require('./util/discardable')
+const sinon = require('sinon')
+const discardable = require('./util/discardable')
 
 module.exports = function (test, testCommon) {
   test('key and value streams: keyStream()', function (t) {
-    var ctx = createContext(t)
+    const ctx = createContext(t)
 
     discardable(t, testCommon, function (db, done) {
       db.batch(ctx.sourceData.slice(), function (err) {
         t.ifError(err)
 
-        var rs = db.keyStream()
+        const rs = db.keyStream()
         rs.on('data', ctx.dataSpy)
         rs.on('end', ctx.endSpy)
         rs.on('close', function () {
@@ -21,13 +21,13 @@ module.exports = function (test, testCommon) {
   })
 
   test('key and value streams: readStream({keys:true,values:false})', function (t) {
-    var ctx = createContext(t)
+    const ctx = createContext(t)
 
     discardable(t, testCommon, function (db, done) {
       db.batch(ctx.sourceData.slice(), function (err) {
         t.ifError(err)
 
-        var rs = db.readStream({ keys: true, values: false })
+        const rs = db.readStream({ keys: true, values: false })
         rs.on('data', ctx.dataSpy)
         rs.on('end', ctx.endSpy)
         rs.on('close', function () {
@@ -39,13 +39,13 @@ module.exports = function (test, testCommon) {
   })
 
   test('key and value streams: valueStream()', function (t) {
-    var ctx = createContext(t)
+    const ctx = createContext(t)
 
     discardable(t, testCommon, function (db, done) {
       db.batch(ctx.sourceData.slice(), function (err) {
         t.ifError(err)
 
-        var rs = db.valueStream()
+        const rs = db.valueStream()
         rs.on('data', ctx.dataSpy)
         rs.on('end', ctx.endSpy)
         rs.on('close', function () {
@@ -57,13 +57,13 @@ module.exports = function (test, testCommon) {
   })
 
   test('key and value streams: readStream({keys:false,values:true})', function (t) {
-    var ctx = createContext(t)
+    const ctx = createContext(t)
 
     discardable(t, testCommon, function (db, done) {
       db.batch(ctx.sourceData.slice(), function (err) {
         t.ifError(err)
 
-        var rs = db.readStream({ keys: false, values: true })
+        const rs = db.readStream({ keys: false, values: true })
         rs.on('data', ctx.dataSpy)
         rs.on('end', ctx.endSpy)
         rs.on('close', function () {
@@ -76,14 +76,14 @@ module.exports = function (test, testCommon) {
 }
 
 function createContext (t) {
-  var ctx = {}
+  const ctx = {}
 
   ctx.dataSpy = sinon.spy()
   ctx.endSpy = sinon.spy()
   ctx.sourceData = []
 
-  for (var i = 0; i < 100; i++) {
-    var k = (i < 10 ? '0' : '') + i
+  for (let i = 0; i < 100; i++) {
+    const k = (i < 10 ? '0' : '') + i
     ctx.sourceData.push({
       type: 'put',
       key: k,
@@ -101,7 +101,7 @@ function createContext (t) {
     t.is(ctx.dataSpy.callCount, data.length, 'stream emitted correct number of "data" events')
 
     data.forEach(function (d, i) {
-      var call = ctx.dataSpy.getCall(i)
+      const call = ctx.dataSpy.getCall(i)
 
       if (call) {
         t.is(call.args.length, 1, 'stream "data" event #' + i + ' fired with 1 argument')

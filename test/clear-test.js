@@ -1,13 +1,13 @@
-var memdown = require('memdown')
-var encode = require('encoding-down')
-var concat = require('level-concat-iterator')
-var levelup = require('../lib/levelup')
+const memdown = require('memdown')
+const encode = require('encoding-down')
+const concat = require('level-concat-iterator')
+const levelup = require('../lib/levelup')
 
 module.exports = function (test) {
   test('clear()', function (t) {
     function makeTest (name, fn) {
       t.test(name, function (t) {
-        var mem = memdown()
+        const mem = memdown()
 
         mem.open(function (err) {
           t.ifError(err, 'no open error')
@@ -36,7 +36,7 @@ module.exports = function (test) {
     }
 
     makeTest('clear() without encoding, without deferred-open', function (t, mem) {
-      var db = levelup(mem)
+      const db = levelup(mem)
 
       db.open(function (err) {
         t.ifError(err)
@@ -49,7 +49,7 @@ module.exports = function (test) {
     })
 
     makeTest('clear() without encoding, with deferred-open', function (t, mem) {
-      var db = levelup(mem)
+      const db = levelup(mem)
 
       db.clear({ gte: '"b"' }, function (err) {
         t.ifError(err, 'no clear error')
@@ -58,7 +58,7 @@ module.exports = function (test) {
     })
 
     makeTest('clear() with encoding, with deferred-open', function (t, mem) {
-      var db = levelup(encode(mem, { keyEncoding: 'json' }))
+      const db = levelup(encode(mem, { keyEncoding: 'json' }))
 
       db.clear({ gte: 'b' }, function (err) {
         t.ifError(err, 'no clear error')
@@ -67,7 +67,7 @@ module.exports = function (test) {
     })
 
     makeTest('clear() with encoding, without deferred-open', function (t, mem) {
-      var db = levelup(encode(mem, { keyEncoding: 'json' }))
+      const db = levelup(encode(mem, { keyEncoding: 'json' }))
 
       db.open(function (err) {
         t.ifError(err)

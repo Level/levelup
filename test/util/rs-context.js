@@ -1,11 +1,11 @@
 'use strict'
 
-var sinon = require('sinon')
+const sinon = require('sinon')
 
 module.exports = function readStreamContext (t) {
-  var ctx = {}
-  var i
-  var k
+  const ctx = {}
+  let i
+  let k
 
   ctx.dataSpy = sinon.spy()
   ctx.endSpy = sinon.spy()
@@ -27,7 +27,7 @@ module.exports = function readStreamContext (t) {
     t.is(ctx.dataSpy.callCount, data.length, 'ReadStream emitted correct number of "data" events')
 
     data.forEach(function (d, i) {
-      var call = ctx.dataSpy.getCall(i)
+      const call = ctx.dataSpy.getCall(i)
       if (call) {
         t.is(call.args.length, 1, 'ReadStream "data" event #' + i + ' fired with 1 argument')
         t.ok(call.args[0].key, 'ReadStream "data" event #' + i + ' argument has "key" property')

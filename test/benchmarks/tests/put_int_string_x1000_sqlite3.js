@@ -1,6 +1,6 @@
-var fn = function (puts, db, cb) {
-  var received = 0
-  var after = function (err) {
+const fn = function (puts, db, cb) {
+  let received = 0
+  const after = function (err) {
     if (err) throw err
     if (++received === puts) cb()
   }
@@ -8,7 +8,7 @@ var fn = function (puts, db, cb) {
   if (this.cycle == null) this.cycle = 0
   else this.cycle++
 
-  for (var i = 0; i < puts; i++) {
+  for (let i = 0; i < puts; i++) {
     db.exec(
       'INSERT INTO bench VALUES(' +
         String(this.cycle * puts + i) +

@@ -1,13 +1,13 @@
-var browserify = require('browserify')
-var path = require('path')
-var after = require('after')
-var concat = require('simple-concat')
-var spawn = require('child_process').spawn
-var PACKAGE_JSON = path.join(__dirname, '..', 'package.json')
+const browserify = require('browserify')
+const path = require('path')
+const after = require('after')
+const concat = require('simple-concat')
+const spawn = require('child_process').spawn
+const PACKAGE_JSON = path.join(__dirname, '..', 'package.json')
 
 module.exports = function (test) {
   test('does not contain package.json', function (t) {
-    var b = browserify(path.join(__dirname, '..'), { browserField: true })
+    const b = browserify(path.join(__dirname, '..'), { browserField: true })
       .once('error', t.end.bind(t))
     b.pipeline
       .on('file', function (file, id, parent) {
@@ -17,9 +17,9 @@ module.exports = function (test) {
   })
 
   test('throws error if missing db factory', function (t) {
-    var b = browserify(path.join(__dirname, 'data/browser-throws.js'), { browserField: true })
-    var node = spawn('node')
-    var next = after(2, t.end.bind(t))
+    const b = browserify(path.join(__dirname, 'data/browser-throws.js'), { browserField: true })
+    const node = spawn('node')
+    const next = after(2, t.end.bind(t))
 
     concat(node.stderr, function (err, buf) {
       t.ifError(err)
@@ -36,8 +36,8 @@ module.exports = function (test) {
   })
 
   test('works with valid db factory (memdown)', function (t) {
-    var b = browserify(path.join(__dirname, 'data/browser-works.js'), { browserField: true })
-    var node = spawn('node')
+    const b = browserify(path.join(__dirname, 'data/browser-works.js'), { browserField: true })
+    const node = spawn('node')
     node.on('exit', function (code) {
       t.is(code, 0)
       t.end()

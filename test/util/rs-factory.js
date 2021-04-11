@@ -1,6 +1,6 @@
 'use strict'
 
-var xtend = require('xtend')
+const xtend = require('xtend')
 
 module.exports = function (testCommon) {
   return function createReadStream (db, options) {

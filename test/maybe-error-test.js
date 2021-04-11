@@ -1,13 +1,13 @@
 'use strict'
 
-var discardable = require('./util/discardable')
+const discardable = require('./util/discardable')
 
 module.exports = function (test, testCommon) {
   test('maybeError() should be called async: put()', function (t) {
     discardable(t, testCommon, function (db, done) {
       db.close(function () {
         t.is(db.isClosed(), true, 'db is closed')
-        var sync = false
+        let sync = false
         db.put('key', 'value', {}, function (err) {
           sync = true
           t.ok(err)
@@ -25,7 +25,7 @@ module.exports = function (test, testCommon) {
         t.ifError(err)
         db.close(function () {
           t.is(db.isClosed(), true, 'db is closed')
-          var sync = false
+          let sync = false
           db.get('key', {}, function (err, value) {
             sync = true
             t.ok(err)
@@ -44,7 +44,7 @@ module.exports = function (test, testCommon) {
         t.ifError(err)
         db.close(function () {
           t.is(db.isClosed(), true, 'db is closed')
-          var sync = false
+          let sync = false
           db.del('key', {}, function (err) {
             sync = true
             t.ok(err)
@@ -61,7 +61,7 @@ module.exports = function (test, testCommon) {
     discardable(t, testCommon, function (db, done) {
       db.close(function () {
         t.is(db.isClosed(), true, 'db is closed')
-        var sync = false
+        let sync = false
         db.batch([{ type: 'put', key: 'key' }], {}, function (err) {
           sync = true
           t.ok(err)

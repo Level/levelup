@@ -1,14 +1,14 @@
-var levelup = require('../lib/levelup.js')
-var memdown = require('memdown')
-var sinon = require('sinon')
+const levelup = require('../lib/levelup.js')
+const memdown = require('memdown')
+const sinon = require('sinon')
 
 module.exports = function (test, testCommon) {
   test('call open twice, should emit "open" once', function (t) {
-    var n = 0
-    var m = 0
-    var db
-    var close = function () {
-      var closing = sinon.spy()
+    let n = 0
+    let m = 0
+
+    const close = function () {
+      const closing = sinon.spy()
       db.on('closing', closing)
       db.on('closed', function () {
         t.is(closing.callCount, 1)
@@ -21,7 +21,7 @@ module.exports = function (test, testCommon) {
       process.nextTick(db.close.bind(db))
     }
 
-    db = levelup(memdown(), function () {
+    const db = levelup(memdown(), function () {
       t.is(n++, 0, 'callback should fire only once')
       if (n && m) { close() }
     })

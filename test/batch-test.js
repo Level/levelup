@@ -1,8 +1,8 @@
-var levelup = require('../lib/levelup')
-var errors = levelup.errors
-var each = require('async-each')
-var series = require('run-series')
-var discardable = require('./util/discardable')
+const levelup = require('../lib/levelup')
+const errors = levelup.errors
+const each = require('async-each')
+const series = require('run-series')
+const discardable = require('./util/discardable')
 
 module.exports = function (test, testCommon) {
   test('array-form batch(): multiple puts', function (t) {
@@ -124,11 +124,11 @@ module.exports = function (test, testCommon) {
 
   test('chained batch(): options', function (t) {
     discardable(t, testCommon, function (db, done) {
-      var batch = db.batch()
-      var underlying = batch
+      const batch = db.batch()
+      let underlying = batch
       while (underlying.batch) underlying = underlying.batch
 
-      var write = underlying.write.bind(underlying)
+      const write = underlying.write.bind(underlying)
       underlying.write = function (options, cb) {
         t.same(options, { foo: 'bar' })
         write(options, cb)
@@ -144,9 +144,9 @@ module.exports = function (test, testCommon) {
 
   testCommon.promises && test('chained batch(): promise interface - options', function (t) {
     discardable(t, testCommon, function (db, done) {
-      var batch = db.batch()
+      const batch = db.batch()
 
-      var write = batch.batch.write.bind(batch.batch)
+      const write = batch.batch.write.bind(batch.batch)
       batch.batch.write = function (options, cb) {
         t.same(options, { foo: 'bar' })
         write(options, cb)
@@ -194,7 +194,7 @@ module.exports = function (test, testCommon) {
 
   test('chained batch(): exposes ops queue length', function (t) {
     discardable(t, testCommon, function (db, done) {
-      var batch = db.batch()
+      const batch = db.batch()
         .put('one', '1')
         .del('two')
         .put('three', '3')
@@ -288,7 +288,7 @@ module.exports = function (test, testCommon) {
 
   test('chained batch() arguments', function (t) {
     discardable(t, testCommon, function (db, done) {
-      var batch = db.batch()
+      const batch = db.batch()
 
       t.test('chained batch() arguments: batch#put() with missing `value`', function (t) {
         throws(t, batch.put.bind(batch, 'foo1'), function (err) {
@@ -360,7 +360,7 @@ module.exports = function (test, testCommon) {
         t.is(err.message, 'write() already called on this batch')
       }
 
-      var batch = db.batch()
+      const batch = db.batch()
       batch.put('foo', 'bar').put('boom', 'bang').del('foo').write(function (err) {
         t.ifError(err, 'no batch error')
 

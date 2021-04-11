@@ -1,10 +1,10 @@
-var memdown = require('memdown')
-var encode = require('encoding-down')
-var levelup = require('../lib/levelup')
+const memdown = require('memdown')
+const encode = require('encoding-down')
+const levelup = require('../lib/levelup')
 
 module.exports = function (test, testCommon) {
   test('iterator#seek()', function (t) {
-    var mem = memdown()
+    const mem = memdown()
 
     t.test('setup', function (t) {
       mem.open(function (err) {
@@ -20,12 +20,12 @@ module.exports = function (test, testCommon) {
     })
 
     t.test('without encoding, without deferred-open', function (t) {
-      var db = levelup(mem)
+      const db = levelup(mem)
 
       db.open(function (err) {
         t.ifError(err, 'no open error')
 
-        var it = db.iterator({ keyAsBuffer: false })
+        const it = db.iterator({ keyAsBuffer: false })
 
         it.seek('"b"')
         it.next(function (err, key, value) {
@@ -40,8 +40,8 @@ module.exports = function (test, testCommon) {
     })
 
     t.test('without encoding, with deferred-open', function (t) {
-      var db = levelup(mem)
-      var it = db.iterator({ keyAsBuffer: false })
+      const db = levelup(mem)
+      const it = db.iterator({ keyAsBuffer: false })
 
       it.seek('"b"')
       it.next(function (err, key, value) {
@@ -55,8 +55,8 @@ module.exports = function (test, testCommon) {
     })
 
     t.test('with encoding, with deferred-open', function (t) {
-      var db = levelup(encode(mem, { keyEncoding: 'json' }))
-      var it = db.iterator()
+      const db = levelup(encode(mem, { keyEncoding: 'json' }))
+      const it = db.iterator()
 
       it.seek('b')
       it.next(function (err, key, value) {
@@ -70,12 +70,12 @@ module.exports = function (test, testCommon) {
     })
 
     t.test('with encoding, without deferred-open', function (t) {
-      var db = levelup(encode(mem, { keyEncoding: 'json' }))
+      const db = levelup(encode(mem, { keyEncoding: 'json' }))
 
       db.open(function (err) {
         t.ifError(err, 'no open error')
 
-        var it = db.iterator()
+        const it = db.iterator()
 
         it.seek('b')
         it.next(function (err, key, value) {

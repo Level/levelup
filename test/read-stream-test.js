@@ -1,11 +1,11 @@
-var sinon = require('sinon')
-var bigBlob = Array.apply(null, Array(1024 * 100)).map(function () { return 'aaaaaaaaaa' }).join('')
-var discardable = require('./util/discardable')
-var readStreamContext = require('./util/rs-context')
-var rsFactory = require('./util/rs-factory')
+const sinon = require('sinon')
+const bigBlob = Array.apply(null, Array(1024 * 100)).map(function () { return 'aaaaaaaaaa' }).join('')
+const discardable = require('./util/discardable')
+const readStreamContext = require('./util/rs-context')
+const rsFactory = require('./util/rs-factory')
 
 module.exports = function (test, testCommon) {
-  var createReadStream = rsFactory(testCommon)
+  const createReadStream = rsFactory(testCommon)
 
   function makeTest (fn) {
     return function (t) {
@@ -19,7 +19,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db)
+      const rs = createReadStream(db)
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -30,14 +30,15 @@ module.exports = function (test, testCommon) {
   }))
 
   test('ReadStream: pausing', makeTest(function (t, db, ctx, done) {
-    var calls = 0
-    var rs
-    var pauseVerify = function () {
+    let calls = 0
+    let rs
+
+    const pauseVerify = function () {
       t.is(calls, 5, 'stream should still be paused')
       rs.resume()
       pauseVerify.called = true
     }
-    var onData = function () {
+    const onData = function () {
       if (++calls === 5) {
         rs.pause()
         setTimeout(pauseVerify, 50)
@@ -66,7 +67,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db)
+      const rs = createReadStream(db)
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -82,7 +83,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db)
+      const rs = createReadStream(db)
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -97,7 +98,7 @@ module.exports = function (test, testCommon) {
       t.ifError(err)
       db.close(function (err) {
         t.ifError(err)
-        var rs = createReadStream(db)
+        const rs = createReadStream(db)
         rs.destroy()
         done()
       })
@@ -108,7 +109,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db)
+      const rs = createReadStream(db)
       rs.on('data', function () {
         rs.destroy()
         rs.destroy()
@@ -121,9 +122,9 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db)
-      var endSpy = sinon.spy()
-      var calls = 0
+      const rs = createReadStream(db)
+      const endSpy = sinon.spy()
+      let calls = 0
       ctx.dataSpy = sinon.spy(function () {
         if (++calls === 5) { rs.destroy() }
       })
@@ -134,7 +135,7 @@ module.exports = function (test, testCommon) {
         t.is(ctx.dataSpy.callCount, 5, 'ReadStream emitted correct number of "data" events (5)')
 
         ctx.sourceData.slice(0, 5).forEach(function (d, i) {
-          var call = ctx.dataSpy.getCall(i)
+          const call = ctx.dataSpy.getCall(i)
           t.ok(call)
 
           if (call) {
@@ -155,7 +156,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { reverse: true })
+      const rs = createReadStream(db, { reverse: true })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -169,7 +170,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { start: '50' })
+      const rs = createReadStream(db, { start: '50' })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -184,7 +185,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { start: '50', reverse: true })
+      const rs = createReadStream(db, { start: '50', reverse: true })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -200,7 +201,7 @@ module.exports = function (test, testCommon) {
       t.ifError(err)
 
       // '49.5' doesn't actually exist but we expect it to start at '50' because '49' < '49.5' < '50' (in string terms as well as numeric)
-      var rs = createReadStream(db, { start: '49.5' })
+      const rs = createReadStream(db, { start: '49.5' })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -215,7 +216,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { start: '49.5', reverse: true })
+      const rs = createReadStream(db, { start: '49.5', reverse: true })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -232,7 +233,7 @@ module.exports = function (test, testCommon) {
 
       // '499999' doesn't actually exist but we expect it to start at '50' because '49' < '499999' < '50' (in string terms)
       // the same as the previous test but we're relying solely on string ordering
-      var rs = createReadStream(db, { start: '499999' })
+      const rs = createReadStream(db, { start: '499999' })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -247,7 +248,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { end: '50' })
+      const rs = createReadStream(db, { end: '50' })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -262,7 +263,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { end: '50.5' })
+      const rs = createReadStream(db, { end: '50.5' })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -277,7 +278,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { end: '50555555' })
+      const rs = createReadStream(db, { end: '50555555' })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -292,7 +293,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { end: '50.5', reverse: true })
+      const rs = createReadStream(db, { end: '50.5', reverse: true })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -306,7 +307,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { start: 30, end: 70 })
+      const rs = createReadStream(db, { start: 30, end: 70 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -321,7 +322,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { start: 70, end: 30, reverse: true })
+      const rs = createReadStream(db, { start: 70, end: 30, reverse: true })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -334,15 +335,15 @@ module.exports = function (test, testCommon) {
 
   // TODO: move this test out
   testCommon.encodings && test('ReadStream: hex encoding', makeTest(function (t, db, ctx, done) {
-    var options = { keyEncoding: 'utf8', valueEncoding: 'hex' }
-    var data = [
+    const options = { keyEncoding: 'utf8', valueEncoding: 'hex' }
+    const data = [
       { type: 'put', key: 'ab', value: 'abcdef0123456789' }
     ]
 
     db.batch(data.slice(), options, function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, options)
+      const rs = createReadStream(db, options)
       rs.on('data', function (data) {
         t.is(data.value, 'abcdef0123456789')
       })
@@ -355,10 +356,10 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
       // read in reverse, assume all's good
-      var rs = createReadStream(db, { reverse: true })
+      const rs = createReadStream(db, { reverse: true })
       rs.on('close', function () {
         // now try reading the other way
-        var rs = createReadStream(db)
+        const rs = createReadStream(db)
         rs.on('data', ctx.dataSpy)
         rs.on('end', ctx.endSpy)
         rs.on('close', function () {
@@ -374,7 +375,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { start: 0 })
+      const rs = createReadStream(db, { start: 0 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -390,7 +391,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { end: 0 })
+      const rs = createReadStream(db, { end: 0 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -404,15 +405,15 @@ module.exports = function (test, testCommon) {
   // i.e. not waiting for 'open' to complete
   // TODO: move this test out
   testCommon.deferredOpen && test('ReadStream: deferred ReadStream on new db', function (t) {
-    var db = testCommon.factory()
-    var ctx = readStreamContext(t)
+    const db = testCommon.factory()
+    const ctx = readStreamContext(t)
 
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
       db.close(function (err) {
         t.ifError(err)
 
-        var async = true
+        let async = true
         db.open(function (err) {
           async = false
           t.ifError(err, 'no open error')
@@ -422,7 +423,7 @@ module.exports = function (test, testCommon) {
         t.is(db.isOpen(), false)
         t.is(db.isClosed(), false)
 
-        var rs = createReadStream(db)
+        const rs = createReadStream(db)
         rs.on('data', ctx.dataSpy)
         rs.on('end', ctx.endSpy)
         rs.on('close', function () {
@@ -440,7 +441,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { limit: 20 })
+      const rs = createReadStream(db, { limit: 20 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -454,7 +455,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { start: '20', limit: 20 })
+      const rs = createReadStream(db, { start: '20', limit: 20 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -468,7 +469,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { end: '50', limit: 20 })
+      const rs = createReadStream(db, { end: '50', limit: 20 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -482,7 +483,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db, { end: '30', limit: 50 })
+      const rs = createReadStream(db, { end: '30', limit: 50 })
       rs.on('data', ctx.dataSpy)
       rs.on('end', ctx.endSpy)
       rs.on('close', function () {
@@ -497,9 +498,9 @@ module.exports = function (test, testCommon) {
   // the use of large blobs means that next() takes time to return
   // so we should be able to slip in an end() while it's working
   test('ReadStream: iterator next/end race condition', makeTest(function (t, db, ctx, done) {
-    var data = []
-    var i = 5
-    var v
+    const data = []
+    let i = 5
+    let v
 
     while (i--) {
       v = bigBlob + i
@@ -508,7 +509,7 @@ module.exports = function (test, testCommon) {
 
     db.batch(data, function (err) {
       t.ifError(err)
-      var rs = createReadStream(db).on('close', done)
+      const rs = createReadStream(db).on('close', done)
       rs.once('data', function () {
         rs.destroy()
       })
@@ -519,7 +520,7 @@ module.exports = function (test, testCommon) {
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
 
-      var rs = createReadStream(db)
+      const rs = createReadStream(db)
         .on('close', done)
 
       process.nextTick(function () {

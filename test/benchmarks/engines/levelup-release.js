@@ -1,13 +1,13 @@
-var levelup = require('levelup')
-var leveldown = require('leveldown')
+const levelup = require('levelup')
+const leveldown = require('leveldown')
 
-var createDb = function (location, callback) {
+const createDb = function (location, callback) {
   levelup(leveldown(location), function (err, db) {
     setTimeout(callback.bind(null, err, db), 50)
   })
 }
 
-var closeDb = function (db, callback) {
+const closeDb = function (db, callback) {
   db.close(callback)
 }
 

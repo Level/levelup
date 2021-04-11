@@ -1,10 +1,10 @@
 'use strict'
 
-var common = require('./common')
+const common = require('./common')
 
 function suite (options) {
-  var testCommon = common(options)
-  var test = testCommon.test
+  const testCommon = common(options)
+  const test = testCommon.test
 
   require('./manifest-test')(test, testCommon)
   require('./batch-test')(test, testCommon)

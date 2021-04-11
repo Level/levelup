@@ -1,5 +1,5 @@
-var levelup = require('../lib/levelup')
-var memdown = require('memdown')
+const levelup = require('../lib/levelup')
+const memdown = require('memdown')
 
 module.exports = function (test, testCommon) {
   test('Init & open(): levelup()', function (t) {
@@ -38,7 +38,7 @@ module.exports = function (test, testCommon) {
   })
 
   test('Init & open(): without callback', function (t) {
-    var db = levelup(memdown())
+    const db = levelup(memdown())
     t.ok(typeof db === 'object' && db !== null)
     db.on('ready', function () {
       t.is(db.isOpen(), true)
@@ -49,7 +49,7 @@ module.exports = function (test, testCommon) {
   test('Init & open(): error with callback', function (t) {
     t.plan(1)
 
-    var mem = memdown()
+    const mem = memdown()
     mem._open = function (opts, cb) {
       process.nextTick(cb, new Error('from underlying store'))
     }
@@ -66,7 +66,7 @@ module.exports = function (test, testCommon) {
   test('Init & open(): error without callback', function (t) {
     t.plan(1)
 
-    var mem = memdown()
+    const mem = memdown()
     mem._open = function (opts, cb) {
       process.nextTick(cb, new Error('from underlying store'))
     }
@@ -83,7 +83,7 @@ module.exports = function (test, testCommon) {
   test('Init & open(): validate abstract-leveldown', function (t) {
     t.plan(1)
 
-    var down = memdown()
+    const down = memdown()
 
     Object.defineProperty(down, 'status', {
       get: function () { return null },
@@ -98,7 +98,7 @@ module.exports = function (test, testCommon) {
   })
 
   test('Init & open(): support open options', function (t) {
-    var down = memdown()
+    const down = memdown()
 
     levelup(down, function (err, up) {
       t.ifError(err, 'no error')

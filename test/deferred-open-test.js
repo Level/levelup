@@ -1,15 +1,15 @@
-var each = require('async-each')
-var parallel = require('run-parallel')
-var concat = require('concat-stream')
-var readStreamContext = require('./util/rs-context')
-var rsFactory = require('./util/rs-factory')
+const each = require('async-each')
+const parallel = require('run-parallel')
+const concat = require('concat-stream')
+const readStreamContext = require('./util/rs-context')
+const rsFactory = require('./util/rs-factory')
 
 module.exports = function (test, testCommon) {
-  var createReadStream = rsFactory(testCommon)
+  const createReadStream = rsFactory(testCommon)
 
   test('deferred open(): put() and get() on new database', function (t) {
     // 1) open database without callback, opens in next tick
-    var db = testCommon.factory()
+    const db = testCommon.factory()
     t.ok(typeof db === 'object' && db !== null)
 
     parallel([
@@ -41,7 +41,7 @@ module.exports = function (test, testCommon) {
 
   test('deferred open(): batch() on new database', function (t) {
     // 1) open database without callback, opens in next tick
-    var db = testCommon.factory()
+    const db = testCommon.factory()
     t.ok(typeof db === 'object' && db !== null)
 
     // 2) insert 3 values with batch(), these should be deferred until the database is actually open
@@ -73,7 +73,7 @@ module.exports = function (test, testCommon) {
 
   test('deferred open(): chained batch() on new database', function (t) {
     // 1) open database without callback, opens in next tick
-    var db = testCommon.factory()
+    const db = testCommon.factory()
     t.ok(typeof db === 'object' && db !== null)
 
     // 2) insert 3 values with batch(), these should be deferred until the database is actually open
@@ -104,14 +104,14 @@ module.exports = function (test, testCommon) {
   })
 
   testCommon.streams && test('deferred open(): test deferred ReadStream', function (t) {
-    var ctx = readStreamContext(t)
-    var db = testCommon.factory()
+    const ctx = readStreamContext(t)
+    const db = testCommon.factory()
 
     db.batch(ctx.sourceData.slice(), function (err) {
       t.ifError(err)
       db.close(function (err) {
         t.ifError(err, 'no error')
-        var async = true
+        let async = true
 
         db.open(function (err) {
           async = false
@@ -134,15 +134,15 @@ module.exports = function (test, testCommon) {
 
   test('deferred open(): no maxListeners warning', function (t) {
     // 1) open database without callback, opens in next tick
-    var db = testCommon.factory()
-    var fail = t.fail.bind(t)
+    const db = testCommon.factory()
+    const fail = t.fail.bind(t)
 
     process.on('warning', fail)
 
     // 2) provoke an EventEmitter maxListeners warning
-    var toPut = 11
+    let toPut = 11
 
-    for (var i = 0; i < toPut; i++) {
+    for (let i = 0; i < toPut; i++) {
       db.put('some', 'string', function (err) {
         t.ifError(err)
         if (!--toPut) {
@@ -154,7 +154,7 @@ module.exports = function (test, testCommon) {
   })
 
   testCommon.encodings && test('deferred open(): value of queued operation is not serialized', function (t) {
-    var db = testCommon.factory({ valueEncoding: 'json' })
+    const db = testCommon.factory({ valueEncoding: 'json' })
 
     // deferred-leveldown < 2.0.2 would serialize the object to a string.
     db.put('key', { thing: 2 }, function (err) {
@@ -169,7 +169,7 @@ module.exports = function (test, testCommon) {
   })
 
   testCommon.encodings && test('deferred open(): key of queued operation is not serialized', function (t) {
-    var db = testCommon.factory({ keyEncoding: 'json' })
+    const db = testCommon.factory({ keyEncoding: 'json' })
 
     // deferred-leveldown < 2.0.2 would serialize the key to a string.
     db.put({ thing: 2 }, 'value', function (err) {

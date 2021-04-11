@@ -1,14 +1,14 @@
-var fn = function (puts, db, cb) {
-  var after = function (err) {
+const fn = function (puts, db, cb) {
+  const after = function (err) {
     if (err) throw err
     cb()
   }
-  var data = []
+  const data = []
 
   if (this.cycle == null) this.cycle = 0
   else this.cycle++
 
-  for (var i = 0; i < puts; i++) {
+  for (let i = 0; i < puts; i++) {
     data.push({
       type: 'put',
       key: this.cycle * puts + i,
