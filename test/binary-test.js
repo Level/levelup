@@ -1,5 +1,5 @@
-var each = require('async-each')
-var discardable = require('./util/discardable')
+const each = require('async-each')
+const discardable = require('./util/discardable')
 
 module.exports = function (test, testCommon) {
   test('test put() and get() with binary value {valueEncoding:binary}', function (t) {

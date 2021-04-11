@@ -1,7 +1,7 @@
-var setupFn = function (count, db, cb) {
-  var data = []
+const setupFn = function (count, db, cb) {
+  const data = []
 
-  for (var i = 0; i < count; i++) {
+  for (let i = 0; i < count; i++) {
     data.push({
       type: 'put',
       key: String(i),
@@ -12,13 +12,13 @@ var setupFn = function (count, db, cb) {
   db.batch(data, cb)
 }
 
-var fn = function (count, db, cb) {
-  var received = 0
-  var after = function (err) {
+const fn = function (count, db, cb) {
+  let received = 0
+  const after = function (err) {
     if (err) throw err
     if (++received === count) cb()
   }
-  for (var i = 0; i < count; i++) { db.get(String(i), after) }
+  for (let i = 0; i < count; i++) { db.get(String(i), after) }
 }
 
 module.exports = fn.bind(null, 1000)

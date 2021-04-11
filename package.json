@@ -45,7 +45,7 @@
     "safe-buffer": "^5.1.0",
     "simple-concat": "^1.0.0",
     "sinon": "^7.4.2",
-    "standard": "^15.0.0",
+    "standard": "^16.0.3",
     "tape": "^5.2.2",
     "trickle": "0.0.2"
   },

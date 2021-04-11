@@ -1,7 +1,7 @@
 module.exports = function (test, testCommon) {
   test('deferred open() is patch-safe: put() on new database', makeTest(function (t, db, done) {
-    var put = db.put
-    var called = 0
+    const put = db.put
+    let called = 0
 
     db.put = function () {
       called++
@@ -15,8 +15,8 @@ module.exports = function (test, testCommon) {
   }))
 
   test('deferred open() is patch-safe: del() on new database', makeTest(function (t, db, done) {
-    var del = db.del
-    var called = 0
+    const del = db.del
+    let called = 0
 
     db.del = function () {
       called++
@@ -30,8 +30,8 @@ module.exports = function (test, testCommon) {
   }))
 
   test('deferred open() is patch-safe: batch() on new database', makeTest(function (t, db, done) {
-    var batch = db.batch
-    var called = 0
+    const batch = db.batch
+    let called = 0
 
     db.batch = function () {
       called++
@@ -50,7 +50,7 @@ module.exports = function (test, testCommon) {
   function makeTest (fn) {
     return function (t) {
       // 1) open database without callback, opens in next tick
-      var db = testCommon.factory()
+      const db = testCommon.factory()
 
       fn(t, db, function (err) {
         t.ifError(err, 'no test error')

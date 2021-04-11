@@ -1,14 +1,14 @@
-var memdown = require('memdown')
-var levelup = require('../lib/levelup')
+const memdown = require('memdown')
+const levelup = require('../lib/levelup')
 
 module.exports = function (test, testCommon) {
   test('simple iterator without encoding-down', function (t) {
-    var db = levelup(memdown())
+    const db = levelup(memdown())
 
     db.put('key', 'value', function (err) {
       t.ifError(err, 'no put error')
 
-      var it = db.iterator({
+      const it = db.iterator({
         keyAsBuffer: false,
         valueAsBuffer: false
       })

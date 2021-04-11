@@ -1,8 +1,8 @@
-var each = require('async-each')
-var parallel = require('run-parallel')
-var concatStream = require('concat-stream')
-var concatIterator = require('level-concat-iterator')
-var discardable = require('./util/discardable')
+const each = require('async-each')
+const parallel = require('run-parallel')
+const concatStream = require('concat-stream')
+const concatIterator = require('level-concat-iterator')
+const discardable = require('./util/discardable')
 
 module.exports = function (test, testCommon) {
   test('json encoding: simple-object values in "json" encoding', function (t) {
@@ -56,7 +56,7 @@ module.exports = function (test, testCommon) {
       keyEncoding: 'json',
       valueEncoding: 'json'
     }, function (db, done) {
-      var ops = entries.map(function (entry) {
+      const ops = entries.map(function (entry) {
         return { type: 'put', key: entry.key, value: entry.value }
       })
 

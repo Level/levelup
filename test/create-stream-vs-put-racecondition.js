@@ -1,7 +1,7 @@
-var levelup = require('../lib/levelup')
-var memdown = require('memdown')
-var encdown = require('encoding-down')
-var after = require('after')
+const levelup = require('../lib/levelup')
+const memdown = require('memdown')
+const encdown = require('encoding-down')
+const after = require('after')
 
 module.exports = function (test, testCommon) {
   ;[true, false].forEach(function (encode) {
@@ -14,7 +14,7 @@ module.exports = function (test, testCommon) {
 }
 
 function makeTest (test, encode, deferredOpen, delayedPut) {
-  var name = [
+  const name = [
     'readStream before put',
     encode && 'encode',
     deferredOpen && 'deferred open',
@@ -22,8 +22,8 @@ function makeTest (test, encode, deferredOpen, delayedPut) {
   ].filter(Boolean).join(', ')
 
   test(name, function (t) {
-    var db = encode ? levelup(encdown(memdown())) : levelup(memdown())
-    var delay = delayedPut ? process.nextTick : callFn
+    const db = encode ? levelup(encdown(memdown())) : levelup(memdown())
+    const delay = delayedPut ? process.nextTick : callFn
 
     run(t, db, !deferredOpen, delay)
   })
@@ -37,8 +37,8 @@ function run (t, db, explicitOpen, delay) {
     })
   }
 
-  var reads = 0
-  var next = after(11, function (err) {
+  let reads = 0
+  const next = after(11, function (err) {
     t.ifError(err, 'no error')
     t.is(reads, 0, 'got 0 items from snaphot')
 
@@ -58,7 +58,7 @@ function run (t, db, explicitOpen, delay) {
 
   // Write data
   delay(function () {
-    for (var i = 0; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
       db.put(String(i), String(i), next)
     }
   })

@@ -1,12 +1,12 @@
-var setupFn = function (count, db, cb) {
-  var doWrites = function () {
+const setupFn = function (count, db, cb) {
+  const doWrites = function () {
     if (--count === 0) return cb()
     db.put('aa' + count, 'bb' + count, doWrites)
   }
   doWrites()
 }
 
-var fn = function (db, cb) {
+const fn = function (db, cb) {
   db.createReadStream().on('end', cb)
 }
 

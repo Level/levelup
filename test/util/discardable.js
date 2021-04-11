@@ -4,7 +4,7 @@ module.exports = function discardable (t, testCommon, options, fn) {
     options = {}
   }
 
-  var db = testCommon.factory(options)
+  const db = testCommon.factory(options)
 
   db.open(function () {
     fn(db, function done (err) {

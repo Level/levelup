@@ -1,7 +1,7 @@
-var async = require('async')
+const async = require('async')
 
-var setupFn = function (count, db, cb) {
-  var queue = async.queue(function (key, callback) {
+const setupFn = function (count, db, cb) {
+  const queue = async.queue(function (key, callback) {
     db.exec(
       'INSERT INTO bench VALUES(' +
         key +
@@ -10,16 +10,16 @@ var setupFn = function (count, db, cb) {
       , callback)
   }, 20)
   queue.drain = cb
-  for (var i = 0; i < count; i++) { queue.push(String(i)) }
+  for (let i = 0; i < count; i++) { queue.push(String(i)) }
 }
 
-var fn = function (count, db, cb) {
-  var received = 0
-  var after = function (err) {
+const fn = function (count, db, cb) {
+  let received = 0
+  const after = function (err) {
     if (err) throw err
     if (++received === count) cb()
   }
-  for (var i = 0; i < count; i++) { db.get('SELECT value FROM bench WHERE key = "' + i + '"', after) }
+  for (let i = 0; i < count; i++) { db.get('SELECT value FROM bench WHERE key = "' + i + '"', after) }
 }
 
 module.exports = fn.bind(null, 1000)

@@ -1,11 +1,11 @@
-var suite = require('level-supports/test')
+const suite = require('level-supports/test')
 
 module.exports = function (test, testCommon) {
   suite(test, testCommon)
 
   // TODO (once manifest lands in other modules): add integration tests.
   test('manifest has expected properties', function (t) {
-    var db = testCommon.factory()
+    const db = testCommon.factory()
 
     t.is(db.supports.status, false)
     t.is(db.supports.deferredOpen, true)

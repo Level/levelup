@@ -1,7 +1,7 @@
-var errors = require('../lib/levelup').errors
-var each = require('async-each')
-var series = require('run-series')
-var discardable = require('./util/discardable')
+const errors = require('../lib/levelup').errors
+const each = require('async-each')
+const series = require('run-series')
+const discardable = require('./util/discardable')
 
 module.exports = function (test, testCommon) {
   test('get() / put() / del(): get() on empty database causes error', function (t) {

@@ -1,10 +1,10 @@
-var after = require('after')
-var discardable = require('./util/discardable')
+const after = require('after')
+const discardable = require('./util/discardable')
 
 module.exports = function (test, testCommon) {
   test('null & undefined keys & values: cause error', function (t) {
     discardable(t, testCommon, function (db, done) {
-      var next = after(12, done)
+      const next = after(12, done)
 
       ;[null, undefined].forEach(function (nullish) {
         db.get(nullish, function (err) {

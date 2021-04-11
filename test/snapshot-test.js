@@ -1,15 +1,15 @@
-var delayed = require('delayed').delayed
-var trickle = require('trickle')
-var discardable = require('./util/discardable')
-var readStreamContext = require('./util/rs-context')
-var rsFactory = require('./util/rs-factory')
+const delayed = require('delayed').delayed
+const trickle = require('trickle')
+const discardable = require('./util/discardable')
+const readStreamContext = require('./util/rs-context')
+const rsFactory = require('./util/rs-factory')
 
 module.exports = function (test, testCommon) {
-  var createReadStream = rsFactory(testCommon)
+  const createReadStream = rsFactory(testCommon)
 
   test('ReadStream implicit snapshot', function (t) {
     discardable(t, testCommon, function (db, done) {
-      var ctx = readStreamContext(t)
+      const ctx = readStreamContext(t)
 
       // 1) Store 100 random numbers stored in the database
       db.batch(ctx.sourceData.slice(), function (err) {
@@ -19,7 +19,7 @@ module.exports = function (test, testCommon) {
         //    to make *sure* that we're going to be reading it for longer than it
         //    takes to overwrite the data in there.
 
-        var rs = createReadStream(db).pipe(trickle({ interval: 5 }))
+        const rs = createReadStream(db).pipe(trickle({ interval: 5 }))
 
         rs.on('data', ctx.dataSpy)
         rs.once('end', ctx.endSpy)
@@ -33,9 +33,9 @@ module.exports = function (test, testCommon) {
           //    If we're not using a snapshot then then we'd expect the test
           //    to fail because it'll pick up these new values rather than the
           //    old ones.
-          var newData = []
-          var i
-          var k
+          const newData = []
+          let i
+          let k
 
           for (i = 0; i < 100; i++) {
             k = (i < 10 ? '0' : '') + i

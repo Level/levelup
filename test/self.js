@@ -5,12 +5,12 @@ if (process.browser && typeof Promise !== 'function') {
   global.Promise = require('pinkie')
 }
 
-var test = require('tape')
-var memdown = require('memdown')
-var encode = require('encoding-down')
-var levelup = require('../lib/levelup')
-var suite = require('.')
-var noop = function () {}
+const test = require('tape')
+const memdown = require('memdown')
+const encode = require('encoding-down')
+const levelup = require('../lib/levelup')
+const suite = require('.')
+const noop = function () {}
 
 suite({
   test: test,

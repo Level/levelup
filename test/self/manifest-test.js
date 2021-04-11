@@ -1,17 +1,17 @@
 'use strict'
 
-var test = require('tape')
-var levelup = require('../..')
-var memdown = require('memdown')
-var sinon = require('sinon')
+const test = require('tape')
+const levelup = require('../..')
+const memdown = require('memdown')
+const sinon = require('sinon')
 
 test('manifest: additionalMethod is proxied', function (t) {
-  var mem = memdown()
+  const mem = memdown()
 
   mem.beep = sinon.spy()
   mem.supports = { additionalMethods: { beep: true } }
 
-  var db = levelup(mem)
+  const db = levelup(mem)
 
   t.is(typeof db.beep, 'function')
   t.is(typeof levelup.prototype.beep, 'undefined')
@@ -31,9 +31,9 @@ test('manifest: additionalMethod is proxied', function (t) {
 })
 
 test('manifest: additionalMethod is proxied even if function does not exist', function (t) {
-  var mem = memdown()
+  const mem = memdown()
   mem.supports = { additionalMethods: { beep: true } }
-  var db = levelup(mem)
+  const db = levelup(mem)
 
   t.is(typeof db.beep, 'function')
   t.is(typeof levelup.prototype.beep, 'undefined')
@@ -41,7 +41,7 @@ test('manifest: additionalMethod is proxied even if function does not exist', fu
 })
 
 test('manifest: approximateSize() et al are proxied even if manifest does not exist', function (t) {
-  var mem = memdown()
+  const mem = memdown()
 
   // deferred-leveldown should feature-detect these methods (for now)
   mem.approximateSize = function () {}
@@ -50,7 +50,7 @@ test('manifest: approximateSize() et al are proxied even if manifest does not ex
   mem.otherMethod = function () {}
   mem.supports = null
 
-  var db = levelup(mem)
+  const db = levelup(mem)
 
   t.is(typeof db.approximateSize, 'function')
   t.is(typeof db.compactRange, 'function')

@@ -1,5 +1,5 @@
-var each = require('async-each')
-var discardable = require('./util/discardable')
+const each = require('async-each')
+const discardable = require('./util/discardable')
 
 module.exports = function (test, testCommon) {
   test('custom encoding: simple-object values in "json" encoding', function (t) {
@@ -61,7 +61,7 @@ module.exports = function (test, testCommon) {
   })
 
   function run (t, entries) {
-    var customEncoding = {
+    const customEncoding = {
       encode: JSON.stringify,
       decode: JSON.parse,
       buffer: false,
@@ -72,7 +72,7 @@ module.exports = function (test, testCommon) {
       keyEncoding: customEncoding,
       valueEncoding: customEncoding
     }, function (db, done) {
-      var ops = entries.map(function (entry) {
+      const ops = entries.map(function (entry) {
         return { type: 'put', key: entry.key, value: entry.value }
       })
 
