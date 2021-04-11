@@ -8,11 +8,11 @@ cache:
 matrix:
   fast_finish: true
   include:
-  - node_js: 6
-    env: CMD=test
-  - node_js: 8
-    env: CMD=test
   - node_js: 10
+    env: CMD=test
+  - node_js: 12
+    env: CMD=test
+  - node_js: 14
     env: CMD=test
   - node_js: stable
     env:
