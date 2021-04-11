@@ -375,12 +375,6 @@ You can supply an options object as the first parameter to `createReadStream()` 
 
 - `values` _(boolean, default: `true`)_: whether the results should contain values. If set to `true` and `keys` set to `false` then results will simply be values, rather than objects with a `value` property. Used internally by the `createValueStream()` method.
 
-Legacy options:
-
-- `start`: instead use `gte`
-
-- `end`: instead use `lte`
-
 <a name="createKeyStream"></a>
 
 ### `db.createKeyStream([options])`
