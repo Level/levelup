@@ -2,6 +2,28 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
+## [5.0.0] - 2021-04-17
+
+### Changed
+
+- **Breaking:** modernize syntax and bump `standard` ([Level/community#98](https://github.com/Level/community/issues/98)) ([`e19cd54`](https://github.com/Level/levelup/commit/e19cd54), [`762d989`](https://github.com/Level/levelup/commit/762d989)) (Vincent Weevers)
+- **Breaking:** remove `Batch._levelup` property ([`cfce6bb`](https://github.com/Level/levelup/commit/cfce6bb)) (Vincent Weevers).
+- Align `nextTick` behavior with `abstract-leveldown` ([`4b35716`](https://github.com/Level/levelup/commit/4b35716)) (Vincent Weevers).
+- Add `files` to package.json and remove `.npmignore` ([`29d8b5d`](https://github.com/Level/levelup/commit/29d8b5d)) (Vincent Weevers)
+- Replace `xtend` with `Object.assign()` ([`7bfc0d4`](https://github.com/Level/levelup/commit/7bfc0d4)) (Vincent Weevers)
+- Bump `deferred-leveldown`, `level-errors`, `-iterator-stream` and `-supports` ([`8b518b1`](https://github.com/Level/levelup/commit/8b518b1), [`1b0cfb8`](https://github.com/Level/levelup/commit/1b0cfb8)) (Vincent Weevers)
+- Refactor `promisify()` code by using `catering` module ([#700](https://github.com/Level/levelup/issues/700)) (Lars-Magnus Skog)
+
+### Added
+
+- Support encoding options on chained batch `put()` and `del()` ([#717](https://github.com/Level/levelup/issues/717), [#633](https://github.com/Level/levelup/issues/633)) ([`0765808`](https://github.com/Level/levelup/commit/0765808)) (Vincent Weevers)
+
+### Removed
+
+- **Breaking:** drop node 6, 8, IE, Safari 9-11 & stock Android ([Level/community#98](https://github.com/Level/community/issues/98)) ([`bb1d4da`](https://github.com/Level/levelup/commit/bb1d4da)) (Vincent Weevers).
+- Remove legacy range options from readme and tests ([Level/community#86](https://github.com/Level/community/issues/86)) ([`2df2a44`](https://github.com/Level/levelup/commit/2df2a44)) (Vincent Weevers)
+- Remove default export ([Level/community#87](https://github.com/Level/community/issues/87)) ([`3fd21e2`](https://github.com/Level/levelup/commit/3fd21e2)) (Vincent Weevers)
+
 ## [4.4.0] - 2020-04-11
 
 ### Changed
@@ -1106,6 +1128,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ### Removed
 
 - Remove unused `inherits` variable ([**@rvagg**](https://github.com/rvagg))
+
+[5.0.0]: https://github.com/Level/levelup/compare/v4.4.0...v5.0.0
 
 [4.4.0]: https://github.com/Level/levelup/compare/v4.3.2...v4.4.0
 

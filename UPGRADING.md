@@ -2,18 +2,43 @@
 
 This document describes breaking changes and how to upgrade. For a complete list of changes including minor and patch releases, please refer to the [changelog](CHANGELOG.md).
 
-## v4
+## 5.0.0
 
-There have been two major updates to dependencies. First, `level-iterator-stream` is now based on [`readable-stream@3`](https://github.com/nodejs/readable-stream#version-3xx). Second, `deferred-leveldown` is now based on [`abstract-leveldown@6`](https://github.com/Level/abstract-leveldown/blob/master/UPGRADING.md#v6). Please follow these links for more information; both contain significant enough changes to warrant this `levelup` major. In addition, all aforementioned dependencies and by extension `levelup` have dropped support of IE10. 
+Legacy range options have been removed ([Level/community#86](https://github.com/Level/community/issues/86)). If you previously did:
+
+```js
+db.createReadStream({ start: 'a', end: 'z' })
+```
+
+An error would now be thrown and you must instead do:
+
+```js
+db.createReadStream({ gte: 'a', lte: 'z' })
+```
+
+The same applies to `db.iterator()`, `db.createKeyStream()` and `db.createValueStream()`.
+
+This release also drops support of legacy runtime environments ([Level/community#98](https://github.com/Level/community/issues/98)):
+
+- Node.js 6 and 8
+- Internet Explorer 11
+- Safari 9-11
+- Stock Android browser (AOSP).
+
+Lastly, in browsers, `process.nextTick()` has been replaced with [`queue-microtask`](https://github.com/feross/queue-microtask), except in streams. In the future we might use `queueMicrotask()` in Node.js too.
+
+## 4.0.0
+
+There have been two major updates to dependencies. First, `level-iterator-stream` is now based on [`readable-stream@3`](https://github.com/nodejs/readable-stream#version-3xx). Second, `deferred-leveldown` is now based on [`abstract-leveldown@6`](https://github.com/Level/abstract-leveldown/blob/master/UPGRADING.md#v6). Please follow these links for more information; both contain significant enough changes to warrant this `levelup` major. In addition, all aforementioned dependencies and by extension `levelup` have dropped support of IE10.
 
 To get a consistent behavior between opening and opened `levelup` instances (in the former case, your store will be wrapped with `deferred-leveldown`), we recommend to pair `levelup@4` only with a store based on `abstract-leveldown` >= 6. For example, `deferred-leveldown` now rejects `null` and `undefined` values. If you pair `levelup@4` with an older store, `db.put('key', null)` would only throw an error if `db` is still opening itself.
 
-## v3
+## 3.0.0
 
 1. Dropped support for node 4.
 2. Batch operations no longer default to `'put'`. If `type` isn't specified, an error will be thrown, courtesy of `abstract-leveldown`.
 
-## v2
+## 2.0.0
 
 ### Summary
 
