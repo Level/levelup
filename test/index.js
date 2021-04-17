@@ -17,6 +17,7 @@ function suite (options) {
   require('./init-test')(test, testCommon)
   if (testCommon.encodings) require('./custom-encoding-test')(test, testCommon)
   if (testCommon.encodings) require('./json-encoding-test')(test, testCommon)
+  if (testCommon.encodings) require('./chained-batch-encoding-test')(test, testCommon)
   if (testCommon.streams) require('./key-value-streams-test')(test, testCommon)
   require('./maybe-error-test')(test, testCommon)
   require('./no-encoding-test')(test, testCommon)
