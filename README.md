@@ -289,27 +289,27 @@ db.batch()
   .write(function () { console.log('Done!') })
 ```
 
-<b><code>batch.put(key, value)</code></b>
+**`batch.put(key, value[, options])`**
 
-Queue a _put_ operation on the current batch, not committed until a `write()` is called on the batch.
+Queue a _put_ operation on the current batch, not committed until a `write()` is called on the batch. The `options` argument, if provided, must be an object and is passed on to the underlying store.
 
 This method may `throw` a `WriteError` if there is a problem with your put (such as the `value` being `null` or `undefined`).
 
-<b><code>batch.del(key)</code></b>
+**`batch.del(key[, options])`**
 
-Queue a _del_ operation on the current batch, not committed until a `write()` is called on the batch.
+Queue a _del_ operation on the current batch, not committed until a `write()` is called on the batch. The `options` argument, if provided, must be an object and is passed on to the underlying store.
 
 This method may `throw` a `WriteError` if there is a problem with your delete.
 
-<b><code>batch.clear()</code></b>
+**`batch.clear()`**
 
 Clear all queued operations on the current batch, any previous operations will be discarded.
 
-<b><code>batch.length</code></b>
+**`batch.length`**
 
 The number of queued operations on the current batch.
 
-<b><code>batch.write(\[options]\[, callback])</code></b>
+**`batch.write([options][, callback])`**
 
 Commit the queued operations for this batch. All operations not _cleared_ will be written to the underlying store atomically, that is, they will either all succeed or fail with no partial commits.
 
