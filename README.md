@@ -3,7 +3,7 @@
 [![level badge][level-badge]](https://github.com/Level/awesome)
 [![npm](https://img.shields.io/npm/v/levelup.svg?label=&logo=npm)](https://www.npmjs.com/package/levelup)
 [![Node version](https://img.shields.io/node/v/levelup.svg)](https://www.npmjs.com/package/levelup)
-[![Travis](https://img.shields.io/travis/com/Level/levelup.svg?logo=travis&label=)](https://travis-ci.com/Level/levelup)
+[![Test](https://github.com/Level/levelup/actions/workflows/test.yml/badge.svg)](https://github.com/Level/levelup/actions/workflows/test.yml)
 [![npm](https://img.shields.io/npm/dm/levelup.svg?label=dl)](https://www.npmjs.com/package/levelup)
 [![Coverage Status](https://codecov.io/gh/Level/levelup/branch/master/graph/badge.svg)](https://codecov.io/gh/Level/levelup)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
