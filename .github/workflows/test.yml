@@ -19,11 +19,6 @@ jobs:
       - name: Test
         if: ${{ matrix.node != 14}}
         run: npm test
-      - name: Test Browsers
-        if: ${{ matrix.node == 14}}
-        env:
-          SAUCE_CONNECT_DOWNLOAD_ON_INSTALL: true
-        run: npm run test-browsers
       - name: Coverage
         run: npm run coverage
       - name: Codecov
