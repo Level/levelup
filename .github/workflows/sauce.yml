@@ -1,5 +1,6 @@
 name: Sauce Labs
 on: push
+concurrency: sauce-labs
 jobs:
   test:
     runs-on: ubuntu-latest
