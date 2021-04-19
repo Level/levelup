@@ -11,3 +11,4 @@ yarn.lock
 package-lock.json
 .nyc_output/
 airtap.log
+coverage/

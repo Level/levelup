@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "standard && hallmark && (nyc -s node test/self.js | faucet) && nyc report",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage": "nyc report -r lcovonly",
     "test-browsers": "airtap --verbose test/self.js > airtap.log",
     "test-browsers-local": "airtap -p local test/self.js",
     "hallmark": "hallmark --fix",
@@ -39,7 +39,6 @@
     "async-each": "^1.0.3",
     "browserify": "^17.0.0",
     "concat-stream": "^2.0.0",
-    "coveralls": "^3.0.2",
     "delayed": "^2.0.0",
     "dependency-check": "^4.1.0",
     "encoding-down": "^7.0.0",

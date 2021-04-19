@@ -1,0 +1,32 @@
+name: Test
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [10, 12, 14]
+    name: Node ${{ matrix.node }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use node ${{ matrix.node }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install
+        run: npm install
+      - name: Test
+        if: ${{ matrix.node != 14}}
+        run: npm test
+      - name: Test Browsers
+        if: ${{ matrix.node == 14}}
+        env:
+          SAUCE_CONNECT_DOWNLOAD_ON_INSTALL: true
+        run: npm run test-browsers
+      - name: Coverage
+        run: npm run coverage
+      - name: Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: coverage/lcov.info
