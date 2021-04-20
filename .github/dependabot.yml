@@ -6,3 +6,7 @@ updates:
       interval: monthly
     ignore:
       - dependency-name: dependency-check
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
