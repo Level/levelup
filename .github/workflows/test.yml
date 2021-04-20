@@ -13,7 +13,7 @@ jobs:
       - name: Fetch tags
         run: git fetch --tags
       - name: Use node ${{ matrix.node }}
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
       - name: Install
