@@ -2,6 +2,12 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
+## [5.0.1] - 2021-06-07
+
+### Changed
+
+- Remove use of `assert` module ([#721](https://github.com/Level/levelup/issues/721)) ([`f3e86ae`](https://github.com/Level/levelup/commit/f3e86ae)) (Alex Potsides)
+
 ## [5.0.0] - 2021-04-17
 
 ### Changed
@@ -1114,7 +1120,7 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 :seedling: Initial release.
 
-## 0.0.0-1 - 2012-08-18
+## [0.0.0-1] - 2012-08-18
 
 ### Added
 
@@ -1128,6 +1134,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ### Removed
 
 - Remove unused `inherits` variable ([**@rvagg**](https://github.com/rvagg))
+
+[5.0.1]: https://github.com/Level/levelup/compare/v5.0.0...v5.0.1
 
 [5.0.0]: https://github.com/Level/levelup/compare/v4.4.0...v5.0.0
 
@@ -1316,3 +1324,5 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 [0.0.1]: https://github.com/Level/levelup/compare/0.0.0...0.0.1
 
 [0.0.0]: https://github.com/Level/levelup/compare/0.0.0-1...0.0.0
+
+[0.0.0-1]: https://github.com/Level/levelup/releases/tag/0.0.0-1

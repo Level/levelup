@@ -1,6 +1,6 @@
 {
   "name": "levelup",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Fast & simple storage - a Node.js-style LevelDB wrapper",
   "license": "MIT",
   "main": "lib/levelup.js",
