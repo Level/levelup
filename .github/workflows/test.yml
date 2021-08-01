@@ -21,6 +21,6 @@ jobs:
       - name: Coverage
         run: npm run coverage
       - name: Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         with:
           file: coverage/lcov.info
