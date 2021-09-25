@@ -25,6 +25,7 @@
   - [`db.close([callback])`](#dbclosecallback)
   - [`db.put(key, value[, options][, callback])`](#dbputkey-value-options-callback)
   - [`db.get(key[, options][, callback])`](#dbgetkey-options-callback)
+  - [`db.getMany(keys[, options][, callback])`](#dbgetmanykeys-options-callback)
   - [`db.del(key[, options][, callback])`](#dbdelkey-options-callback)
   - [`db.batch(array[, options][, callback])` _(array form)_](#dbbatcharray-options-callback-array-form)
   - [`db.batch()` _(chained form)_](#dbbatch-chained-form)
@@ -208,7 +209,7 @@ If no callback is passed, a promise is returned.
 
 ### `db.get(key[, options][, callback])`
 
-<code>get()</code> is the primary method for fetching data from the store. The `key` can be of any type. If it doesn't exist in the store then the callback or promise will receive an error. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
+Get a value from the store by `key`. The `key` can be of any type. If it doesn't exist in the store then the callback or promise will receive an error. A not-found err object will be of type `'NotFoundError'` so you can `err.type == 'NotFoundError'` or you can perform a truthy test on the property `err.notFound`.
 
 ```js
 db.get('foo', function (err, value) {
@@ -225,9 +226,19 @@ db.get('foo', function (err, value) {
 })
 ```
 
-`options` is passed on to the underlying store.
+The optional `options` object is passed on to the underlying store.
 
 If no callback is passed, a promise is returned.
+
+<a name="get_many"></a>
+
+### `db.getMany(keys[, options][, callback])`
+
+Get multiple values from the store by an array of `keys`. The optional `options` object is passed on to the underlying store.
+
+The `callback` function will be called with an `Error` if the operation failed for any reason. If successful the first argument will be `null` and the second argument will be an array of values with the same order as `keys`. If a key was not found, the relevant value will be `undefined`.
+
+If no callback is provided, a promise is returned.
 
 <a name="del"></a>
 
