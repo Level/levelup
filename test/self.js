@@ -34,7 +34,6 @@ suite({
 // TODO to make this pass:
 // - Have abstract-leveldown use level-errors
 // - Perform type checks in same order (e.g. check key before callback)
-// - Add db.isClosed(), isOpen() to abstract-leveldown
 suite({
   test: noop,
   factory: function (options) {
