@@ -25,10 +25,10 @@
   ],
   "dependencies": {
     "catering": "^2.0.0",
-    "deferred-leveldown": "^6.0.0",
+    "deferred-leveldown": "^7.0.0",
     "level-errors": "^3.0.0",
     "level-iterator-stream": "^5.0.0",
-    "level-supports": "^2.0.0",
+    "level-supports": "^2.0.1",
     "queue-microtask": "^1.2.3"
   },
   "devDependencies": {
@@ -41,12 +41,12 @@
     "concat-stream": "^2.0.0",
     "delayed": "^2.0.0",
     "dependency-check": "^4.1.0",
-    "encoding-down": "^7.0.0",
+    "encoding-down": "^7.1.0",
     "faucet": "^0.0.1",
     "hallmark": "^3.1.0",
     "level-community": "^3.0.0",
     "level-concat-iterator": "^3.0.0",
-    "memdown": "^6.0.0",
+    "memdown": "^6.1.0",
     "nyc": "^15.1.0",
     "run-parallel": "^1.2.0",
     "run-series": "^1.1.8",
