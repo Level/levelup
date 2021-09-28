@@ -10,7 +10,6 @@ module.exports = function (test, testCommon) {
   test('deferred open(): put() and get() on new database', function (t) {
     // 1) open database without callback, opens in next tick
     const db = testCommon.factory()
-    t.ok(typeof db === 'object' && db !== null)
 
     parallel([
       // 2) insert 3 values with put(), these should be deferred until the database is actually open
@@ -34,15 +33,29 @@ module.exports = function (test, testCommon) {
       })
     })
 
-    // we should still be in a state of limbo down here, not opened or closed, but 'new'
-    t.is(db.isOpen(), false)
-    t.is(db.isClosed(), false)
+    t.is(db.status, 'opening')
+  })
+
+  test('deferred open(): put() and get() on reopened database', async function (t) {
+    const db = testCommon.factory()
+
+    await db.close()
+    t.is(db.status, 'closed')
+
+    db.open(() => {})
+    t.is(db.status, 'opening')
+
+    await db.put('beep', 'boop')
+
+    t.is(db.status, 'open')
+    t.is(await db.get('beep', { asBuffer: false }), 'boop')
+
+    await db.close()
   })
 
   test('deferred open(): batch() on new database', function (t) {
     // 1) open database without callback, opens in next tick
     const db = testCommon.factory()
-    t.ok(typeof db === 'object' && db !== null)
 
     // 2) insert 3 values with batch(), these should be deferred until the database is actually open
     db.batch([
@@ -66,15 +79,12 @@ module.exports = function (test, testCommon) {
       })
     })
 
-    // we should still be in a state of limbo down here, not opened or closed, but 'new'
-    t.is(db.isOpen(), false)
-    t.is(db.isClosed(), false)
+    t.is(db.status, 'opening')
   })
 
   test('deferred open(): chained batch() on new database', function (t) {
     // 1) open database without callback, opens in next tick
     const db = testCommon.factory()
-    t.ok(typeof db === 'object' && db !== null)
 
     // 2) insert 3 values with batch(), these should be deferred until the database is actually open
     db.batch()
@@ -98,9 +108,7 @@ module.exports = function (test, testCommon) {
         })
       })
 
-    // we should still be in a state of limbo down here, not opened or closed, but 'new'
-    t.is(db.isOpen(), false)
-    t.is(db.isClosed(), false)
+    t.is(db.status, 'opening')
   })
 
   testCommon.streams && test('deferred open(): test deferred ReadStream', function (t) {

@@ -12,19 +12,20 @@ test('manifest: additionalMethod is proxied', function (t) {
   mem.supports = { additionalMethods: { beep: true } }
 
   const db = levelup(mem)
+  const noop = () => {}
 
   t.is(typeof db.beep, 'function')
   t.is(typeof levelup.prototype.beep, 'undefined')
 
-  db.beep()
+  db.beep(noop)
   t.is(mem.beep.callCount, 0, 'deferred')
 
   db.on('open', function () {
     t.is(mem.beep.callCount, 1)
-    t.same(mem.beep.getCall(0).args, [])
+    t.same(mem.beep.getCall(0).args, [noop])
 
-    db.beep('boop')
-    t.same(mem.beep.getCall(1).args, ['boop'])
+    db.beep('boop', noop)
+    t.same(mem.beep.getCall(1).args, ['boop', noop])
 
     db.close(t.end.bind(t))
   })

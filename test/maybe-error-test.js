@@ -14,7 +14,7 @@ module.exports = function (test, testCommon) {
           t.is(err.message, 'Database is not open')
         })
         t.is(sync, false, '.put cb called asynchronously')
-        done()
+        done() // TODO: called too soon, we still have 2 pending assertions
       })
     })
   })
@@ -69,6 +69,21 @@ module.exports = function (test, testCommon) {
         })
         t.is(sync, false, '.batch cb called asynchronously')
         done()
+      })
+    })
+  })
+
+  test('maybeError() should be called async: getMany()', function (t) {
+    discardable(t, testCommon, function (db, done) {
+      db.close(function () {
+        t.is(db.status, 'closed', 'db is closed')
+        let sync = false
+        db.getMany(['key'], function (err) {
+          sync = true
+          t.is(err && err.message, 'Database is not open')
+          done()
+        })
+        t.is(sync, false, '.getMany cb called asynchronously')
       })
     })
   })

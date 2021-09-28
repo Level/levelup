@@ -49,7 +49,7 @@ module.exports = function (test, testCommon) {
 
   function makeTest (fn) {
     return function (t) {
-      // 1) open database without callback, opens in next tick
+      // Open database without callback, opens in next tick
       const db = testCommon.factory()
 
       fn(t, db, function (err) {
@@ -57,7 +57,8 @@ module.exports = function (test, testCommon) {
         db.close(t.end.bind(t))
       })
 
-      // we should still be in a state of limbo down here, not opened or closed, but 'new'
+      // Expected state is 'opening'
+      t.is(db._isOpening(), true)
       t.is(db.isOpen(), false)
       t.is(db.isClosed(), false)
     }
