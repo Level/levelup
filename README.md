@@ -42,8 +42,6 @@
 - [Contributing](#contributing)
 - [Big Thanks](#big-thanks)
 - [Donate](#donate)
-  - [Backers](#backers)
-  - [Sponsors](#sponsors)
 - [License](#license)
 
 </details>

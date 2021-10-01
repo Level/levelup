@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.1.0] - 2021-10-01
+
+### Changed
+
+- Bump `deferred-leveldown` from 6.x to 7.x ([`2226bba`](https://github.com/Level/levelup/commit/2226bba)) (Vincent Weevers)
+
+### Added
+
+- Add `db.getMany(keys)` ([`02cf2d3`](https://github.com/Level/levelup/commit/02cf2d3)) (Vincent Weevers).
+
 ## [5.0.1] - 2021-06-07
 
 ### Changed
@@ -1141,6 +1151,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md)._
 
 - Remove unused `inherits` variable ([**@rvagg**](https://github.com/rvagg))
 
+[5.1.0]: https://github.com/Level/levelup/releases/tag/v5.1.0
+
 [5.0.1]: https://github.com/Level/levelup/releases/tag/v5.0.1
 
 [5.0.0]: https://github.com/Level/levelup/releases/tag/v5.0.0
@@ -1271,7 +1283,7 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md)._
 
 [0.6.0]: https://github.com/Level/levelup/releases/tag/0.6.0
 
-[0.6.0-rc1]:https://github.com/Level/levelup/releases/tag/0.6.0-rc1
+[0.6.0-rc1]: https://github.com/Level/levelup/releases/tag/0.6.0-rc1
 
 [0.5.4]: https://github.com/Level/levelup/releases/tag/0.5.4
 
