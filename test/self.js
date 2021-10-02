@@ -34,6 +34,8 @@ suite({
 // TODO to make this pass:
 // - Have abstract-leveldown use level-errors
 // - Perform type checks in same order (e.g. check key before callback)
+// - Add status checks to abstract-leveldown
+// - Add chainedBatch.length to abstract-leveldown, or remove from levelup
 suite({
   test: noop,
   factory: function (options) {

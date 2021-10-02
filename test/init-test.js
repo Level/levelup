@@ -20,13 +20,14 @@ module.exports = function (test, testCommon) {
   test('Init & open(): open and close statuses', function (t) {
     levelup(memdown(), function (err, db) {
       t.ifError(err, 'no error')
-      t.is(db.isOpen(), true)
+      t.is(db.status, 'open')
+      t.is(db.isOperational(), true)
 
       db.close(function (err) {
         t.ifError(err)
 
-        t.is(db.isOpen(), false)
-        t.is(db.isClosed(), true)
+        t.is(db.status, 'closed')
+        t.is(db.isOperational(), false)
 
         levelup(memdown(), function (err, db) {
           t.ifError(err)
@@ -35,50 +36,62 @@ module.exports = function (test, testCommon) {
           db.close(t.end.bind(t))
         })
       })
+
+      t.is(db.isOperational(), false)
     })
   })
 
   test('Init & open(): without callback', function (t) {
     const db = levelup(memdown())
-    t.ok(typeof db === 'object' && db !== null)
+
+    t.is(db.isOperational(), true)
+
     db.on('ready', function () {
-      t.is(db.isOpen(), true)
+      t.is(db.status, 'open')
+      t.is(db.isOperational(), true)
+
       db.close(t.end.bind(t))
     })
   })
 
   test('Init & open(): error with callback', function (t) {
-    t.plan(1)
+    t.plan(3)
 
     const mem = memdown()
     mem._open = function (opts, cb) {
       nextTick(cb, new Error('from underlying store'))
     }
 
-    levelup(mem, function (err) {
+    const db = levelup(mem, function (err) {
       t.is(err.message, 'from underlying store')
+      t.is(db.isOperational(), false)
     }).on('open', function () {
       t.fail('should not finish opening')
     }).on('error', function () {
       t.fail('should not emit error')
     })
+
+    t.is(db.isOperational(), true)
   })
 
   test('Init & open(): error without callback', function (t) {
-    t.plan(1)
+    t.plan(3)
 
     const mem = memdown()
     mem._open = function (opts, cb) {
       nextTick(cb, new Error('from underlying store'))
     }
 
-    levelup(mem)
+    const db = levelup(mem)
       .on('open', function () {
         t.fail('should not finish opening')
       })
       .on('error', function (err) {
         t.is(err.message, 'from underlying store')
+        t.is(db.isOperational(), false)
       })
+
+    t.is(db.isOperational(), true)
   })
 
   test('Init & open(): validate abstract-leveldown', function (t) {

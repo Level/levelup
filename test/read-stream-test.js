@@ -420,9 +420,7 @@ module.exports = function (test, testCommon) {
           t.ifError(err, 'no open error')
         })
 
-        // is in limbo
-        t.is(db.isOpen(), false)
-        t.is(db.isClosed(), false)
+        t.is(db.status, 'opening')
 
         const rs = createReadStream(db)
         rs.on('data', ctx.dataSpy)

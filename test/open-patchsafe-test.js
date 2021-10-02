@@ -57,10 +57,7 @@ module.exports = function (test, testCommon) {
         db.close(t.end.bind(t))
       })
 
-      // Expected state is 'opening'
-      t.is(db._isOpening(), true)
-      t.is(db.isOpen(), false)
-      t.is(db.isClosed(), false)
+      t.is(db.status, 'opening')
     }
   }
 }
