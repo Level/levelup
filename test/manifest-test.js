@@ -8,10 +8,10 @@ module.exports = function (test, testCommon) {
     const db = testCommon.factory()
 
     t.is(db.supports.status, true)
-    t.is(db.supports.deferredOpen, true)
-    t.is(db.supports.openCallback, true)
-    t.is(db.supports.promises, true)
-    t.is(db.supports.streams, true)
+    if (testCommon.deferredOpen) t.is(db.supports.deferredOpen, true)
+    if (testCommon.openCallback) t.is(db.supports.openCallback, true)
+    if (testCommon.promises) t.is(db.supports.promises, true)
+    if (testCommon.streams) t.is(db.supports.streams, true)
 
     db.close(t.end.bind(t))
   })

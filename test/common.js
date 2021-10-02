@@ -24,6 +24,7 @@ module.exports = function testCommon (options) {
     deferredOpen: !!options.deferredOpen,
     promises: !!options.promises,
     streams: !!options.streams,
-    encodings: !!options.encodings
+    encodings: !!options.encodings,
+    openCallback: !!options.openCallback
   }
 }

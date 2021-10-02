@@ -34,8 +34,6 @@ suite({
 // TODO to make this pass:
 // - Have abstract-leveldown use level-errors
 // - Perform type checks in same order (e.g. check key before callback)
-// - Add status checks to abstract-leveldown
-// - Add chainedBatch.length to abstract-leveldown, or remove from levelup
 suite({
   test: noop,
   factory: function (options) {
@@ -43,9 +41,10 @@ suite({
   },
   clear: true,
   deferredOpen: false,
-  promises: false,
+  promises: true,
   streams: false,
-  encodings: false
+  encodings: false,
+  openCallback: false
 })
 
 // Integration tests that can't use a generic testCommon.factory()

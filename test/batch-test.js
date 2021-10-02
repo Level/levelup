@@ -145,11 +145,12 @@ module.exports = function (test, testCommon) {
   testCommon.promises && test('chained batch(): promise interface - options', function (t) {
     discardable(t, testCommon, function (db, done) {
       const batch = db.batch()
+      const underlying = batch.batch || batch
+      const write = underlying.write.bind(underlying)
 
-      const write = batch.batch.write.bind(batch.batch)
-      batch.batch.write = function (options, cb) {
+      underlying.write = function (options, cb) {
         t.same(options, { foo: 'bar' })
-        write(options, cb)
+        return write(options, cb)
       }
 
       batch.put('one', '1')

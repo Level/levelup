@@ -99,7 +99,17 @@ module.exports = function (test, testCommon) {
       t.ifError(err)
       db.close(function (err) {
         t.ifError(err)
-        const rs = createReadStream(db)
+
+        let rs
+
+        try {
+          rs = createReadStream(db)
+        } catch (err) {
+          // Will error if backed by a recent abstract-leveldown
+          t.is(err.message, 'Database is not open')
+          return done()
+        }
+
         rs.destroy()
         done()
       })
