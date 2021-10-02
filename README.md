@@ -108,8 +108,6 @@ db.put('name', 'levelup', function (err) {
 - <a href="#del"><code>db.<b>del()</b></code></a>
 - <a href="#batch"><code>db.<b>batch()</b></code></a> _(array form)_
 - <a href="#batch_chained"><code>db.<b>batch()</b></code></a> _(chained form)_
-- <a href="#isOpen"><code>db.<b>isOpen()</b></code></a>
-- <a href="#isClosed"><code>db.<b>isClosed()</b></code></a>
 - <a href="#createReadStream"><code>db.<b>createReadStream()</b></code></a>
 - <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
 - <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
@@ -325,27 +323,19 @@ The optional `options` object is passed to the `.write()` operation of the under
 
 If no callback is passed, a promise is returned.
 
-<a name="isOpen"></a>
+### `db.status`
 
-### `db.isOpen()`
+A readonly string that is one of:
 
-A `levelup` instance can be in one of the following states:
+- `new`     - newly created, not opened or closed
+- `opening` - waiting for the underlying store to be opened
+- `open`    - successfully opened the store, available for use
+- `closing` - waiting for the store to be closed
+- `closed`  - store has been successfully closed.
 
-- _"new"_     - newly created, not opened or closed
-- _"opening"_ - waiting for the underlying store to be opened
-- _"open"_    - successfully opened the store, available for use
-- _"closing"_ - waiting for the store to be closed
-- _"closed"_  - store has been successfully closed, should not be used
+### `db.isOperational()`
 
-`isOpen()` will return `true` only when the state is "open".
-
-<a name="isClosed"></a>
-
-### `db.isClosed()`
-
-_See <a href="#put"><code>isOpen()</code></a>_
-
-`isClosed()` will return `true` only when the state is "closing" _or_ "closed", it can be useful for determining if read and write operations are permissible.
+Returns `true` if the store accepts operations, which in the case of `levelup` means that `status` is either `opening` or `open`, because it opens itself and queues up operations until opened.
 
 <a name="createReadStream"></a>
 
