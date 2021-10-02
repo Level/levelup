@@ -17,7 +17,6 @@
 - [Supported Platforms](#supported-platforms)
 - [Usage](#usage)
 - [API](#api)
-  - [Special Notes](#special-notes)
   - [`levelup(db[, options[, callback]])`](#levelupdb-options-callback)
   - [`db.supports`](#dbsupports)
   - [`db.open([options][, callback])`](#dbopenoptions-callback)
@@ -28,14 +27,14 @@
   - [`db.del(key[, options][, callback])`](#dbdelkey-options-callback)
   - [`db.batch(array[, options][, callback])` _(array form)_](#dbbatcharray-options-callback-array-form)
   - [`db.batch()` _(chained form)_](#dbbatch-chained-form)
-  - [`db.isOpen()`](#dbisopen)
-  - [`db.isClosed()`](#dbisclosed)
+  - [`db.status`](#dbstatus)
+  - [`db.isOperational()`](#dbisoperational)
   - [`db.createReadStream([options])`](#dbcreatereadstreamoptions)
   - [`db.createKeyStream([options])`](#dbcreatekeystreamoptions)
   - [`db.createValueStream([options])`](#dbcreatevaluestreamoptions)
   - [`db.iterator([options])`](#dbiteratoroptions)
   - [`db.clear([options][, callback])`](#dbclearoptions-callback)
-    - [What happened to `db.createWriteStream`?](#what-happened-to-dbcreatewritestream)
+- [What happened to `db.createWriteStream`?](#what-happened-to-dbcreatewritestream)
 - [Promise Support](#promise-support)
 - [Events](#events)
 - [Multi-process Access](#multi-process-access)
@@ -52,7 +51,7 @@
 
 LevelDB is a simple key-value store built by Google. It's used in Google Chrome and many other products. LevelDB supports arbitrary byte arrays as both keys and values, singular _get_, _put_ and _delete_ operations, _batched put and delete_, bi-directional iterators and simple compression using the very fast [Snappy](http://google.github.io/snappy/) algorithm.
 
-LevelDB stores entries sorted lexicographically by keys. This makes the <a href="#createReadStream">streaming interface</a> of `levelup` - which exposes LevelDB iterators as [Readable Streams](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) - a very powerful query mechanism.
+LevelDB stores entries sorted lexicographically by keys. This makes the streaming interface of `levelup` - which exposes LevelDB iterators as [Readable Streams](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) - a very powerful query mechanism.
 
 The most common store is [`leveldown`](https://github.com/Level/leveldown/) which provides a pure C++ binding to LevelDB. [Many alternative stores are available](https://github.com/Level/awesome/#stores) such as [`level.js`](https://github.com/Level/level.js) in the browser or [`memdown`](https://github.com/Level/memdown) for an in-memory store. They typically support strings and Buffers for both keys and values. For a richer set of data types you can wrap the store with [`encoding-down`](https://github.com/Level/encoding-down).
 
@@ -66,7 +65,7 @@ We aim to support Active LTS and Current Node.js releases as well as browsers. F
 
 ## Usage
 
-**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md).
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md)._
 
 First you need to install `levelup`! No stores are included so you must also install `leveldown` (for example).
 
@@ -98,27 +97,6 @@ db.put('name', 'levelup', function (err) {
 ```
 
 ## API
-
-- <a href="#ctor"><code><b>levelup()</b></code></a>
-- <a href="#supports"><code>db.<b>supports</b></code></a>
-- <a href="#open"><code>db.<b>open()</b></code></a>
-- <a href="#close"><code>db.<b>close()</b></code></a>
-- <a href="#put"><code>db.<b>put()</b></code></a>
-- <a href="#get"><code>db.<b>get()</b></code></a>
-- <a href="#del"><code>db.<b>del()</b></code></a>
-- <a href="#batch"><code>db.<b>batch()</b></code></a> _(array form)_
-- <a href="#batch_chained"><code>db.<b>batch()</b></code></a> _(chained form)_
-- <a href="#createReadStream"><code>db.<b>createReadStream()</b></code></a>
-- <a href="#createKeyStream"><code>db.<b>createKeyStream()</b></code></a>
-- <a href="#createValueStream"><code>db.<b>createValueStream()</b></code></a>
-- <a href="#iterator"><code>db.<b>iterator()</b></code></a>
-- <a href="#clear"><code>db.<b>clear()</b></code></a>
-
-### Special Notes
-
-- <a href="#writeStreams">What happened to <code><b>db.createWriteStream()</b></code></a>
-
-<a name="ctor"></a>
 
 ### `levelup(db[, options[, callback]])`
 
@@ -154,8 +132,6 @@ db.get('foo', function (err, value) {
 })
 ```
 
-<a name="supports"></a>
-
 ### `db.supports`
 
 A read-only [manifest](https://github.com/Level/supports). Might be used like so:
@@ -170,37 +146,27 @@ if (db.supports.bufferKeys && db.supports.promises) {
 }
 ```
 
-<a name="open"></a>
-
 ### `db.open([options][, callback])`
 
-Opens the underlying store. In general you should never need to call this method directly as it's automatically called by <a href="#ctor"><code>levelup()</code></a>.
-
-However, it is possible to _reopen_ the store after it has been closed with <a href="#close"><code>close()</code></a>, although this is not generally advised.
+Opens the underlying store. In general you shouldn't need to call this method directly as it's automatically called by [`levelup()`](#levelupdb-options-callback). However, it is possible to reopen the store after it has been closed with [`close()`](#dbclosecallback).
 
 If no callback is passed, a promise is returned.
 
-<a name="close"></a>
-
 ### `db.close([callback])`
 
-<code>close()</code> closes the underlying store. The callback will receive any error encountered during closing as the first argument.
+`close()` closes the underlying store. The callback will receive any error encountered during closing as the first argument.
 
 You should always clean up your `levelup` instance by calling `close()` when you no longer need it to free up resources. A store cannot be opened by multiple instances of `levelup` simultaneously.
 
 If no callback is passed, a promise is returned.
 
-<a name="put"></a>
-
 ### `db.put(key, value[, options][, callback])`
 
-<code>put()</code> is the primary method for inserting data into the store. Both `key` and `value` can be of any type as far as `levelup` is concerned.
+`put()` is the primary method for inserting data into the store. Both `key` and `value` can be of any type as far as `levelup` is concerned.
 
 `options` is passed on to the underlying store.
 
 If no callback is passed, a promise is returned.
-
-<a name="get"></a>
 
 ### `db.get(key[, options][, callback])`
 
@@ -225,8 +191,6 @@ The optional `options` object is passed on to the underlying store.
 
 If no callback is passed, a promise is returned.
 
-<a name="get_many"></a>
-
 ### `db.getMany(keys[, options][, callback])`
 
 Get multiple values from the store by an array of `keys`. The optional `options` object is passed on to the underlying store.
@@ -235,11 +199,9 @@ The `callback` function will be called with an `Error` if the operation failed f
 
 If no callback is provided, a promise is returned.
 
-<a name="del"></a>
-
 ### `db.del(key[, options][, callback])`
 
-<code>del()</code> is the primary method for removing data from the store.
+`del()` is the primary method for removing data from the store.
 
 ```js
 db.del('foo', function (err) {
@@ -252,16 +214,14 @@ db.del('foo', function (err) {
 
 If no callback is passed, a promise is returned.
 
-<a name="batch"></a>
-
 ### `db.batch(array[, options][, callback])` _(array form)_
 
-<code>batch()</code> can be used for very fast bulk-write operations (both _put_ and _delete_). The `array` argument should contain a list of operations to be executed sequentially, although as a whole they are performed as an atomic operation inside the underlying store.
+`batch()` can be used for very fast bulk-write operations (both _put_ and _delete_). The `array` argument should contain a list of operations to be executed sequentially, although as a whole they are performed as an atomic operation inside the underlying store.
 
 Each operation is contained in an object having the following properties: `type`, `key`, `value`, where the _type_ is either `'put'` or `'del'`. In the case of `'del'` the `value` property is ignored. Any entries with a `key` of `null` or `undefined` will cause an error to be returned on the `callback` and any `type: 'put'` entry with a `value` of `null` or `undefined` will return an error.
 
 ```js
-var ops = [
+const ops = [
   { type: 'del', key: 'father' },
   { type: 'put', key: 'name', value: 'Yuri Irsenovich Kim' },
   { type: 'put', key: 'dob', value: '16 February 1941' },
@@ -279,11 +239,9 @@ db.batch(ops, function (err) {
 
 If no callback is passed, a promise is returned.
 
-<a name="batch_chained"></a>
-
 ### `db.batch()` _(chained form)_
 
-<code>batch()</code>, when called with no arguments will return a `Batch` object which can be used to build, and eventually commit, an atomic batch operation. Depending on how it's used, it is possible to obtain greater performance when using the chained form of `batch()` over the array form.
+`batch()`, when called with no arguments will return a `Batch` object which can be used to build, and eventually commit, an atomic batch operation. Depending on how it's used, it is possible to obtain greater performance when using the chained form of `batch()` over the array form.
 
 ```js
 db.batch()
@@ -337,8 +295,6 @@ A readonly string that is one of:
 
 Returns `true` if the store accepts operations, which in the case of `levelup` means that `status` is either `opening` or `open`, because it opens itself and queues up operations until opened.
 
-<a name="createReadStream"></a>
-
 ### `db.createReadStream([options])`
 
 Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of key-value pairs. A pair is an object with `key` and `value` properties. By default it will stream all entries in the underlying store from start to end. Use the options described below to control the range, direction and results.
@@ -373,11 +329,9 @@ You can supply an options object as the first parameter to `createReadStream()` 
 
 - `values` _(boolean, default: `true`)_: whether the results should contain values. If set to `true` and `keys` set to `false` then results will simply be values, rather than objects with a `value` property. Used internally by the `createValueStream()` method.
 
-<a name="createKeyStream"></a>
-
 ### `db.createKeyStream([options])`
 
-Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of keys rather than key-value pairs. Use the same options as described for <a href="#createReadStream"><code>createReadStream</code></a> to control the range and direction.
+Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of keys rather than key-value pairs. Use the same options as described for [`createReadStream()`](#dbcreatereadstreamoptions) to control the range and direction.
 
 You can also obtain this stream by passing an options object to `createReadStream()` with `keys` set to `true` and `values` set to `false`. The result is equivalent; both streams operate in [object mode](https://nodejs.org/docs/latest/api/stream.html#stream_object_mode).
 
@@ -394,11 +348,9 @@ db.createReadStream({ keys: true, values: false })
   })
 ```
 
-<a name="createValueStream"></a>
-
 ### `db.createValueStream([options])`
 
-Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of values rather than key-value pairs. Use the same options as described for <a href="#createReadStream"><code>createReadStream</code></a> to control the range and direction.
+Returns a [Readable Stream](https://nodejs.org/docs/latest/api/stream.html#stream_readable_streams) of values rather than key-value pairs. Use the same options as described for [`createReadStream()`](#dbcreatereadstreamoptions) to control the range and direction.
 
 You can also obtain this stream by passing an options object to `createReadStream()` with `values` set to `true` and `keys` set to `false`. The result is equivalent; both streams operate in [object mode](https://nodejs.org/docs/latest/api/stream.html#stream_object_mode).
 
@@ -415,11 +367,9 @@ db.createReadStream({ keys: false, values: true })
   })
 ```
 
-<a name="iterator"></a>
-
 ### `db.iterator([options])`
 
-Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-leveldown/#abstractleveldown_iteratoroptions), which is what powers the readable streams above. Options are the same as the range options of <a href="#createReadStream"><code>createReadStream</code></a> and are passed to the underlying store.
+Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-leveldown/#abstractleveldown_iteratoroptions), which is what powers the readable streams above. Options are the same as the range options of [`createReadStream()`](#dbcreatereadstreamoptions) and are passed to the underlying store.
 
 These iterators support [`for await...of`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of):
 
@@ -428,8 +378,6 @@ for await (const [key, value] of db.iterator()) {
   console.log(value)
 }
 ```
-
-<a name="clear"></a>
 
 ### `db.clear([options][, callback])`
 
@@ -444,9 +392,7 @@ If no options are provided, all entries will be deleted. The `callback` function
 
 If no callback is passed, a promise is returned.
 
-<a name="writeStreams"></a>
-
-#### What happened to `db.createWriteStream`?
+## What happened to `db.createWriteStream`?
 
 `db.createWriteStream()` has been removed in order to provide a smaller and more maintainable core. It primarily existed to create symmetry with `db.createReadStream()` but through much [discussion](https://github.com/Level/levelup/issues/199), removing it was the best course of action.
 
