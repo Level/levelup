@@ -443,8 +443,6 @@ for await (const [key, value] of db.iterator()) {
 
 ### `db.clear([options][, callback])`
 
-**This method is experimental. Not all underlying stores support it yet. Consult [Level/community#79](https://github.com/Level/community/issues/79) to find out if your (combination of) dependencies support `db.clear()`.**
-
 Delete all entries or a range. Not guaranteed to be atomic. Accepts the following range options (with the same rules as on iterators):
 
 - `gt` (greater than), `gte` (greater than or equal) define the lower bound of the range to be deleted. Only entries where the key is greater than (or equal to) this option will be included in the range. When `reverse=true` the order will be reversed, but the entries deleted will be the same.
