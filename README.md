@@ -466,38 +466,14 @@ Check out the implementations that the community has produced [here](https://git
 
 ## Promise Support
 
-`levelup` ships with native `Promise` support out of the box.
-
-Each function accepting a callback returns a promise if the callback is omitted. This applies for:
-
-- `db.get(key[, options])`
-- `db.put(key, value[, options])`
-- `db.del(key[, options])`
-- `db.batch(ops[, options])`
-- `db.batch().write()`
-
-The only exception is the `levelup` constructor itself, which if no callback is passed will lazily open the underlying store in the background.
+Each function accepting a callback returns a promise if the callback is omitted. The only exception is the `levelup` constructor itself, which if no callback is passed will lazily open the underlying store in the background.
 
 Example:
 
 ```js
-var db = levelup(leveldown('./my-db'))
-
-db.put('foo', 'bar')
-  .then(function () { return db.get('foo') })
-  .then(function (value) { console.log(value) })
-  .catch(function (err) { console.error(err) })
-```
-
-Or using `async/await`:
-
-```js
-const main = async () => {
-  const db = levelup(leveldown('./my-db'))
-
-  await db.put('foo', 'bar')
-  console.log(await db.get('foo'))
-}
+const db = levelup(leveldown('./my-db'))
+await db.put('foo', 'bar')
+console.log(await db.get('foo'))
 ```
 
 ## Events
