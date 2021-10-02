@@ -160,7 +160,7 @@ db.get('foo', function (err, value) {
 
 ### `db.supports`
 
-A read-only [manifest](https://github.com/Level/supports). Not [widely supported yet](https://github.com/Level/community/issues/83). Might be used like so:
+A read-only [manifest](https://github.com/Level/supports). Might be used like so:
 
 ```js
 if (!db.supports.permanence) {
