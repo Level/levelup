@@ -431,6 +431,14 @@ db.createReadStream({ keys: false, values: true })
 
 Returns an [`abstract-leveldown` iterator](https://github.com/Level/abstract-leveldown/#abstractleveldown_iteratoroptions), which is what powers the readable streams above. Options are the same as the range options of <a href="#createReadStream"><code>createReadStream</code></a> and are passed to the underlying store.
 
+These iterators support [`for await...of`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of):
+
+```js
+for await (const [key, value] of db.iterator()) {
+  console.log(value)
+}
+```
+
 <a name="clear"></a>
 
 ### `db.clear([options][, callback])`
