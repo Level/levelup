@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.1.1] - 2021-10-02
+
+### Added
+
+- Document new features ([#727](https://github.com/Level/levelup/issues/727)) ([`e1ecad9`](https://github.com/Level/levelup/commit/e1ecad9)) (Vincent Weevers)
+
+### Fixed
+
+- Expose nextTick for API parity with `abstract-leveldown` ([`7bc86e4`](https://github.com/Level/levelup/commit/7bc86e4)) (Vincent Weevers)
+- Set `supports.status` to true ([`e2e2c34`](https://github.com/Level/levelup/commit/e2e2c34)) (Vincent Weevers)
+
 ## [5.1.0] - 2021-10-01
 
 ### Changed
@@ -1150,6 +1161,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md)._
 ### Removed
 
 - Remove unused `inherits` variable ([**@rvagg**](https://github.com/rvagg))
+
+[5.1.1]: https://github.com/Level/levelup/releases/tag/v5.1.1
 
 [5.1.0]: https://github.com/Level/levelup/releases/tag/v5.1.0
 
