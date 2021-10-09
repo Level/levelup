@@ -27,7 +27,7 @@
     "deferred-leveldown": "^7.0.0",
     "level-errors": "^3.0.1",
     "level-iterator-stream": "^5.0.0",
-    "level-supports": "^2.0.1",
+    "level-supports": "^2.0.2",
     "queue-microtask": "^1.2.3"
   },
   "devDependencies": {
