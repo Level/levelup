@@ -1,7 +1,10 @@
-const errors = require('../lib/levelup').errors
+'use strict'
+
+// const errors = require('../lib/levelup').errors
 const each = require('async-each')
 const series = require('run-series')
 const discardable = require('./util/discardable')
+const verifyNotFoundError = require('./util/verify-not-found-error')
 
 module.exports = function (test, testCommon) {
   test('get() / put() / del(): get() on empty database causes error', function (t) {
@@ -9,11 +12,14 @@ module.exports = function (test, testCommon) {
       db.get('undefkey', function (err, value) {
         t.notOk(value)
         t.ok(err instanceof Error)
-        t.ok(err instanceof errors.LevelUPError)
-        t.ok(err instanceof errors.NotFoundError)
-        t.is(err.notFound, true, 'err.notFound is `true`')
-        t.is(err.status, 404, 'err.status is 404')
-        t.ok(/\[undefkey\]/.test(err))
+        t.ok(verifyNotFoundError(err))
+
+        // https://github.com/Level/errors/issues/39
+        // t.ok(err instanceof errors.LevelUPError)
+        // t.is(err.notFound, true, 'err.notFound is `true`')
+        // t.is(err.status, 404, 'err.status is 404')
+        // t.ok(/\[undefkey\]/.test(err))
+
         done()
       })
     })
@@ -23,11 +29,14 @@ module.exports = function (test, testCommon) {
     discardable(t, testCommon, function (db, done) {
       db.get('undefkey').catch(function (err) {
         t.ok(err instanceof Error)
-        t.ok(err instanceof errors.LevelUPError)
-        t.ok(err instanceof errors.NotFoundError)
-        t.is(err.notFound, true, 'err.notFound is `true`')
-        t.is(err.status, 404, 'err.status is 404')
-        t.ok(/\[undefkey\]/.test(err))
+        t.ok(verifyNotFoundError(err))
+
+        // https://github.com/Level/errors/issues/39
+        // t.ok(err instanceof errors.LevelUPError)
+        // t.is(err.notFound, true, 'err.notFound is `true`')
+        // t.is(err.status, 404, 'err.status is 404')
+        // t.ok(/\[undefkey\]/.test(err))
+
         done()
       })
     })
