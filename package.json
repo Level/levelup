@@ -42,7 +42,7 @@
     "dependency-check": "^4.1.0",
     "encoding-down": "^7.1.0",
     "faucet": "^0.0.1",
-    "hallmark": "^3.1.0",
+    "hallmark": "^4.0.0",
     "level-concat-iterator": "^3.0.0",
     "memdown": "^6.1.0",
     "nyc": "^15.1.0",
