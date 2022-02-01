@@ -4,8 +4,9 @@ providers:
 browsers:
   - name: chrome
   - name: firefox
-  - name: safari
-    version: 12..latest
+  # https://github.com/airtap/sauce/issues/11
+  # - name: safari
+  #   version: 12..latest
   - name: ios_saf
     version: 12..latest
   # TODO: look into android 10 failure
