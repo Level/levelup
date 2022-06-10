@@ -25,6 +25,7 @@
   "dependencies": {
     "catering": "^2.0.0",
     "deferred-leveldown": "^7.0.0",
+    "inherits": "^2.0.4",
     "level-errors": "^3.0.1",
     "level-iterator-stream": "^5.0.0",
     "level-supports": "^2.0.1",
