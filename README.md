@@ -1,5 +1,7 @@
 # levelup
 
+> :pushpin: This module will soon be [deprecated](https://github.com/Level/community/issues/113), because it is superseded by [`abstract-level`](https://github.com/Level/abstract-level).
+
 [![level badge][level-badge]](https://github.com/Level/awesome)
 [![npm](https://img.shields.io/npm/v/levelup.svg)](https://www.npmjs.com/package/levelup)
 [![Node version](https://img.shields.io/node/v/levelup.svg)](https://www.npmjs.com/package/levelup)
