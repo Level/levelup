@@ -41,7 +41,7 @@
     "delayed": "^2.0.0",
     "dependency-check": "^4.1.0",
     "encoding-down": "^7.1.0",
-    "faucet": "^0.0.1",
+    "faucet": "^0.0.3",
     "hallmark": "^4.0.0",
     "level-concat-iterator": "^3.0.0",
     "memdown": "^6.1.0",
